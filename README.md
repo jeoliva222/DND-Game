@@ -1,5 +1,7 @@
 # DND-Game
-A simple turn-based Java adventure game. Music and character pain sound borrowed from Doom (1993) by ID Software. Sound sources taken and modified from freesound.org.
+A simple turn-based Java adventure game. Code by Jackson Oliva.
+
+You play a frog, enslaved and emprisoned. Escape your confines and claim your sweet revenge!
 
 Controls:
 
@@ -30,3 +32,12 @@ Charged attacks will not occur unless you attack the immediate next turn after c
 Use the mouse to highlight enemies or objects before engaging
 
 Hit Save Crystals to save your game's progress and heal a bit
+
+-----------------------------------
+
+Credits:
+
+Music and character pain sound borrowed from Doom (1993) by ID Software.
+Most sound sources taken and modified from freesound.org.
+Voice-based sound effects recorded and modified by Jackson Oliva using Cockos Reaper.
+Art created by Jackson Oliva using Adobe Photoshop.
