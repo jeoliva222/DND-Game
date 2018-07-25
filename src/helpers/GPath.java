@@ -36,6 +36,8 @@ public class GPath {
 	
 	public static String SOUND = "res" + File.separator + "sounds" + File.separator;
 	
+	public static String SAVE = "save" + File.separator;
+	
 	public static String NULL = GPath.IMAGE + "null.png";
 	
 	public static String BORDER = GPath.IMAGE + "template.png";

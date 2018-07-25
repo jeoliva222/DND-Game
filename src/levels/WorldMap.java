@@ -1,26 +1,37 @@
 package levels;
 
 // Contains the definition for the relationships and
-// connections in between MapAreas
+// connections in between MapAreas. Relationships used by AreaFetcher to 
+// fetch instances of areas when moving between two areas
 public class WorldMap {
 	
 	//************************************************
 	// WORLD DEFINITION
 	
-	public static MapArea[][] gameWorld = new MapArea[][] {
-		{DungeonLevels.area_DUNGEON, DesertLevels.area_DESERT}
+	public static String[][] gameWorld = new String[][] {
+		{"dungeon", "desert"}
 	};
 	
 	//************************************************
 	// FUNCTIONS
 	
-	// Returns the index of an area in the world
+	// Returns the area in the world based off of its index
 	public static MapArea getArea(int x, int y) {
-		return WorldMap.gameWorld[y][x];
+		return AreaFetcher.fetchArea(WorldMap.getAreaKey(x, y));
 	}
 	
-	// Sets world to particular instance. Used with Saving/Loading
-	public static void setWorld(MapArea[][] newWorld) {
+	// Returns the string key of an area in the world based off its index
+	public static String getAreaKey(int x, int y) {
+		try {
+			String returnKey = WorldMap.gameWorld[y][x];
+			return returnKey;
+		} catch(IndexOutOfBoundsException e) {
+			return "";
+		}
+	}
+	
+	// Sets world to particular instance.
+	public static void setWorld(String[][] newWorld) {
 		WorldMap.gameWorld = null;
 		WorldMap.gameWorld = newWorld;
 	}

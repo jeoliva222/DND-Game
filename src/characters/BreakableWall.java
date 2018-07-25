@@ -56,7 +56,7 @@ public class BreakableWall extends GCharacter {
 		}
 		
 		///*** INSERT CODE TO ALTER DUNGEON TYPE
-		String areaPath = EntityManager.getPlayer().fetchArea().getTheme();
+		String areaPath = EntityManager.getActiveArea().getTheme();
 		areaPath = areaPath.substring(0, (areaPath.length() - 1));
 		//String areaPath = "dungeon";
 		

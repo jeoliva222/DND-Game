@@ -1,7 +1,6 @@
 package tiles;
 
 import helpers.GPath;
-import levels.WorldMap;
 import managers.EntityManager;
 
 // Ground type with alternate variant image
@@ -18,9 +17,7 @@ public class AltGround extends TileType {
 	@Override
 	public String selectImage() {
 		// Fetch region path to display image from correct area
-		int areaX = EntityManager.getPlayer().getAreaX();
-		int areaY = EntityManager.getPlayer().getAreaY();
-		String regionPath = WorldMap.getArea(areaX, areaY).getTheme();
+		String regionPath = EntityManager.getActiveArea().getTheme();
 		
 		this.imagePath = GPath.createImagePath(GPath.TILE, regionPath, "altground.png");
 		return this.imagePath;

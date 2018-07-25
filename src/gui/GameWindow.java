@@ -3,15 +3,18 @@ package gui;
 import java.awt.Dimension;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.io.File;
 
 import javax.swing.JFrame;
 
 import characters.GCharacter;
 import characters.Player;
+import helpers.GPath;
 import helpers.GameState;
 import helpers.SoundPlayer;
 import items.GItem;
-import levels.WorldMap;
 import managers.EntityManager;
 import projectiles.GProjectile;
 
@@ -119,16 +122,27 @@ public class GameWindow extends JFrame implements KeyListener {
 		
 		// Set some extra parameters and then make visible
 		this.setTitle("DnD Game");
-		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		this.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		this.addKeyListener(this);
 		this.setVisible(true);
 		this.pack();
 		
+		// Set on-close listener
+	    this.addWindowListener(new WindowAdapter() {
+	        @Override
+	        public void windowClosing(WindowEvent event) {
+	        	// Delete all temporary files and exit the frame on close
+	        	GameState.deleteTempSaves();
+	            System.exit(0);
+	        }
+	    });
+		
 		// "Caches" sound playing code by playing a silent sound.
+	    // This allows the first sound to play without a noticeable delay
 		SoundPlayer.cacheSoundPlaying();
 		
-		// Play music
-		SoundPlayer.playMidi(EntityManager.getPlayer().fetchArea().getMusic(), 30);
+		// Start playing music
+		SoundPlayer.playMidi(EntityManager.getActiveArea().getMusic(), 30);
 	}
 	
 	// Moves the player x-wise/y-wise then updates the screen to show it
@@ -289,12 +303,14 @@ public class GameWindow extends JFrame implements KeyListener {
 		this.updateGUI();
 	}
 	
+	// Updates all of the GUI on the screen
 	public void updateGUI() {
 		LogScreen.displayLogs();
 		StatusScreen.updateStatusScreen();
 		InfoScreen.updateInfoScreen();
 	}
 	
+	// Saves the game to a save file
 	public void saveGame() {
 		// Don't save if player is dead
     	if(EntityManager.getPlayer().isAlive()) {
@@ -304,37 +320,30 @@ public class GameWindow extends JFrame implements KeyListener {
         	// Get current player state
         	Player player = EntityManager.getPlayer();
         	
-        	// Save the current level state
+        	// Save the current level state without reseting NPC locations
            	GameWindow.getScreen().saveLevel(false);
         	
-           	// Grab the current world state
-        	GameState gState = new GameState(inv, player, WorldMap.gameWorld);
-        	
-        	// Save the game to a save file
-        	gState.saveGame();
+           	// Save the current area to a file in the temp folder
+           	GameState.saveCurrentArea();
+           	
+           	// Save the current world state
+        	GameState.saveGame(inv, player);
         	
         	// Log that we've saved the game, then update the screen
         	LogScreen.log("Saved game!");
     	}
 	}
 	
+	// Loads the game from the save file
 	public void loadGame() {
-		// Gets game save from file
-    	GameState gState = GameState.loadGame();
-    	
-    	// If loading failed, don't do anything
-    	if(gState == null) {
-    		return;
-    	}
-    	
-    	// Load the world from the save
-    	WorldMap.setWorld(gState.gameWorld);
-    	
-    	// Load our inventory from the save
-    	InventoryScreen.setItemArray(gState.inventory);
-    	
-    	// Load player from the save
-    	EntityManager.setPlayer(gState.player);
+		// We don't want to load without all of the files!
+		// Only load if we have a save file
+		if(!(new File(GPath.SAVE + "player.ser").exists())) {
+			return;
+		}
+		
+		// Gets game save from file (Sets player and inventory from save file)
+    	GameState.loadGame();
     	
 		// Defocus InfoScreen
 		InfoScreen.defocusAll();
@@ -348,21 +357,17 @@ public class GameWindow extends JFrame implements KeyListener {
 				GameScreen.getTile(x, y).clearAll();
 			}
 		}
-		
-		// Clear out the memory of the GameState
-		gState.gameWorld = null;
-		gState.inventory = null;
-		gState.player = null;
     	
+		// Set the new active area
+		EntityManager.setActiveArea(EntityManager.getPlayer().fetchArea());
+		
 		// Load the level our player is at
-		int areaX = EntityManager.getPlayer().getAreaX();
-		int areaY = EntityManager.getPlayer().getAreaY();
 		int levelX = EntityManager.getPlayer().getLevelX();
 		int levelY = EntityManager.getPlayer().getLevelY();
-		GameWindow.getScreen().loadLevel(WorldMap.getArea(areaX, areaY).getLevel(levelX, levelY));
+		GameWindow.getScreen().loadLevel(EntityManager.getActiveArea().getLevel(levelX, levelY));
 		
 		// Change music
-		SoundPlayer.changeMidi(EntityManager.getPlayer().fetchArea().getMusic(), 30);
+		SoundPlayer.changeMidi(EntityManager.getActiveArea().getMusic(), 30);
 		
 		// Log that we loaded the screen
 		LogScreen.log("Loaded game...");

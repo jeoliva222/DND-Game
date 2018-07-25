@@ -9,6 +9,7 @@ import effects.GEffect;
 import gui.GameScreen;
 import gui.GameTile;
 import items.GPickup;
+import levels.MapArea;
 import projectiles.GProjectile;
 
 public class EntityManager {
@@ -30,6 +31,9 @@ public class EntityManager {
 	
 	// List of active pickups
 	private static PickupManager pickupManager;
+	
+	// Active area that is loaded in
+	private static MapArea activeArea;
 	
 	///*** CONTAINS TEMPORARY CODE***
 	// Blank Constructor for the EntityManager
@@ -197,6 +201,14 @@ public class EntityManager {
 	
 	public static PickupManager getPickupManager() {
 		return EntityManager.pickupManager;
+	}
+	
+	public static MapArea getActiveArea() {
+		return EntityManager.activeArea;
+	}
+	
+	public static void setActiveArea(MapArea newArea) {
+		EntityManager.activeArea = newArea;
 	}
 	
 }

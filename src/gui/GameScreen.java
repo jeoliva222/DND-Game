@@ -8,9 +8,10 @@ import javax.swing.JPanel;
 
 import characters.Corpse;
 import characters.GCharacter;
+import helpers.GameState;
 import helpers.SoundPlayer;
 import items.GPickup;
-import levels.MapArea;
+import levels.AreaFetcher;
 import levels.MapLevel;
 import levels.WorldMap;
 import managers.EntityManager;
@@ -55,6 +56,15 @@ public class GameScreen extends JPanel {
 		// Initialize Grid of GameTiles
 		GameScreen.tiles = new GameTile[yDimen][xDimen];
 		
+		/// Set the active area
+		// TODO
+		int areaX = EntityManager.getPlayer().getAreaX();
+		int areaY = EntityManager.getPlayer().getAreaY();
+		int levelX = EntityManager.getPlayer().getLevelX();
+		int levelY = EntityManager.getPlayer().getLevelY();
+		String areaKey = WorldMap.getAreaKey(areaX, areaY);
+		EntityManager.setActiveArea(AreaFetcher.fetchDefaultArea(areaKey));
+		
 		// Populate the grid with tiles, with placeholder as ground-type
 		for(int y = 0; y < yDimen; y++) {
 			for(int x = 0; x < xDimen; x++) {
@@ -64,12 +74,8 @@ public class GameScreen extends JPanel {
 			}
 		}
 		
-		/// Load our level ***TEMP***
-		int areaX = EntityManager.getPlayer().getAreaX();
-		int areaY = EntityManager.getPlayer().getAreaY();
-		int levelX = EntityManager.getPlayer().getLevelX();
-		int levelY = EntityManager.getPlayer().getLevelY();
-		this.loadLevel(WorldMap.getArea(areaX, areaY).getLevel(levelX, levelY));
+		// Load our level
+		this.loadLevel(EntityManager.getActiveArea().getLevel(levelX, levelY));
 
 		// Set various attributes of GameScreen
 		this.setVisible(true);
@@ -81,14 +87,12 @@ public class GameScreen extends JPanel {
 	// or not.
 	public boolean swapLevel(int dx, int dy) {
 		// Load player area/level coordinates
-		int areaX = EntityManager.getPlayer().getAreaX();
-		int areaY = EntityManager.getPlayer().getAreaY();
 		int levelX = EntityManager.getPlayer().getLevelX();
 		int levelY = EntityManager.getPlayer().getLevelY();
 		
 		try {			
 			// First try to swap to a new level within the same area
-			MapLevel nextLevel = WorldMap.getArea(areaX, areaY).getLevel(levelX + dx, levelY + dy);
+			MapLevel nextLevel = EntityManager.getActiveArea().getLevel(levelX + dx, levelY + dy);
 			
 			// Check if the next level is null
 			if(nextLevel == null) {
@@ -143,15 +147,12 @@ public class GameScreen extends JPanel {
 		int levelX = EntityManager.getPlayer().getLevelX();
 		int levelY = EntityManager.getPlayer().getLevelY();
 		
-		try {
-			// Fetch the current area
-			MapArea oldArea = WorldMap.getArea(areaX, areaY);
-			
-			// Fetch the next area
-			MapArea newArea = WorldMap.getArea(areaX + dx, areaY + dy);
+		try {	
+			// Fetch the next area key
+			String newAreaKey = WorldMap.getAreaKey(areaX + dx, areaY + dy);
 			
 			// Check if the next area is null
-			if(newArea == null) {
+			if(newAreaKey == "") {
 				// If null, we can't move to it, so return false
 				return false;
 			} else {
@@ -160,12 +161,21 @@ public class GameScreen extends JPanel {
 				int newLevelY = levelY + dy;
 				
 				// Load the border limits of the old area
-				int xOldMax = oldArea.getLength();
-				int yOldMax = oldArea.getHeight();
+				int xOldMax = EntityManager.getActiveArea().getLength();
+				int yOldMax = EntityManager.getActiveArea().getHeight();
+				
+				// Save our current level
+				this.saveLevel(true);
+				
+				// Save the current area
+				GameState.saveCurrentArea();
+				
+				// Load in the new area
+				EntityManager.setActiveArea(WorldMap.getArea(areaX + dx, areaY + dy));
 				
 				// Load the border limits of the new area
-				int xNewMax = newArea.getLength();
-				int yNewMax = newArea.getHeight();
+				int xNewMax = EntityManager.getActiveArea().getLength();
+				int yNewMax = EntityManager.getActiveArea().getHeight();
 				
 				// Switch the player x-wise to other end of the screen
 				// if past the limits
@@ -183,17 +193,14 @@ public class GameScreen extends JPanel {
 					newLevelY = yNewMax - 1;
 				}
 				
-				// First try to swap to a new level within the same area
-				MapLevel nextLevel = newArea.getLevel(newLevelX, newLevelY);
+				// Fetch the level from the new area we're heading into
+				MapLevel nextLevel = EntityManager.getActiveArea().getLevel(newLevelX, newLevelY);
 				
 				if(nextLevel == null) {
 					// Level in next area is null, so return false
 					return false;
 				} else {
 					// If we've got a level to move to, commence changing level
-					
-					// Save our current level
-					this.saveLevel(true);
 					
 					// Defocus InfoScreen
 					InfoScreen.defocusAll();
@@ -221,12 +228,12 @@ public class GameScreen extends JPanel {
 					this.loadLevel(nextLevel);
 					
 					// Change music
-					SoundPlayer.changeMidi(EntityManager.getPlayer().fetchArea().getMusic(), 30);
+					SoundPlayer.changeMidi(EntityManager.getActiveArea().getMusic(), 30);
 					
 					// Indicate to the main window that the screen was changed
 					GameWindow.changedScreen = true;
 					
-					LogScreen.log("Now Entering: "+newArea.getName());
+					LogScreen.log("Now Entering: "+ EntityManager.getActiveArea().getName());
 					
 					// Return true to indicate the player can update their position
 					return true;
@@ -264,14 +271,12 @@ public class GameScreen extends JPanel {
 	
 	// Saves the entities of the current level we are on
 	public void saveLevel(boolean resetNPCs) {
-		// Get player area/level coordinates
-		int areaX = EntityManager.getPlayer().getAreaX();
-		int areaY = EntityManager.getPlayer().getAreaY();
+		// Get player level coordinates
 		int levelX = EntityManager.getPlayer().getLevelX();
 		int levelY = EntityManager.getPlayer().getLevelY();
 		
 		// Fetch the level the player is on
-		MapLevel currentLevel = WorldMap.getArea(areaX, areaY).getLevel(levelX, levelY);
+		MapLevel currentLevel = EntityManager.getActiveArea().getLevel(levelX, levelY);
 		
 		// Save the tiles
 		TileType[][] tts = new TileType[GameInitializer.yDimen][GameInitializer.xDimen];

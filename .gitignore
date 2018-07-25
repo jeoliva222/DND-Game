@@ -23,4 +23,10 @@ $RECYCLE.BIN/
 # =========================
 
 # Java Generated files
-.class
+*.class
+.classpath
+.project
+/bin/
+
+# Save files
+*.ser

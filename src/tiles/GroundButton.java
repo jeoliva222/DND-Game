@@ -5,7 +5,6 @@ import java.util.ArrayList;
 
 import characters.GCharacter;
 import helpers.GPath;
-import levels.WorldMap;
 import managers.EntityManager;
 
 public class GroundButton extends GButton {
@@ -64,9 +63,7 @@ public class GroundButton extends GButton {
 	@Override
 	public String selectImage() {
 		// Fetch region path to display image from correct area
-		int areaX = EntityManager.getPlayer().getAreaX();
-		int areaY = EntityManager.getPlayer().getAreaY();
-		String regionPath = WorldMap.getArea(areaX, areaY).getTheme();
+		String regionPath = EntityManager.getActiveArea().getTheme();
 		
 		// Initialize string variables
 		String basePath = GPath.createImagePath(GPath.TILE, regionPath);

@@ -3,7 +3,6 @@ package tiles;
 import java.util.Random;
 
 import helpers.GPath;
-import levels.WorldMap;
 import managers.EntityManager;
 
 public class Ground extends TileType {
@@ -21,9 +20,7 @@ public class Ground extends TileType {
 	@Override
 	public String selectImage() {
 		// Fetch region path to display image from correct area
-		int areaX = EntityManager.getPlayer().getAreaX();
-		int areaY = EntityManager.getPlayer().getAreaY();
-		String regionPath = WorldMap.getArea(areaX, areaY).getTheme();
+		String regionPath = EntityManager.getActiveArea().getTheme();
 		String imagePath = null;
 		
 		// Fetch one of three images randomly, with
