@@ -93,8 +93,8 @@ public class DungeonLevels implements Serializable {
 			add(new Beanpole(7, 3, PatrolPattern.STATIONARY));
 			add(new Beanpole(8, 3, PatrolPattern.STATIONARY));
 			add(new Beanpole(1, 5, PatrolPattern.STATIONARY));
-			add(new EliteBeanpole(1, 6, PatrolPattern.STATIONARY));
-			add(new EliteBeanpole(1, 7, PatrolPattern.STATIONARY));
+			add(new Beanpole(1, 6, PatrolPattern.STATIONARY));
+			add(new Beanpole(1, 7, PatrolPattern.STATIONARY));
 			add(new Beanpole(1, 8, PatrolPattern.STATIONARY));
 			add(new Bitester(4, 6, PatrolPattern.PATROL));
 			add(new Bitester(4, 8, PatrolPattern.PATROL));
@@ -205,8 +205,8 @@ public class DungeonLevels implements Serializable {
 			add(new Beanpole(3, 8));
 			add(new SaveCrystal(3, 3));
 			add(new BreakableWall(8, 1));
-			add(new Beanpole(2, 2, PatrolPattern.PATROL_CCW));
-			add(new Beanpole(2, 1, PatrolPattern.PATROL_CCW));
+			add(new EliteBeanpole(2, 2, PatrolPattern.PATROL_CCW));
+			add(new EliteBeanpole(2, 1, PatrolPattern.PATROL_CCW));
 			add(new BunnyWarrior(7, 1, PatrolPattern.STATIONARY));
 			add(new Bitester(3, 6, PatrolPattern.PATROL));
 			add(new Bitester(7, 7, PatrolPattern.PATROL));
@@ -538,7 +538,7 @@ public class DungeonLevels implements Serializable {
 							add(new Dimension(3, 9));
 						}}))
 		}, new ArrayList<GCharacter>() {{
-			add(new Watchman(8, 5, new ArrayList<GCharacter>() {{
+			add(new Watchman(8, 5, new ArrayList<GCharacter>() {{ // New Watchman
 				add(new EliteBeanpole(6, 5, PatrolPattern.PATROL_CCW));
 				add(new Beanpole(7, 4, PatrolPattern.PATROL_CCW));
 				add(new Beanpole(7, 6, PatrolPattern.PATROL_CCW));
@@ -553,16 +553,16 @@ public class DungeonLevels implements Serializable {
 		MapLevel bottomCorner = new MapLevel(new int[][] {
 			{3, 3, 3, 1, 3, 3, 3, 3, 3, 3},
 			{3, 1, 1, 1, 1, 1, 3, 1, 1, 3},
-			{3, 1, 3, 3, 3, 1, 3, 1, 1, 3},
+			{3, 1, 4, 4, 4, 1, 3, 0, 0, 3},
 			{3, 1, 1, 1, 1, 1, 3, 1, 1, 1},
 			{3, 3, 3, 1, 3, 3, 3, 1, 1, 1},
-			{3, 1, 1, 1, 1, 1, 3, 1, 1, 3},
-			{3, 1, 3, 1, 3, 1, 3, 1, 1, 3},
+			{3, 1, 4, 1, 4, 1, 3, 1, 1, 3},
+			{3, 1, 4, 1, 4, 1, 3, 1, 1, 3},
 			{3, 1, 1, 1, 1, 1, 4, 1, 1, 3},
 			{3, 3, 3, 3, 3, 3, 3, 4, 4, 3},
 			{3, 3, 3, 3, 3, 3, 3, 3, 3, 3}
 		}, new ExtraTile[] {
-				new ExtraTile(1, 6, 
+				new ExtraTile(1, 5, 
 						new GroundButton(TriggerType.ENEMY_AND_TILE, false, GButton.VISIBLE, new ArrayList<GCharacter>() {{
 						}}, new ArrayList<ExtraTile>() {{
 							add(new ExtraTile(6, 7, new Ground()));
@@ -570,20 +570,12 @@ public class DungeonLevels implements Serializable {
 				new ExtraTile(7, 1, 
 						new GroundButton(TriggerType.WALL_GROUND, false, GButton.VEILED, new ArrayList<Dimension>() {{
 							add(new Dimension(6, 1));
+							add(new Dimension(6, 7));
 						}}))
 		}, new ArrayList<GCharacter>() {{
 			add(new Watchman(5, 3, new ArrayList<GCharacter>() {{ // New Watchman
-			}},
-			new ArrayList<ExtraTile>() {{
-				add(new ExtraTile(7, 2, new AltWall()));
-				add(new ExtraTile(8, 2, new AltWall()));
-				add(new ExtraTile(2, 2, new Ground()));
-				add(new ExtraTile(3, 2, new Ground()));
-				add(new ExtraTile(4, 2, new Ground()));
-				add(new ExtraTile(2, 6, new Ground()));
-				add(new ExtraTile(6, 7, new Ground()));
-			}}, PatrolPattern.PATROL_CW));
-			add(new Watchman(2, 7, new ArrayList<GCharacter>() {{ // New Watchman
+				add(new Beanpole(2, 6, PatrolPattern.PATROL));
+				add(new Beanpole(4, 6, PatrolPattern.PATROL));
 			}},
 			new ArrayList<ExtraTile>() {{
 				add(new ExtraTile(7, 2, new AltWall()));
@@ -593,7 +585,8 @@ public class DungeonLevels implements Serializable {
 				add(new ExtraTile(4, 2, new Ground()));
 				add(new ExtraTile(2, 6, new Ground()));
 				add(new ExtraTile(4, 6, new Ground()));
-				add(new ExtraTile(6, 7, new Ground()));
+				add(new ExtraTile(2, 5, new Ground()));
+				add(new ExtraTile(4, 5, new Ground()));
 			}}, PatrolPattern.PATROL_CW));
 			add(new EliteWatchman(7, 1, new ArrayList<GCharacter>() {{ // New Elite Watchman
 				add(new Beanpole(7, 8));
@@ -604,6 +597,7 @@ public class DungeonLevels implements Serializable {
 				add(new ExtraTile(7, 8, new Ground()));
 				add(new ExtraTile(8, 8, new Ground()));
 			}}, PatrolPattern.STATIONARY));
+			add(new EliteBeanpole(5, 5, PatrolPattern.STATIONARY));
 		}}, new ArrayList<GPickup>() {{
 			add(new GPickup(8, 1, new LargeHealthPotion()));
 		}});
@@ -638,7 +632,7 @@ public class DungeonLevels implements Serializable {
 						}}))
 		}, new ArrayList<GCharacter>() {{
 			add(new Watchman(7, 8, new ArrayList<GCharacter>() {{ // New Watchman
-				add(new BreakableWall(9, 1));
+				add(new BreakableWall(8, 3));
 			}},
 			new ArrayList<ExtraTile>() {{
 				add(new ExtraTile(3, 5, new Ground()));
@@ -652,7 +646,7 @@ public class DungeonLevels implements Serializable {
 				add(new ExtraTile(6, 7, new Ground()));
 			}}, PatrolPattern.STATIONARY));
 			add(new Watchman(5, 8, new ArrayList<GCharacter>() {{ // New Watchman
-				add(new BreakableWall(8, 1));
+				add(new BreakableWall(8, 2));
 			}},
 			new ArrayList<ExtraTile>() {{
 				add(new ExtraTile(3, 5, new Ground()));
@@ -666,7 +660,7 @@ public class DungeonLevels implements Serializable {
 				add(new ExtraTile(6, 7, new Ground()));
 			}}, PatrolPattern.STATIONARY));
 			add(new Watchman(3, 8, new ArrayList<GCharacter>() {{ // New Watchman
-				add(new BreakableWall(8, 2));
+				add(new BreakableWall(8, 1));
 			}},
 			new ArrayList<ExtraTile>() {{
 				add(new ExtraTile(3, 5, new Ground()));
@@ -756,11 +750,11 @@ public class DungeonLevels implements Serializable {
 			{3, 3, 3, 3, 3, 3, 1, 3, 1, 3},
 			{3, 1, 3, 1, 1, 1, 1, 1, 1, 3},
 			{3, 1, 0, 1, 1, 1, 1, 3, 1, 3},
-			{3, 1, 0, 1, 1, 1, 1, 1, 1, 3},
+			{3, 1, 0, 0, 1, 0, 1, 1, 1, 3},
 			{3, 1, 0, 1, 1, 1, 1, 3, 1, 3},
-			{3, 1, 3, 1, 3, 1, 1, 1, 1, 3},
+			{3, 1, 3, 0, 3, 3, 1, 1, 1, 3},
 			{3, 3, 3, 1, 3, 1, 1, 1, 1, 3},
-			{3, 3, 3, 1, 3, 3, 3, 3, 3, 3}
+			{3, 3, 3, 3, 3, 3, 3, 3, 3, 3}
 		}, new ExtraTile[] {
 				new ExtraTile(5, 8, 
 						new GroundButton(TriggerType.ENEMY_AND_TILE, false, GButton.VISIBLE, new ArrayList<GCharacter>() {{
@@ -784,10 +778,10 @@ public class DungeonLevels implements Serializable {
 			new ArrayList<ExtraTile>() {{
 				add(new ExtraTile(5, 8, new Ground()));
 				add(new ExtraTile(3, 3, new Ground()));
-				add(new ExtraTile(3, 8, new Wall()));
+				add(new ExtraTile(3, 7, new AltWall()));
 			}}));
 		}}, new ArrayList<GPickup>() {{
-			add(new GPickup(3, 9, new MediumHealthPotion()));
+			add(new GPickup(3, 8, new MediumHealthPotion()));
 		}});
 		
 		//-------------------

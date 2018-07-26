@@ -35,7 +35,7 @@ public class EntityManager {
 	// Active area that is loaded in
 	private static MapArea activeArea;
 	
-	///*** CONTAINS TEMPORARY CODE***
+	///TODO Temporary code
 	// Blank Constructor for the EntityManager
 	public EntityManager() {
 		EntityManager.player = new Player();

@@ -1,7 +1,6 @@
 package tiles;
 
 import helpers.GPath;
-import levels.WorldMap;
 import managers.EntityManager;
 
 // Class representing a Wall tile type in the game

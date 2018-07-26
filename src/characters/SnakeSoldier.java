@@ -297,7 +297,7 @@ public class SnakeSoldier extends GCharacter {
 						dy = -1;
 					}
 					
-					// Decide if bunny should attempt a ranged swipe/bite prep
+					// Decide if snake should attempt a ranged swipe/bite/charge prep
 					// Punishes running away and eager approaches
 					// Attempt only 1/2 of the time
 					int shouldAttack = r.nextInt(2);

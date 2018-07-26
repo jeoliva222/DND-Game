@@ -41,7 +41,6 @@ public class BreakableWall extends GCharacter {
 	
 	@Override
 	public String getImage() {
-		///***** TEMPORARY STUFF HERE
 		String basePath = GPath.createImagePath(GPath.ENEMY, GPath.BREAKABLE_WALL);
 		String entityPath = "_breakablewall";
 		String hpPath;
@@ -55,10 +54,9 @@ public class BreakableWall extends GCharacter {
 			return GPath.NULL;
 		}
 		
-		///*** INSERT CODE TO ALTER DUNGEON TYPE
+		// Breakable wall image changes based on which area we are in
 		String areaPath = EntityManager.getActiveArea().getTheme();
 		areaPath = areaPath.substring(0, (areaPath.length() - 1));
-		//String areaPath = "dungeon";
 		
 		// Return full path
 		return basePath + areaPath + entityPath + hpPath + ".png";

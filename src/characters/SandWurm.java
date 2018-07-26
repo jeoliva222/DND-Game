@@ -20,6 +20,7 @@ import tiles.Ground;
 import tiles.MovableType;
 import tiles.TileType;
 
+// Class that represents the Sandwurm enemy found in the Desert area
 public class SandWurm extends GCharacter {
 
 	// Serialization ID
@@ -178,6 +179,7 @@ public class SandWurm extends GCharacter {
 	}
 	
 	// Override that increments a damaged counter on hit
+	// Damage counter indicates probability to warp away from player
 	@Override
 	public boolean damageCharacter(int damage) {
 		this.currentHP = this.currentHP - damage;
@@ -206,6 +208,7 @@ public class SandWurm extends GCharacter {
 			return false;
 		}
 		
+		// Sandwurms can only move on regular ground
 		// If NPC can't move here, return without moving
 		if(!(tt instanceof Ground)) {
 			return false;

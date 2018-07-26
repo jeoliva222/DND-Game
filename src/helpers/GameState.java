@@ -156,7 +156,8 @@ public class GameState {
 		File tempFolder = new File(GPath.SAVE + "temp");
 		File[] areaFileList = tempFolder.listFiles();
 		for(File areaFile : areaFileList) {
-			areaFile.delete();
+			if(areaFile.getName().endsWith(".ser"))
+				areaFile.delete();
 		}
 	}
 	
