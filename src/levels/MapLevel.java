@@ -11,6 +11,7 @@ import tiles.AltGround;
 import tiles.AltWall;
 import tiles.ExtraTile;
 import tiles.Ground;
+import tiles.Pit;
 import tiles.TileType;
 import tiles.Wall;
 import tiles.Water;
@@ -39,6 +40,12 @@ public class MapLevel implements Serializable {
 		this.tiles = new TileType[GameInitializer.yDimen][GameInitializer.xDimen];
 		
 		// Convert int-code to Tiles
+		// 0 = Alternate Ground
+		// 1 = Ground
+		// 2 = Water
+		// 3 = Wall
+		// 4 = Alternate Wall
+		// 5 = Pit
 		for(int y = 0; y < GameInitializer.yDimen; y++) {
 			for(int x = 0; x < GameInitializer.xDimen; x++) {
 				TileType tt;
@@ -52,7 +59,9 @@ public class MapLevel implements Serializable {
 					tt = new Wall();
 				} else if (map[y][x] == 4) {
 					tt = new AltWall();
-				} else {
+				} else if (map[y][x] == 5) {
+					tt = new Pit();
+				}  else {
 					tt = new Wall();
 				}
 				

@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import ai.PatrolPattern;
 import characters.ArrowTurret;
 import characters.Bitester;
+import characters.BreakableWall;
 import characters.BunnyWarrior;
 import characters.EliteArrowTurret;
 import characters.EliteBunnyWarrior;
@@ -18,10 +19,14 @@ import helpers.GPath;
 import items.GPickup;
 import items.MediumHealthPotion;
 import items.SmallHealthPotion;
+import tiles.AltGround;
+import tiles.AltWall;
 import tiles.ExtraTile;
 import tiles.GButton;
+import tiles.Ground;
 import tiles.GroundButton;
 import tiles.TriggerType;
+import tiles.Wall;
 
 // Contains definitions of all the Poacher's Desert levels
 // as well as the connections between them
@@ -38,6 +43,8 @@ public class DesertLevels implements Serializable {
 	// CONSTRUCTOR: LEVEL DEFINITIONS
 	
 	public DesertLevels() {
+		
+		//------------------- // ROW 0
 		
 		MapLevel d00 = new MapLevel(new int[][] {
 			{4, 3, 3, 3, 3, 3, 3, 3, 3, 3},
@@ -178,7 +185,7 @@ public class DesertLevels implements Serializable {
 		}}, new ArrayList<GPickup>() {{
 		}});
 		
-		//-------------------
+		//------------------- // ROW 1
 		
 		MapLevel d01 = new MapLevel(new int[][] {
 			{4, 1, 1, 1, 1, 1, 1, 1, 1, 1},
@@ -300,24 +307,29 @@ public class DesertLevels implements Serializable {
 			{0, 0, 0, 4, 1, 1, 4, 0, 0, 4},
 			{4, 4, 0, 4, 4, 4, 4, 4, 0, 4},
 			{4, 0, 0, 4, 1, 1, 4, 0, 0, 4},
-			{4, 0, 0, 4, 1, 1, 4, 0, 0, 4},
-			{4, 4, 0, 4, 1, 1, 4, 0, 0, 4},
+			{4, 0, 0, 4, 1, 1, 4, 0, 1, 4},
+			{4, 4, 0, 4, 1, 1, 4, 0, 1, 4},
 			{1, 4, 4, 4, 1, 1, 4, 0, 0, 4},
 			{1, 1, 4, 4, 1, 1, 0, 0, 0, 4},
 			{1, 1, 1, 1, 1, 1, 4, 0, 0, 4}
 		}, new ExtraTile[] {
+				new ExtraTile(2, 6, 
+						new GroundButton(TriggerType.WALL_GROUND, false, new ArrayList<Dimension>() {{
+							add(new Dimension(4, 3));
+							add(new Dimension(5, 3));
+						}})),	
 		}, new ArrayList<GCharacter>() {{
 		}}, new ArrayList<GPickup>() {{
 		}});
 		
-		//-------------------
+		//------------------- // ROW 2
 		
 		MapLevel d02 = new MapLevel(new int[][] {
 			{3, 1, 1, 1, 1, 1, 1, 1, 1, 1},
 			{3, 1, 1, 1, 1, 1, 1, 1, 1, 1},
 			{3, 3, 4, 4, 4, 4, 4, 4, 4, 1},
 			{3, 3, 4, 4, 1, 3, 0, 0, 4, 1},
-			{3, 2, 2, 0, 0, 0, 4, 4, 4, 1},
+			{3, 2, 2, 0, 0, 4, 4, 4, 4, 1},
 			{3, 4, 4, 0, 0, 4, 0, 1, 4, 1},
 			{3, 4, 0, 4, 0, 0, 1, 2, 4, 1},
 			{3, 4, 4, 4, 4, 4, 0, 4, 2, 1},
@@ -327,6 +339,7 @@ public class DesertLevels implements Serializable {
 				new ExtraTile(3, 5, 
 						new GroundButton(TriggerType.WALL_GROUND, false, GButton.VEILED, new ArrayList<Dimension>() {{
 							add(new Dimension(6, 4));
+							add(new Dimension(5, 4));
 						}}))
 		}, new ArrayList<GCharacter>() {{
 			add(new SnakeSoldier(7, 3, PatrolPattern.STATIONARY));
@@ -428,14 +441,16 @@ public class DesertLevels implements Serializable {
 			{1, 1, 1, 1, 1, 1, 1, 1, 1, 1}
 		}, new ExtraTile[] {
 				new ExtraTile(5, 4, 
-						new GroundButton(TriggerType.WALL_GROUND, false, GButton.VEILED, new ArrayList<Dimension>() {{
-							add(new Dimension(5, 1));
-							add(new Dimension(8, 7));
+						new GroundButton(TriggerType.ENEMY_AND_TILE, false, GButton.VEILED, new ArrayList<GCharacter>() {{
+						}}, new ArrayList<ExtraTile>() {{
+							add(new ExtraTile(5, 1, new AltGround()));
+							add(new ExtraTile(8, 7, new AltWall()));
 						}})),
 				new ExtraTile(7, 2, 
-						new GroundButton(TriggerType.WALL_GROUND, false, GButton.VISIBLE, new ArrayList<Dimension>() {{
-							add(new Dimension(8, 7));
-						}})),
+						new GroundButton(TriggerType.ENEMY_AND_TILE, false, GButton.VISIBLE, new ArrayList<GCharacter>() {{
+						}}, new ArrayList<ExtraTile>() {{
+							add(new ExtraTile(8, 7, new AltGround()));
+						}}))
 		}, new ArrayList<GCharacter>() {{
 			add(new ArrowTurret(2, 2, 1, 0, 5));
 			add(new ArrowTurret(2, 6, 1, 0, 5));
@@ -447,18 +462,229 @@ public class DesertLevels implements Serializable {
 		//-------------------
 		
 		MapLevel d62 = new MapLevel(new int[][] {
-			{1, 1, 1, 1, 1, 1, 1, 1, 1, 3},
-			{4, 4, 4, 4, 1, 1, 4, 4, 4, 4},
-			{0, 0, 0, 4, 1, 1, 4, 0, 0, 4},
-			{4, 4, 0, 4, 4, 4, 4, 4, 0, 4},
-			{4, 0, 0, 4, 1, 1, 4, 0, 0, 4},
-			{4, 0, 0, 4, 1, 1, 4, 0, 0, 4},
-			{4, 4, 0, 4, 1, 1, 4, 0, 0, 4},
-			{1, 4, 4, 4, 1, 1, 4, 0, 0, 4},
-			{1, 1, 4, 4, 1, 1, 0, 0, 0, 4},
-			{1, 1, 1, 1, 1, 1, 4, 0, 0, 4}
+			{1, 1, 1, 1, 1, 1, 4, 0, 0, 4},
+			{4, 4, 4, 4, 4, 4, 4, 0, 0, 4},
+			{4, 4, 4, 4, 0, 5, 5, 0, 0, 4},
+			{4, 0, 0, 4, 0, 5, 5, 0, 0, 4},
+			{4, 0, 0, 4, 0, 5, 5, 0, 0, 4},
+			{4, 0, 0, 4, 0, 5, 5, 0, 0, 4},
+			{4, 0, 0, 4, 4, 4, 4, 4, 4, 4},
+			{0, 0, 0, 0, 4, 2, 2, 2, 2, 3},
+			{4, 4, 4, 0, 1, 1, 1, 1, 3, 3},
+			{1, 1, 1, 1, 1, 1, 1, 1, 1, 3}
+		}, new ExtraTile[] {
+				new ExtraTile(2, 7, 
+						new GroundButton(TriggerType.ENEMY_AND_TILE, false, GButton.VEILED, new ArrayList<GCharacter>() {{
+							add(new ArrowTurret(1, 2, 0, 1, 3, 2));
+							add(new ArrowTurret(2, 2, 0, 1, 3));
+						}}, new ArrayList<ExtraTile>() {{
+							add(new ExtraTile(3, 7, new AltWall()));
+							add(new ExtraTile(0, 7, new AltWall()));
+							add(new ExtraTile(1, 2, new AltGround()));
+							add(new ExtraTile(2, 2, new AltGround()));
+						}})),
+				new ExtraTile(1, 3, 
+						new GroundButton(TriggerType.ENEMY_AND_TILE, false, GButton.VISIBLE, new ArrayList<GCharacter>() {{
+						}}, new ArrayList<ExtraTile>() {{
+							add(new ExtraTile(3, 7, new AltGround()));
+							add(new ExtraTile(0, 7, new AltGround()));
+						}})),
+				new ExtraTile(7, 2, 
+						new GroundButton(TriggerType.ENEMY_AND_TILE, false, GButton.VEILED, new ArrayList<GCharacter>() {{
+						}}, new ArrayList<ExtraTile>() {{
+							add(new ExtraTile(7, 1, new AltWall()));
+							add(new ExtraTile(8, 1, new AltWall()));
+							add(new ExtraTile(8, 2, new AltGround()));
+						}})),
+				new ExtraTile(8, 2, 
+						new GroundButton(TriggerType.ENEMY_AND_TILE, false, GButton.VEILED, new ArrayList<GCharacter>() {{
+						}}, new ArrayList<ExtraTile>() {{
+							add(new ExtraTile(7, 1, new AltWall()));
+							add(new ExtraTile(8, 1, new AltWall()));
+							add(new ExtraTile(7, 2, new AltGround()));
+						}})),
+		}, new ArrayList<GCharacter>() {{
+			add(new SnakeSoldier(4, 2, PatrolPattern.STATIONARY));
+		}}, new ArrayList<GPickup>() {{
+		}});
+		
+		//------------------- // ROW 3
+		
+		MapLevel d03 = new MapLevel(new int[][] {
+			{3, 4, 4, 0, 0, 0, 1, 1, 4, 1},
+			{3, 1, 1, 1, 0, 1, 0, 2, 4, 1},
+			{3, 1, 3, 1, 0, 0, 4, 4, 2, 1},
+			{3, 1, 1, 0, 0, 0, 4, 2, 2, 1},
+			{3, 3, 0, 1, 0, 4, 2, 2, 2, 1},
+			{3, 1, 1, 1, 0, 0, 0, 0, 1, 1},
+			{3, 1, 3, 0, 0, 4, 2, 2, 1, 1},
+			{3, 1, 0, 0, 0, 0, 4, 2, 2, 1},
+			{3, 1, 1, 0, 4, 0, 4, 4, 2, 1},
+			{3, 3, 1, 0, 0, 0, 1, 2, 4, 1}
 		}, new ExtraTile[] {
 		}, new ArrayList<GCharacter>() {{
+			add(new SandBeep(2, 1));
+			add(new SandBeep(3, 8));
+			add(new SandBeep(2, 7));
+		}}, new ArrayList<GPickup>() {{
+		}});
+		
+		//-------------------
+		
+		MapLevel d13 = new MapLevel(new int[][] {
+			{1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
+			{1, 1, 1, 1, 1, 1, 3, 1, 1, 1},
+			{1, 1, 3, 1, 1, 1, 1, 1, 1, 1},
+			{1, 1, 1, 3, 1, 1, 1, 3, 1, 1},
+			{1, 1, 1, 3, 1, 1, 3, 1, 1, 1},
+			{1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
+			{1, 1, 1, 1, 1, 1, 1, 3, 1, 1},
+			{1, 1, 1, 1, 1, 3, 1, 3, 1, 1},
+			{1, 3, 1, 1, 3, 1, 1, 1, 1, 1},
+			{1, 1, 1, 1, 1, 1, 1, 1, 1, 1}
+		}, new ExtraTile[] {
+		}, new ArrayList<GCharacter>() {{
+			add(new SandWurm(4, 3));
+			add(new SandWurm(7, 4));
+		}}, new ArrayList<GPickup>() {{
+		}});
+		
+		//-------------------
+		
+		MapLevel d23 = new MapLevel(new int[][] {
+			{1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
+			{1, 1, 3, 1, 1, 3, 1, 3, 1, 1},
+			{1, 3, 1, 1, 1, 1, 1, 1, 1, 1},
+			{1, 1, 1, 3, 1, 3, 1, 3, 1, 1},
+			{1, 1, 1, 1, 1, 3, 1, 1, 1, 1},
+			{1, 1, 1, 3, 1, 1, 1, 1, 3, 1},
+			{1, 1, 3, 1, 1, 1, 3, 1, 1, 1},
+			{1, 1, 1, 3, 1, 3, 1, 1, 3, 1},
+			{1, 3, 1, 1, 1, 3, 1, 3, 1, 1},
+			{1, 1, 1, 1, 1, 1, 1, 1, 1, 1}
+		}, new ExtraTile[] {
+		}, new ArrayList<GCharacter>() {{
+		}}, new ArrayList<GPickup>() {{
+		}});
+		
+		//-------------------
+		
+		MapLevel d33 = new MapLevel(new int[][] {
+			{1, 1, 1, 1, 4, 0, 0, 4, 1, 1},
+			{1, 4, 4, 4, 4, 0, 0, 4, 4, 1},
+			{1, 4, 0, 4, 4, 4, 0, 0, 4, 1},
+			{1, 4, 4, 0, 0, 0, 0, 0, 4, 1},
+			{1, 4, 0, 0, 0, 4, 0, 4, 4, 1},
+			{1, 4, 0, 0, 0, 4, 0, 0, 4, 1},
+			{1, 4, 0, 1, 0, 0, 0, 0, 4, 1},
+			{1, 4, 0, 0, 0, 0, 0, 0, 4, 1},
+			{1, 4, 4, 4, 4, 4, 4, 4, 4, 1},
+			{1, 1, 1, 1, 1, 1, 1, 1, 1, 1}
+		}, new ExtraTile[] {
+		}, new ArrayList<GCharacter>() {{
+		}}, new ArrayList<GPickup>() {{
+		}});
+		
+		//-------------------
+		
+		MapLevel d43 = new MapLevel(new int[][] {
+			{1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
+			{1, 1, 1, 3, 1, 1, 1, 1, 2, 1},
+			{1, 1, 1, 2, 2, 1, 3, 1, 2, 1},
+			{1, 1, 1, 2, 2, 3, 2, 2, 1, 1},
+			{1, 1, 2, 2, 2, 2, 2, 2, 1, 1},
+			{1, 3, 2, 2, 2, 2, 2, 2, 1, 1},
+			{1, 1, 1, 2, 2, 2, 2, 3, 1, 1},
+			{1, 1, 1, 2, 2, 2, 2, 3, 1, 1},
+			{1, 1, 1, 3, 2, 2, 1, 1, 3, 1},
+			{1, 1, 1, 1, 1, 1, 1, 1, 1, 1}
+		}, new ExtraTile[] {
+		}, new ArrayList<GCharacter>() {{
+			add(new SnakeSoldier(7, 2, PatrolPattern.WANDER));
+			add(new SnakeSoldier(2, 6, PatrolPattern.WANDER));
+			add(new SnakeSoldier(5, 5, PatrolPattern.WANDER));
+		}}, new ArrayList<GPickup>() {{
+		}});
+		
+		//-------------------
+		
+		MapLevel d53 = new MapLevel(new int[][] {
+			{1, 4, 0, 0, 0, 0, 0, 0, 4, 4},
+			{1, 4, 4, 4, 4, 4, 4, 4, 4, 4},
+			{1, 4, 0, 0, 0, 0, 0, 0, 4, 4},
+			{1, 4, 4, 0, 0, 0, 0, 0, 0, 4},
+			{1, 4, 4, 4, 4, 0, 4, 4, 4, 4},
+			{1, 4, 4, 0, 0, 0, 0, 0, 0, 4},
+			{1, 4, 0, 0, 0, 0, 0, 0, 4, 4},
+			{1, 4, 4, 0, 0, 0, 0, 0, 0, 0},
+			{1, 3, 4, 4, 4, 4, 4, 4, 4, 4},
+			{1, 1, 1, 1, 1, 1, 1, 1, 1, 1}
+		}, new ExtraTile[] {
+				new ExtraTile(5, 4, 
+						new GroundButton(TriggerType.ENEMY_AND_TILE, false, GButton.VEILED, new ArrayList<GCharacter>() {{
+						}}, new ArrayList<ExtraTile>() {{
+							add(new ExtraTile(5, 1, new AltGround()));
+							add(new ExtraTile(8, 7, new AltWall()));
+						}})),
+				new ExtraTile(7, 2, 
+						new GroundButton(TriggerType.ENEMY_AND_TILE, false, GButton.VISIBLE, new ArrayList<GCharacter>() {{
+						}}, new ArrayList<ExtraTile>() {{
+							add(new ExtraTile(8, 7, new AltGround()));
+						}}))
+		}, new ArrayList<GCharacter>() {{
+			add(new ArrowTurret(2, 2, 1, 0, 5));
+			add(new ArrowTurret(2, 6, 1, 0, 5));
+			add(new ArrowTurret(8, 5, -1, 0, 5));
+			add(new ArrowTurret(8, 3, -1, 0, 5));
+		}}, new ArrayList<GPickup>() {{
+		}});
+		
+		//-------------------
+		
+		MapLevel d63 = new MapLevel(new int[][] {
+			{1, 1, 1, 1, 1, 1, 4, 0, 0, 4},
+			{4, 4, 4, 4, 4, 4, 4, 0, 0, 4},
+			{4, 4, 4, 4, 0, 5, 5, 0, 0, 4},
+			{4, 0, 0, 4, 0, 5, 5, 0, 0, 4},
+			{4, 0, 0, 4, 0, 5, 5, 0, 0, 4},
+			{4, 0, 0, 4, 0, 5, 5, 0, 0, 4},
+			{4, 0, 0, 4, 4, 4, 4, 4, 4, 4},
+			{0, 0, 0, 0, 4, 2, 2, 2, 2, 3},
+			{4, 4, 4, 0, 1, 1, 1, 1, 3, 3},
+			{1, 1, 1, 1, 1, 1, 1, 1, 1, 3}
+		}, new ExtraTile[] {
+				new ExtraTile(2, 7, 
+						new GroundButton(TriggerType.ENEMY_AND_TILE, false, GButton.VEILED, new ArrayList<GCharacter>() {{
+							add(new ArrowTurret(1, 2, 0, 1, 3, 2));
+							add(new ArrowTurret(2, 2, 0, 1, 3));
+						}}, new ArrayList<ExtraTile>() {{
+							add(new ExtraTile(3, 7, new AltWall()));
+							add(new ExtraTile(0, 7, new AltWall()));
+							add(new ExtraTile(1, 2, new AltGround()));
+							add(new ExtraTile(2, 2, new AltGround()));
+						}})),
+				new ExtraTile(1, 3, 
+						new GroundButton(TriggerType.ENEMY_AND_TILE, false, GButton.VISIBLE, new ArrayList<GCharacter>() {{
+						}}, new ArrayList<ExtraTile>() {{
+							add(new ExtraTile(3, 7, new AltGround()));
+							add(new ExtraTile(0, 7, new AltGround()));
+						}})),
+				new ExtraTile(7, 2, 
+						new GroundButton(TriggerType.ENEMY_AND_TILE, false, GButton.VEILED, new ArrayList<GCharacter>() {{
+						}}, new ArrayList<ExtraTile>() {{
+							add(new ExtraTile(7, 1, new AltWall()));
+							add(new ExtraTile(8, 1, new AltWall()));
+							add(new ExtraTile(8, 2, new AltGround()));
+						}})),
+				new ExtraTile(8, 2, 
+						new GroundButton(TriggerType.ENEMY_AND_TILE, false, GButton.VEILED, new ArrayList<GCharacter>() {{
+						}}, new ArrayList<ExtraTile>() {{
+							add(new ExtraTile(7, 1, new AltWall()));
+							add(new ExtraTile(8, 1, new AltWall()));
+							add(new ExtraTile(7, 2, new AltGround()));
+						}})),
+		}, new ArrayList<GCharacter>() {{
+			add(new SnakeSoldier(4, 2, PatrolPattern.STATIONARY));
 		}}, new ArrayList<GPickup>() {{
 		}});
 		
@@ -471,7 +697,8 @@ public class DesertLevels implements Serializable {
 			// Level grid definition
 			{d00, d10, d20, d30, d40, d50, d60},
 			{d01, d11, d21, d31, d41, d51, d61},
-			{d02, d12, d22, d32, d42, d52, d62}
+			{d02, d12, d22, d32, d42, d52, d62},
+			{d03, d13, d23, d33, d43, d53, d63},
 			//
 		});
 	

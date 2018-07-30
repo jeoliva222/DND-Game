@@ -3,6 +3,7 @@ package tiles;
 import helpers.GPath;
 import managers.EntityManager;
 
+// Class defining alternate variation of wall tile on screen
 public class AltWall extends TileType {
 
 	// Serialization ID

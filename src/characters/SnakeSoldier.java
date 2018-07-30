@@ -252,10 +252,10 @@ public class SnakeSoldier extends GCharacter {
 					this.yMarkDir = dy;
 					
 					// Decide whether to swipe or stab
-					int swipeBiteSlam = r.nextInt(3);
-					if(swipeBiteSlam == 0) {
+					int swipeBiteSlam = r.nextInt(10);
+					if(swipeBiteSlam <= 1) {
 						this.state = SnakeSoldier.STATE_PREP_BITE;
-					} else if(swipeBiteSlam == 1) {
+					} else if(swipeBiteSlam <= 5) {
 						this.state = SnakeSoldier.STATE_PREP_SWIPE;
 					} else {
 						this.state = SnakeSoldier.STATE_PREP_SLAM;
@@ -310,10 +310,10 @@ public class SnakeSoldier extends GCharacter {
 							this.yMarkDir = dy;
 							
 							// Randomly choose an attack
-							int attChoice = r.nextInt(3);
-							if(attChoice == 0) {
+							int attChoice = r.nextInt(10);
+							if(attChoice <= 1) {
 								this.state = SnakeSoldier.STATE_PREP_BITE;
-							} else if(attChoice == 1) {
+							} else if(attChoice <= 5) {
 								this.state = SnakeSoldier.STATE_PREP_SWIPE;
 							} else {
 								this.state = SnakeSoldier.STATE_PREP_SLAM;

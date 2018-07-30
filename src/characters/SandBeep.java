@@ -45,6 +45,11 @@ public class SandBeep extends GCharacter {
 	// Marks whether the Beep will do a double hop next time it moves
 	protected boolean doDoubleHop = false;
 	
+	// Marked direction of hop
+	// Used when doing a double hop
+	protected int markedX;
+	protected int markedY;
+	
 	//----------------------------
 	
 	// File paths to images
@@ -191,13 +196,7 @@ public class SandBeep extends GCharacter {
 					IdleController.moveIdle(this);
 				}
 				break;
-			case SandBeep.STATE_PREP:
-				// Decide the number of hops we do this turn
-				int hopCount = 1;
-				if(this.doDoubleHop) {
-					hopCount = 2;
-				}
-				
+			case SandBeep.STATE_PREP:				
 				// Relative movement direction (Initialize at 0)
 				int dx = 0;
 				int dy = 0;
@@ -215,44 +214,59 @@ public class SandBeep extends GCharacter {
 					dy = -1;
 				}
 				
-				// Loop through for number of hops
-				for(int i = 0; i < hopCount; i++) {
-					// Get relative location to player
-					distX = plrX - this.xPos;
-					distY = plrY - this.yPos;
+				// Get relative location to player
+				distX = plrX - this.xPos;
+				distY = plrY - this.yPos;
+				
+				// Attack if player is in one tile radius around player
+				if((this.xPos + dx) == plrX && (this.yPos + dy) == plrY) {
+					// Mark tiles with damage indicators
+					EntityManager.getEffectManager().addEffect(new DamageIndicator(plrX, plrY));
+					this.playerInitiate();
+				} else {
+					// If not attacking the player, hop closer to them
 					
-					// Attack if player is in one tile radius around player
-					if((this.xPos + dx) == plrX && (this.yPos + dy) == plrY) {
+					// First, try to move diagonal
+					// If unsuccessful, move in the direction that it is
+					// further from the player.
+					// Only does this on the first hop of the turn
+					if(this.moveCharacter(dx, dy)) {
+						this.markedX = dx;
+						this.markedY = dy;
+					} else if((Math.abs(distX)) > (Math.abs(distY))) {
+							// If movement in the x direction fails, try the y direction
+						if(this.moveCharacter(dx, 0)) {
+							this.markedX = dx;
+							this.markedY = 0;
+						} else if (this.moveCharacter(0, dy)) {
+							this.markedX = 0;
+							this.markedY = dy;
+						}
+					} else {
+						// If movement in the y direction fails, try the x direction
+						if(this.moveCharacter(0, dy)) {
+							this.markedX = 0;
+							this.markedY = dy;
+						} else if(this.moveCharacter(dx, 0)) {
+							this.markedX = dx;
+							this.markedY = 0;
+						}
+					}
+				}
+				
+				// Do a second hop if we're queued up for it
+				if(this.doDoubleHop) {
+					// Attack if player is our current hop path
+					if((this.xPos + this.markedX) == plrX && (this.yPos + this.markedY) == plrY) {
 						// Mark tiles with damage indicators
 						EntityManager.getEffectManager().addEffect(new DamageIndicator(plrX, plrY));
 						this.playerInitiate();
-						
-						// Break from the 'for' hop loop so we only attack once
-						break;
 					} else {
-						// If not attacking the player, hop closer to them
-						
-						// First, try to move diagonal
-						// If unsuccessful, move in the direction that it is
-						// further from the player.
-						// Only does this on the first hop of the turn
-						if(!this.moveCharacter(dx, dy) && (i < 1)) {
-							if((Math.abs(distX)) > (Math.abs(distY))) {
-								// If movement in the x direction fails, try the y direction
-								if(!this.moveCharacter(dx, 0)) {
-									this.moveCharacter(0, dy);
-								}
-							} else {
-								// If movement in the y direction fails, try the x direction
-								if(!this.moveCharacter(0, dy)) {
-									this.moveCharacter(dx, 0);
-								}
-							}
-						}
-						
+						// If we don't hit the payer, continue on our current hop path
+						this.moveCharacter(this.markedX, this.markedY);
 					}
-				
 				}
+				
 				// Play hop sound
 				this.playHopSound();
 
@@ -308,6 +322,14 @@ public class SandBeep extends GCharacter {
 		} else {
 			SoundPlayer.playWAV(GPath.createSoundPath("beep_death3.wav"));
 		}
+	}
+	
+	// Override that resets a few extra parameters
+	@Override
+	public void returnToOrigin() {
+		super.returnToOrigin();
+		this.cooldownCount = 0;
+		this.doDoubleHop = false;
 	}
 	
 }
