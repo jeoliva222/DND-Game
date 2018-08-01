@@ -112,6 +112,13 @@ public class EliteBunnyWarrior extends BunnyWarrior {
 	public String getCorpseImage() {
 		return this.bwImage_DEAD;
 	}
+	
+	// Override that resets a few extra parameters
+	@Override
+	public void returnToOrigin() {
+		super.returnToOrigin();
+		this.comboCount = 0;
+	}
 
 	@Override
 	public void takeTurn() {

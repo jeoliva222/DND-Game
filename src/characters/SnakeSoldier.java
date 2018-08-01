@@ -22,7 +22,7 @@ public class SnakeSoldier extends GCharacter {
 
 	// Modifiers/Statistics
 	
-	private int MAX_HP = 15;
+	private int MAX_HP = 13;
 	
 	private int MIN_DMG = 4;
 	private int MAX_DMG = 6;

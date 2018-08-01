@@ -39,8 +39,8 @@ public class Bitester extends GCharacter {
 	//----------------------------
 	
 	// Additional Behavior
-	private int chaseCount = 0;
-	private int chaseMax = 2;
+	protected int chaseCount = 0;
+	protected int chaseMax = 2;
 	
 	//----------------------------
 	
@@ -151,6 +151,14 @@ public class Bitester extends GCharacter {
 		} else {
 			SoundPlayer.playWAV(GPath.createSoundPath("Bitester_DEATH.wav"));
 		}
+	}
+	
+	// Override that resets a few extra parameters
+	@Override
+	public void returnToOrigin() {
+		super.returnToOrigin();
+		this.chaseCount = 0;
+		System.out.println("Reseting Bitester");
 	}
 	
 	@Override

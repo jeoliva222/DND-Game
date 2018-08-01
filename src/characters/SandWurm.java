@@ -53,10 +53,8 @@ public class SandWurm extends GCharacter {
 	
 	// Additional parameters
 	
-	// Count for determining attack patterns
-	protected int attCount = 0;
-	
 	// Times the Wurm was damaged since its last warp
+	// Determines attack patterns
 	protected int dmgCount = 0;
 	
 	// Direction of attack
@@ -184,8 +182,15 @@ public class SandWurm extends GCharacter {
 	public boolean damageCharacter(int damage) {
 		this.currentHP = this.currentHP - damage;
 		InfoScreen.setNPCFocus(this);
-		this.attCount += 1;
+		this.dmgCount += 1;
 		return this.isAlive();
+	}
+	
+	// Override that resets a few extra parameters
+	@Override
+	public void returnToOrigin() {
+		super.returnToOrigin();
+		this.dmgCount = 0;
 	}
 	
 	@Override
@@ -265,9 +270,7 @@ public class SandWurm extends GCharacter {
 				
 				// Based on damage taken, decide to warp away or not
 				r = new Random();
-				if((this.attCount != 0) && ((this.attCount) >= (r.nextInt(4)))) {
-					System.out.println("Warping away");
-					
+				if((this.dmgCount != 0) && ((this.dmgCount) >= (r.nextInt(4)))) {
 					// Warp away from the player
 					this.warpWurm(plrX, plrY);
 					
@@ -364,7 +367,7 @@ public class SandWurm extends GCharacter {
 				break;
 			case SandWurm.STATE_WARP:
 				// Reset attack count and go to prep for spit attack 
-				this.attCount = 0;
+				this.dmgCount = 0;
 				this.state = SandWurm.STATE_PREP_SPIT;
 				break;
 			case SandWurm.STATE_PREP_SPIT:

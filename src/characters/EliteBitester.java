@@ -27,12 +27,6 @@ public class EliteBitester extends Bitester {
 	
 	//----------------------------
 	
-	// Additional Behavior
-	private int chaseCount = 0;
-	private int chaseMax = 4;
-	
-	//----------------------------
-	
 	// File paths to images
 	private String imageDir = GPath.createImagePath(GPath.ENEMY, GPath.ELITE_BITESTER);
 	private String btImage_base = "elite_bitester";
@@ -42,10 +36,15 @@ public class EliteBitester extends Bitester {
 
 	public EliteBitester(int startX, int startY) {
 		super(startX, startY);
+		this.chaseCount = 0;
+		this.chaseMax = 4;
 	}
 	
 	public EliteBitester(int startX, int startY, PatrolPattern patpat) {
 		super(startX, startY, patpat);
+		this.chaseCount = 0;
+		this.chaseMax = 4;
+		
 	}
 	
 	public String getName() {
@@ -134,6 +133,7 @@ public class EliteBitester extends Bitester {
 					// If player hops out of water, start to lose interest
 					if(tt.getMovableType() != MovableType.WATER) {
 						this.chaseCount++;
+						System.out.println("CC: " + Integer.toString(this.chaseCount));
 					} else {
 						this.chaseCount = 0;
 					}

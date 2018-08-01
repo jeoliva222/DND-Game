@@ -42,8 +42,6 @@ public class Beep extends GCharacter {
 	protected int cooldownCount = 0;
 	protected final int cooldownMax = 2;
 	
-	
-	
 	//----------------------------
 	
 	// File paths to images
@@ -156,6 +154,13 @@ public class Beep extends GCharacter {
 		} else {
 			this.playDeathSound();
 		}
+	}
+	
+	// Override that resets a few extra parameters
+	@Override
+	public void returnToOrigin() {
+		super.returnToOrigin();
+		this.cooldownCount = 0;
 	}
 
 	@Override

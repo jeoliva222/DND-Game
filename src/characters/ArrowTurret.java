@@ -120,6 +120,12 @@ public class ArrowTurret extends GCharacter {
 	public void playerInitiate() {
 		// Never initiates player
 	}
+	
+	// Override to prevent turrets from taking damage
+	@Override
+	public boolean damageCharacter(int damage) {
+		return this.isAlive();
+	}
 
 	@Override
 	public void takeTurn() {

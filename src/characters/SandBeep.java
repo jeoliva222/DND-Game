@@ -165,6 +165,14 @@ public class SandBeep extends GCharacter {
 		}
 	}
 
+	// Override that resets a few extra parameters
+	@Override
+	public void returnToOrigin() {
+		super.returnToOrigin();
+		this.cooldownCount = 0;
+		this.doExtraHop = false;
+	}
+	
 	@Override
 	public void takeTurn() {
 		
@@ -328,14 +336,6 @@ public class SandBeep extends GCharacter {
 		} else {
 			SoundPlayer.playWAV(GPath.createSoundPath("beep_death3.wav"));
 		}
-	}
-	
-	// Override that resets a few extra parameters
-	@Override
-	public void returnToOrigin() {
-		super.returnToOrigin();
-		this.cooldownCount = 0;
-		this.doExtraHop = false;
 	}
 	
 }
