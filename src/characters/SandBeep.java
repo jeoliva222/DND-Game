@@ -53,11 +53,11 @@ public class SandBeep extends GCharacter {
 	//----------------------------
 	
 	// File paths to images
-	private String imageDir = GPath.createImagePath(GPath.ENEMY, GPath.BEEP);
-	private String bpImage_base = "beep";
+	private String imageDir = GPath.createImagePath(GPath.ENEMY, GPath.SAND_BEEP);
+	private String bpImage_base = "sand_beep";
 	
-	private String beImage_DEAD = GPath.createImagePath(GPath.ENEMY, GPath.BEEP, "beep_dead.png");
-	private String beImage_DEAD_CRIT = GPath.createImagePath(GPath.ENEMY, GPath.BEEP, "beep_dead_CRIT.png");
+	private String beImage_DEAD = GPath.createImagePath(GPath.ENEMY, GPath.SAND_BEEP, "sand_beep_dead.png");
+	private String beImage_DEAD_CRIT = GPath.createImagePath(GPath.ENEMY, GPath.SAND_BEEP, "sand_beep_dead_CRIT.png");
 
 	// Constructors
 	public SandBeep(int startX, int startY) {
@@ -138,7 +138,7 @@ public class SandBeep extends GCharacter {
 	}
 	
 	public String getCorpseImage() {
-		if(this.currentHP < -(this.maxHP)) {
+		if(this.currentHP < -(this.maxHP / 2)) {
 			return this.beImage_DEAD_CRIT;
 		} else {
 			return this.beImage_DEAD;

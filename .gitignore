@@ -26,6 +26,7 @@ $RECYCLE.BIN/
 *.class
 .classpath
 .project
+.settings
 /bin/
 
 # Save files

@@ -106,7 +106,19 @@ public class GPath {
 	
 	public static String KINGS_HEAD = "kings_head" + File.separator;
 	
+	public static String SAND_BEEP = "sand_beep" + File.separator;
+	
+	public static String ELITE_SAND_BEEP = "elite_sand_beep" + File.separator;
+	
+	public static String SANDWURM = "sandwurm" + File.separator;
+	
+	public static String ELITE_SANDWURM = "elite_sandwurm" + File.separator;
+	
 	public static String SAVE_CRYSTAL = "save_crystal" + File.separator;
+	
+	public static String SNAKE_SOLDIER = "snake_soldier" + File.separator;
+	
+	public static String ELITE_SNAKE_SOLDIER = "elite_snake_soldier" + File.separator;
 	
 	public static String WATCHMAN = "watchman" + File.separator;
 	

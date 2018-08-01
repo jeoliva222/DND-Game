@@ -56,10 +56,10 @@ public class SnakeSoldier extends GCharacter {
 	
 	// TODO
 	// File paths to images
-	private String imageDir = GPath.createImagePath(GPath.ENEMY, GPath.BWARRIOR);
-	private String bwImage_base = "bunnywarrior";
+	private String imageDir = GPath.createImagePath(GPath.ENEMY, GPath.SNAKE_SOLDIER);
+	private String ssImage_base = "snakesoldier";
 	
-	private String bwImage_DEAD = GPath.createImagePath(GPath.ENEMY, GPath.BWARRIOR, this.bwImage_base+"_dead.png");
+	private String ssImage_DEAD = GPath.createImagePath(GPath.ENEMY, GPath.BWARRIOR, "bunnywarrior_dead.png");
 
 	// Constructor
 	public SnakeSoldier(int startX, int startY) {
@@ -104,57 +104,58 @@ public class SnakeSoldier extends GCharacter {
 	
 	@Override
 	public String getImage() {
-		String imgPath = this.imageDir + this.bwImage_base;
-		String hpPath = "";
-		String statePath = "";
-		
-		if(this.currentHP > (this.maxHP / 2)) {
-			hpPath = "_full";
-		} else if(this.currentHP > 0) {
-			hpPath = "_fatal";
-		} else {
-			hpPath = "_dead";
-			return GPath.NULL;
-		}
-		
-		switch(this.state) {
-		case SnakeSoldier.STATE_IDLE:
-		case SnakeSoldier.STATE_PURSUE:
-			// No extra path
-			break;
-		case SnakeSoldier.STATE_PREP_BITE:
-			statePath = "_PREP_STAB";
-			break;
-		case SnakeSoldier.STATE_ALERTED:
-		case SnakeSoldier.STATE_ATT_BITE:
-			statePath = "_ALERT";
-			break;
-		case SnakeSoldier.STATE_PREP_SWIPE:
-			statePath = "_PREP_SWING";
-			break;
-		case SnakeSoldier.STATE_ATT_SWIPE:
-			statePath = "_ATT_SWING";
-			break;
-		case SnakeSoldier.STATE_PREP_SLAM:
-			statePath = "_PREP_STAB";
-			break;
-		case SnakeSoldier.STATE_MID_SLAM:
-			statePath = "_PREP_SWING";
-			break;
-		case SnakeSoldier.STATE_ATT_SLAM:
-			statePath = "_ATT_SWING";
-			break;
-		default:
-			System.out.println
-				(this.getName() + " couldn't find a proper image: " + Integer.toString(this.state));
-			return GPath.NULL;
-		}
-		
-		return (imgPath + hpPath + statePath + ".png");
+		String imgPath = this.imageDir + this.ssImage_base;
+//		String hpPath = "";
+//		String statePath = "";
+//		
+//		if(this.currentHP > (this.maxHP / 2)) {
+//			hpPath = "_full";
+//		} else if(this.currentHP > 0) {
+//			hpPath = "_fatal";
+//		} else {
+//			hpPath = "_dead";
+//			return GPath.NULL;
+//		}
+//		
+//		switch(this.state) {
+//		case SnakeSoldier.STATE_IDLE:
+//		case SnakeSoldier.STATE_PURSUE:
+//			// No extra path
+//			break;
+//		case SnakeSoldier.STATE_PREP_BITE:
+//			statePath = "_PREP_STAB";
+//			break;
+//		case SnakeSoldier.STATE_ALERTED:
+//		case SnakeSoldier.STATE_ATT_BITE:
+//			statePath = "_ALERT";
+//			break;
+//		case SnakeSoldier.STATE_PREP_SWIPE:
+//			statePath = "_PREP_SWING";
+//			break;
+//		case SnakeSoldier.STATE_ATT_SWIPE:
+//			statePath = "_ATT_SWING";
+//			break;
+//		case SnakeSoldier.STATE_PREP_SLAM:
+//			statePath = "_PREP_STAB";
+//			break;
+//		case SnakeSoldier.STATE_MID_SLAM:
+//			statePath = "_PREP_SWING";
+//			break;
+//		case SnakeSoldier.STATE_ATT_SLAM:
+//			statePath = "_ATT_SWING";
+//			break;
+//		default:
+//			System.out.println
+//				(this.getName() + " couldn't find a proper image: " + Integer.toString(this.state));
+//			return GPath.NULL;
+//		}
+//		
+//		return (imgPath + hpPath + statePath + ".png");
+		return (imgPath + ".png");
 	}
 	
 	public String getCorpseImage() {
-		return this.bwImage_DEAD;
+		return this.ssImage_DEAD;
 	}
 	
 	public void populateMoveTypes() {
@@ -210,9 +211,9 @@ public class SnakeSoldier extends GCharacter {
 					Random r = new Random();
 					int whichSound = r.nextInt(2);
 					if(whichSound == 0) {
-						SoundPlayer.playWAV(GPath.createSoundPath("BunnyWarrior_ALERT.wav"));
+						SoundPlayer.playWAV(GPath.createSoundPath("snake1_greet1.wav"));
 					} else {
-						SoundPlayer.playWAV(GPath.createSoundPath("BunnyWarrior_ALERT2.wav"));
+						SoundPlayer.playWAV(GPath.createSoundPath("snake1_warn1.wav"));
 					}
 					this.state = SnakeSoldier.STATE_ALERTED;
 				} else {
