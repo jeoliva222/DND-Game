@@ -10,6 +10,7 @@ import characters.Bitester;
 import characters.BreakableWall;
 import characters.BunnyWarrior;
 import characters.EliteArrowTurret;
+import characters.EliteBitester;
 import characters.EliteBunnyWarrior;
 import characters.GCharacter;
 import characters.SandBeep;
@@ -27,6 +28,7 @@ import tiles.Ground;
 import tiles.GroundButton;
 import tiles.TriggerType;
 import tiles.Wall;
+import weapons.Armory;
 
 // Contains definitions of all the Poacher's Desert levels
 // as well as the connections between them
@@ -361,7 +363,7 @@ public class DesertLevels implements Serializable {
 			{1, 1, 1, 1, 1, 1, 1, 3, 1, 1},
 			{1, 1, 1, 1, 1, 3, 1, 3, 1, 1},
 			{1, 3, 1, 1, 3, 1, 1, 1, 1, 1},
-			{1, 1, 1, 1, 1, 1, 1, 1, 1, 1}
+			{1, 1, 1, 1, 1, 1, 3, 3, 1, 1}
 		}, new ExtraTile[] {
 		}, new ArrayList<GCharacter>() {{
 			add(new SandWurm(4, 3));
@@ -381,7 +383,7 @@ public class DesertLevels implements Serializable {
 			{1, 1, 3, 1, 1, 1, 3, 1, 1, 1},
 			{1, 1, 1, 3, 1, 3, 1, 1, 3, 1},
 			{1, 3, 1, 1, 1, 3, 1, 3, 1, 1},
-			{1, 1, 1, 1, 1, 1, 1, 1, 1, 1}
+			{1, 3, 1, 1, 1, 1, 1, 1, 1, 1}
 		}, new ExtraTile[] {
 		}, new ArrayList<GCharacter>() {{
 		}}, new ArrayList<GPickup>() {{
@@ -417,7 +419,7 @@ public class DesertLevels implements Serializable {
 			{1, 1, 1, 2, 2, 2, 2, 3, 1, 1},
 			{1, 1, 1, 2, 2, 2, 2, 3, 1, 1},
 			{1, 1, 1, 3, 2, 2, 1, 1, 3, 1},
-			{1, 1, 1, 1, 1, 1, 1, 1, 1, 1}
+			{1, 1, 1, 1, 3, 1, 1, 1, 1, 1}
 		}, new ExtraTile[] {
 		}, new ArrayList<GCharacter>() {{
 			add(new SnakeSoldier(7, 2, PatrolPattern.WANDER));
@@ -517,7 +519,7 @@ public class DesertLevels implements Serializable {
 			{3, 1, 1, 0, 0, 0, 4, 2, 2, 1},
 			{3, 3, 0, 1, 0, 4, 2, 2, 2, 1},
 			{3, 1, 1, 1, 0, 0, 0, 0, 1, 1},
-			{3, 1, 3, 0, 0, 4, 2, 2, 1, 1},
+			{3, 1, 3, 0, 0, 4, 2, 2, 1, 3},
 			{3, 1, 0, 0, 0, 0, 4, 2, 2, 1},
 			{3, 1, 1, 0, 4, 0, 4, 4, 2, 1},
 			{3, 3, 1, 0, 0, 0, 1, 2, 4, 1}
@@ -532,36 +534,34 @@ public class DesertLevels implements Serializable {
 		//-------------------
 		
 		MapLevel d13 = new MapLevel(new int[][] {
-			{1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
-			{1, 1, 1, 1, 1, 1, 3, 1, 1, 1},
-			{1, 1, 3, 1, 1, 1, 1, 1, 1, 1},
-			{1, 1, 1, 3, 1, 1, 1, 3, 1, 1},
-			{1, 1, 1, 3, 1, 1, 3, 1, 1, 1},
-			{1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
+			{1, 1, 1, 1, 1, 1, 3, 3, 1, 1},
 			{1, 1, 1, 1, 1, 1, 1, 3, 1, 1},
-			{1, 1, 1, 1, 1, 3, 1, 3, 1, 1},
-			{1, 3, 1, 1, 3, 1, 1, 1, 1, 1},
-			{1, 1, 1, 1, 1, 1, 1, 1, 1, 1}
+			{1, 3, 1, 1, 1, 1, 1, 1, 1, 1},
+			{1, 1, 1, 1, 3, 1, 1, 1, 3, 1},
+			{1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
+			{1, 1, 1, 1, 1, 3, 1, 1, 1, 1},
+			{3, 1, 3, 1, 1, 1, 1, 1, 1, 3},
+			{1, 1, 1, 3, 1, 1, 1, 1, 3, 1},
+			{1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
+			{1, 1, 3, 1, 1, 1, 1, 1, 1, 1}
 		}, new ExtraTile[] {
 		}, new ArrayList<GCharacter>() {{
-			add(new SandWurm(4, 3));
-			add(new SandWurm(7, 4));
 		}}, new ArrayList<GPickup>() {{
 		}});
 		
 		//-------------------
 		
 		MapLevel d23 = new MapLevel(new int[][] {
-			{1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
-			{1, 1, 3, 1, 1, 3, 1, 3, 1, 1},
 			{1, 3, 1, 1, 1, 1, 1, 1, 1, 1},
-			{1, 1, 1, 3, 1, 3, 1, 3, 1, 1},
-			{1, 1, 1, 1, 1, 3, 1, 1, 1, 1},
-			{1, 1, 1, 3, 1, 1, 1, 1, 3, 1},
-			{1, 1, 3, 1, 1, 1, 3, 1, 1, 1},
-			{1, 1, 1, 3, 1, 3, 1, 1, 3, 1},
-			{1, 3, 1, 1, 1, 3, 1, 3, 1, 1},
-			{1, 1, 1, 1, 1, 1, 1, 1, 1, 1}
+			{1, 1, 1, 3, 1, 1, 1, 3, 1, 3},
+			{1, 1, 1, 1, 4, 0, 4, 4, 1, 1},
+			{1, 1, 1, 1, 0, 1, 0, 0, 4, 1},
+			{1, 1, 3, 1, 1, 1, 1, 0, 1, 1},
+			{1, 1, 3, 1, 1, 3, 1, 4, 1, 1},
+			{3, 1, 1, 1, 1, 4, 3, 1, 1, 1},
+			{1, 3, 3, 1, 0, 1, 1, 1, 3, 1},
+			{1, 1, 1, 1, 1, 1, 1, 4, 1, 1},
+			{1, 1, 1, 1, 1, 1, 0, 4, 1, 1}
 		}, new ExtraTile[] {
 		}, new ArrayList<GCharacter>() {{
 		}}, new ArrayList<GPickup>() {{
@@ -570,39 +570,42 @@ public class DesertLevels implements Serializable {
 		//-------------------
 		
 		MapLevel d33 = new MapLevel(new int[][] {
-			{1, 1, 1, 1, 4, 0, 0, 4, 1, 1},
-			{1, 4, 4, 4, 4, 0, 0, 4, 4, 1},
-			{1, 4, 0, 4, 4, 4, 0, 0, 4, 1},
-			{1, 4, 4, 0, 0, 0, 0, 0, 4, 1},
-			{1, 4, 0, 0, 0, 4, 0, 4, 4, 1},
-			{1, 4, 0, 0, 0, 4, 0, 0, 4, 1},
-			{1, 4, 0, 1, 0, 0, 0, 0, 4, 1},
-			{1, 4, 0, 0, 0, 0, 0, 0, 4, 1},
-			{1, 4, 4, 4, 4, 4, 4, 4, 4, 1},
-			{1, 1, 1, 1, 1, 1, 1, 1, 1, 1}
+			{1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
+			{3, 1, 1, 2, 2, 2, 2, 1, 1, 1},
+			{1, 1, 2, 2, 2, 2, 2, 2, 3, 1},
+			{1, 1, 3, 2, 2, 2, 2, 2, 2, 2},
+			{1, 2, 2, 2, 2, 1, 1, 2, 2, 1},
+			{1, 1, 2, 2, 2, 1, 2, 2, 1, 1},
+			{1, 1, 2, 2, 2, 2, 2, 1, 3, 1},
+			{1, 2, 2, 1, 1, 2, 2, 3, 1, 1},
+			{1, 2, 2, 2, 1, 1, 2, 2, 1, 1},
+			{1, 1, 2, 2, 1, 1, 1, 1, 1, 1}
 		}, new ExtraTile[] {
 		}, new ArrayList<GCharacter>() {{
+			add(new EliteBitester(4, 3));
+			add(new EliteBitester(5, 6));
+			add(new Bitester(6, 2));
 		}}, new ArrayList<GPickup>() {{
+			add(new GPickup(5, 4, Armory.cactusClaws));
 		}});
 		
 		//-------------------
 		
 		MapLevel d43 = new MapLevel(new int[][] {
+			{1, 1, 1, 1, 3, 1, 1, 1, 1, 1},
 			{1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
-			{1, 1, 1, 3, 1, 1, 1, 1, 2, 1},
-			{1, 1, 1, 2, 2, 1, 3, 1, 2, 1},
-			{1, 1, 1, 2, 2, 3, 2, 2, 1, 1},
-			{1, 1, 2, 2, 2, 2, 2, 2, 1, 1},
-			{1, 3, 2, 2, 2, 2, 2, 2, 1, 1},
-			{1, 1, 1, 2, 2, 2, 2, 3, 1, 1},
-			{1, 1, 1, 2, 2, 2, 2, 3, 1, 1},
-			{1, 1, 1, 3, 2, 2, 1, 1, 3, 1},
-			{1, 1, 1, 1, 1, 1, 1, 1, 1, 1}
+			{1, 1, 1, 1, 3, 1, 1, 1, 1, 1},
+			{2, 2, 1, 1, 1, 1, 1, 1, 1, 1},
+			{1, 3, 1, 1, 1, 1, 1, 3, 1, 1},
+			{1, 1, 1, 3, 1, 1, 3, 1, 1, 1},
+			{1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
+			{1, 1, 1, 1, 3, 1, 1, 1, 1, 1},
+			{1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
+			{1, 1, 1, 1, 1, 3, 1, 1, 1, 1}
 		}, new ExtraTile[] {
 		}, new ArrayList<GCharacter>() {{
-			add(new SnakeSoldier(7, 2, PatrolPattern.WANDER));
-			add(new SnakeSoldier(2, 6, PatrolPattern.WANDER));
-			add(new SnakeSoldier(5, 5, PatrolPattern.WANDER));
+			add(new SandWurm(4, 3));
+			add(new SandBeep(6, 7));
 		}}, new ArrayList<GPickup>() {{
 		}});
 		
@@ -620,22 +623,8 @@ public class DesertLevels implements Serializable {
 			{1, 3, 4, 4, 4, 4, 4, 4, 4, 4},
 			{1, 1, 1, 1, 1, 1, 1, 1, 1, 1}
 		}, new ExtraTile[] {
-				new ExtraTile(5, 4, 
-						new GroundButton(TriggerType.ENEMY_AND_TILE, false, GButton.VEILED, new ArrayList<GCharacter>() {{
-						}}, new ArrayList<ExtraTile>() {{
-							add(new ExtraTile(5, 1, new AltGround()));
-							add(new ExtraTile(8, 7, new AltWall()));
-						}})),
-				new ExtraTile(7, 2, 
-						new GroundButton(TriggerType.ENEMY_AND_TILE, false, GButton.VISIBLE, new ArrayList<GCharacter>() {{
-						}}, new ArrayList<ExtraTile>() {{
-							add(new ExtraTile(8, 7, new AltGround()));
-						}}))
 		}, new ArrayList<GCharacter>() {{
-			add(new ArrowTurret(2, 2, 1, 0, 5));
-			add(new ArrowTurret(2, 6, 1, 0, 5));
-			add(new ArrowTurret(8, 5, -1, 0, 5));
-			add(new ArrowTurret(8, 3, -1, 0, 5));
+			add(new SnakeSoldier(2, 2, PatrolPattern.SURFACE_CCW));
 		}}, new ArrayList<GPickup>() {{
 		}});
 		
