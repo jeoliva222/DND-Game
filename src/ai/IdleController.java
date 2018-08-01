@@ -1,56 +1,41 @@
 package ai;
 
+import java.awt.Dimension;
 import java.util.Random;
 
 import characters.GCharacter;
 
+// Static controller class that handles idle NPC movement patterns
 public class IdleController {
 
+	// Handles idle movement for NPC based off of their PatrolPattern
 	public static void moveIdle(GCharacter npc) {
 		switch(npc.getPatrolPattern()) {
 			case STATIONARY: 
 				// Do nothing
 				return;
 			case WANDER:
-				// Sometimes randomly move in one of four directions
-				Random r = new Random();
-				// Gets a number 0 - 3: Determines if NPC should move or not
-				int shouldMove = r.nextInt(4);
-				
-				// Most of the time, don't even try to move
-				if(shouldMove != 0) {
-					return;
-				}
-				
-				// Gets 0 or 1
-				int xOrY = r.nextInt(2);
-				// Gets -1 or 1
-				int posOrNeg = r.nextInt(2);
-				posOrNeg = 1 - (2 * posOrNeg);
-				
-				if(xOrY == 0) {
-					//X-wise
-					if(!npc.moveCharacter(posOrNeg, 0)) {
-						npc.moveCharacter((-posOrNeg), 0);
-					}
-				} else {
-					//Y-wise
-					if(!npc.moveCharacter(0, posOrNeg)) {
-						npc.moveCharacter(0, (-posOrNeg));
-					}
-				}
+				IdleController.wanderCharacter(npc);
 				break;
 			case PATROL:
 				// Patrol the NPC
-				IdleController.patrolNPC(npc);
+				IdleController.patrolRandom(npc);
 				break;
 			case PATROL_CW:
 				// Patrol the NPC CW
-				IdleController.patrolCW(npc);
+				IdleController.patrolStatic(npc, true);
 				break;
 			case PATROL_CCW:
 				// Patrol the NPC CCW
-				IdleController.patrolCCW(npc);
+				IdleController.patrolStatic(npc, false);
+				break;
+			case SURFACE_CW:
+				// Surface follow CW
+				IdleController.surfaceFollow(npc, true);
+				break;
+			case SURFACE_CCW:
+				// Surface follow CCW
+				IdleController.surfaceFollow(npc, false);
 				break;
 			default: 
 				// Do nothing
@@ -59,8 +44,41 @@ public class IdleController {
 		
 	}
 	
-	// Does the movement logic for patrolling NPCs
-	private static void patrolNPC(GCharacter npc) {
+	// Does the movement logic for a wandering NPC that sometimes fidgets in position
+	private static void wanderCharacter(GCharacter npc) {
+		// Sometimes randomly move in one of four directions
+		Random r = new Random();
+		// Gets a number 0 - 3: Determines if NPC should move or not
+		int shouldMove = r.nextInt(4);
+		
+		// Most of the time, don't even try to move
+		if(shouldMove != 0) {
+			return;
+		}
+		
+		// Only move 1/4 of the time
+		
+		// Gets 0 or 1
+		int xOrY = r.nextInt(2);
+		// Gets -1 or 1
+		int posOrNeg = IdleController.setNewDirection();
+		
+		// Randomly move X-wise or Y-wise
+		if(xOrY == 0) {
+			//X-wise
+			if(!npc.moveCharacter(posOrNeg, 0)) {
+				npc.moveCharacter((-posOrNeg), 0);
+			}
+		} else {
+			//Y-wise
+			if(!npc.moveCharacter(0, posOrNeg)) {
+				npc.moveCharacter(0, (-posOrNeg));
+			}
+		}
+	}
+	
+	// Does the movement logic for patrolling NPCs who turn in random directions
+	private static void patrolRandom(GCharacter npc) {
 		// Get patrol movements
 		int xPat = npc.getXPatrol();
 		int yPat = npc.getYPatrol();
@@ -115,8 +133,8 @@ public class IdleController {
 		npc.setYPatrol(yPat);
 	}
 	
-	// Does the movement logic for CW-patrolling NPCs
-	private static void patrolCW(GCharacter npc) {
+	// Does the movement logic for patrolling NPCs who always rotate in the same direction
+	private static void patrolStatic(GCharacter npc, boolean isCW) {
 		// Get patrol movements
 		int xPat = npc.getXPatrol();
 		int yPat = npc.getYPatrol();
@@ -126,73 +144,43 @@ public class IdleController {
 			yPat = 1;
 		}
 		
-		// Try to move in current direction
-		if(!npc.moveCharacter(xPat, yPat)) { 
-			// NPC was going right
-			if(xPat == 1 && yPat == 0) {
-				if(npc.moveCharacter(0, 1)) {
-					xPat = 0;
-					yPat = 1;
-				} else if (npc.moveCharacter(0, -1)) {
-					xPat = 0;
-					yPat = -1;
-				} else {
-					xPat = -1;
-					yPat = 0;
-					npc.moveCharacter(xPat, yPat);
-				}
-			} 
-			// NPC was going left
-			else if(xPat == -1 && yPat == 0) {
-				if(npc.moveCharacter(0, -1)) {
-					xPat = 0;
-					yPat = -1;
-				} else if (npc.moveCharacter(0, 1)) {
-					xPat = 0;
-					yPat = 1;
-				} else {
-					xPat = 1;
-					yPat = 0;
-					npc.moveCharacter(xPat, yPat);
-				}
-			}
-			// NPC was going down
-			else if(xPat == 0 && yPat == 1) {
-				if(npc.moveCharacter(-1, 0)) {
-					xPat = -1;
-					yPat = 0;
-				} else if (npc.moveCharacter(1, 0)) {
-					xPat = 1;
-					yPat = 0;
-				} else {
-					xPat = 0;
-					yPat = -1;
-					npc.moveCharacter(xPat, yPat);
-				}
-			}
-			// NPC was going up
-			else if(xPat == 0 && yPat == -1) {
-				if(npc.moveCharacter(1, 0)) {
-					xPat = 1;
-					yPat = 0;
-				} else if (npc.moveCharacter(-1, 0)) {
-					xPat = -1;
-					yPat = 0;
-				} else {
-					xPat = 0;
-					yPat = 1;
-					npc.moveCharacter(xPat, yPat);
+		// Check if we can move in our current direction
+		if(npc.moveCharacter(xPat, yPat)) {
+			// We moved this turn, so we're done
+			return;
+		}
+		
+		// Check if we can rotate in our preferred direction
+		Dimension rotateDirection = IdleController.getRotation(xPat, yPat, isCW);
+		if(npc.moveCharacter(rotateDirection.width, rotateDirection.height)) {
+			// If we rotated, we're done for the turn
+			// Set new patrol direction before exiting function
+			npc.setXPatrol(rotateDirection.width);
+			npc.setYPatrol(rotateDirection.height);
+			return;
+		} else {
+			// Check if we can rotate in our non-preferred direction if we're blocked on
+			// our preferred direction
+			if(npc.moveCharacter(-rotateDirection.width, -rotateDirection.height)) {
+				// If we rotated in the opposite direction, we're done for the turn
+				// Set new patrol direction before exiting function
+				npc.setXPatrol(-rotateDirection.width);
+				npc.setYPatrol(-rotateDirection.height);
+				return;
+			} else {
+				// If nothing else works, then try to go backwards
+				if(npc.moveCharacter(-xPat, -yPat)) {
+					npc.setXPatrol(-xPat);
+					npc.setYPatrol(-yPat);
+					return;
 				}
 			}
 		}
-		
-		// Set the updated values for the patrol movements
-		npc.setXPatrol(xPat);
-		npc.setYPatrol(yPat);
+
 	}
 	
-	// Does the movement logic for CCW-patrolling NPCs
-	private static void patrolCCW(GCharacter npc) {
+	// Does the movement logic for NPCs following a surface
+	private static void surfaceFollow(GCharacter npc, boolean isCW) {
 		// Get patrol movements
 		int xPat = npc.getXPatrol();
 		int yPat = npc.getYPatrol();
@@ -202,71 +190,75 @@ public class IdleController {
 			yPat = 1;
 		}
 		
-		// Try to move in current direction
-		if(!npc.moveCharacter(xPat, yPat)) { 
-			// NPC was going right
-			if(xPat == 1 && yPat == 0) {
-				if(npc.moveCharacter(0, -1)) {
-					xPat = 0;
-					yPat = -1;
-				} else if (npc.moveCharacter(0, 1)) {
-					xPat = 0;
-					yPat = 1;
-				} else {
-					xPat = -1;
-					yPat = 0;
-					npc.moveCharacter(xPat, yPat);
-				}
-			} 
-			// NPC was going left
-			else if(xPat == -1 && yPat == 0) {
-				if(npc.moveCharacter(0, 1)) {
-					xPat = 0;
-					yPat = 1;
-				} else if (npc.moveCharacter(0, -1)) {
-					xPat = 0;
-					yPat = -1;
-				} else {
-					xPat = 1;
-					yPat = 0;
-					npc.moveCharacter(xPat, yPat);
-				}
-			}
-			// NPC was going down
-			else if(xPat == 0 && yPat == 1) {
-				if(npc.moveCharacter(1, 0)) {
-					xPat = 1;
-					yPat = 0;
-				} else if (npc.moveCharacter(-1, 0)) {
-					xPat = -1;
-					yPat = 0;
-				} else {
-					xPat = 0;
-					yPat = -1;
-					npc.moveCharacter(xPat, yPat);
-				}
-			}
-			// NPC was going up
-			else if(xPat == 0 && yPat == -1) {
-				if(npc.moveCharacter(-1, 0)) {
-					xPat = -1;
-					yPat = 0;
-				} else if (npc.moveCharacter(1, 0)) {
-					xPat = 1;
-					yPat = 0;
-				} else {
-					xPat = 0;
-					yPat = 1;
-					npc.moveCharacter(xPat, yPat);
+		// First check if we need to turn to follow our surface
+		Dimension rotateDirection = IdleController.getRotation(xPat, yPat, isCW);
+		if(npc.moveCharacter(rotateDirection.width, rotateDirection.height)) {
+			// If we rotated, we're done for the turn
+			// Set new patrol direction before exiting function
+			npc.setXPatrol(rotateDirection.width);
+			npc.setYPatrol(rotateDirection.height);
+			return;
+		}
+		
+		// If we can't turn, then we must still be following a wall
+		// Try to move forwards
+		if(npc.moveCharacter(xPat, yPat)) {
+			// If we moved forward, we're done for the turn
+			return;
+		} else {
+			// If we can't move forward or rotate in our foremost direction, then
+			// try to turn in the opposite direction
+			if(npc.moveCharacter(-rotateDirection.width, -rotateDirection.height)) {
+				// If we rotated now, we're done for the turn
+				// Set new patrol direction before exiting function
+				npc.setXPatrol(-rotateDirection.width);
+				npc.setYPatrol(-rotateDirection.height);
+				return;
+			} else {
+				// If nothing else worked, go backwards from our starting direction
+				if(npc.moveCharacter(-xPat, -yPat)) {
+					npc.setXPatrol(-xPat);
+					npc.setYPatrol(-yPat);
+					return;
 				}
 			}
 		}
-		
-		// Set the updated values for the patrol movements
-		npc.setXPatrol(xPat);
-		npc.setYPatrol(yPat);
+
 	}
-		
+	
+	// Gets the appropriate rotation directions
+	private static Dimension getRotation(int xPat, int yPat, boolean isCW) {
+		if(xPat == 1 && yPat == 0) {
+			if(isCW) {
+				return new Dimension(0, 1);
+			} else {
+				return new Dimension(0, -1);
+			}
+		} else if(xPat == -1 && yPat == 0) {
+			if(isCW) {
+				return new Dimension(0, -1);
+			} else {
+				return new Dimension(0, 1);
+			}
+		} else if(xPat == 0 && yPat == 1) {
+			if(isCW) {
+				return new Dimension(-1, 0);
+			} else {
+				return new Dimension(1, 0);
+			}
+		} else if(xPat == 0 && yPat == -1) {
+			if(isCW) {
+				return new Dimension(1, 0);
+			} else {
+				return new Dimension(-1, 0);
+			}
+		} else {
+			// If none of those combinations, return (0, 0) output
+			return new Dimension(0, 0);
+		}
+	}
+	
+	// Outputs a 1 or a -1 to signify new random direction
 	private static int setNewDirection() {
 		Random r = new Random();
 		int output = 1 + (-2 * r.nextInt(2));
