@@ -158,7 +158,6 @@ public class Bitester extends GCharacter {
 	public void returnToOrigin() {
 		super.returnToOrigin();
 		this.chaseCount = 0;
-		System.out.println("Reseting Bitester");
 	}
 	
 	@Override

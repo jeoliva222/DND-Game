@@ -133,7 +133,6 @@ public class EliteBitester extends Bitester {
 					// If player hops out of water, start to lose interest
 					if(tt.getMovableType() != MovableType.WATER) {
 						this.chaseCount++;
-						System.out.println("CC: " + Integer.toString(this.chaseCount));
 					} else {
 						this.chaseCount = 0;
 					}

@@ -20,10 +20,10 @@ public class Armory {
 			"WEAPON (Fist): Studded with iron rivets. Charge to dish out extra pain!",
 			GPath.createImagePath(GPath.PICKUP, GPath.WEAPON, "caestus.png"));
 	
-	// Padded Fists (Caestus)
+	// Cactus Claws
 	public static final Fists cactusClaws = new Fists("Cactus Claws", 2, 2, 0.00, 1.0, 2.5, 
 			"WEAPON (Fist): Rake-like claws formed from cactus thorns. Gets consistent results.",
-			GPath.createImagePath(GPath.PICKUP, GPath.WEAPON, "caestus.png"));
+			GPath.createImagePath(GPath.PICKUP, GPath.WEAPON, "cactusClaws.png"));
 
 	// Sword Weapons ----------------------------
 	//
@@ -38,10 +38,10 @@ public class Armory {
 			"WEAPON (Sword): A solid choice, although it could use sharpening.",
 			GPath.createImagePath(GPath.PICKUP, GPath.WEAPON, "ironSword.png"));
 	
-	// Iron Sword
+	// Rusted Sabre
 	public static final Sword rustedSabre = new Sword("Rusted Sabre", 1, 4, 0.1, 1.8, 1.0, 
 			"WEAPON (Sword): A partially rusted antique. The blade is quite sharp in a few places.",
-			GPath.createImagePath(GPath.PICKUP, GPath.WEAPON, "ironSword.png"));
+			GPath.createImagePath(GPath.PICKUP, GPath.WEAPON, "rustedSabre.png"));
 	
 	// Special 'D20' Sword
 	public static final Sword luckSword = new Sword("D20 Sword", 1, 20, 0.01, 5.0, 1.0, 
@@ -61,7 +61,7 @@ public class Armory {
 			"WEAPON (Spear): Keep them at bay with this!",
 			GPath.createImagePath(GPath.PICKUP, GPath.WEAPON, "ironSpear.png"));
 	
-	// Iron Spear
+	// Ceremonial Spear
 	public static final Spear ceremonialSpear = new Spear("Ceremonial Spear", 2, 3, 0.15, 1.7, 1.0, 
 			"WEAPON (Spear): It feels wrong to use this.",
 			GPath.createImagePath(GPath.PICKUP, GPath.WEAPON, "ironSpear.png"));
@@ -79,7 +79,7 @@ public class Armory {
 			"WEAPON (Dagger): A shard of glass from a broken mirror. Charge to shadowstep your opponents!",
 			GPath.createImagePath(GPath.PICKUP, GPath.WEAPON, "glassShard.png"));
 	
-	// Glass Shard Dagger
+	// Tailbone Dagger
 	public static final Dagger tailboneDagger = new Dagger("Tailbone Dagger", 2, 2, 0.3, 2.5, 1.0, 
 			"WEAPON (Dagger): Knife formed from a sharpened bone. Charge to shadowstep your opponents!",
 			GPath.createImagePath(GPath.PICKUP, GPath.WEAPON, "glassShard.png"));
