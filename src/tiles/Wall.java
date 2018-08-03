@@ -16,7 +16,7 @@ public class Wall extends TileType {
 	@Override
 	public String selectImage() {
 		// Fetch region path to display image from correct area
-		String regionPath = EntityManager.getActiveArea().getTheme();
+		String regionPath = EntityManager.getInstance().getActiveArea().getTheme();
 		String imagePath = GPath.createImagePath(GPath.TILE, regionPath, "wall.png");
 		
 		// Return the full image path

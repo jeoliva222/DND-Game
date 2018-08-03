@@ -21,7 +21,7 @@ public class Water extends TileType {
 	@Override
 	public String selectImage() {
 		// Fetch region path to display image from correct area
-		String regionPath = EntityManager.getActiveArea().getTheme();
+		String regionPath = EntityManager.getInstance().getActiveArea().getTheme();
 		String imagePath = null;
 		
 		// Randomly select one of two images, with one

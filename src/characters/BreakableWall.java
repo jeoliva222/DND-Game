@@ -55,7 +55,7 @@ public class BreakableWall extends GCharacter {
 		}
 		
 		// Breakable wall image changes based on which area we are in
-		String areaPath = EntityManager.getActiveArea().getTheme();
+		String areaPath = EntityManager.getInstance().getActiveArea().getTheme();
 		areaPath = areaPath.substring(0, (areaPath.length() - 1));
 		
 		// Return full path

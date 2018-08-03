@@ -25,11 +25,14 @@ public class Sword extends Weapon {
 	
 	@Override
 	public boolean tryAttack(int dx, int dy) {
+		// Retrieve instance of EntityManager
+		EntityManager em = EntityManager.getInstance();
+		
 		// For every NPC, check if we're attacking in their direction next to them
-		for(GCharacter npc : EntityManager.getNPCManager().getCharacters()) {
+		for(GCharacter npc : em.getNPCManager().getCharacters()) {
 			// If we're attacking at an NPC's position, do attack
-			if((EntityManager.getPlayer().getXPos() + dx) == npc.getXPos()
-					&& (EntityManager.getPlayer().getYPos() + dy) == npc.getYPos()) {
+			if((em.getPlayer().getXPos() + dx) == npc.getXPos()
+					&& (em.getPlayer().getYPos() + dy) == npc.getYPos()) {
 				// If weapon is charged, swipe 3 tiles and multiply damage
 				if(this.isCharged) {
 					// Discharge weapon
@@ -38,9 +41,9 @@ public class Sword extends Weapon {
 					// Deal damage to middle target first
 					int dmg = this.calculateDamage(this.chargeMult);
 					npc.damageCharacter(dmg);
-					EntityManager.getEffectManager().addEffect
-						(new ChargeIndicator((EntityManager.getPlayer().getXPos() + dx),
-							(EntityManager.getPlayer().getYPos() + dy)));
+					em.getEffectManager().addEffect
+						(new ChargeIndicator((em.getPlayer().getXPos() + dx),
+							(em.getPlayer().getYPos() + dy)));
 					LogScreen.log("Player swiped and dealt " + Integer.toString(dmg)
 						+ " damage to " + npc.getName() + ".", GColors.ATTACK);
 					
@@ -63,22 +66,25 @@ public class Sword extends Weapon {
 	
 	// Finds and attacks edge targets of swipe/charged sword attack
 	private void findSwipeTargets(int dx, int dy) {
+		// Retrieve instance of EntityManager
+		EntityManager em = EntityManager.getInstance();
+		
 		if(Math.abs(dx) > Math.abs(dy)) {
 			// Target is to left or right of player
-			EntityManager.getEffectManager().addEffect(new ChargeIndicator(EntityManager.getPlayer().getXPos() + dx, EntityManager.getPlayer().getYPos() + 1));
-			EntityManager.getEffectManager().addEffect(new ChargeIndicator(EntityManager.getPlayer().getXPos() + dx, EntityManager.getPlayer().getYPos() - 1));	
+			em.getEffectManager().addEffect(new ChargeIndicator(em.getPlayer().getXPos() + dx, em.getPlayer().getYPos() + 1));
+			em.getEffectManager().addEffect(new ChargeIndicator(em.getPlayer().getXPos() + dx, em.getPlayer().getYPos() - 1));	
 			
 			// Find and attack upper/lower targets if they exist
-			for(GCharacter npc : EntityManager.getNPCManager().getCharacters()) {
-				if((EntityManager.getPlayer().getXPos() + dx) == npc.getXPos()
-						&& (EntityManager.getPlayer().getYPos() + 1) == npc.getYPos()) {
+			for(GCharacter npc : em.getNPCManager().getCharacters()) {
+				if((em.getPlayer().getXPos() + dx) == npc.getXPos()
+						&& (em.getPlayer().getYPos() + 1) == npc.getYPos()) {
 					// Upper target attack
 					int dmg = this.calculateDamage(this.chargeMult);
 					npc.damageCharacter(dmg);
 					LogScreen.log("Player swiped and dealt " + Integer.toString(dmg)
 					+ " damage to " + npc.getName() + ".", GColors.ATTACK);
-				} else if ((EntityManager.getPlayer().getXPos() + dx) == npc.getXPos()
-						&& (EntityManager.getPlayer().getYPos() - 1) == npc.getYPos()) {
+				} else if ((em.getPlayer().getXPos() + dx) == npc.getXPos()
+						&& (em.getPlayer().getYPos() - 1) == npc.getYPos()) {
 					// Lower target
 					int dmg = this.calculateDamage(this.chargeMult);
 					npc.damageCharacter(dmg);
@@ -88,20 +94,20 @@ public class Sword extends Weapon {
 			}
 		} else {
 			// Target is above/below the player
-			EntityManager.getEffectManager().addEffect(new ChargeIndicator(EntityManager.getPlayer().getXPos() + 1, EntityManager.getPlayer().getYPos() + dy));
-			EntityManager.getEffectManager().addEffect(new ChargeIndicator(EntityManager.getPlayer().getXPos() - 1, EntityManager.getPlayer().getYPos() + dy));	
+			em.getEffectManager().addEffect(new ChargeIndicator(em.getPlayer().getXPos() + 1, em.getPlayer().getYPos() + dy));
+			em.getEffectManager().addEffect(new ChargeIndicator(em.getPlayer().getXPos() - 1, em.getPlayer().getYPos() + dy));	
 			
 			// Find and attack left/right targets if they exist
-			for(GCharacter npc : EntityManager.getNPCManager().getCharacters()) {
-				if((EntityManager.getPlayer().getXPos() + 1) == npc.getXPos()
-						&& (EntityManager.getPlayer().getYPos() + dy) == npc.getYPos()) {
+			for(GCharacter npc : em.getNPCManager().getCharacters()) {
+				if((em.getPlayer().getXPos() + 1) == npc.getXPos()
+						&& (em.getPlayer().getYPos() + dy) == npc.getYPos()) {
 					// Right target
 					int dmg = this.calculateDamage(this.chargeMult);
 					npc.damageCharacter(dmg);
 					LogScreen.log("Player swiped and dealt " + Integer.toString(dmg)
 					+ " damage to " + npc.getName() + ".", GColors.ATTACK);
-				} else if ((EntityManager.getPlayer().getXPos() - 1) == npc.getXPos()
-						&& (EntityManager.getPlayer().getYPos() + dy) == npc.getYPos()) {
+				} else if ((em.getPlayer().getXPos() - 1) == npc.getXPos()
+						&& (em.getPlayer().getYPos() + dy) == npc.getYPos()) {
 					// Left target
 					int dmg = this.calculateDamage(this.chargeMult);
 					npc.damageCharacter(dmg);

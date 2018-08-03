@@ -27,6 +27,9 @@ public class Spear extends Weapon {
 	
 	@Override
 	public boolean tryAttack(int dx, int dy) {
+		// Retrieve instance of EntityManager
+		EntityManager em = EntityManager.getInstance();
+		
 		if(this.isCharged) {
 			// Checks if we hit at least one target
 			boolean foundTarget = false;
@@ -35,8 +38,8 @@ public class Spear extends Weapon {
 			boolean nextToWall;
 			try {
 			nextToWall = GameScreen
-					.getTile((EntityManager.getPlayer().getXPos() + dx),
-							(EntityManager.getPlayer().getYPos() + dy))
+					.getTile((em.getPlayer().getXPos() + dx),
+							(em.getPlayer().getYPos() + dy))
 					.getTileType()
 					.getMovableType() == MovableType.WALL;
 			} catch (ArrayIndexOutOfBoundsException e) {
@@ -44,10 +47,10 @@ public class Spear extends Weapon {
 			}
 			
 			// If charged, check for NPCs two spaces away from player to attack
-			for(GCharacter npc : EntityManager.getNPCManager().getCharacters()) {
+			for(GCharacter npc : em.getNPCManager().getCharacters()) {
 				// First check for immediately adjacent positions to attack
-				if((EntityManager.getPlayer().getXPos() + dx) == npc.getXPos()
-						&& (EntityManager.getPlayer().getYPos() + dy) == npc.getYPos()) {
+				if((em.getPlayer().getXPos() + dx) == npc.getXPos()
+						&& (em.getPlayer().getYPos() + dy) == npc.getYPos()) {
 					// If not at proper range, don't do multiplier, but discharge weapon
 					this.dischargeWeapon();
 					int dmg = this.calculateDamage();
@@ -56,8 +59,8 @@ public class Spear extends Weapon {
 						+ " damage to " + npc.getName() + ".", GColors.ATTACK);				
 					foundTarget = true;
 				// Then check for positions two tiles away to attack
-				} else if((EntityManager.getPlayer().getXPos() + (dx*2)) == npc.getXPos()
-						&& (EntityManager.getPlayer().getYPos() + (dy*2)) == npc.getYPos()) {
+				} else if((em.getPlayer().getXPos() + (dx*2)) == npc.getXPos()
+						&& (em.getPlayer().getYPos() + (dy*2)) == npc.getYPos()) {
 					// Check that previous space isn't a wall
 					if(!nextToWall) {
 						// Deal multiplier on regular damage and discharge weapon
@@ -73,23 +76,23 @@ public class Spear extends Weapon {
 			
 			// If we found a target, return true and mark tiles with attack effects
 			if(foundTarget) {
-				EntityManager.getEffectManager()
-					.addEffect(new ChargeIndicator(EntityManager.getPlayer().getXPos() + dx,
-							EntityManager.getPlayer().getYPos() + dy));
+				em.getEffectManager()
+					.addEffect(new ChargeIndicator(em.getPlayer().getXPos() + dx,
+							em.getPlayer().getYPos() + dy));
 				if(!nextToWall) {
 					// Only mark 2nd tile if we're not attacking through a wall
-					EntityManager.getEffectManager()
-						.addEffect(new ChargeIndicator(EntityManager.getPlayer().getXPos() + (dx*2),
-								EntityManager.getPlayer().getYPos() + (dy*2)));
+					em.getEffectManager()
+						.addEffect(new ChargeIndicator(em.getPlayer().getXPos() + (dx*2),
+								em.getPlayer().getYPos() + (dy*2)));
 				}
 				this.playSwingSound();
 				return true;
 			}
 		} else {
 			// If not charged, check for immediately adjacent NPCs to attack
-			for(GCharacter npc : EntityManager.getNPCManager().getCharacters()) {
-				if((EntityManager.getPlayer().getXPos() + dx) == npc.getXPos()
-						&& (EntityManager.getPlayer().getYPos() + dy) == npc.getYPos()) {
+			for(GCharacter npc : em.getNPCManager().getCharacters()) {
+				if((em.getPlayer().getXPos() + dx) == npc.getXPos()
+						&& (em.getPlayer().getYPos() + dy) == npc.getYPos()) {
 					// If not charged deal normal damage
 					int dmg = this.calculateDamage();
 					npc.damageCharacter(dmg);

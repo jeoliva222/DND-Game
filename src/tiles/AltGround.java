@@ -17,7 +17,7 @@ public class AltGround extends TileType {
 	@Override
 	public String selectImage() {
 		// Fetch region path to display image from correct area
-		String regionPath = EntityManager.getActiveArea().getTheme();
+		String regionPath = EntityManager.getInstance().getActiveArea().getTheme();
 		
 		this.imagePath = GPath.createImagePath(GPath.TILE, regionPath, "altground.png");
 		return this.imagePath;

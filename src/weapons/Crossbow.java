@@ -28,6 +28,8 @@ public class Crossbow extends Weapon {
 	
 	@Override
 	public boolean tryAttack(int dx, int dy) {
+		// Retrieve instance of EntityManager
+		EntityManager em = EntityManager.getInstance();
 		if(this.isCharged) {
 			// Discharge weapon
 			this.dischargeWeapon();
@@ -39,18 +41,18 @@ public class Crossbow extends Weapon {
 				if(dx > 0) {
 					// Right-wise shot
 					// Check for NPCs in the same line as your attack
-					for(GCharacter npc : EntityManager.getNPCManager().getCharacters()) {
-						if((EntityManager.getPlayer().getXPos()) < npc.getXPos()
-								&& (EntityManager.getPlayer().getYPos()) == npc.getYPos()) {
+					for(GCharacter npc : em.getNPCManager().getCharacters()) {
+						if((em.getPlayer().getXPos()) < npc.getXPos()
+								&& (em.getPlayer().getYPos()) == npc.getYPos()) {
 							inlineEnemies.add(npc);
 						}
 					}
 				} else {
 					// Left-wise shot
 					// Check for NPCs in the same line as your attack
-					for(GCharacter npc : EntityManager.getNPCManager().getCharacters()) {
-						if((EntityManager.getPlayer().getXPos()) > npc.getXPos()
-								&& (EntityManager.getPlayer().getYPos()) == npc.getYPos()) {
+					for(GCharacter npc : em.getNPCManager().getCharacters()) {
+						if((em.getPlayer().getXPos()) > npc.getXPos()
+								&& (em.getPlayer().getYPos()) == npc.getYPos()) {
 							inlineEnemies.add(npc);
 						}
 					}
@@ -60,18 +62,18 @@ public class Crossbow extends Weapon {
 				if(dy > 0) {
 					// Downward shot
 					// Check for NPCs in the same line as your attack
-					for(GCharacter npc : EntityManager.getNPCManager().getCharacters()) {
-						if((EntityManager.getPlayer().getXPos()) == npc.getXPos()
-								&& (EntityManager.getPlayer().getYPos()) < npc.getYPos()) {
+					for(GCharacter npc : em.getNPCManager().getCharacters()) {
+						if((em.getPlayer().getXPos()) == npc.getXPos()
+								&& (em.getPlayer().getYPos()) < npc.getYPos()) {
 							inlineEnemies.add(npc);
 						}
 					}
 				} else {
 					// Upward shot
 					// Check for NPCs in the same line as your attack
-					for(GCharacter npc : EntityManager.getNPCManager().getCharacters()) {
-						if((EntityManager.getPlayer().getXPos()) == npc.getXPos()
-								&& (EntityManager.getPlayer().getYPos()) > npc.getYPos()) {
+					for(GCharacter npc : em.getNPCManager().getCharacters()) {
+						if((em.getPlayer().getXPos()) == npc.getXPos()
+								&& (em.getPlayer().getYPos()) > npc.getYPos()) {
 							inlineEnemies.add(npc);
 						}
 					}
@@ -92,8 +94,8 @@ public class Crossbow extends Weapon {
 					int dist = 0;
 					
 					// Total the NPC's distance from the player
-					dist += Math.abs(EntityManager.getPlayer().getXPos() - npc.getXPos());
-					dist += Math.abs(EntityManager.getPlayer().getYPos() - npc.getYPos());
+					dist += Math.abs(em.getPlayer().getXPos() - npc.getXPos());
+					dist += Math.abs(em.getPlayer().getYPos() - npc.getYPos());
 					
 					// If it's smaller than our current closest NPC, record this
 					if(dist < closestDist) {
@@ -109,7 +111,7 @@ public class Crossbow extends Weapon {
 				+ Integer.toString(dmg) + " damage.", GColors.ATTACK);
 				
 				// Add on-hit effect
-				EntityManager.getEffectManager()
+				em.getEffectManager()
 					.addEffect(new ChargeIndicator(closestNPC.getXPos(), closestNPC.getYPos()));
 				
 				// Return true to indicate we hit a target
@@ -118,9 +120,9 @@ public class Crossbow extends Weapon {
 			
 		} else {
 			// If not charged, check for immediately adjacent NPCs to punch
-			for(GCharacter npc : EntityManager.getNPCManager().getCharacters()) {
-				if((EntityManager.getPlayer().getXPos() + dx) == npc.getXPos()
-						&& (EntityManager.getPlayer().getYPos() + dy) == npc.getYPos()) {
+			for(GCharacter npc : em.getNPCManager().getCharacters()) {
+				if((em.getPlayer().getXPos() + dx) == npc.getXPos()
+						&& (em.getPlayer().getYPos() + dy) == npc.getYPos()) {
 					// If not charged deal normal damage and attack normally
 					int dmg = this.calculateDamage();
 					npc.damageCharacter(dmg);

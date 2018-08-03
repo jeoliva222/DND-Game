@@ -168,7 +168,7 @@ public class InventoryScreen extends JPanel {
 	// Use the currently selected item
 	public static boolean useSelected() {
 		// If the player isn't alive, return false
-		if(!EntityManager.getPlayer().isAlive()) {
+		if(!EntityManager.getInstance().getPlayer().isAlive()) {
 			return false;
 		}
 		
@@ -182,7 +182,7 @@ public class InventoryScreen extends JPanel {
 	// Discards/Trashes the currently selected item
 	public static boolean discardSelected() {
 		// If the player isn't alive or item is null, return false
-		if(!EntityManager.getPlayer().isAlive() ||
+		if(!EntityManager.getInstance().getPlayer().isAlive() ||
 				(InventoryScreen.invTiles[currentY][currentX].getItem() == null)) {
 			return false;
 		}

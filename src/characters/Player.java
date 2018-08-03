@@ -173,7 +173,7 @@ public class Player implements Serializable {
 		
 		// Grab any items at the new position
 		boolean breakFlag = false;
-		for(GPickup pu: EntityManager.getPickupManager().getPickups()) {
+		for(GPickup pu: EntityManager.getInstance().getPickupManager().getPickups()) {
 			if(pu.getXPos() == this.xPos && pu.getYPos() == this.yPos) {
 				// Add item to inventory if we have inventory space
 				if(InventoryScreen.addItem(pu.item)) {
@@ -188,7 +188,7 @@ public class Player implements Serializable {
 					SoundPlayer.playWAV(GPath.createSoundPath("Item_GET.wav"));
 					
 					// Remove item from manager
-					EntityManager.getPickupManager().removePickup(pu);
+					EntityManager.getInstance().getPickupManager().removePickup(pu);
 				}
 				
 				// Set break flag to break from 'for' loop
@@ -229,7 +229,7 @@ public class Player implements Serializable {
 		}
 		
 		// Finally check for collision
-		for(GCharacter npc : EntityManager.getNPCManager().getCharacters()) {
+		for(GCharacter npc : EntityManager.getInstance().getNPCManager().getCharacters()) {
 			if((newX) == npc.xPos && (newY) == npc.yPos) {
 				if(isTeleport) {
 					npc.damageCharacter(1000);
@@ -250,7 +250,7 @@ public class Player implements Serializable {
 		
 		// Grab any items at the new position
 		boolean breakFlag = false;
-		for(GPickup pu: EntityManager.getPickupManager().getPickups()) {
+		for(GPickup pu: EntityManager.getInstance().getPickupManager().getPickups()) {
 			if(pu.getXPos() == this.xPos && pu.getYPos() == this.yPos) {
 				// Add item to inventory if we have inventory space
 				if(InventoryScreen.addItem(pu.item)) {
@@ -265,7 +265,7 @@ public class Player implements Serializable {
 					SoundPlayer.playWAV(GPath.createSoundPath("Item_GET.wav"));
 					
 					// Remove item from manager
-					EntityManager.getPickupManager().removePickup(pu);
+					EntityManager.getInstance().getPickupManager().removePickup(pu);
 				}
 				
 				// Set break flag to break from 'for' loop

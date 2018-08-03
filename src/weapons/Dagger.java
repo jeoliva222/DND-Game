@@ -27,10 +27,13 @@ public class Dagger extends Weapon {
 
 	@Override
 	public boolean tryAttack(int dx, int dy) {
-		// Fetch reference to the player
-		Player player = EntityManager.getPlayer();
+		// Retrieve instance of EntityManager
+		EntityManager em = EntityManager.getInstance();
 		
-		for(GCharacter npc : EntityManager.getNPCManager().getCharacters()) {
+		// Fetch reference to the player
+		Player player = em.getPlayer();
+		
+		for(GCharacter npc : em.getNPCManager().getCharacters()) {
 			// If we're attacking at an NPC's position, complete attack
 			if((player.getXPos() + dx) == npc.getXPos()
 					&& (player.getYPos() + dy) == npc.getYPos()) {
@@ -43,7 +46,7 @@ public class Dagger extends Weapon {
 					
 					if(player.getMoveTypes().contains(tt.getMovableType()) &&
 							player.leapPlayer(player.getXPos() + (dx*2), player.getYPos() + (dy*2))) {
-						///*** THIS LINE SOMETIMES CAUSES GRAPHICAL BUGS
+						///*** THIS LINE SOMETIMES CAUSES GRAPHICAL BUGS TODO
 						//tt.onStep();
 						
 						// If space to backstab, deal modified damage and steb behind target

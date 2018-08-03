@@ -249,7 +249,7 @@ public class KingBonBon extends GCharacter {
 		SoundPlayer.playWAV(GPath.createSoundPath("king_death.wav"));
 		
 		// Spawn the King's Head
-		EntityManager.getNPCManager().addCharacter(new KingsHead(this.xPos, this.yPos));
+		EntityManager.getInstance().getNPCManager().addCharacter(new KingsHead(this.xPos, this.yPos));
 	}
 	
 	// Override that increments internal counter ands sets logic flags
@@ -277,7 +277,7 @@ public class KingBonBon extends GCharacter {
 	@Override
 	public void takeTurn() {
 		// Fetch reference to the player
-		Player player = EntityManager.getPlayer();
+		Player player = EntityManager.getInstance().getPlayer();
 		
 		// Random number generator
 		Random r = new Random();
@@ -747,12 +747,12 @@ public class KingBonBon extends GCharacter {
 	
 	// Shortening of adding effect for convenience and easy code reading
 	private void addEffect(GEffect fx) {
-		EntityManager.getEffectManager().addEffect(fx);
+		EntityManager.getInstance().getEffectManager().addEffect(fx);
 	}
 	
 	// Shortening of adding projectile for convenience and easy code reading
 	private void addProjectile(GProjectile proj) {
-		EntityManager.getProjectileManager().addProjectile(proj);
+		EntityManager.getInstance().getProjectileManager().addProjectile(proj);
 	}
 	
 	// Checks for best corner to warp to and returns it

@@ -130,7 +130,7 @@ public class ArrowTurret extends GCharacter {
 	@Override
 	public void takeTurn() {
 		// If this is dead or the player is dead, don't do anything
-		if(!this.isAlive() || !EntityManager.getPlayer().isAlive()) {
+		if(!this.isAlive() || !EntityManager.getInstance().getPlayer().isAlive()) {
 			// Do nothing
 			return;
 		}
@@ -154,7 +154,7 @@ public class ArrowTurret extends GCharacter {
 					SoundPlayer.playWAV(GPath.createSoundPath("arrow_SHOT.wav"));
 					
 					// Fire an arrow in a predetermined direction
-					EntityManager.getProjectileManager()
+					EntityManager.getInstance().getProjectileManager()
 						.addProjectile(new Arrow((this.xPos + this.shootX),
 												(this.yPos + this.shootY),
 												this.shootX,

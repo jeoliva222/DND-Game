@@ -177,7 +177,7 @@ public class SandBeep extends GCharacter {
 	public void takeTurn() {
 		
 		// Fetch the player for easy reference
-		Player player = EntityManager.getPlayer();
+		Player player = EntityManager.getInstance().getPlayer();
 		
 		// If this is dead or the player is dead, don't do anything
 		if(!this.isAlive() || !player.isAlive()) {
@@ -232,7 +232,7 @@ public class SandBeep extends GCharacter {
 				// Attack if player is in one tile radius around player
 				if((this.xPos + dx) == plrX && (this.yPos + dy) == plrY) {
 					// Mark tiles with damage indicators
-					EntityManager.getEffectManager().addEffect(new DamageIndicator(plrX, plrY));
+					EntityManager.getInstance().getEffectManager().addEffect(new DamageIndicator(plrX, plrY));
 					this.playerInitiate();
 					
 					// Flip flag to indicate we've attacked this turn
@@ -273,7 +273,7 @@ public class SandBeep extends GCharacter {
 					// Attack if player is our current hop path
 					if((this.xPos + this.markedX) == plrX && (this.yPos + this.markedY) == plrY) {
 						// Mark tiles with damage indicators
-						EntityManager.getEffectManager().addEffect(new DamageIndicator(plrX, plrY));
+						EntityManager.getInstance().getEffectManager().addEffect(new DamageIndicator(plrX, plrY));
 						this.playerInitiate();
 					} else {
 						// If we don't hit the payer, continue on our current hop path

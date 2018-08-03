@@ -19,7 +19,7 @@ public class Pit extends TileType {
 		// TODO Make pit image
 		
 		// Fetch region path to display image from correct area
-		String regionPath = EntityManager.getActiveArea().getTheme();
+		String regionPath = EntityManager.getInstance().getActiveArea().getTheme();
 		this.imagePath = GPath.createImagePath(GPath.TILE, regionPath, "ground.png");
 		return this.imagePath;
 	}

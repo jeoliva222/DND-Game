@@ -63,7 +63,7 @@ public abstract class GProjectile {
 	// Updates the projectile's movement and checks for collisions
 	private boolean updateProjectile() {	
 		// If this the player is dead, don't do anything
-		if(!EntityManager.getPlayer().isAlive()) {
+		if(!EntityManager.getInstance().getPlayer().isAlive()) {
 			// Do nothing
 			return false;
 		}
@@ -102,19 +102,22 @@ public abstract class GProjectile {
 	
 	// Checks for projectile collisions with the player and npcs
 	public boolean checkEntityCollisions() {
+		// Retrieve instance of EntityManager
+		EntityManager em = EntityManager.getInstance();
+		
 		// Check if player has run into the projectile
 		// Damage player and return true if yes
-		if(this.xPos == EntityManager.getPlayer().getXPos() &&
-				this.yPos == EntityManager.getPlayer().getYPos()) {
+		if(this.xPos == em.getPlayer().getXPos() &&
+				this.yPos == em.getPlayer().getYPos()) {
 			int damage = this.calculateDamage();
 			LogScreen.log(this.name+" hit player for "+Integer.toString(damage)+" damage.", GColors.DAMAGE);
-			EntityManager.getPlayer().damagePlayer(damage);
+			em.getPlayer().damagePlayer(damage);
 			this.setSpawnDamaged(true);
 			return (!this.entityPiercing);
 		}
 		
 		// First check if any characters have run into the projectile
-		for(GCharacter npc : EntityManager.getNPCManager().getCharacters()) {
+		for(GCharacter npc : em.getNPCManager().getCharacters()) {
 			// If we impact a character, return true to indicate we've hit something
 			if(this.xPos == npc.getXPos() && this.yPos == npc.getYPos()) {
 				// If not the owner's enemy-type of the projectile, damage the character
@@ -136,22 +139,25 @@ public abstract class GProjectile {
 	
 	// Checks for entities swapping positions with the projectile
 	public boolean checkSwapCollisions() {
+		// Retrieve instance of EntityManager
+		EntityManager em = EntityManager.getInstance();
+		
 		// Check if player moved into projectile's position
-		if(this.xPos == EntityManager.getPlayer().getXPos() &&
-				this.yPos == EntityManager.getPlayer().getYPos()) {
+		if(this.xPos == em.getPlayer().getXPos() &&
+				this.yPos == em.getPlayer().getYPos()) {
 			// Check if projectile is moving to player's last position
-			if((this.xPos + this.dx) == EntityManager.getPlayer().getLastX() &&
-					(this.yPos + this.dy) == EntityManager.getPlayer().getLastY()) {
+			if((this.xPos + this.dx) == em.getPlayer().getLastX() &&
+					(this.yPos + this.dy) == em.getPlayer().getLastY()) {
 				// If it is, then damage the player and disappear if not piercing
 				int damage = this.calculateDamage();
 				LogScreen.log(this.name+" hit player for "+Integer.toString(damage)+" damage.", GColors.DAMAGE);
-				EntityManager.getPlayer().damagePlayer(damage);
+				em.getPlayer().damagePlayer(damage);
 				return (!this.entityPiercing);
 			}
 		}
 		
 		// For each NPC, check if they've moved into the projectile's position
-		for(GCharacter npc: EntityManager.getNPCManager().getCharacters()) {
+		for(GCharacter npc: em.getNPCManager().getCharacters()) {
 			if(this.xPos == npc.getXPos() && this.yPos == npc.getYPos()) {
 				// Check if the projectile swapped places with the NPC
 				if((this.xPos + this.dx) == npc.getLastX() && 

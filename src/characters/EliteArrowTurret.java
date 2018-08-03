@@ -79,7 +79,7 @@ public class EliteArrowTurret extends ArrowTurret {
 	@Override
 	public void takeTurn() {
 		// If this is dead or the player is dead, don't do anything
-		if(!this.isAlive() || !EntityManager.getPlayer().isAlive()) {
+		if(!this.isAlive() || !EntityManager.getInstance().getPlayer().isAlive()) {
 			// Do nothing
 			return;
 		}
@@ -104,22 +104,22 @@ public class EliteArrowTurret extends ArrowTurret {
 					
 					if(this.doAltFire || this.alwaysAlt) {
 						// Fire arrows in all four cardinal directions
-						EntityManager.getProjectileManager()
+						EntityManager.getInstance().getProjectileManager()
 							.addProjectile(new Arrow((this.xPos + 1),
 												(this.yPos),
 												1,
 												0, this));
-						EntityManager.getProjectileManager()
+						EntityManager.getInstance().getProjectileManager()
 							.addProjectile(new Arrow((this.xPos - 1),
 											(this.yPos),
 											-1,
 											0, this));
-						EntityManager.getProjectileManager()
+						EntityManager.getInstance().getProjectileManager()
 							.addProjectile(new Arrow((this.xPos),
 											(this.yPos + 1),
 											0,
 											1, this));
-						EntityManager.getProjectileManager()
+						EntityManager.getInstance().getProjectileManager()
 							.addProjectile(new Arrow((this.xPos),
 											(this.yPos - 1),
 											0,
@@ -129,7 +129,7 @@ public class EliteArrowTurret extends ArrowTurret {
 						this.doAltFire = false;
 					} else {
 						// Fire an arrow in a predetermined direction
-						EntityManager.getProjectileManager()
+						EntityManager.getInstance().getProjectileManager()
 							.addProjectile(new Arrow((this.xPos + this.shootX),
 													(this.yPos + this.shootY),
 													this.shootX,

@@ -122,10 +122,10 @@ public class WeaponStatPanel extends JPanel {
 		     @Override
 		     public void mouseEntered(MouseEvent mouseEvent) {
 		    	 // Try to focus on Equipped weapon if it exists
-		    	 if(EntityManager.getPlayer().getWeapon() == null) {
+		    	 if(EntityManager.getInstance().getPlayer().getWeapon() == null) {
 		    		 return;
 		    	 } else {
-		    		 InfoScreen.setItemFocus(EntityManager.getPlayer().getWeapon());
+		    		 InfoScreen.setItemFocus(EntityManager.getInstance().getPlayer().getWeapon());
 		    	 }
 		     }
 		});
@@ -137,7 +137,7 @@ public class WeaponStatPanel extends JPanel {
 	
 	public void updateWeaponPanel() {
 		// Fetches player's current weapon for reference
-		Weapon newWep = EntityManager.getPlayer().getWeapon();
+		Weapon newWep = EntityManager.getInstance().getPlayer().getWeapon();
 		
 		// Updates the weapon and border image
 		this.setWeaponPath(newWep.imagePath);

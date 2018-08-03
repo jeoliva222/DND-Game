@@ -95,7 +95,7 @@ public class EliteBitester extends Bitester {
 	@Override
 	public void takeTurn() {
 		
-		Player player = EntityManager.getPlayer();
+		Player player = EntityManager.getInstance().getPlayer();
 		
 		// If this is dead or the player is dead, don't do anything
 		if(!this.isAlive() || !player.isAlive()) {

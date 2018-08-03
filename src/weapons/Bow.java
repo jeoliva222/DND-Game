@@ -28,14 +28,17 @@ public class Bow extends Weapon {
 	
 	@Override
 	public boolean tryAttack(int dx, int dy) {
+		// Retrieve instance of EntityManager
+		EntityManager em = EntityManager.getInstance();
+		
 		if(this.isCharged) {
 			// Discharge weapon
 			this.dischargeWeapon();
 			
 			// Fire an arrow in the direction the player attacked
-			EntityManager.getProjectileManager()
-				.addProjectile(new Arrow((EntityManager.getPlayer().getXPos() + dx),
-										(EntityManager.getPlayer().getYPos() + dy),
+			em.getProjectileManager()
+				.addProjectile(new Arrow((em.getPlayer().getXPos() + dx),
+										(em.getPlayer().getYPos() + dy),
 										dx,
 										dy, null));
 			
@@ -43,9 +46,9 @@ public class Bow extends Weapon {
 			return true;
 		} else {
 			// If not charged, check for immediately adjacent NPCs to punch
-			for(GCharacter npc : EntityManager.getNPCManager().getCharacters()) {
-				if((EntityManager.getPlayer().getXPos() + dx) == npc.getXPos()
-						&& (EntityManager.getPlayer().getYPos() + dy) == npc.getYPos()) {
+			for(GCharacter npc : em.getNPCManager().getCharacters()) {
+				if((em.getPlayer().getXPos() + dx) == npc.getXPos()
+						&& (em.getPlayer().getYPos() + dy) == npc.getYPos()) {
 					// If not charged deal normal damage and attack normally
 					int dmg = this.calculateDamage();
 					npc.damageCharacter(dmg);

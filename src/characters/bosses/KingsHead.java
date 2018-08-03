@@ -252,7 +252,7 @@ public class KingsHead extends GCharacter {
 	@Override
 	public void takeTurn() {
 		// Get reference to the player
-		Player player = EntityManager.getPlayer();
+		Player player = EntityManager.getInstance().getPlayer();
 		
 		// If this is dead or the player is dead, don't do anything
 		if(!this.isAlive() || !player.isAlive()) {
@@ -307,7 +307,7 @@ public class KingsHead extends GCharacter {
 				// Attack if player is in one tile radius around player
 				if(Math.abs(distX) <= 1 && Math.abs(distY) <= 1) {
 					// Mark tiles with damage indicators
-					EntityManager.getEffectManager().addEffect(new DamageIndicator(plrX, plrY));
+					EntityManager.getInstance().getEffectManager().addEffect(new DamageIndicator(plrX, plrY));
 					this.playerInitiate();
 				} else {
 					// If not attacking the player, hope closer to them
@@ -595,12 +595,12 @@ public class KingsHead extends GCharacter {
 
 	// Shortening of adding effect for convenience and easy code reading
 	private void addEffect(GEffect fx) {
-		EntityManager.getEffectManager().addEffect(fx);
+		EntityManager.getInstance().getEffectManager().addEffect(fx);
 	}
 	
 	// Shortening of adding projectile for convenience and easy code reading
 	private void addProjectile(GProjectile proj) {
-		EntityManager.getProjectileManager().addProjectile(proj);
+		EntityManager.getInstance().getProjectileManager().addProjectile(proj);
 	}
 	
 }

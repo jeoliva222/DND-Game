@@ -189,7 +189,7 @@ public class Watchman extends GCharacter {
 	@Override
 	public void takeTurn() {
 		// Get reference to the player
-		Player player = EntityManager.getPlayer();
+		Player player = EntityManager.getInstance().getPlayer();
 		
 		// If this is dead or the player is dead, don't do anything
 		if(!this.isAlive() || !player.isAlive()) {
@@ -212,7 +212,7 @@ public class Watchman extends GCharacter {
 					if(!this.soundedAlarm) {
 						// For every NPC in the list, spawn it
 						for(GCharacter npc: this.npcList) {
-							EntityManager.getNPCManager().addPendingCharacter(npc);
+							EntityManager.getInstance().getNPCManager().addPendingCharacter(npc);
 						}
 						
 						for(ExtraTile et: this.tileList) {
@@ -280,18 +280,21 @@ public class Watchman extends GCharacter {
 				}
 				break;
 			case Watchman.STATE_PREP:
+				// Retrieve instance of EntityManager
+				EntityManager em = EntityManager.getInstance();
+				
 				// Increment windup count and check to see if we've wound up enough
 				this.windupCount += 1;
 				if(this.windupCount >= this.windupMax) {
 					// Use direction from player to mark squares
 					if(Math.abs(this.xMarkDir) > Math.abs(this.yMarkDir)) {
 						// Player to left/right
-						EntityManager.getEffectManager().addEffect(new MusicEffect(this.xPos + this.xMarkDir, this.yPos));
-						EntityManager.getEffectManager().addEffect(new MusicEffect(this.xPos + this.xMarkDir, this.yPos + 1));
-						EntityManager.getEffectManager().addEffect(new MusicEffect(this.xPos + this.xMarkDir, this.yPos - 1));
-						EntityManager.getEffectManager().addEffect(new MusicEffect(this.xPos + (this.xMarkDir*2), this.yPos));
-						EntityManager.getEffectManager().addEffect(new MusicEffect(this.xPos + (this.xMarkDir*2), this.yPos + 1));
-						EntityManager.getEffectManager().addEffect(new MusicEffect(this.xPos + (this.xMarkDir*2), this.yPos - 1));
+						em.getEffectManager().addEffect(new MusicEffect(this.xPos + this.xMarkDir, this.yPos));
+						em.getEffectManager().addEffect(new MusicEffect(this.xPos + this.xMarkDir, this.yPos + 1));
+						em.getEffectManager().addEffect(new MusicEffect(this.xPos + this.xMarkDir, this.yPos - 1));
+						em.getEffectManager().addEffect(new MusicEffect(this.xPos + (this.xMarkDir*2), this.yPos));
+						em.getEffectManager().addEffect(new MusicEffect(this.xPos + (this.xMarkDir*2), this.yPos + 1));
+						em.getEffectManager().addEffect(new MusicEffect(this.xPos + (this.xMarkDir*2), this.yPos - 1));
 						
 						// Attack player if in affected space
 						if(((plrX == this.xPos + this.xMarkDir) || (plrX == this.xPos + (this.xMarkDir*2))) &&
@@ -300,12 +303,12 @@ public class Watchman extends GCharacter {
 						}
 					} else {
 						// Player above/below
-						EntityManager.getEffectManager().addEffect(new MusicEffect(this.xPos, this.yPos + this.yMarkDir));
-						EntityManager.getEffectManager().addEffect(new MusicEffect(this.xPos + 1, this.yPos + this.yMarkDir));
-						EntityManager.getEffectManager().addEffect(new MusicEffect(this.xPos - 1, this.yPos + this.yMarkDir));
-						EntityManager.getEffectManager().addEffect(new MusicEffect(this.xPos, this.yPos + (this.yMarkDir*2)));
-						EntityManager.getEffectManager().addEffect(new MusicEffect(this.xPos + 1, this.yPos + (this.yMarkDir*2)));
-						EntityManager.getEffectManager().addEffect(new MusicEffect(this.xPos - 1, this.yPos + (this.yMarkDir*2)));
+						em.getEffectManager().addEffect(new MusicEffect(this.xPos, this.yPos + this.yMarkDir));
+						em.getEffectManager().addEffect(new MusicEffect(this.xPos + 1, this.yPos + this.yMarkDir));
+						em.getEffectManager().addEffect(new MusicEffect(this.xPos - 1, this.yPos + this.yMarkDir));
+						em.getEffectManager().addEffect(new MusicEffect(this.xPos, this.yPos + (this.yMarkDir*2)));
+						em.getEffectManager().addEffect(new MusicEffect(this.xPos + 1, this.yPos + (this.yMarkDir*2)));
+						em.getEffectManager().addEffect(new MusicEffect(this.xPos - 1, this.yPos + (this.yMarkDir*2)));
 						
 						// Attack player if in affected space
 						if(((plrY == this.yPos + this.yMarkDir) || (plrY == this.yPos + (this.yMarkDir*2))) &&

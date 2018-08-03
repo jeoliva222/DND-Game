@@ -24,10 +24,13 @@ public class Fists extends Weapon {
 	
 	@Override
 	public boolean tryAttack(int dx, int dy) {
-		for(GCharacter npc : EntityManager.getNPCManager().getCharacters()) {
+		// Retrieve instance of EntityManager
+		EntityManager em = EntityManager.getInstance();
+		
+		for(GCharacter npc : em.getNPCManager().getCharacters()) {
 			// If we're attacking at an NPC's position, complete attack
-			if((EntityManager.getPlayer().getXPos() + dx) == npc.getXPos()
-					&& (EntityManager.getPlayer().getYPos() + dy) == npc.getYPos()) {
+			if((em.getPlayer().getXPos() + dx) == npc.getXPos()
+					&& (em.getPlayer().getYPos() + dy) == npc.getYPos()) {
 				if(this.isCharged) {
 					// First, discharge weapon
 					this.dischargeWeapon();

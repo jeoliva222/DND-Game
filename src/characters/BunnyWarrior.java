@@ -170,7 +170,7 @@ public class BunnyWarrior extends GCharacter {
 	@Override
 	public void takeTurn() {
 		// Fetch reference to the player
-		Player player = EntityManager.getPlayer();
+		Player player = EntityManager.getInstance().getPlayer();
 		
 		// If this is dead or the player is dead, don't do anything
 		if(!this.isAlive() || !player.isAlive()) {
@@ -296,8 +296,8 @@ public class BunnyWarrior extends GCharacter {
 				break;
 			case BunnyWarrior.STATE_PREP_STAB:
 				// Mark tiles with damage indicators
-				EntityManager.getEffectManager().addEffect(new DamageIndicator(this.xPos + this.xMarkDir, this.yPos + this.yMarkDir));
-				EntityManager.getEffectManager().addEffect(new DamageIndicator(this.xPos + (this.xMarkDir*2), this.yPos + (this.yMarkDir*2)));
+				EntityManager.getInstance().getEffectManager().addEffect(new DamageIndicator(this.xPos + this.xMarkDir, this.yPos + this.yMarkDir));
+				EntityManager.getInstance().getEffectManager().addEffect(new DamageIndicator(this.xPos + (this.xMarkDir*2), this.yPos + (this.yMarkDir*2)));
 				
 				// Play sound
 				SoundPlayer.playWAV(GPath.createSoundPath("whip_ATT.wav"));
@@ -319,9 +319,9 @@ public class BunnyWarrior extends GCharacter {
 				SoundPlayer.playWAV(GPath.createSoundPath("swing_ATT.wav"));
 				if(Math.abs(this.xMarkDir) > Math.abs(this.yMarkDir)) {
 					// Player to left/right
-					EntityManager.getEffectManager().addEffect(new DamageIndicator(this.xPos + this.xMarkDir, this.yPos));
-					EntityManager.getEffectManager().addEffect(new DamageIndicator(this.xPos + this.xMarkDir, this.yPos + 1));
-					EntityManager.getEffectManager().addEffect(new DamageIndicator(this.xPos + this.xMarkDir, this.yPos - 1));
+					EntityManager.getInstance().getEffectManager().addEffect(new DamageIndicator(this.xPos + this.xMarkDir, this.yPos));
+					EntityManager.getInstance().getEffectManager().addEffect(new DamageIndicator(this.xPos + this.xMarkDir, this.yPos + 1));
+					EntityManager.getInstance().getEffectManager().addEffect(new DamageIndicator(this.xPos + this.xMarkDir, this.yPos - 1));
 					
 					// Attack player if in affected space
 					if((plrX == this.xPos + this.xMarkDir) &&
@@ -330,9 +330,9 @@ public class BunnyWarrior extends GCharacter {
 					}
 				} else {
 					// Player above/below
-					EntityManager.getEffectManager().addEffect(new DamageIndicator(this.xPos, this.yPos + this.yMarkDir));
-					EntityManager.getEffectManager().addEffect(new DamageIndicator(this.xPos + 1, this.yPos + this.yMarkDir));
-					EntityManager.getEffectManager().addEffect(new DamageIndicator(this.xPos - 1, this.yPos + this.yMarkDir));
+					EntityManager.getInstance().getEffectManager().addEffect(new DamageIndicator(this.xPos, this.yPos + this.yMarkDir));
+					EntityManager.getInstance().getEffectManager().addEffect(new DamageIndicator(this.xPos + 1, this.yPos + this.yMarkDir));
+					EntityManager.getInstance().getEffectManager().addEffect(new DamageIndicator(this.xPos - 1, this.yPos + this.yMarkDir));
 					
 					// Attack player if in affected space
 					if((plrY == this.yPos + this.yMarkDir) &&

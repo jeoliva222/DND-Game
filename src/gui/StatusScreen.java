@@ -73,8 +73,8 @@ public class StatusScreen extends JPanel {
 		StatusScreen.sWeaponHeight = (int) (StatusScreen.sWeaponHeight * GameInitializer.scaleFactor);
 		
 		// Set up health panel
-		StatusScreen.healthInfo.setText("HP: " + Integer.toString(EntityManager.getPlayer().getCurrentHP())
-				+ " / " + Integer.toString(EntityManager.getPlayer().getMaxHP()));
+		StatusScreen.healthInfo.setText("HP: " + Integer.toString(EntityManager.getInstance().getPlayer().getCurrentHP())
+				+ " / " + Integer.toString(EntityManager.getInstance().getPlayer().getMaxHP()));
 		StatusScreen.healthInfo.setFont(new Font(Font.SERIF, Font.BOLD, StatusScreen.hpFontSize));
 		StatusScreen.healthPanel.add(StatusScreen.healthInfo);
 		this.add(StatusScreen.healthPanel);
@@ -97,12 +97,12 @@ public class StatusScreen extends JPanel {
 	// Updates the values in the health panel
 	public static void updateHealthValues() {
 		// Get HP values
-		int hp = EntityManager.getPlayer().getCurrentHP();
-		int max = EntityManager.getPlayer().getMaxHP();
+		int hp = EntityManager.getInstance().getPlayer().getCurrentHP();
+		int max = EntityManager.getInstance().getPlayer().getMaxHP();
 		
 		// Set Health text
-		StatusScreen.healthInfo.setText("HP: " + Integer.toString(EntityManager.getPlayer().getCurrentHP())
-				+ " / " + Integer.toString(EntityManager.getPlayer().getMaxHP()));
+		StatusScreen.healthInfo.setText("HP: " + Integer.toString(hp)
+				+ " / " + Integer.toString(max));
 		
 		// Based on percentage of health left, get color
 		Color healthColor;
@@ -127,8 +127,8 @@ public class StatusScreen extends JPanel {
 	
 	public static void updatePlayerImage() {
 		// Get position of player
-		int xPos = EntityManager.getPlayer().getXPos();
-		int yPos = EntityManager.getPlayer().getYPos();
+		int xPos = EntityManager.getInstance().getPlayer().getXPos();
+		int yPos = EntityManager.getInstance().getPlayer().getYPos();
 		
 		// Get new scale factor
 		double scaleFactor = upScaleFactor;

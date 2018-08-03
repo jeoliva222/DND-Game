@@ -192,7 +192,7 @@ public class GameTile extends JPanel {
 	
 	// Focuses on an NPC if it exists, returning true if we do
 	private boolean findNPC() {
-		for(GCharacter npc: EntityManager.getNPCManager().getCharacters()) {
+		for(GCharacter npc: EntityManager.getInstance().getNPCManager().getCharacters()) {
 			if(this.gridX == npc.getXPos() && this.gridY == npc.getYPos() && npc.getFocusable()) {
 				InfoScreen.setNPCFocus(npc);
 				return true;
@@ -203,7 +203,7 @@ public class GameTile extends JPanel {
 	
 	// Focuses on an NPC if it exists, returning true if we do
 	private boolean findItem() {
-		for(GPickup pu: EntityManager.getPickupManager().getPickups()) {
+		for(GPickup pu: EntityManager.getInstance().getPickupManager().getPickups()) {
 			if(this.gridX == pu.getXPos() && this.gridY == pu.getYPos()) {
 				InfoScreen.setItemFocus(pu.item);
 				return true;

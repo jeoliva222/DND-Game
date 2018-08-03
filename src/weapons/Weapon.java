@@ -62,7 +62,7 @@ public abstract class Weapon extends GItem {
 	// Charges the weapon
 	public void chargeWeapon() {
 		// If player is dead, don't do anything
-		if(!EntityManager.getPlayer().isAlive()) {
+		if(!EntityManager.getInstance().getPlayer().isAlive()) {
 			return;
 		}
 		
@@ -81,10 +81,10 @@ public abstract class Weapon extends GItem {
 	
 	public boolean use() {
 		// Retrieve the currently used weapon
-		Weapon oldWep = EntityManager.getPlayer().getWeapon();
+		Weapon oldWep = EntityManager.getInstance().getPlayer().getWeapon();
 		
 		// Set player's new weapon
-		EntityManager.getPlayer().setWeapon(this);
+		EntityManager.getInstance().getPlayer().setWeapon(this);
 		
 		// Update status screen to show new weapon
 		StatusScreen.updateWeapons();

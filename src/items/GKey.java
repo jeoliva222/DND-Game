@@ -67,8 +67,8 @@ public class GKey extends GItem {
 	@Override
 	public boolean use() {
 		// Get player's coordinates on the screen
-		int plrX = EntityManager.getPlayer().getXPos();
-		int plrY = EntityManager.getPlayer().getYPos();
+		int plrX = EntityManager.getInstance().getPlayer().getXPos();
+		int plrY = EntityManager.getInstance().getPlayer().getYPos();
 		
 		// Initialize TileType variables
 		TileType upTile, downTile, leftTile, rightTile;

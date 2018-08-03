@@ -20,7 +20,7 @@ public class Ground extends TileType {
 	@Override
 	public String selectImage() {
 		// Fetch region path to display image from correct area
-		String regionPath = EntityManager.getActiveArea().getTheme();
+		String regionPath = EntityManager.getInstance().getActiveArea().getTheme();
 		String imagePath = null;
 		
 		// Fetch one of three images randomly, with

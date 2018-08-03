@@ -65,7 +65,7 @@ public class WaterButton extends GButton {
 	@Override
 	public String selectImage() {
 		// Fetch region path to display image from correct area
-		String regionPath = EntityManager.getActiveArea().getTheme();
+		String regionPath = EntityManager.getInstance().getActiveArea().getTheme();
 		
 		// Initialize String variables
 		String basePath = GPath.createImagePath(GPath.TILE, regionPath);

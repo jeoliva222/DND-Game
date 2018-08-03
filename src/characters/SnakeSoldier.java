@@ -186,7 +186,7 @@ public class SnakeSoldier extends GCharacter {
 	@Override
 	public void takeTurn() {
 		// Fetch reference to the player
-		Player player = EntityManager.getPlayer();
+		Player player = EntityManager.getInstance().getPlayer();
 		
 		// If this is dead or the player is dead, don't do anything
 		if(!this.isAlive() || !player.isAlive()) {
@@ -323,7 +323,7 @@ public class SnakeSoldier extends GCharacter {
 				break;
 			case SnakeSoldier.STATE_PREP_BITE:
 				// Mark tile with damage indicator
-				EntityManager.getEffectManager().addEffect(new DamageIndicator(this.xPos + this.xMarkDir, this.yPos + this.yMarkDir));
+				EntityManager.getInstance().getEffectManager().addEffect(new DamageIndicator(this.xPos + this.xMarkDir, this.yPos + this.yMarkDir));
 				
 				// Play sound
 				SoundPlayer.playWAV(GPath.createSoundPath("whip_ATT.wav"));
@@ -344,9 +344,9 @@ public class SnakeSoldier extends GCharacter {
 				SoundPlayer.playWAV(GPath.createSoundPath("swing_ATT.wav"));
 				if(Math.abs(this.xMarkDir) > Math.abs(this.yMarkDir)) {
 					// Player to left/right
-					EntityManager.getEffectManager().addEffect(new DamageIndicator(this.xPos + this.xMarkDir, this.yPos));
-					EntityManager.getEffectManager().addEffect(new DamageIndicator(this.xPos + this.xMarkDir, this.yPos + 1));
-					EntityManager.getEffectManager().addEffect(new DamageIndicator(this.xPos + this.xMarkDir, this.yPos - 1));
+					EntityManager.getInstance().getEffectManager().addEffect(new DamageIndicator(this.xPos + this.xMarkDir, this.yPos));
+					EntityManager.getInstance().getEffectManager().addEffect(new DamageIndicator(this.xPos + this.xMarkDir, this.yPos + 1));
+					EntityManager.getInstance().getEffectManager().addEffect(new DamageIndicator(this.xPos + this.xMarkDir, this.yPos - 1));
 					
 					// Attack player if in affected space
 					if((plrX == this.xPos + this.xMarkDir) &&
@@ -355,9 +355,9 @@ public class SnakeSoldier extends GCharacter {
 					}
 				} else {
 					// Player above/below
-					EntityManager.getEffectManager().addEffect(new DamageIndicator(this.xPos, this.yPos + this.yMarkDir));
-					EntityManager.getEffectManager().addEffect(new DamageIndicator(this.xPos + 1, this.yPos + this.yMarkDir));
-					EntityManager.getEffectManager().addEffect(new DamageIndicator(this.xPos - 1, this.yPos + this.yMarkDir));
+					EntityManager.getInstance().getEffectManager().addEffect(new DamageIndicator(this.xPos, this.yPos + this.yMarkDir));
+					EntityManager.getInstance().getEffectManager().addEffect(new DamageIndicator(this.xPos + 1, this.yPos + this.yMarkDir));
+					EntityManager.getInstance().getEffectManager().addEffect(new DamageIndicator(this.xPos - 1, this.yPos + this.yMarkDir));
 					
 					// Attack player if in affected space
 					if((plrY == this.yPos + this.yMarkDir) &&
@@ -382,7 +382,7 @@ public class SnakeSoldier extends GCharacter {
 					SoundPlayer.playWAV(GPath.createSoundPath("swing_ATT.wav"));
 					
 					// Mark tile with damage indicator
-					EntityManager.getEffectManager().addEffect(new DamageIndicator(this.xPos + this.xMarkDir, this.yPos + this.yMarkDir));
+					EntityManager.getInstance().getEffectManager().addEffect(new DamageIndicator(this.xPos + this.xMarkDir, this.yPos + this.yMarkDir));
 					
 					// Change state to confirm that we hit
 					this.state = SnakeSoldier.STATE_ATT_SLAM;
@@ -397,7 +397,7 @@ public class SnakeSoldier extends GCharacter {
 						// If not successful, end the charge already
 						
 						// Mark tile with damage indicator
-						EntityManager.getEffectManager().addEffect(new DamageIndicator(this.xPos + this.xMarkDir, this.yPos + this.yMarkDir));
+						EntityManager.getInstance().getEffectManager().addEffect(new DamageIndicator(this.xPos + this.xMarkDir, this.yPos + this.yMarkDir));
 						
 						this.state = SnakeSoldier.STATE_ATT_SLAM;
 					}
@@ -413,7 +413,7 @@ public class SnakeSoldier extends GCharacter {
 					SoundPlayer.playWAV(GPath.createSoundPath("swing_ATT.wav"));
 					
 					// Mark tile with damage indicator
-					EntityManager.getEffectManager().addEffect(new DamageIndicator(this.xPos + this.xMarkDir, this.yPos + this.yMarkDir));
+					EntityManager.getInstance().getEffectManager().addEffect(new DamageIndicator(this.xPos + this.xMarkDir, this.yPos + this.yMarkDir));
 					
 					// Change state to confirm that we hit
 					this.state = SnakeSoldier.STATE_ATT_SLAM;
@@ -427,7 +427,7 @@ public class SnakeSoldier extends GCharacter {
 						// If not successful, end the charge
 						
 						// Mark tile with damage indicator
-						EntityManager.getEffectManager().addEffect(new DamageIndicator(this.xPos + this.xMarkDir, this.yPos + this.yMarkDir));
+						EntityManager.getInstance().getEffectManager().addEffect(new DamageIndicator(this.xPos + this.xMarkDir, this.yPos + this.yMarkDir));
 						
 						this.state = SnakeSoldier.STATE_ATT_SLAM;
 					}

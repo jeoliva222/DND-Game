@@ -163,7 +163,7 @@ public class PathFinder {
 			}
 			
 			// Check on collisions for other characters 
-			for(GCharacter otherNPC : EntityManager.getNPCManager().getCharacters()) {
+			for(GCharacter otherNPC : EntityManager.getInstance().getNPCManager().getCharacters()) {
 				if(coord.width == otherNPC.getXPos() && coord.height == otherNPC.getYPos()) {
 					return false;
 				}

@@ -95,7 +95,7 @@ public abstract class GCharacter implements Serializable {
 	public boolean moveCharacter(int dx, int dy) {
 		
 		// Check on collisions for other characters 
-		for(GCharacter npc : EntityManager.getNPCManager().getCharacters()) {
+		for(GCharacter npc : EntityManager.getInstance().getNPCManager().getCharacters()) {
 			if((this.xPos + dx) == npc.xPos && (this.yPos + dy) == npc.yPos) {
 				return false;
 			}
@@ -148,7 +148,7 @@ public abstract class GCharacter implements Serializable {
 					+ Integer.toString(dmg) + " damage to the player.", GColors.DAMAGE);
 		}
 		
-		return EntityManager.getPlayer().damagePlayer(dmg);
+		return EntityManager.getInstance().getPlayer().damagePlayer(dmg);
 	}
 	
 	// Initiates an attack on the player assuming no damage multiplier

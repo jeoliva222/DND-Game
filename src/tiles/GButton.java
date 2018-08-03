@@ -104,8 +104,8 @@ public abstract class GButton extends TileType {
 		this.imagePath = this.selectImage();
 		
 		// Refresh tile the player was on
-		int plrX = EntityManager.getPlayer().getXPos();
-		int plrY = EntityManager.getPlayer().getYPos();
+		int plrX = EntityManager.getInstance().getPlayer().getXPos();
+		int plrY = EntityManager.getInstance().getPlayer().getYPos();
 		GameScreen.getTile(plrX, plrY).setBG(this.imagePath);
 		GameScreen.getTile(plrX, plrY).repaint();
 		
@@ -154,13 +154,13 @@ public abstract class GButton extends TileType {
 				// For every NPC in the list, spawn it
 				for(GCharacter npc: this.npcList) {
 					///**** TEMPORARY IMPLEMENTATION
-					EntityManager.getNPCManager().addCharacter(npc);
+					EntityManager.getInstance().getNPCManager().addCharacter(npc);
 				}
 				break;
 			case ENEMY_AND_TILE:
 				// For every NPC in the list, spawn it
 				for(GCharacter npc: this.npcList) {
-					EntityManager.getNPCManager().addCharacter(npc);
+					EntityManager.getInstance().getNPCManager().addCharacter(npc);
 				}
 				
 				for(ExtraTile et: this.extraList) {

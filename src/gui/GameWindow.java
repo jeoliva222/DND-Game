@@ -33,9 +33,6 @@ public class GameWindow extends JFrame implements KeyListener {
 	// Flag to save the game
 	public static boolean shouldSave = false;
 	
-	// Manager to hold and deal with all game entities
-	private static EntityManager entityManager;
-	
 	// GameScreen for displaying the game
 	private static GameScreen screen;
 	
@@ -57,10 +54,6 @@ public class GameWindow extends JFrame implements KeyListener {
 	// Constructor
 	public GameWindow() {
 		super();
-
-		///*** No loading functionality at the moment ***
-		// Initializes the entity manager
-		GameWindow.entityManager = new EntityManager();
 		
 		// Initialize GameScreen within window
 		GameWindow.screen = new GameScreen();
@@ -142,17 +135,20 @@ public class GameWindow extends JFrame implements KeyListener {
 		SoundPlayer.cacheSoundPlaying();
 		
 		// Start playing music
-		SoundPlayer.playMidi(EntityManager.getActiveArea().getMusic(), 30);
+		SoundPlayer.playMidi(EntityManager.getInstance().getActiveArea().getMusic(), 30);
 	}
 	
 	// Moves the player x-wise/y-wise then updates the screen to show it
 	public void movePlayer(int dx, int dy) {
+		// Fetch reference to player
+		Player plr = EntityManager.getInstance().getPlayer();
+		
 		// Get player position before switch
-		int currentX = EntityManager.getPlayer().getXPos();
-		int currentY = EntityManager.getPlayer().getYPos();
+		int currentX = plr.getXPos();
+		int currentY = plr.getYPos();
 		
 		// Move player if possible
-		EntityManager.getPlayer().movePlayer(dx, dy);
+		plr.movePlayer(dx, dy);
 		
 		// Make the changes to the board
 		this.shiftEntity(currentX, currentY);
@@ -161,7 +157,7 @@ public class GameWindow extends JFrame implements KeyListener {
 	
 	public void moveCharacters() {
 		// Iterate through all characters
-		for(GCharacter gchar : EntityManager.getNPCManager().getCharacters()) {
+		for(GCharacter gchar : EntityManager.getInstance().getNPCManager().getCharacters()) {
 			// Get character position before switch
 			int currentX = gchar.getXPos();
 			int currentY = gchar.getYPos();
@@ -177,7 +173,7 @@ public class GameWindow extends JFrame implements KeyListener {
 	// Takes turns for all the projectiles
 	public void moveProjectiles() {
 		// Iterate through all projectiles
-		for(GProjectile proj : EntityManager.getProjectileManager().getProjectiles()) {
+		for(GProjectile proj : EntityManager.getInstance().getProjectileManager().getProjectiles()) {
 			// Get projectile position before switch
 			int currentX = proj.getXPos();
 			int currentY = proj.getYPos();
@@ -220,12 +216,15 @@ public class GameWindow extends JFrame implements KeyListener {
 	
 	// Updates image for player
 	public void updatePlayer() {
+		// Fetch instance of player
+		Player plr = EntityManager.getInstance().getPlayer();
+		
 		// Get player image path
-		String playerImage = EntityManager.getPlayer().getPlayerImage();
+		String playerImage = plr.getPlayerImage();
 		
 		// Get player position before switch
-		int currentX = EntityManager.getPlayer().getXPos();
-		int currentY = EntityManager.getPlayer().getYPos();
+		int currentX = plr.getXPos();
+		int currentY = plr.getYPos();
 		
 		// Fetch tile the player is on
 		GameTile updateTile = null;
@@ -243,7 +242,7 @@ public class GameWindow extends JFrame implements KeyListener {
 	// Update image[s] for characters
 	public void updateCharacters() {
 		// Iterate through all characters
-		for(GCharacter gchar : EntityManager.getNPCManager().getCharacters()) {
+		for(GCharacter gchar : EntityManager.getInstance().getNPCManager().getCharacters()) {
 			// Get character image path
 			String charImage = gchar.getImage();
 			
@@ -268,7 +267,7 @@ public class GameWindow extends JFrame implements KeyListener {
 	// Update image[s] for projectiles
 	public void updateProjectiles() {
 		// Iterate through all projectiles
-		for(GProjectile proj : EntityManager.getProjectileManager().getProjectiles()) {
+		for(GProjectile proj : EntityManager.getInstance().getProjectileManager().getProjectiles()) {
 			// Get projectile image path
 			String projImage = proj.getImage();
 			
@@ -292,7 +291,7 @@ public class GameWindow extends JFrame implements KeyListener {
 	
 	// Updates everything in the window
 	public void updateAll() {
-		GameWindow.entityManager.manageAll();
+		EntityManager.getInstance().manageAll();
 		if(GameWindow.shouldSave) {
 			this.saveGame();
 			GameWindow.shouldSave = false;
@@ -313,12 +312,12 @@ public class GameWindow extends JFrame implements KeyListener {
 	// Saves the game to a save file
 	public void saveGame() {
 		// Don't save if player is dead
-    	if(EntityManager.getPlayer().isAlive()) {
+    	if(EntityManager.getInstance().getPlayer().isAlive()) {
     		// Grab items from inventory
         	GItem[] inv = InventoryScreen.getItemArray();
         	
         	// Get current player state
-        	Player player = EntityManager.getPlayer();
+        	Player player = EntityManager.getInstance().getPlayer();
         	
         	// Save the current level state without reseting NPC locations
            	GameWindow.getScreen().saveLevel(false);
@@ -342,6 +341,9 @@ public class GameWindow extends JFrame implements KeyListener {
 			return;
 		}
 		
+		// Fetch instance of EntityManager
+		EntityManager em = EntityManager.getInstance();
+		
 		// Gets game save from file (Sets player and inventory from save file)
     	GameState.loadGame();
     	
@@ -349,7 +351,7 @@ public class GameWindow extends JFrame implements KeyListener {
 		InfoScreen.defocusAll();
 		
 		// Clear the EntityManager
-		EntityManager.removeEverything();
+		em.removeEverything();
 		
 		// Clear the GameTile images
 		for(int y = 0; y < GameInitializer.yDimen; y++) {
@@ -359,15 +361,15 @@ public class GameWindow extends JFrame implements KeyListener {
 		}
     	
 		// Set the new active area
-		EntityManager.setActiveArea(EntityManager.getPlayer().fetchArea());
+		EntityManager.getInstance().setActiveArea(em.getPlayer().fetchArea());
 		
 		// Load the level our player is at
-		int levelX = EntityManager.getPlayer().getLevelX();
-		int levelY = EntityManager.getPlayer().getLevelY();
-		GameWindow.getScreen().loadLevel(EntityManager.getActiveArea().getLevel(levelX, levelY));
+		int levelX = em.getPlayer().getLevelX();
+		int levelY = em.getPlayer().getLevelY();
+		GameWindow.getScreen().loadLevel(em.getActiveArea().getLevel(levelX, levelY));
 		
 		// Change music
-		SoundPlayer.changeMidi(EntityManager.getActiveArea().getMusic(), 30);
+		SoundPlayer.changeMidi(em.getActiveArea().getMusic(), 30);
 		
 		// Log that we loaded the screen
 		LogScreen.log("Loaded game...");
@@ -415,24 +417,24 @@ public class GameWindow extends JFrame implements KeyListener {
         } 
         else if(e.getKeyCode() == KeyEvent.VK_SPACE) {
         	// Charge weapon and hold position for the turn
-        	EntityManager.getPlayer().getWeapon().chargeWeapon();
+        	EntityManager.getInstance().getPlayer().getWeapon().chargeWeapon();
         	this.completeTurn(0, 0);
         	this.updateAll();
         } 
         else if (e.getKeyCode() == KeyEvent.VK_CONTROL) {
         	// Hold position for the turn
-        	EntityManager.getPlayer().getWeapon().dischargeWeapon();
+        	EntityManager.getInstance().getPlayer().getWeapon().dischargeWeapon();
         	this.completeTurn(0, 0);
         	this.updateAll();
         }
         else if(e.getKeyCode() == KeyEvent.VK_M) {
         	///*** DEBUG: Damages player by 1
-        	EntityManager.getPlayer().damagePlayer(1);
+        	EntityManager.getInstance().getPlayer().damagePlayer(1);
         	this.updateAll();
         }
         else if(e.getKeyCode() == KeyEvent.VK_N) {
         	///*** DEBUG: Heals player by 1
-        	EntityManager.getPlayer().healPlayer(1, false);
+        	EntityManager.getInstance().getPlayer().healPlayer(1, false);
         	this.updateAll();
         }
         else if(e.getKeyCode() == KeyEvent.VK_Z) {
@@ -457,7 +459,7 @@ public class GameWindow extends JFrame implements KeyListener {
         }
         else if(e.getKeyCode() == KeyEvent.VK_SHIFT) {
         	// Swaps active weapon
-        	EntityManager.getPlayer().swapEquippedWeapon();
+        	EntityManager.getInstance().getPlayer().swapEquippedWeapon();
         	this.completeTurn(0, 0);
         	this.updateAll();
         }
@@ -495,10 +497,5 @@ public class GameWindow extends JFrame implements KeyListener {
 	private static void setScreen(GameScreen setter) {
 		GameWindow.screen = setter;
 	}
-	
-	public static EntityManager getEntityManager() {
-		return GameWindow.entityManager;
-	}
-	
 	
 }

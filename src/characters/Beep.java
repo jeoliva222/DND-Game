@@ -167,7 +167,7 @@ public class Beep extends GCharacter {
 	public void takeTurn() {
 		
 		// Fetch the player for easy reference
-		Player player = EntityManager.getPlayer();
+		Player player = EntityManager.getInstance().getPlayer();
 		
 		// If this is dead or the player is dead, don't do anything
 		if(!this.isAlive() || !player.isAlive()) {
@@ -198,7 +198,7 @@ public class Beep extends GCharacter {
 				// Attack if player is in one tile radius around player
 				if(Math.abs(distX) <= 1 && Math.abs(distY) <= 1) {
 					// Mark tiles with damage indicators
-					EntityManager.getEffectManager().addEffect(new DamageIndicator(plrX, plrY));
+					EntityManager.getInstance().getEffectManager().addEffect(new DamageIndicator(plrX, plrY));
 					this.playerInitiate();
 				} else {
 					// If not attacking the player, hop closer to them

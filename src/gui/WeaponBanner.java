@@ -79,10 +79,10 @@ public class WeaponBanner extends JPanel {
 		     @Override
 		     public void mouseEntered(MouseEvent mouseEvent) {
 		    	 // Try to focus on Equipped weapon if it exists
-		    	 if(EntityManager.getPlayer().getSheathedWeapon() == null) {
+		    	 if(EntityManager.getInstance().getPlayer().getSheathedWeapon() == null) {
 		    		 return;
 		    	 } else {
-		    		 InfoScreen.setItemFocus(EntityManager.getPlayer().getSheathedWeapon());
+		    		 InfoScreen.setItemFocus(EntityManager.getInstance().getPlayer().getSheathedWeapon());
 		    	 }
 		     }
 		});
@@ -94,7 +94,7 @@ public class WeaponBanner extends JPanel {
 	
 	public void updateWeaponBanner() {
 		// Fetches player's current sheathed weapon for reference
-		Weapon newWep = EntityManager.getPlayer().getSheathedWeapon();
+		Weapon newWep = EntityManager.getInstance().getPlayer().getSheathedWeapon();
 		
 		// Updates the weapon and border image
 		this.setWeaponPath(newWep.imagePath);

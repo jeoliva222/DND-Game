@@ -14,60 +14,63 @@ import projectiles.GProjectile;
 
 public class EntityManager {
 
+	// Singleton instance of the EntityManager
+	private static EntityManager INSTANCE;
+	
 	// The player the user controls
-	private static Player player;
+	private Player player;
 	
 	// The list of dead characters
-	private static CorpseManager corpseManager;
+	private CorpseManager corpseManager;
 	
 	// List of currently alive NPCs/enemies
-	private static NPCManager npcManager;
+	private NPCManager npcManager;
 	
 	// List of active visual effects
-	private static EffectManager fxManager;
+	private EffectManager fxManager;
 	
 	// List of active projectiles
-	private static ProjectileManager projManager;
+	private ProjectileManager projManager;
 	
 	// List of active pickups
-	private static PickupManager pickupManager;
+	private PickupManager pickupManager;
 	
 	// Active area that is loaded in
-	private static MapArea activeArea;
+	private MapArea activeArea;
 	
 	///TODO Temporary code
 	// Blank Constructor for the EntityManager
-	public EntityManager() {
-		EntityManager.player = new Player();
-		EntityManager.corpseManager = new CorpseManager();
-		EntityManager.npcManager = new NPCManager();
-		EntityManager.fxManager = new EffectManager();
-		EntityManager.projManager = new ProjectileManager();
-		EntityManager.pickupManager = new PickupManager();
+	private EntityManager() {
+		this.player = new Player();
+		this.corpseManager = new CorpseManager();
+		this.npcManager = new NPCManager();
+		this.fxManager = new EffectManager();
+		this.projManager = new ProjectileManager();
+		this.pickupManager = new PickupManager();
 	}
 	
 	// Constructor created with pre-existing entities
-	public EntityManager(Player player, ArrayList<Corpse> corpses, ArrayList<GCharacter> npcs,
+	private EntityManager(Player player, ArrayList<Corpse> corpses, ArrayList<GCharacter> npcs,
 			ArrayList<GProjectile> projectiles, ArrayList<GPickup> pickups) {
-		EntityManager.player = player;
-		EntityManager.corpseManager = new CorpseManager(corpses);
-		EntityManager.npcManager = new NPCManager(npcs);
-		EntityManager.fxManager = new EffectManager();
-		EntityManager.projManager = new ProjectileManager(projectiles);
-		EntityManager.pickupManager = new PickupManager(pickups);
+		this.player = player;
+		this.corpseManager = new CorpseManager(corpses);
+		this.npcManager = new NPCManager(npcs);
+		this.fxManager = new EffectManager();
+		this.projManager = new ProjectileManager(projectiles);
+		this.pickupManager = new PickupManager(pickups);
 	}
 	
 	// Adds everything that was pending addition to the game
 	public void addAllPending() {
-		EntityManager.npcManager.movePending();
-		EntityManager.projManager.movePending();
+		this.npcManager.movePending();
+		this.projManager.movePending();
 	}
 	
 	// Cleans up effects that have lasted their duration
 	public void effectCleaner() {
 		// Add all effects that have persisted long enough to the discard pile
 		ArrayList<GEffect> hearse = new ArrayList<GEffect>();
-		for(GEffect fx: EntityManager.fxManager.getEffects()) {
+		for(GEffect fx: this.fxManager.getEffects()) {
 			if(fx.persist()) {
 				hearse.add(fx);
 			}
@@ -85,7 +88,7 @@ public class EntityManager {
 				// Do nothing
 			}
 			// Remove the effect from the manager
-			EntityManager.fxManager.removeEffect(fx);
+			this.fxManager.removeEffect(fx);
 		}
 	}
 	
@@ -93,9 +96,9 @@ public class EntityManager {
 	public void corpseCleaner() {
 		// First add the dead characters to a reference list
 		ArrayList<GCharacter> hearse = new ArrayList<GCharacter>();
-		for(GCharacter gchar: EntityManager.npcManager.getCharacters()) {
+		for(GCharacter gchar: this.npcManager.getCharacters()) {
 			if(!gchar.isAlive()) {
-				EntityManager.corpseManager.addCorpse(new Corpse(gchar));
+				this.corpseManager.addCorpse(new Corpse(gchar));
 				hearse.add(gchar);
 				
 				// Also make sure to refresh the tile to clear the dead entity
@@ -116,16 +119,16 @@ public class EntityManager {
 			}
 			// Do the on death functionality and remove from reference list
 			gchar.onDeath();
-			EntityManager.npcManager.removeCharacter(gchar);
+			this.npcManager.removeCharacter(gchar);
 		}
 	}
 	
 	// Removes projectiles that have made an impact from the reference list
-	///**** STILL HAS TO-DO STUFF
+	// TODO
 	public void projectileCleaner() {
 		// Remove projectiles that have made an impact with something
 		ArrayList<GProjectile> hearse = new ArrayList<GProjectile>();
-		for(GProjectile proj: EntityManager.projManager.getProjectiles()) {
+		for(GProjectile proj: this.projManager.getProjectiles()) {
 			if(proj.hasImpacted()) {
 				// Add to pending-removal list
 				hearse.add(proj);
@@ -143,23 +146,19 @@ public class EntityManager {
 				// Do nothing
 			}
 			// Do the on death functionality and remove from reference list
-			///******* ADD ON DEATH FUNCTION
+			// TODO
 			//proj.onDeath();
-			EntityManager.projManager.removeProjectile(proj);
+			this.projManager.removeProjectile(proj);
 		}
-		
-		///*** MOVED TO addAllPending Function
-		// Finally, add pending projectiles into the game
-		//EntityManager.projManager.movePending();
 	}
 	
 	// Clears all the entities from the managers (minus the player)
-	public static void removeEverything() {
-		EntityManager.getCorpseManager().removeAll();
-		EntityManager.getEffectManager().removeAll();
-		EntityManager.getNPCManager().removeAll();
-		EntityManager.getProjectileManager().removeAll();
-		EntityManager.getPickupManager().removeAll();
+	public void removeEverything() {
+		this.getCorpseManager().removeAll();
+		this.getEffectManager().removeAll();
+		this.getNPCManager().removeAll();
+		this.getProjectileManager().removeAll();
+		this.getPickupManager().removeAll();
 	}
 	
 	// Does all the different management functions
@@ -174,41 +173,50 @@ public class EntityManager {
 	//-----------------------
 	// Getters and Setters
 	
-	public static Player getPlayer() {
-		return EntityManager.player;
+	public Player getPlayer() {
+		return this.player;
 	}
 	
-	public static void setPlayer(Player newPlayer) {
-		EntityManager.player = null;
-		EntityManager.player = newPlayer;
+	public void setPlayer(Player newPlayer) {
+		this.player = null;
+		this.player = newPlayer;
 	}
 	
-	public static CorpseManager getCorpseManager() {
-		return EntityManager.corpseManager;
+	public CorpseManager getCorpseManager() {
+		return this.corpseManager;
 	}
 	
-	public static NPCManager getNPCManager() {
-		return EntityManager.npcManager;
+	public NPCManager getNPCManager() {
+		return this.npcManager;
 	}
 	
-	public static EffectManager getEffectManager() {
-		return EntityManager.fxManager;
+	public EffectManager getEffectManager() {
+		return this.fxManager;
 	}
 	
-	public static ProjectileManager getProjectileManager() {
-		return EntityManager.projManager;
+	public ProjectileManager getProjectileManager() {
+		return this.projManager;
 	}
 	
-	public static PickupManager getPickupManager() {
-		return EntityManager.pickupManager;
+	public PickupManager getPickupManager() {
+		return this.pickupManager;
 	}
 	
-	public static MapArea getActiveArea() {
-		return EntityManager.activeArea;
+	public MapArea getActiveArea() {
+		return this.activeArea;
 	}
 	
-	public static void setActiveArea(MapArea newArea) {
-		EntityManager.activeArea = newArea;
+	public void setActiveArea(MapArea newArea) {
+		this.activeArea = newArea;
+	}
+	
+	// Singleton Instance retriever
+	public static EntityManager getInstance() {
+		if(INSTANCE == null) {
+			INSTANCE = new EntityManager();
+		}
+		
+		return INSTANCE;
 	}
 	
 }

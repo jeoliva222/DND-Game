@@ -198,7 +198,7 @@ public class SandWurm extends GCharacter {
 	public boolean moveCharacter(int dx, int dy) {
 		
 		// Check on collisions for other characters 
-		for(GCharacter npc : EntityManager.getNPCManager().getCharacters()) {
+		for(GCharacter npc : EntityManager.getInstance().getNPCManager().getCharacters()) {
 			if((this.xPos + dx) == npc.xPos && (this.yPos + dy) == npc.yPos) {
 				return false;
 			}
@@ -235,7 +235,7 @@ public class SandWurm extends GCharacter {
 	@Override
 	public void takeTurn() {
 		// Fetch the player for easy reference
-		Player player = EntityManager.getPlayer();
+		Player player = EntityManager.getInstance().getPlayer();
 		
 		// If this is dead or the player is dead, don't do anything
 		if(!this.isAlive() || !player.isAlive()) {
@@ -354,7 +354,7 @@ public class SandWurm extends GCharacter {
 				break;
 			case SandWurm.STATE_PREP:	
 				// Mark tile with damage indicator
-				EntityManager.getEffectManager().addEffect(new DamageIndicator(this.xPos + this.markX, this.yPos + this.markY));
+				EntityManager.getInstance().getEffectManager().addEffect(new DamageIndicator(this.xPos + this.markX, this.yPos + this.markY));
 				
 				// Attack in marked direction
 				if((this.xPos + this.markX) == plrX && (this.yPos + this.markY) == plrY)
@@ -393,7 +393,7 @@ public class SandWurm extends GCharacter {
 				}
 				
 				// Spit at the player
-				EntityManager.getProjectileManager()
+				EntityManager.getInstance().getProjectileManager()
 				.addProjectile(new MusicNote((this.xPos + dx),
 										(this.yPos + dy),
 										dx,
@@ -419,7 +419,7 @@ public class SandWurm extends GCharacter {
 		ArrayList<Dimension> badCoords = new ArrayList<Dimension>();
 		
 		// Populate list of bad coordinates to warp to
-		for(GCharacter npc : EntityManager.getNPCManager().getCharacters()) {
+		for(GCharacter npc : EntityManager.getInstance().getNPCManager().getCharacters()) {
 			badCoords.add(new Dimension(npc.getXPos(), npc.getYPos()));
 		}
 
@@ -467,14 +467,14 @@ public class SandWurm extends GCharacter {
 			}
 			
 			// Check for collisions with other NPCs
-			for(GCharacter npc : EntityManager.getNPCManager().getCharacters()) {
+			for(GCharacter npc : EntityManager.getInstance().getNPCManager().getCharacters()) {
 				if((newX) == npc.xPos && (newY) == npc.yPos) {
 					continue;
 				}
 			}
 			
 			// Finally, check for collision with the player
-			Player player = EntityManager.getPlayer();
+			Player player = EntityManager.getInstance().getPlayer();
 			if((newX) == player.getXPos() && (newY) == player.getYPos()) {
 				continue;
 			}

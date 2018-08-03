@@ -163,7 +163,7 @@ public class Bitester extends GCharacter {
 	@Override
 	public void takeTurn() {
 		// Fetch reference to the player
-		Player player = EntityManager.getPlayer();
+		Player player = EntityManager.getInstance().getPlayer();
 		
 		// If this is dead or the player is dead, don't do anything
 		if(!this.isAlive() || !player.isAlive()) {

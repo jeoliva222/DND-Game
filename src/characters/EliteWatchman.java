@@ -107,7 +107,7 @@ public class EliteWatchman extends Watchman {
 	@Override
 	public void takeTurn() {
 		// Get reference to the player
-		Player player = EntityManager.getPlayer();
+		Player player = EntityManager.getInstance().getPlayer();
 		
 		// If this is dead or the player is dead, don't do anything
 		if(!this.isAlive() || !player.isAlive()) {
@@ -130,7 +130,7 @@ public class EliteWatchman extends Watchman {
 					if(!this.soundedAlarm) {
 						// For every NPC in the list, spawn it
 						for(GCharacter npc: this.npcList) {
-							EntityManager.getNPCManager().addPendingCharacter(npc);
+							EntityManager.getInstance().getNPCManager().addPendingCharacter(npc);
 						}
 						
 						for(ExtraTile et: this.tileList) {
@@ -198,12 +198,12 @@ public class EliteWatchman extends Watchman {
 				break;
 			case EliteWatchman.STATE_PREP:
 				// Fire two Music notes at player in a line
-				EntityManager.getProjectileManager()
+				EntityManager.getInstance().getProjectileManager()
 					.addProjectile(new MusicNote((this.xPos + this.xMarkDir),
 											(this.yPos + this.yMarkDir),
 											this.xMarkDir,
 											this.yMarkDir, this));
-				EntityManager.getProjectileManager()
+				EntityManager.getInstance().getProjectileManager()
 				.addProjectile(new MusicNote((this.xPos + (this.xMarkDir*2)),
 										(this.yPos + (this.yMarkDir*2)),
 										this.xMarkDir,

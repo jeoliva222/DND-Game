@@ -23,13 +23,13 @@ public class MediumHealthPotion extends GItem {
 	@Override
 	public boolean use() {
 		// Fetch player's maximum health
-		int maxHP = EntityManager.getPlayer().getMaxHP();
+		int maxHP = EntityManager.getInstance().getPlayer().getMaxHP();
 		
 		// Get healing amount
 		int healing = maxHP / 2;
 		
 		// Heal the player
-		EntityManager.getPlayer().healPlayer(healing, false);
+		EntityManager.getInstance().getPlayer().healPlayer(healing, false);
 		
 		// Log result
 		LogScreen.log("Player chugged and recovered "+Integer.toString(healing)

@@ -24,7 +24,7 @@ public class LargeHealthPotion extends GItem {
 	@Override
 	public boolean use() {		
 		// Heal the player to maximum health
-		EntityManager.getPlayer().fullyHeal();
+		EntityManager.getInstance().getPlayer().fullyHeal();
 		
 		// Log results
 		LogScreen.log("Player chugged deeply and recovered to full health!", GColors.HEAL);

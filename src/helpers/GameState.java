@@ -81,7 +81,7 @@ public class GameState {
 	    	InventoryScreen.setItemArray(loadedInv);
 	    	
 	    	// Set Player
-	    	EntityManager.setPlayer(loadedPlayer);
+	    	EntityManager.getInstance().setPlayer(loadedPlayer);
 	      }
 	      catch (Exception e) {
 	          System.out.println("Error loading data! See stack trace:");
@@ -103,7 +103,7 @@ public class GameState {
 			FileOutputStream myFileOutputStream =
 					new FileOutputStream(GPath.SAVE + "temp" + File.separator + areaName + ".ser");
 			ObjectOutputStream myObjectOutputStream = new ObjectOutputStream(myFileOutputStream);
-			myObjectOutputStream.writeObject(EntityManager.getActiveArea());
+			myObjectOutputStream.writeObject(EntityManager.getInstance().getActiveArea());
 			myObjectOutputStream.close();
 		} catch (IOException e) {
 			System.out.println("Saving the area " + areaName + " failed!");
@@ -115,7 +115,7 @@ public class GameState {
 	// Save the area we are currently in
 	public static void saveCurrentArea() {
 		// Fetch reference to the player
-		Player player = EntityManager.getPlayer();
+		Player player = EntityManager.getInstance().getPlayer();
 		
 		// Get the area key of the current are we're in
 		String areaKey = WorldMap.getAreaKey(player.getAreaX(), player.getAreaY());

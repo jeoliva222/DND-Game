@@ -164,7 +164,7 @@ public class Beanpole extends GCharacter {
 	@Override
 	public void takeTurn() {
 		// Get reference to the player
-		Player player = EntityManager.getPlayer();
+		Player player = EntityManager.getInstance().getPlayer();
 		
 		// If this is dead or the player is dead, don't do anything
 		if(!this.isAlive() || !player.isAlive()) {
@@ -238,7 +238,7 @@ public class Beanpole extends GCharacter {
 				break;
 			case Beanpole.STATE_PREP:
 				// Mark tile with damage indicator
-				EntityManager.getEffectManager().addEffect(new DamageIndicator(this.xPos + this.markX, this.yPos + this.markY));
+				EntityManager.getInstance().getEffectManager().addEffect(new DamageIndicator(this.xPos + this.markX, this.yPos + this.markY));
 				
 				// Attack in marked direction
 				if((this.xPos + this.markX) == plrX && (this.yPos + this.markY) == plrY)
