@@ -105,53 +105,51 @@ public class SnakeSoldier extends GCharacter {
 	@Override
 	public String getImage() {
 		String imgPath = this.imageDir + this.ssImage_base;
-//		String hpPath = "";
-//		String statePath = "";
-//		
-//		if(this.currentHP > (this.maxHP / 2)) {
-//			hpPath = "_full";
-//		} else if(this.currentHP > 0) {
-//			hpPath = "_fatal";
-//		} else {
-//			hpPath = "_dead";
-//			return GPath.NULL;
-//		}
-//		
-//		switch(this.state) {
-//		case SnakeSoldier.STATE_IDLE:
-//		case SnakeSoldier.STATE_PURSUE:
-//			// No extra path
-//			break;
-//		case SnakeSoldier.STATE_PREP_BITE:
-//			statePath = "_PREP_STAB";
-//			break;
-//		case SnakeSoldier.STATE_ALERTED:
-//		case SnakeSoldier.STATE_ATT_BITE:
-//			statePath = "_ALERT";
-//			break;
-//		case SnakeSoldier.STATE_PREP_SWIPE:
-//			statePath = "_PREP_SWING";
-//			break;
-//		case SnakeSoldier.STATE_ATT_SWIPE:
-//			statePath = "_ATT_SWING";
-//			break;
-//		case SnakeSoldier.STATE_PREP_SLAM:
-//			statePath = "_PREP_STAB";
-//			break;
-//		case SnakeSoldier.STATE_MID_SLAM:
-//			statePath = "_PREP_SWING";
-//			break;
-//		case SnakeSoldier.STATE_ATT_SLAM:
-//			statePath = "_ATT_SWING";
-//			break;
-//		default:
-//			System.out.println
-//				(this.getName() + " couldn't find a proper image: " + Integer.toString(this.state));
-//			return GPath.NULL;
-//		}
-//		
-//		return (imgPath + hpPath + statePath + ".png");
-		return (imgPath + ".png");
+		String hpPath = "";
+		String statePath = "";
+		
+		if(this.currentHP > (this.maxHP / 2)) {
+			hpPath = "_full";
+		} else if(this.currentHP > 0) {
+			hpPath = "_fatal";
+		} else {
+			return GPath.NULL;
+		}
+		
+		switch(this.state) {
+		case SnakeSoldier.STATE_IDLE:
+		case SnakeSoldier.STATE_PURSUE:
+			// No extra path
+			break;
+		case SnakeSoldier.STATE_PREP_BITE:
+			statePath = "_ALERT";
+			break;
+		case SnakeSoldier.STATE_ALERTED:
+		case SnakeSoldier.STATE_ATT_BITE:
+			statePath = "_ALERT";
+			break;
+		case SnakeSoldier.STATE_PREP_SWIPE:
+			statePath = "_PREP_SWIPE";
+			break;
+		case SnakeSoldier.STATE_ATT_SWIPE:
+			statePath = "_ATT_SWIPE";
+			break;
+		case SnakeSoldier.STATE_PREP_SLAM:
+			statePath = "_ALERT";
+			break;
+		case SnakeSoldier.STATE_MID_SLAM:
+			statePath = "_PREP_SWIPE";
+			break;
+		case SnakeSoldier.STATE_ATT_SLAM:
+			statePath = "_ATT_SWIPE";
+			break;
+		default:
+			System.out.println
+				(this.getName() + " couldn't find a proper image: " + Integer.toString(this.state));
+			return GPath.NULL;
+		}
+		
+		return (imgPath + hpPath + statePath + ".png");
 	}
 	
 	public String getCorpseImage() {
