@@ -42,8 +42,10 @@ public class GameScreen extends JPanel {
 		int xDimen = GameInitializer.xDimen;
 		int yDimen = GameInitializer.yDimen;
 		
+		// Calculate tile size
 		GameScreen.tileSize = (int) (scaleFactor * GameInitializer.tileArtSize);
 		
+		// Initialize screen size
 		GameScreen.gWidth = xDimen * GameScreen.tileSize;
 		GameScreen.gHeight = yDimen * GameScreen.tileSize;
 		System.out.println("GS Width = " + Integer.toString(GameScreen.gWidth));

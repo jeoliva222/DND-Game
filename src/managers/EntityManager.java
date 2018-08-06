@@ -146,8 +146,7 @@ public class EntityManager {
 				// Do nothing
 			}
 			// Do the on death functionality and remove from reference list
-			// TODO
-			//proj.onDeath();
+			proj.onDeath();
 			this.projManager.removeProjectile(proj);
 		}
 	}

@@ -205,6 +205,11 @@ public abstract class GProjectile {
 		return this.madeImpact;
 	}
 	
+	// What the projectile does when it disappears
+	public void onDeath() {
+		// Do nothing by default
+	}
+	
 	//-----------------------------
 	// Getters and Setters
 	

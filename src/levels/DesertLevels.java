@@ -594,8 +594,8 @@ public class DesertLevels implements Serializable {
 			{1, 1, 2, 2, 2, 1, 2, 2, 1, 1},
 			{1, 1, 2, 2, 2, 2, 2, 1, 3, 1},
 			{1, 2, 2, 1, 1, 2, 2, 3, 1, 1},
-			{1, 2, 2, 2, 1, 1, 2, 2, 1, 1},
-			{1, 1, 2, 2, 1, 1, 1, 1, 1, 1}
+			{1, 2, 2, 2, 1, 2, 2, 2, 1, 1},
+			{1, 1, 2, 2, 2, 2, 2, 2, 1, 1}
 		}, new ExtraTile[] {
 		}, new ArrayList<GCharacter>() {{
 			add(new EliteBitester(4, 3));
@@ -603,7 +603,7 @@ public class DesertLevels implements Serializable {
 			add(new Bitester(6, 2));
 		}}, new ArrayList<GPickup>() {{
 			add(new GPickup(5, 4, Armory.cactusClaws));
-			add(new GPickup(5, 5, new SmallHealthPotion()));
+			add(new GPickup(4, 7, new SmallHealthPotion()));
 		}});
 		
 		//-------------------
@@ -677,9 +677,6 @@ public class DesertLevels implements Serializable {
 			{3, 4, 4, 4, 2, 1, 1, 1, 1, 1}
 		}, new ExtraTile[] {
 		}, new ArrayList<GCharacter>() {{
-//			add(new SandBeep(2, 1));
-//			add(new SandBeep(3, 8));
-//			add(new SandBeep(2, 7));
 		}}, new ArrayList<GPickup>() {{
 		}});
 		
@@ -706,17 +703,17 @@ public class DesertLevels implements Serializable {
 		
 		//-------------------
 		
-		MapLevel d24 = new MapLevel(new int[][] {//
-			{1, 3, 1, 1, 1, 1, 1, 1, 1, 1},
-			{1, 1, 1, 3, 1, 1, 1, 3, 1, 3},
-			{1, 1, 1, 1, 4, 0, 4, 4, 1, 1},
-			{1, 1, 1, 1, 0, 1, 0, 0, 4, 1},
-			{1, 1, 3, 1, 1, 1, 1, 0, 1, 1},
-			{1, 1, 3, 1, 1, 3, 1, 4, 1, 1},
-			{3, 1, 1, 1, 1, 4, 3, 1, 1, 1},
-			{1, 3, 3, 1, 0, 1, 1, 1, 3, 1},
+		MapLevel d24 = new MapLevel(new int[][] {
 			{1, 1, 1, 1, 1, 1, 1, 4, 1, 1},
-			{1, 1, 1, 1, 1, 1, 0, 4, 1, 1}
+			{1, 1, 3, 1, 1, 1, 1, 1, 1, 4},
+			{1, 1, 1, 1, 4, 4, 4, 4, 4, 4},
+			{1, 1, 3, 1, 4, 0, 0, 0, 0, 0},
+			{1, 1, 1, 4, 4, 0, 0, 0, 0, 0},
+			{1, 1, 4, 4, 4, 4, 4, 0, 0, 4},
+			{1, 4, 4, 0, 0, 0, 0, 0, 0, 4},
+			{1, 4, 0, 0, 0, 0, 0, 0, 0, 4},
+			{1, 4, 0, 0, 0, 0, 0, 0, 4, 4},
+			{1, 4, 0, 0, 4, 4, 4, 4, 4, 4}
 		}, new ExtraTile[] {
 		}, new ArrayList<GCharacter>() {{
 		}}, new ArrayList<GPickup>() {{
@@ -724,60 +721,99 @@ public class DesertLevels implements Serializable {
 		
 		//-------------------
 		
-		MapLevel d34 = new MapLevel(new int[][] {//
-			{1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
-			{3, 1, 1, 2, 2, 2, 2, 1, 1, 1},
-			{1, 1, 2, 2, 2, 2, 2, 2, 3, 1},
-			{1, 1, 3, 2, 2, 2, 2, 2, 2, 2},
-			{1, 2, 2, 2, 2, 1, 1, 2, 2, 1},
-			{1, 1, 2, 2, 2, 1, 2, 2, 1, 1},
-			{1, 1, 2, 2, 2, 2, 2, 1, 3, 1},
-			{1, 2, 2, 1, 1, 2, 2, 3, 1, 1},
-			{1, 2, 2, 2, 1, 1, 2, 2, 1, 1},
-			{1, 1, 2, 2, 1, 1, 1, 1, 1, 1}
+		MapLevel d34 = new MapLevel(new int[][] {//TODO
+			{1, 1, 2, 2, 2, 2, 2, 2, 1, 1},
+			{4, 1, 1, 2, 2, 2, 2, 1, 1, 4},
+			{4, 4, 1, 0, 0, 0, 0, 1, 4, 4},
+			{0, 4, 4, 4, 1, 1, 4, 4, 4, 0},
+			{0, 0, 0, 4, 1, 1, 4, 0, 0, 0},
+			{4, 0, 0, 4, 0, 0, 4, 0, 0, 4},
+			{4, 0, 0, 4, 0, 4, 4, 0, 0, 4},
+			{4, 0, 0, 4, 0, 0, 4, 0, 0, 4},
+			{4, 0, 0, 4, 4, 0, 4, 0, 0, 4},
+			{4, 4, 4, 4, 0, 0, 4, 4, 4, 4}
 		}, new ExtraTile[] {
+				new ExtraTile(1, 8, 
+						new GroundButton(TriggerType.ENEMY_AND_TILE, false, GButton.VISIBLE, new ArrayList<GCharacter>() {{
+						}}, new ArrayList<ExtraTile>() {{
+							add(new ExtraTile(3, 7, new AltGround()));
+						}})),
+				new ExtraTile(8, 8, 
+						new GroundButton(TriggerType.ENEMY_AND_TILE, false, GButton.VISIBLE, new ArrayList<GCharacter>() {{
+						}}, new ArrayList<ExtraTile>() {{
+							add(new ExtraTile(6, 7, new AltGround()));
+						}}))
 		}, new ArrayList<GCharacter>() {{
-			add(new EliteBitester(4, 3));
-			add(new EliteBitester(5, 6));
-			add(new Bitester(6, 2));
-		}}, new ArrayList<GPickup>() {{
-			add(new GPickup(5, 4, Armory.cactusClaws));
-			add(new GPickup(5, 5, new SmallHealthPotion()));
-		}});
-		
-		//-------------------
-		
-		MapLevel d44 = new MapLevel(new int[][] {//
-			{1, 1, 1, 1, 3, 1, 1, 1, 1, 1},
-			{1, 1, 1, 1, 1, 1, 1, 1, 1, 3},
-			{1, 1, 1, 1, 3, 1, 1, 1, 1, 1},
-			{2, 2, 1, 1, 1, 1, 1, 1, 1, 1},
-			{1, 3, 1, 1, 1, 1, 1, 3, 1, 1},
-			{1, 1, 1, 3, 1, 1, 3, 1, 1, 1},
-			{1, 1, 1, 1, 1, 1, 1, 1, 1, 3},
-			{1, 1, 1, 1, 3, 1, 1, 1, 1, 1},
-			{1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
-			{1, 1, 1, 1, 1, 3, 1, 1, 1, 1}
-		}, new ExtraTile[] {
-		}, new ArrayList<GCharacter>() {{
-			add(new SandWurm(4, 3));
-			add(new EliteSandBeep(6, 7));
 		}}, new ArrayList<GPickup>() {{
 		}});
 		
 		//-------------------
 		
-		MapLevel d54 = new MapLevel(new int[][] {//
-			{1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
+		MapLevel d44 = new MapLevel(new int[][] {
+			{1, 1, 1, 1, 1, 3, 1, 1, 1, 1},
+			{4, 1, 1, 1, 1, 1, 1, 3, 1, 1},
+			{4, 4, 4, 4, 4, 4, 1, 1, 3, 1},
+			{0, 0, 0, 0, 0, 4, 1, 1, 1, 1},
+			{0, 0, 0, 0, 0, 4, 4, 1, 1, 3},
+			{4, 4, 4, 4, 0, 0, 4, 4, 1, 1},
+			{4, 0, 0, 0, 0, 0, 0, 4, 4, 1},
+			{4, 0, 0, 0, 0, 0, 0, 0, 4, 1},
+			{4, 0, 0, 0, 0, 0, 0, 0, 4, 1},
+			{4, 0, 0, 4, 4, 4, 4, 4, 4, 1}
+		}, new ExtraTile[] {
+		}, new ArrayList<GCharacter>() {{
+		}}, new ArrayList<GPickup>() {{
+		}});
+		
+		//-------------------
+		
+		MapLevel d54 = new MapLevel(new int[][] {
+			{1, 3, 1, 1, 3, 1, 1, 1, 3, 3},
+			{1, 1, 3, 1, 1, 1, 3, 1, 3, 3},
+			{1, 1, 3, 3, 1, 3, 1, 1, 3, 1},
+			{1, 1, 1, 3, 1, 1, 1, 3, 3, 1},
+			{3, 1, 1, 1, 1, 3, 1, 1, 1, 1},
+			{1, 3, 1, 1, 1, 1, 1, 3, 1, 3},
+			{1, 1, 1, 3, 1, 1, 1, 1, 3, 3},
+			{1, 1, 1, 1, 1, 1, 3, 1, 1, 1},
+			{1, 1, 3, 1, 1, 3, 1, 1, 3, 1},
+			{1, 1, 1, 1, 1, 1, 1, 1, 1, 1}
+		}, new ExtraTile[] {
+		}, new ArrayList<GCharacter>() {{
+		}}, new ArrayList<GPickup>() {{
+		}});
+		
+		//-------------------
+		
+		MapLevel d64 = new MapLevel(new int[][] {
+			{3, 3, 1, 1, 1, 3, 3, 1, 1, 3},
+			{3, 1, 1, 1, 3, 1, 1, 1, 3, 3},
+			{1, 1, 1, 1, 1, 3, 1, 3, 1, 3},
+			{1, 3, 3, 1, 1, 3, 1, 1, 1, 3},
+			{1, 1, 1, 1, 1, 1, 3, 1, 1, 3},
+			{3, 1, 1, 1, 3, 1, 1, 3, 1, 3},
 			{3, 1, 1, 1, 1, 3, 1, 1, 1, 3},
-			{1, 3, 3, 1, 1, 1, 1, 3, 1, 3},
-			{1, 1, 1, 1, 3, 1, 1, 1, 1, 1},
-			{1, 1, 1, 1, 1, 1, 1, 1, 1, 3},
-			{1, 1, 1, 3, 1, 1, 3, 1, 1, 1},
+			{1, 1, 3, 1, 1, 1, 1, 1, 3, 3},
+			{1, 1, 1, 1, 3, 1, 1, 3, 3, 3},
+			{1, 3, 1, 1, 1, 1, 1, 1, 3, 3}
+		}, new ExtraTile[] {
+		}, new ArrayList<GCharacter>() {{
+		}}, new ArrayList<GPickup>() {{
+		}});
+		
+		//------------------- // ROW 5
+		
+		MapLevel d05 = new MapLevel(new int[][] {
+			{3, 4, 4, 4, 2, 1, 1, 1, 1, 1},
+			{3, 2, 2, 2, 2, 1, 1, 1, 1, 1},
+			{3, 2, 2, 2, 1, 1, 3, 1, 1, 1},
+			{3, 2, 2, 3, 1, 1, 1, 1, 1, 1},
+			{3, 2, 1, 1, 1, 1, 1, 1, 1, 1},
+			{3, 3, 1, 1, 1, 1, 1, 1, 1, 1},
 			{3, 1, 1, 1, 1, 1, 1, 1, 1, 1},
-			{1, 1, 3, 1, 1, 1, 1, 1, 1, 3},
-			{1, 1, 1, 1, 1, 3, 3, 1, 1, 1},
-			{1, 3, 1, 1, 3, 1, 1, 1, 3, 3}
+			{3, 1, 1, 1, 3, 1, 1, 1, 3, 1},
+			{3, 1, 1, 1, 1, 1, 1, 1, 1, 3},
+			{3, 1, 1, 1, 1, 1, 1, 1, 1, 1}
 		}, new ExtraTile[] {
 		}, new ArrayList<GCharacter>() {{
 		}}, new ArrayList<GPickup>() {{
@@ -785,17 +821,139 @@ public class DesertLevels implements Serializable {
 		
 		//-------------------
 		
-		MapLevel d64 = new MapLevel(new int[][] {//
-			{1, 1, 1, 1, 1, 1, 1, 1, 1, 3},
-			{3, 1, 1, 1, 1, 1, 1, 1, 3, 3},
-			{3, 1, 1, 1, 1, 1, 1, 3, 1, 3},
-			{1, 1, 1, 3, 1, 1, 3, 1, 3, 3},
-			{3, 1, 1, 1, 1, 3, 1, 3, 1, 3},
-			{1, 1, 1, 1, 1, 3, 1, 1, 1, 3},
-			{1, 1, 1, 1, 1, 1, 1, 3, 1, 3},
-			{3, 1, 1, 1, 1, 3, 1, 1, 1, 3},
-			{1, 1, 1, 3, 1, 1, 3, 3, 3, 3},
-			{3, 3, 1, 1, 1, 3, 3, 1, 1, 3}
+		MapLevel d15 = new MapLevel(new int[][] {
+			{1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
+			{1, 1, 1, 1, 1, 3, 1, 1, 1, 1},
+			{1, 1, 3, 1, 1, 2, 1, 1, 1, 1},
+			{1, 1, 1, 1, 1, 2, 2, 1, 1, 1},
+			{1, 1, 1, 1, 1, 3, 2, 1, 1, 1},
+			{1, 1, 1, 1, 1, 2, 2, 3, 1, 4},
+			{1, 1, 1, 3, 1, 1, 2, 2, 1, 4},
+			{1, 1, 1, 1, 1, 1, 1, 2, 4, 4},
+			{3, 1, 1, 1, 1, 1, 2, 2, 4, 4},
+			{1, 1, 1, 1, 3, 2, 2, 4, 4, 4}
+		}, new ExtraTile[] {
+		}, new ArrayList<GCharacter>() {{
+		}}, new ArrayList<GPickup>() {{
+		}});
+		
+		//-------------------
+		
+		MapLevel d25 = new MapLevel(new int[][] {
+			{1, 4, 0, 0, 4, 4, 4, 4, 4, 4},
+			{1, 4, 4, 0, 0, 0, 0, 0, 0, 4},
+			{1, 2, 4, 4, 4, 0, 0, 4, 0, 4},
+			{1, 1, 2, 2, 4, 0, 0, 4, 0, 4},
+			{1, 1, 3, 2, 4, 0, 0, 4, 0, 4},
+			{4, 4, 4, 4, 4, 0, 0, 0, 0, 4},
+			{4, 0, 0, 0, 0, 0, 4, 0, 0, 4},
+			{4, 0, 4, 0, 0, 4, 4, 0, 0, 4},
+			{4, 0, 0, 0, 0, 0, 0, 0, 0, 4},
+			{4, 0, 4, 4, 4, 4, 4, 4, 4, 4}
+		}, new ExtraTile[] {
+		}, new ArrayList<GCharacter>() {{
+			add(new BreakableWall(3, 4));
+		}}, new ArrayList<GPickup>() {{
+			add(new GPickup(3, 4, new SmallMaxPotion()));
+		}});
+		
+		//-------------------
+		
+		MapLevel d35 = new MapLevel(new int[][] {
+			{4, 4, 4, 4, 0, 0, 4, 4, 4, 4},
+			{4, 0, 0, 0, 0, 0, 0, 0, 0, 4},
+			{4, 0, 0, 4, 4, 4, 4, 0, 0, 4},
+			{4, 0, 0, 0, 0, 0, 0, 0, 0, 4},
+			{4, 0, 0, 0, 0, 0, 0, 0, 0, 4},
+			{4, 0, 4, 0, 0, 0, 0, 4, 0, 4},
+			{4, 0, 0, 0, 0, 0, 0, 0, 0, 4},
+			{4, 0, 0, 0, 0, 0, 0, 0, 0, 4},
+			{4, 0, 0, 4, 0, 0, 4, 0, 0, 4},
+			{4, 0, 4, 4, 4, 4, 4, 4, 0, 4}
+		}, new ExtraTile[] {
+				new ExtraTile(2, 1, 
+						new GroundButton(TriggerType.ENEMY_AND_TILE, false, GButton.VEILED, new ArrayList<GCharacter>() {{
+						}}, new ArrayList<ExtraTile>() {{
+							add(new ExtraTile(7, 1, new AltGround()));
+							add(new ExtraTile(3, 1, new AltWall()));
+							add(new ExtraTile(6, 1, new AltWall()));
+						}})),
+				new ExtraTile(7, 1, 
+						new GroundButton(TriggerType.ENEMY_AND_TILE, false, GButton.VEILED, new ArrayList<GCharacter>() {{
+						}}, new ArrayList<ExtraTile>() {{
+							add(new ExtraTile(2, 1, new AltGround()));
+							add(new ExtraTile(3, 1, new AltWall()));
+							add(new ExtraTile(6, 1, new AltWall()));
+						}})),
+				new ExtraTile(2, 8, 
+						new GroundButton(TriggerType.ENEMY_AND_TILE, false, GButton.VISIBLE, new ArrayList<GCharacter>() {{
+						}}, new ArrayList<ExtraTile>() {{
+							add(new ExtraTile(3, 1, new AltGround()));
+						}})),
+				new ExtraTile(7, 8, 
+						new GroundButton(TriggerType.ENEMY_AND_TILE, false, GButton.VISIBLE, new ArrayList<GCharacter>() {{
+						}}, new ArrayList<ExtraTile>() {{
+							add(new ExtraTile(6, 1, new AltGround()));
+						}}))
+		}, new ArrayList<GCharacter>() {{
+		}}, new ArrayList<GPickup>() {{
+		}});
+		
+		//-------------------
+		
+		MapLevel d45 = new MapLevel(new int[][] {
+			{4, 0, 0, 4, 4, 4, 4, 4, 4, 1},
+			{4, 0, 4, 0, 4, 0, 0, 0, 4, 1},
+			{4, 0, 0, 0, 0, 0, 0, 0, 4, 1},
+			{4, 0, 0, 0, 0, 0, 0, 0, 4, 1},
+			{4, 5, 5, 5, 5, 5, 5, 0, 4, 1},
+			{4, 0, 0, 0, 0, 0, 0, 0, 4, 4},
+			{4, 0, 0, 0, 0, 0, 0, 0, 4, 4},
+			{4, 0, 0, 0, 0, 0, 0, 0, 4, 4},
+			{4, 0, 4, 4, 4, 4, 4, 4, 4, 4},
+			{4, 0, 4, 1, 1, 1, 1, 0, 4, 4}
+		}, new ExtraTile[] {
+				new ExtraTile(3, 1, 
+						new GroundButton(TriggerType.ENEMY_AND_TILE, false, GButton.VISIBLE, new ArrayList<GCharacter>() {{
+						}}, new ArrayList<ExtraTile>() {{
+							add(new ExtraTile(7, 8, new AltGround()));
+						}}))
+		}, new ArrayList<GCharacter>() {{
+			add(new BreakableWall(3, 1));
+		}}, new ArrayList<GPickup>() {{
+		}});
+		
+		//-------------------
+		
+		MapLevel d55 = new MapLevel(new int[][] {
+			{1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
+			{1, 1, 1, 1, 1, 2, 1, 1, 2, 2},
+			{1, 1, 1, 1, 2, 2, 1, 2, 2, 2},
+			{1, 1, 1, 1, 1, 2, 2, 2, 2, 2},
+			{1, 1, 1, 1, 1, 3, 2, 2, 2, 2},
+			{4, 1, 1, 2, 2, 2, 2, 2, 2, 2},
+			{4, 4, 1, 1, 2, 2, 2, 1, 2, 2},
+			{4, 4, 1, 1, 1, 2, 2, 1, 3, 2},
+			{4, 4, 1, 2, 2, 2, 2, 2, 2, 2},
+			{4, 4, 2, 2, 2, 2, 2, 2, 2, 2},
+		}, new ExtraTile[] {
+		}, new ArrayList<GCharacter>() {{
+		}}, new ArrayList<GPickup>() {{
+		}});
+		
+		//-------------------
+		
+		MapLevel d65 = new MapLevel(new int[][] {//
+			{1, 3, 1, 1, 1, 1, 1, 1, 3, 3},
+			{2, 1, 2, 1, 2, 1, 1, 1, 3, 3},
+			{2, 2, 2, 2, 2, 2, 1, 3, 2, 3},
+			{2, 2, 2, 2, 2, 2, 2, 2, 2, 3},
+			{2, 2, 2, 2, 2, 2, 2, 2, 2, 3},
+			{2, 2, 2, 2, 2, 2, 2, 2, 2, 3},
+			{2, 2, 2, 2, 2, 2, 2, 2, 2, 3},
+			{2, 2, 2, 2, 2, 2, 2, 2, 2, 3},
+			{2, 2, 2, 2, 2, 2, 2, 2, 2, 3},
+			{2, 2, 2, 2, 2, 2, 2, 2, 2, 3}
 		}, new ExtraTile[] {
 		}, new ArrayList<GCharacter>() {{
 		}}, new ArrayList<GPickup>() {{
@@ -813,6 +971,7 @@ public class DesertLevels implements Serializable {
 			{d02, d12, d22, d32, d42, d52, d62},
 			{d03, d13, d23, d33, d43, d53, d63},
 			{d04, d14, d24, d34, d44, d54, d64},
+			{d05, d15, d25, d35, d45, d55, d65},
 			//
 		});
 	
