@@ -17,7 +17,7 @@ public class GameInitializer {
 	
 	// Factor by which the entire game is scaled
 	// Used to make game playable on smaller screens
-	public static double scaleFactor = 0.4;
+	public static double scaleFactor = 1.0;
 	
 	// Offsets to window size to account for the frame's natural border dimensions
 	public static int xOffset = 18;

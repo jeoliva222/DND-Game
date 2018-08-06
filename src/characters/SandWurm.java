@@ -64,8 +64,8 @@ public class SandWurm extends GCharacter {
 	//----------------------------
 	
 	// File paths to images
-	private String imageDir = GPath.createImagePath(GPath.ENEMY, GPath.BEANPOLE);
-	private String swImage_base = "beanpole";
+	private String imageDir = GPath.createImagePath(GPath.ENEMY, GPath.SANDWURM);
+	private String swImage_base = "sandwurm";
 	
 	private String swImage_DEAD = GPath.createImagePath(GPath.ENEMY, GPath.BEANPOLE, "beanpole_dead.png");
 	private String swImage_DEAD_CRIT = GPath.createImagePath(GPath.ENEMY, GPath.BEANPOLE, "beanpole_dead_CRIT.png");
@@ -121,7 +121,7 @@ public class SandWurm extends GCharacter {
 		if(this.currentHP > (this.maxHP / 2)) {
 			hpPath = "_full";
 		} else if(this.currentHP > 0) {
-			hpPath = "_fatal";
+			hpPath = "_full";
 		} else {
 			hpPath = "_dead";
 			return GPath.NULL;
@@ -138,11 +138,11 @@ public class SandWurm extends GCharacter {
 		case SandWurm.STATE_PREP_SPIT:
 		case SandWurm.STATE_BURROW:
 		case SandWurm.STATE_PREP:
-			statePath = "_PREP";
+			statePath = "_PREP_BITE";
 			break;
 		case SandWurm.STATE_ATT_SPIT:
 		case SandWurm.STATE_ATT:
-			statePath = "_ATT";
+			statePath = "_ATT_BITE";
 			break;
 		default:
 			System.out.println

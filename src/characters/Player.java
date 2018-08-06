@@ -63,7 +63,7 @@ public class Player implements Serializable {
 	public Player() {
 		// Set player tile position
 		// Default is 6, 2
-		this.xPos = 4;
+		this.xPos = 1;
 		this.yPos = 5;
 		this.lastX = this.xPos;
 		this.lastY = this.yPos;
@@ -75,11 +75,12 @@ public class Player implements Serializable {
 		
 		/// ***TEMP*** Set the level coordinates
 		// Default is 3, 2
-		this.levelX = 1;
-		this.levelY = 4;
+		this.levelX = 0;
+		this.levelY = 0;
 		
 		// Set health values
-		this.maxHP = 15;
+		// Default is 15
+		this.maxHP = 20;
 		this.currentHP = this.maxHP;
 		
 		// Dictate what player can move on

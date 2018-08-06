@@ -107,6 +107,7 @@ public class DesertLevels implements Serializable {
 			add(new BunnyWarrior(5, 5, PatrolPattern.PATROL_CW));
 			add(new SandBeep(2, 7));
 			add(new SandBeep(7, 6));
+			add(new BreakableWall(4, 7));
 		}}, new ArrayList<GPickup>() {{
 		}});
 		
