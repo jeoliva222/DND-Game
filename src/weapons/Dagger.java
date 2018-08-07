@@ -50,20 +50,20 @@ public class Dagger extends Weapon {
 						//tt.onStep();
 						
 						// If space to backstab, deal modified damage and steb behind target
-						int dmg = this.calculateDamage(this.chargeMult);
+						int dmg = this.calculateDamage(this.chargeMult, npc);
 						npc.damageCharacter(dmg);
 						LogScreen.log("Player backstabbed "+ npc.getName() +" and dealt " + Integer.toString(dmg)
 						+ " damage.", GColors.ATTACK);
 					} else {
 						// If no space to backstab, deal normal damage and attack normally
-						int dmg = this.calculateDamage();
+						int dmg = this.calculateDamage(npc);
 						npc.damageCharacter(dmg);
 						LogScreen.log("Player cut "+ npc.getName() +" and dealt " + Integer.toString(dmg)
 						+ " damage.", GColors.ATTACK);
 					}
 				} else {
 					// If not charged deal normal damage and attack normally
-					int dmg = this.calculateDamage();
+					int dmg = this.calculateDamage(npc);
 					npc.damageCharacter(dmg);
 					LogScreen.log("Player cut "+ npc.getName() +" and dealt " + Integer.toString(dmg)
 						+ " damage.", GColors.ATTACK);

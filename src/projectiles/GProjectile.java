@@ -3,6 +3,7 @@ package projectiles;
 import java.util.Random;
 
 import characters.GCharacter;
+import characters.Player;
 import gui.GameScreen;
 import gui.GameTile;
 import gui.LogScreen;
@@ -109,10 +110,21 @@ public abstract class GProjectile {
 		// Damage player and return true if yes
 		if(this.xPos == em.getPlayer().getXPos() &&
 				this.yPos == em.getPlayer().getYPos()) {
-			int damage = this.calculateDamage();
-			LogScreen.log(this.name+" hit player for "+Integer.toString(damage)+" damage.", GColors.DAMAGE);
-			em.getPlayer().damagePlayer(damage);
+			// Calculate damage value
+			int damage = this.calculateDamage(em.getPlayer());
+			
+			// Log result and deal damage
+			if(damage > 0) {
+				LogScreen.log(this.name+" hit player for "+Integer.toString(damage)+" damage.", GColors.DAMAGE);
+				em.getPlayer().damagePlayer(damage);
+			} else {
+				LogScreen.log(this.name+" fizzled on contact with player.", GColors.BASIC);
+			}
+			
+			// Mark that projectile hit entity on spawn
 			this.setSpawnDamaged(true);
+			
+			// Return whether projectile should continue flying
 			return (!this.entityPiercing);
 		}
 		
@@ -123,12 +135,24 @@ public abstract class GProjectile {
 				// If not the owner's enemy-type of the projectile, damage the character
 				if(this.owner == null ||
 						npc.getClass() != this.owner.getClass()) {
-					int damage = this.calculateDamage();
-					LogScreen.log(this.name+" impacted "+npc.getName()+" for "
-							+Integer.toString(damage)+" damage.", GColors.ATTACK);
-					npc.damageCharacter(damage);
+					// Calculate damage value
+					int damage = this.calculateDamage(npc);
+					
+					// Log result and deal damage
+					if(damage > 0) {
+						LogScreen.log(this.name+" impacted "+npc.getName()+" for "
+								+Integer.toString(damage)+" damage.", GColors.ATTACK);
+						npc.damageCharacter(damage);
+					} else {
+						LogScreen.log(this.name+" fizzled on contact with " +npc.getName()+ ".", GColors.BASIC);
+					}
+
 				}
+				
+				// Mark that projectile hit entity on spawn
 				this.setSpawnDamaged(true);
+				
+				// Return whether projectile should continue flying
 				return (!this.entityPiercing);
 			}
 		}
@@ -149,9 +173,17 @@ public abstract class GProjectile {
 			if((this.xPos + this.dx) == em.getPlayer().getLastX() &&
 					(this.yPos + this.dy) == em.getPlayer().getLastY()) {
 				// If it is, then damage the player and disappear if not piercing
-				int damage = this.calculateDamage();
-				LogScreen.log(this.name+" hit player for "+Integer.toString(damage)+" damage.", GColors.DAMAGE);
-				em.getPlayer().damagePlayer(damage);
+				int damage = this.calculateDamage(em.getPlayer());
+				
+				// Log result and deal damage
+				if(damage > 0) {
+					LogScreen.log(this.name+" hit player for "+Integer.toString(damage)+" damage.", GColors.DAMAGE);
+					em.getPlayer().damagePlayer(damage);
+				} else {
+					LogScreen.log(this.name+" fizzled on contact with player.", GColors.BASIC);
+				}
+				
+				// Return whether projectile should continue flying
 				return (!this.entityPiercing);
 			}
 		}
@@ -162,14 +194,24 @@ public abstract class GProjectile {
 				// Check if the projectile swapped places with the NPC
 				if((this.xPos + this.dx) == npc.getLastX() && 
 						(this.yPos + this.dy) == npc.getLastY()) {
-					// If not the owner's enemy-type of the projectile, damage the character
+					// If not the owner's enemy-type of the projectile, affect the character
 					if(this.owner == null ||
 							npc.getClass() != this.owner.getClass()) {
-						int damage = this.calculateDamage();
-						LogScreen.log(this.name+" impacted "+npc.getName()+" for "
-								+Integer.toString(damage)+" damage.", GColors.ATTACK);
-						npc.damageCharacter(damage);
+						// Calculate damage value
+						int damage = this.calculateDamage(npc);
+						
+						// Log result and deal damage
+						if(damage > 0) {
+							LogScreen.log(this.name+" impacted "+npc.getName()+" for "
+									+Integer.toString(damage)+" damage.", GColors.ATTACK);
+							npc.damageCharacter(damage);
+						} else {
+							LogScreen.log(this.name+" fizzled on contact with " +npc.getName()+ ".", GColors.BASIC);
+						}
+						
 					}
+					
+					// Return whether projectile should continue flying
 					return (!this.entityPiercing);
 				}
 			}
@@ -177,8 +219,8 @@ public abstract class GProjectile {
 		return false;
 	}
 	
-	// Calculate damage for the weapon with damage multiplier
-	public int calculateDamage(double dmgMult) {
+	// Calculate damage for the weapon with damage multiplier (For NPCs)
+	public int calculateDamage(double dmgMult, GCharacter npc) {
 		Random r = new Random();
 		int dmg;
 		int newMin = (int) Math.floor(this.minDmg * dmgMult);
@@ -192,12 +234,53 @@ public abstract class GProjectile {
 			dmg = r.nextInt((newMax - newMin) + 1) + newMin;
 		}
 		
+		// Subtract armor value of target from damage dealt
+		dmg -= npc.getArmor();
+		
+		// Limit minimum damage at 0
+		if(dmg < 0) {
+			dmg = 0;
+		}
+		
+		// Return damage value
 		return dmg;
 	}
 	
-	// Calculate damage with assumption of no damage multiplier
-	public int calculateDamage() {
-		return calculateDamage(1.0);
+	// Calculate damage with assumption of no damage multiplier (For NPCs)
+	public int calculateDamage(GCharacter npc) {
+		return calculateDamage(1.0, npc);
+	}
+	
+	// Calculate damage for the weapon with damage multiplier (For players)
+	public int calculateDamage(double dmgMult, Player plr) {
+		Random r = new Random();
+		int dmg;
+		int newMin = (int) Math.floor(this.minDmg * dmgMult);
+		int newMax = (int) Math.floor(this.maxDmg * dmgMult);
+		
+		// If the player gets lucky, they crit the enemy
+		// Otherwise, calculate damage normally
+		if(Math.random() < this.critChance) {
+			dmg = (int) Math.floor(newMax * this.critMult);
+		} else {
+			dmg = r.nextInt((newMax - newMin) + 1) + newMin;
+		}
+		
+		// Subtract armor value of target from damage dealt
+		dmg -= plr.getArmor();
+		
+		// Limit minimum damage at 0
+		if(dmg < 0) {
+			dmg = 0;
+		}
+		
+		// Return damage value
+		return dmg;
+	}
+	
+	// Calculate damage with assumption of no damage multiplier (For players)
+	public int calculateDamage(Player plr) {
+		return calculateDamage(1.0, plr);
 	}
 	
 	// Returns whether the projectile has made an impact yet

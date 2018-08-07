@@ -50,7 +50,7 @@ public class Bow extends Weapon {
 				if((em.getPlayer().getXPos() + dx) == npc.getXPos()
 						&& (em.getPlayer().getYPos() + dy) == npc.getYPos()) {
 					// If not charged deal normal damage and attack normally
-					int dmg = this.calculateDamage();
+					int dmg = this.calculateDamage(npc);
 					npc.damageCharacter(dmg);
 					LogScreen.log("Player punched and dealt " + Integer.toString(dmg)
 						+ " damage to " + npc.getName() + ".", GColors.ATTACK);

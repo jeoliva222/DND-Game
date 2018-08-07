@@ -2,8 +2,6 @@ package weapons;
 
 import helpers.GPath;
 
-/// ***TEMPORARY IMAGE PATHS USED***
-
 // Class where all weapon definitions are stored
 public class Armory {
 	
@@ -17,7 +15,7 @@ public class Armory {
 	
 	// Padded Fists (Caestus)
 	public static final Fists caestus = new Fists("Caestus", 1, 3, 0.05, 2.0, 1.7, 
-			"WEAPON (Fist): Studded with iron rivets. Charge to dish out extra pain!",
+			"WEAPON (Fist): Studded with iron rivets. Charge attack to dish out extra pain!",
 			GPath.createImagePath(GPath.PICKUP, GPath.WEAPON, "caestus.png"));
 	
 	// Cactus Claws
@@ -30,7 +28,7 @@ public class Armory {
 	
 	// Lowly Broken Sword
 	public static final Sword brokenSword = new Sword("Broken Sword", 1, 2, 0.1, 2.0, 1.0, 
-			"WEAPON (Sword): Equip this with 'Enter'! Charge to slash multiple targets.",
+			"WEAPON (Sword): Equip this with 'Enter'! Charge attack to slash multiple targets.",
 			GPath.createImagePath(GPath.PICKUP, GPath.WEAPON, "brokenSword.png"));
 	
 	// Iron Sword
@@ -53,7 +51,7 @@ public class Armory {
 	
 	// Long Stick Spear
 	public static final Spear longStick = new Spear("Long Stick", 1, 2, 0.1, 1.5, 1.0, 
-			"WEAPON (Spear): A pokey stick. Charge to attack at a range!",
+			"WEAPON (Spear): A pokey stick. Charge attack for a ranged stab!",
 			GPath.createImagePath(GPath.PICKUP, GPath.WEAPON, "longStick.png"));
 	
 	// Iron Spear
@@ -76,12 +74,12 @@ public class Armory {
 	
 	// Glass Shard Dagger
 	public static final Dagger glassShard = new Dagger("Glass Shard", 1, 2, 0.2, 2.5, 1.0, 
-			"WEAPON (Dagger): A shard of glass from a broken mirror. Charge to shadowstep your opponents!",
+			"WEAPON (Dagger): A shard of glass from a broken mirror. Charge attack to shadowstep your opponents!",
 			GPath.createImagePath(GPath.PICKUP, GPath.WEAPON, "glassShard.png"));
 	
 	// Tailbone Dagger
 	public static final Dagger tailboneDagger = new Dagger("Tailbone Dagger", 2, 2, 0.3, 2.5, 1.0, 
-			"WEAPON (Dagger): Knife formed from a sharpened bone. Charge to shadowstep your opponents!",
+			"WEAPON (Dagger): Knife formed from a sharpened bone. Charge attack to shadowstep your opponents!",
 			GPath.createImagePath(GPath.PICKUP, GPath.WEAPON, "glassShard.png"));
 	
 	// Crossbow Weapons ----------------------------
@@ -98,6 +96,14 @@ public class Armory {
 	// Lowly Twig Bow
 	public static final Bow twigBow = new Bow("Twig Bow", 1, 1, 0.05, 2.0, 3.0, 
 			"WEAPON (Bow): Charge to fire an arrow!",
+			GPath.createImagePath(GPath.TILE, GPath.GENERIC, "testProj.png"));
+	
+	// Shield Weapons ------------------------------
+	//
+	
+	// Wooden Targe
+	public static final Shield woodenTarge = new Shield("Wooden Targe", 1, 2, 2, 0.1, 1.5, 1.0, 
+			"WEAPON (Shield): [2 Block] Block some incoming damage when charging. Charge attack to swing offhand weapon!",
 			GPath.createImagePath(GPath.TILE, GPath.GENERIC, "testProj.png"));
 
 }

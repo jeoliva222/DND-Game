@@ -20,11 +20,14 @@ public abstract class GCharacter implements Serializable {
 	// Serialization ID
 	private static final long serialVersionUID = 894471161442120373L;
 
-	// File path of the character image (Not needed?)
+	// File path of the character image (Not needed?) TODO
 	protected String imagePath;
 	
 	// Current and Max Health values
 	protected int currentHP, maxHP;
+	
+	// Amount of damage blocked on each attack (0 by default)
+	protected int armor = 0;
 	
 	// X and Y position
 	protected int xPos, yPos;
@@ -135,20 +138,54 @@ public abstract class GCharacter implements Serializable {
 		int newMin = (int) Math.floor(this.minDmg * dmgMult);
 		int newMax = (int) Math.floor(this.maxDmg * dmgMult);
 		
+		// Fetch reference to the player
+		Player plr = EntityManager.getInstance().getPlayer();
+		
 		// If the enemy gets lucky, they crit the player
 		// Otherwise, calculate damage normally
 		if(Math.random() < this.critChance) {
+			// Get damage value
 			dmg = (int) Math.floor(newMax * this.critMult);
-			//System.out.println(this.getName() + " crit the player for " + Integer.toString(dmg) + " damage.");
-			LogScreen.log(this.getName() +
-					" crit the player for " + Integer.toString(dmg) + " damage.", GColors.DAMAGE);
+
+			// Subtract armor of player
+			dmg -= plr.getArmor();
+			
+			// Limit minimum damage value at 0
+			if(dmg < 0) {
+				dmg = 0;
+			}
+			
+			// Log result
+			if(dmg == 0) {
+				LogScreen.log(this.getName() +
+						" tickled the player's defenses", GColors.BASIC);
+			} else {
+				LogScreen.log(this.getName() +
+						" crit the player for " + Integer.toString(dmg) + " damage.", GColors.DAMAGE);
+			}
 		} else {
+			// Get damage value
 			dmg = r.nextInt((newMax - newMin) + 1) + newMin;
-			LogScreen.log(this.getName() + " did "
+			
+			// Subtract armor of player
+			dmg -= plr.getArmor();
+			
+			// Limit minimum damage value at 0
+			if(dmg < 0) {
+				dmg = 0;
+			}
+			
+			// Log result
+			if(dmg == 0) {
+				LogScreen.log(this.getName() +
+						" tickled the player's defenses", GColors.BASIC);
+			} else {
+				LogScreen.log(this.getName() + " did "
 					+ Integer.toString(dmg) + " damage to the player.", GColors.DAMAGE);
+			}
 		}
 		
-		return EntityManager.getInstance().getPlayer().damagePlayer(dmg);
+		return plr.damagePlayer(dmg);
 	}
 	
 	// Initiates an attack on the player assuming no damage multiplier
@@ -279,6 +316,14 @@ public abstract class GCharacter implements Serializable {
 	
 	public int getMaxHP() {
 		return this.maxHP;
+	}
+	
+	public int getArmor() {
+		return this.armor;
+	}
+	
+	public void addArmor(int armorValue) {
+		this.armor += armorValue;
 	}
 	
 	public boolean getFocusable() {

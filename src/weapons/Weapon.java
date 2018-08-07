@@ -2,6 +2,7 @@ package weapons;
 
 import java.util.Random;
 
+import characters.GCharacter;
 import gui.InventoryScreen;
 import gui.LogScreen;
 import gui.StatusScreen;
@@ -37,7 +38,7 @@ public abstract class Weapon extends GItem {
 	abstract public boolean tryAttack(int dx, int dy);
 	
 	// Calculate damage for the weapon with damage multiplier
-	public int calculateDamage(double dmgMult) {
+	public int calculateDamage(double dmgMult, GCharacter npc) {
 		Random r = new Random();
 		int dmg;
 		int newMin = (int) Math.floor(this.minDmg * dmgMult);
@@ -51,12 +52,21 @@ public abstract class Weapon extends GItem {
 			dmg = r.nextInt((newMax - newMin) + 1) + newMin;
 		}
 		
+		// Subtract armor value of target from damage
+		dmg -= npc.getArmor();
+		
+		// Limit minimum damage at 0
+		if(dmg < 0) {
+			dmg = 0;
+		}
+		
+		// Return damage value
 		return dmg;
 	}
 	
 	// Calculate damage with assumption of no damage multiplier
-	public int calculateDamage() {
-		return calculateDamage(1.0);
+	public int calculateDamage(GCharacter npc) {
+		return calculateDamage(1.0, npc);
 	}
 	
 	// Charges the weapon
@@ -74,9 +84,9 @@ public abstract class Weapon extends GItem {
 		}
 	}
 	
-	// Sets the charge of the weapon to false
+	// Sets the charge of the weapon to false if it is currently charged
 	public void dischargeWeapon() {
-		this.isCharged = false;
+		if(this.isCharged) this.isCharged = false;
 	}
 	
 	public boolean use() {

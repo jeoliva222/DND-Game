@@ -50,6 +50,9 @@ public class Player implements Serializable {
 	// Maximum and Current health amounts
 	private int maxHP, currentHP;
 	
+	// Amount of armor that negates damage
+	private int armor;
+	
 	// List of tile categories you can move on
 	private ArrayList<MovableType> moveTypes = new ArrayList<MovableType>();
 	
@@ -76,12 +79,15 @@ public class Player implements Serializable {
 		/// ***TEMP*** Set the level coordinates
 		// Default is 3, 2
 		this.levelX = 5;
-		this.levelY = 5;
+		this.levelY = 2;
 		
 		// Set health values
 		// Default is 15
 		this.maxHP = 20;
 		this.currentHP = this.maxHP;
+		
+		// Set default armor value
+		this.armor = 0;
 		
 		// Dictate what player can move on
 		this.populateMoveTypes();
@@ -288,6 +294,8 @@ public class Player implements Serializable {
 		return this.leapPlayer(newX, newY, false);
 	}
 	
+	// Subtracts health from player and kills them if they reach 0 health
+	// Actual damage calculations performed in GCharacter class
 	// Returns True if alive from damage, False if dead from damage
 	public boolean damagePlayer(int damage) {
 		this.currentHP = this.currentHP - damage;
@@ -500,6 +508,14 @@ public class Player implements Serializable {
 	
 	public void setWeapon(Weapon newWeapon) {
 		this.equippedWeapon = newWeapon;
+	}
+	
+	public int getArmor() {
+		return this.armor;
+	}
+	
+	public void addArmor(int armorValue) {
+		this.armor += armorValue;
 	}
 	
 }

@@ -53,7 +53,7 @@ public class Spear extends Weapon {
 						&& (em.getPlayer().getYPos() + dy) == npc.getYPos()) {
 					// If not at proper range, don't do multiplier, but discharge weapon
 					this.dischargeWeapon();
-					int dmg = this.calculateDamage();
+					int dmg = this.calculateDamage(npc);
 					npc.damageCharacter(dmg);
 					LogScreen.log("Player lanced forward and dealt " + Integer.toString(dmg)
 						+ " damage to " + npc.getName() + ".", GColors.ATTACK);				
@@ -65,7 +65,7 @@ public class Spear extends Weapon {
 					if(!nextToWall) {
 						// Deal multiplier on regular damage and discharge weapon
 						this.dischargeWeapon();
-						int dmg = this.calculateDamage(this.chargeMult);
+						int dmg = this.calculateDamage(this.chargeMult, npc);
 						npc.damageCharacter(dmg);
 						LogScreen.log("Player lanced forward and dealt " + Integer.toString(dmg)
 							+ " damage to " + npc.getName() + ".", GColors.ATTACK);				
@@ -94,7 +94,7 @@ public class Spear extends Weapon {
 				if((em.getPlayer().getXPos() + dx) == npc.getXPos()
 						&& (em.getPlayer().getYPos() + dy) == npc.getYPos()) {
 					// If not charged deal normal damage
-					int dmg = this.calculateDamage();
+					int dmg = this.calculateDamage(npc);
 					npc.damageCharacter(dmg);
 					LogScreen.log("Player stabbed and dealt " + Integer.toString(dmg)
 						+ " damage to " + npc.getName() + ".", GColors.ATTACK);	

@@ -39,7 +39,7 @@ public class Sword extends Weapon {
 					this.dischargeWeapon();
 					
 					// Deal damage to middle target first
-					int dmg = this.calculateDamage(this.chargeMult);
+					int dmg = this.calculateDamage(this.chargeMult, npc);
 					npc.damageCharacter(dmg);
 					em.getEffectManager().addEffect
 						(new ChargeIndicator((em.getPlayer().getXPos() + dx),
@@ -51,7 +51,7 @@ public class Sword extends Weapon {
 					this.findSwipeTargets(dx, dy);
 				} else {
 					// If not charged deal normal damage and attack normally
-					int dmg = this.calculateDamage();
+					int dmg = this.calculateDamage(npc);
 					npc.damageCharacter(dmg);
 					LogScreen.log("Player swung and dealt " + Integer.toString(dmg)
 						+ " damage to " + npc.getName() + ".", GColors.ATTACK);
@@ -79,14 +79,14 @@ public class Sword extends Weapon {
 				if((em.getPlayer().getXPos() + dx) == npc.getXPos()
 						&& (em.getPlayer().getYPos() + 1) == npc.getYPos()) {
 					// Upper target attack
-					int dmg = this.calculateDamage(this.chargeMult);
+					int dmg = this.calculateDamage(this.chargeMult, npc);
 					npc.damageCharacter(dmg);
 					LogScreen.log("Player swiped and dealt " + Integer.toString(dmg)
 					+ " damage to " + npc.getName() + ".", GColors.ATTACK);
 				} else if ((em.getPlayer().getXPos() + dx) == npc.getXPos()
 						&& (em.getPlayer().getYPos() - 1) == npc.getYPos()) {
 					// Lower target
-					int dmg = this.calculateDamage(this.chargeMult);
+					int dmg = this.calculateDamage(this.chargeMult, npc);
 					npc.damageCharacter(dmg);
 					LogScreen.log("Player swiped and dealt " + Integer.toString(dmg)
 					+ " damage to " + npc.getName() + ".", GColors.ATTACK);
@@ -102,14 +102,14 @@ public class Sword extends Weapon {
 				if((em.getPlayer().getXPos() + 1) == npc.getXPos()
 						&& (em.getPlayer().getYPos() + dy) == npc.getYPos()) {
 					// Right target
-					int dmg = this.calculateDamage(this.chargeMult);
+					int dmg = this.calculateDamage(this.chargeMult, npc);
 					npc.damageCharacter(dmg);
 					LogScreen.log("Player swiped and dealt " + Integer.toString(dmg)
 					+ " damage to " + npc.getName() + ".", GColors.ATTACK);
 				} else if ((em.getPlayer().getXPos() - 1) == npc.getXPos()
 						&& (em.getPlayer().getYPos() + dy) == npc.getYPos()) {
 					// Left target
-					int dmg = this.calculateDamage(this.chargeMult);
+					int dmg = this.calculateDamage(this.chargeMult, npc);
 					npc.damageCharacter(dmg);
 					LogScreen.log("Player swiped and dealt " + Integer.toString(dmg)
 					+ " damage to " + npc.getName() + ".", GColors.ATTACK);

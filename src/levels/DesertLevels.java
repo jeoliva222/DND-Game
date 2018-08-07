@@ -474,6 +474,7 @@ public class DesertLevels implements Serializable {
 			add(new ArrowTurret(2, 6, 1, 0, 5));
 			add(new ArrowTurret(8, 5, -1, 0, 5));
 			add(new ArrowTurret(8, 3, -1, 0, 5));
+			add(new SnakeSoldier(5, 0, PatrolPattern.STATIONARY));
 		}}, new ArrayList<GPickup>() {{
 		}});
 		

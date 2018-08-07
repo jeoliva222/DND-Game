@@ -36,13 +36,13 @@ public class Fists extends Weapon {
 					this.dischargeWeapon();
 					
 					// If charged deal extra damage with standard attack
-					int dmg = this.calculateDamage(this.chargeMult);
+					int dmg = this.calculateDamage(this.chargeMult, npc);
 					npc.damageCharacter(dmg);
 					LogScreen.log("Player punched and dealt " + Integer.toString(dmg)
 						+ " damage to " + npc.getName() + ".", GColors.ATTACK);
 				} else {
 					// If not charged deal normal damage and attack normally
-					int dmg = this.calculateDamage();
+					int dmg = this.calculateDamage(npc);
 					npc.damageCharacter(dmg);
 					LogScreen.log("Player slapped and dealt " + Integer.toString(dmg)
 						+ " damage to " + npc.getName() + ".", GColors.ATTACK);

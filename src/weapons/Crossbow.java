@@ -105,7 +105,7 @@ public class Crossbow extends Weapon {
 				}
 				
 				// Damage the closest NPC
-				int dmg = this.calculateDamage(this.chargeMult);
+				int dmg = this.calculateDamage(this.chargeMult, closestNPC);
 				closestNPC.damageCharacter(dmg);
 				LogScreen.log("Player sniped " + closestNPC.getName() + " and dealt "
 				+ Integer.toString(dmg) + " damage.", GColors.ATTACK);
@@ -124,7 +124,7 @@ public class Crossbow extends Weapon {
 				if((em.getPlayer().getXPos() + dx) == npc.getXPos()
 						&& (em.getPlayer().getYPos() + dy) == npc.getYPos()) {
 					// If not charged deal normal damage and attack normally
-					int dmg = this.calculateDamage();
+					int dmg = this.calculateDamage(npc);
 					npc.damageCharacter(dmg);
 					LogScreen.log("Player punched and dealt " + Integer.toString(dmg)
 						+ " damage to " + npc.getName() + ".", GColors.ATTACK);

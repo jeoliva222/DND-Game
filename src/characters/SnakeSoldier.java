@@ -54,7 +54,6 @@ public class SnakeSoldier extends GCharacter {
 	
 	//----------------------------
 	
-	// TODO
 	// File paths to images
 	private String imageDir = GPath.createImagePath(GPath.ENEMY, GPath.SNAKE_SOLDIER);
 	private String ssImage_base = "snakesoldier";

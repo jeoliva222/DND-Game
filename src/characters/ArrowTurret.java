@@ -59,6 +59,9 @@ public class ArrowTurret extends GCharacter {
 		this.critChance = CRIT_CHANCE;
 		this.critMult = CRIT_MULT;
 		
+		// Can't be damaged
+		this.armor = 100;
+		
 		if(shootX == 0 && shootY == 0) {
 			this.shootX = 0;
 			this.shootY = 1;
@@ -119,12 +122,6 @@ public class ArrowTurret extends GCharacter {
 	@Override
 	public void playerInitiate() {
 		// Never initiates player
-	}
-	
-	// Override to prevent turrets from taking damage
-	@Override
-	public boolean damageCharacter(int damage) {
-		return this.isAlive();
 	}
 
 	@Override
