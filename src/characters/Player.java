@@ -57,7 +57,7 @@ public class Player implements Serializable {
 	private ArrayList<MovableType> moveTypes = new ArrayList<MovableType>();
 	
 	// Equipped Weapon (Active)
-	private Weapon equippedWeapon = Armory.ironSword;
+	private Weapon equippedWeapon = Armory.bareFists;
 	
 	// Sheathed Weapon (Inactive)
 	private Weapon sheathedWeapon = Armory.bareFists;
@@ -66,27 +66,28 @@ public class Player implements Serializable {
 	public Player() {
 		// Set player tile position
 		// Default is 6, 2
-		this.xPos = 2;
-		this.yPos = 5;
+		this.xPos = 6;
+		this.yPos = 2;
 		this.lastX = this.xPos;
 		this.lastY = this.yPos;
 		
 		/// ***TEMP*** Set the area coordinates
 		// Default is 0, 0
-		this.areaX = 1;
+		this.areaX = 0;
 		this.areaY = 0;
 		
 		/// ***TEMP*** Set the level coordinates
 		// Default is 3, 2
-		this.levelX = 5;
+		this.levelX = 3;
 		this.levelY = 2;
 		
 		// Set health values
 		// Default is 15
-		this.maxHP = 20;
+		this.maxHP = 15;
 		this.currentHP = this.maxHP;
 		
-		// Set default armor value
+		// Set armor value
+		// Default is 0
 		this.armor = 0;
 		
 		// Dictate what player can move on

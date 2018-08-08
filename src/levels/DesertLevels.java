@@ -19,6 +19,7 @@ import characters.SandBeep;
 import characters.SandWurm;
 import characters.SnakeSoldier;
 import helpers.GPath;
+import items.GKey;
 import items.GPickup;
 import items.MediumHealthPotion;
 import items.SmallHealthPotion;
@@ -29,6 +30,7 @@ import tiles.ExtraTile;
 import tiles.GButton;
 import tiles.Ground;
 import tiles.GroundButton;
+import tiles.KeyDoor;
 import tiles.TriggerType;
 import tiles.Wall;
 import weapons.Armory;
@@ -722,7 +724,7 @@ public class DesertLevels implements Serializable {
 		
 		//-------------------
 		
-		MapLevel d34 = new MapLevel(new int[][] {//TODO
+		MapLevel d34 = new MapLevel(new int[][] {//TODO Add Key doors
 			{1, 1, 2, 2, 2, 2, 2, 2, 1, 1},
 			{4, 1, 1, 2, 2, 2, 2, 1, 1, 4},
 			{4, 4, 1, 0, 0, 0, 0, 1, 4, 4},
@@ -934,9 +936,9 @@ public class DesertLevels implements Serializable {
 			{1, 1, 1, 1, 1, 3, 2, 2, 2, 2},
 			{4, 1, 1, 2, 2, 2, 2, 2, 2, 2},
 			{4, 4, 1, 1, 2, 2, 2, 1, 2, 2},
-			{4, 4, 1, 1, 1, 2, 2, 1, 3, 2},
-			{4, 4, 1, 2, 2, 2, 2, 2, 2, 2},
-			{4, 4, 2, 2, 2, 2, 2, 2, 2, 2},
+			{4, 4, 0, 1, 1, 2, 2, 1, 3, 2},
+			{4, 4, 0, 2, 2, 2, 2, 2, 2, 2},
+			{4, 4, 0, 0, 2, 2, 2, 2, 2, 2}
 		}, new ExtraTile[] {
 		}, new ArrayList<GCharacter>() {{
 		}}, new ArrayList<GPickup>() {{
@@ -944,20 +946,150 @@ public class DesertLevels implements Serializable {
 		
 		//-------------------
 		
-		MapLevel d65 = new MapLevel(new int[][] {//
+		MapLevel d65 = new MapLevel(new int[][] {//TODO Add More stuff
 			{1, 3, 1, 1, 1, 1, 1, 1, 3, 3},
 			{2, 1, 2, 1, 2, 1, 1, 1, 3, 3},
 			{2, 2, 2, 2, 2, 2, 1, 3, 2, 3},
 			{2, 2, 2, 2, 2, 2, 2, 2, 2, 3},
+			{2, 2, 2, 2, 2, 2, 2, 1, 3, 3},
+			{2, 2, 2, 2, 1, 2, 2, 2, 1, 3},
+			{2, 2, 2, 1, 1, 2, 2, 2, 2, 3},
 			{2, 2, 2, 2, 2, 2, 2, 2, 2, 3},
-			{2, 2, 2, 2, 2, 2, 2, 2, 2, 3},
-			{2, 2, 2, 2, 2, 2, 2, 2, 2, 3},
-			{2, 2, 2, 2, 2, 2, 2, 2, 2, 3},
-			{2, 2, 2, 2, 2, 2, 2, 2, 2, 3},
+			{2, 2, 2, 2, 2, 2, 1, 1, 2, 3},
 			{2, 2, 2, 2, 2, 2, 2, 2, 2, 3}
 		}, new ExtraTile[] {
 		}, new ArrayList<GCharacter>() {{
 		}}, new ArrayList<GPickup>() {{
+		}});
+		
+		//------------------- // ROW 6
+		
+		MapLevel d06 = new MapLevel(new int[][] {
+			{3, 1, 1, 1, 1, 1, 1, 1, 1, 1},
+			{3, 3, 1, 1, 1, 1, 1, 1, 1, 3},
+			{3, 1, 1, 1, 1, 3, 1, 1, 1, 1},
+			{3, 3, 3, 1, 3, 1, 1, 1, 1, 3},
+			{3, 3, 0, 1, 1, 1, 0, 1, 1, 1},
+			{3, 1, 3, 1, 1, 1, 1, 1, 1, 1},
+			{3, 3, 1, 3, 1, 1, 1, 1, 1, 1},
+			{3, 3, 1, 1, 1, 1, 1, 3, 1, 1},
+			{3, 3, 0, 0, 0, 1, 3, 1, 1, 3},
+			{3, 4, 4, 4, 4, 4, 3, 3, 3, 3}
+		}, new ExtraTile[] {
+		}, new ArrayList<GCharacter>() {{
+		}}, new ArrayList<GPickup>() {{
+		}});
+		
+		//-------------------
+		
+		MapLevel d16 = new MapLevel(new int[][] {
+			{1, 1, 1, 1, 3, 2, 2, 4, 4, 4},
+			{3, 1, 1, 1, 2, 2, 4, 4, 4, 4},
+			{1, 1, 3, 1, 2, 1, 1, 1, 4, 4},
+			{3, 1, 3, 2, 2, 1, 4, 1, 4, 4},
+			{1, 1, 1, 3, 2, 1, 1, 1, 1, 4},
+			{1, 1, 1, 1, 2, 2, 1, 4, 1, 1},
+			{1, 1, 1, 1, 3, 2, 1, 1, 1, 1},
+			{1, 1, 1, 1, 2, 3, 1, 1, 1, 1},
+			{3, 1, 1, 1, 1, 1, 1, 1, 1, 1},
+			{3, 3, 3, 3, 3, 3, 3, 3, 3, 3}
+		}, new ExtraTile[] {
+		}, new ArrayList<GCharacter>() {{
+			add(new SandBeep(2, 7));
+			add(new SnakeSoldier(7, 3, PatrolPattern.SURFACE_CW));
+			add(new SnakeSoldier(8, 5, PatrolPattern.SURFACE_CW));
+		}}, new ArrayList<GPickup>() {{
+		}});
+		
+		//-------------------
+		
+		MapLevel d26 = new MapLevel(new int[][] {
+			{4, 0, 4, 4, 4, 4, 4, 4, 4, 4},
+			{4, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+			{4, 4, 4, 4, 4, 4, 4, 4, 4, 4},
+			{4, 4, 1, 1, 1, 1, 1, 1, 4, 4},
+			{4, 1, 1, 1, 1, 1, 1, 1, 1, 4},
+			{1, 1, 1, 3, 1, 1, 1, 1, 1, 1},
+			{1, 1, 1, 1, 1, 1, 1, 3, 1, 1},
+			{1, 1, 1, 1, 1, 3, 1, 1, 1, 1},
+			{1, 1, 3, 1, 3, 1, 1, 1, 1, 3},
+			{3, 3, 3, 3, 3, 3, 3, 3, 3, 3}
+		}, new ExtraTile[] {
+		}, new ArrayList<GCharacter>() {{
+		}}, new ArrayList<GPickup>() {{
+		}});
+		
+		//-------------------
+		
+		MapLevel d36 = new MapLevel(new int[][] {
+			{4, 0, 4, 4, 4, 4, 4, 4, 0, 4},
+			{0, 0, 4, 4, 4, 4, 4, 4, 0, 0},
+			{4, 4, 4, 1, 1, 1, 1, 4, 4, 4},
+			{4, 4, 1, 1, 1, 1, 1, 1, 4, 4},
+			{4, 1, 1, 1, 1, 1, 1, 1, 1, 4},
+			{1, 1, 1, 1, 1, 3, 1, 1, 3, 1},
+			{1, 1, 1, 1, 1, 1, 3, 3, 1, 3},
+			{1, 1, 1, 1, 1, 1, 3, 1, 1, 1},
+			{3, 1, 1, 1, 3, 1, 1, 1, 3, 1},
+			{3, 3, 3, 3, 3, 3, 3, 3, 3, 3}
+		}, new ExtraTile[] {
+		}, new ArrayList<GCharacter>() {{
+		}}, new ArrayList<GPickup>() {{
+		}});
+		
+		//-------------------
+		
+		MapLevel d46 = new MapLevel(new int[][] {
+			{4, 0, 4, 1, 1, 1, 1, 0, 4, 4},
+			{0, 0, 4, 1, 2, 1, 1, 0, 4, 4},
+			{4, 4, 4, 1, 2, 2, 2, 0, 4, 4},
+			{4, 4, 3, 2, 2, 2, 2, 2, 4, 4},
+			{4, 3, 2, 3, 2, 2, 2, 2, 1, 4},
+			{1, 1, 3, 2, 2, 2, 2, 2, 2, 4},
+			{3, 1, 3, 2, 2, 2, 2, 2, 2, 4},
+			{1, 1, 3, 3, 2, 2, 2, 2, 1, 4},
+			{1, 3, 3, 2, 2, 2, 2, 2, 3, 4},
+			{3, 3, 3, 3, 3, 3, 3, 3, 3, 3}
+		}, new ExtraTile[] {
+		}, new ArrayList<GCharacter>() {{
+		}}, new ArrayList<GPickup>() {{
+		}});
+		
+		//-------------------
+		
+		MapLevel d56 = new MapLevel(new int[][] {//TODO Add Key door
+			{4, 4, 0, 0, 2, 2, 2, 2, 2, 2},
+			{4, 4, 4, 0, 2, 2, 2, 2, 2, 2},
+			{4, 0, 0, 0, 2, 1, 1, 2, 2, 2},
+			{4, 0, 4, 0, 2, 2, 1, 2, 2, 2},
+			{4, 0, 0, 0, 2, 2, 2, 2, 2, 1},
+			{4, 0, 0, 2, 2, 2, 2, 2, 1, 1},
+			{4, 4, 4, 4, 2, 2, 2, 2, 2, 2},
+			{4, 0, 0, 4, 4, 2, 2, 2, 2, 2},
+			{4, 0, 0, 0, 4, 2, 3, 2, 2, 2},
+			{4, 4, 4, 4, 4, 3, 3, 3, 3, 3}
+		}, new ExtraTile[] {
+		}, new ArrayList<GCharacter>() {{
+		}}, new ArrayList<GPickup>() {{
+		}});
+		
+		//-------------------
+		
+		MapLevel d66 = new MapLevel(new int[][] {
+			{2, 2, 2, 2, 2, 2, 2, 2, 2, 3},
+			{2, 2, 2, 2, 2, 2, 2, 2, 2, 3},
+			{2, 2, 2, 1, 3, 2, 2, 2, 2, 3},
+			{2, 2, 2, 2, 2, 2, 2, 2, 2, 3},
+			{1, 2, 2, 2, 2, 2, 2, 2, 2, 3},
+			{1, 2, 2, 2, 2, 2, 2, 2, 2, 3},
+			{2, 2, 2, 2, 2, 2, 2, 1, 3, 3},
+			{2, 2, 2, 1, 2, 2, 1, 1, 1, 3},
+			{2, 2, 1, 3, 2, 2, 1, 3, 3, 3},
+			{3, 3, 3, 3, 3, 3, 3, 3, 3, 3}
+		}, new ExtraTile[] {
+		}, new ArrayList<GCharacter>() {{
+		}}, new ArrayList<GPickup>() {{
+			add(new GPickup(8, 7, new GKey(KeyDoor.BLUE)));
 		}});
 		
 		
@@ -973,6 +1105,7 @@ public class DesertLevels implements Serializable {
 			{d03, d13, d23, d33, d43, d53, d63},
 			{d04, d14, d24, d34, d44, d54, d64},
 			{d05, d15, d25, d35, d45, d55, d65},
+			{d06, d16, d26, d36, d46, d56, d66}
 			//
 		});
 	

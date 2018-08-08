@@ -26,13 +26,15 @@ public class Watchman extends GCharacter {
 	// Serialization ID
 	private static final long serialVersionUID = -7747701036774455549L;
 
-	private int MAX_HP = 10;
+	private int MAX_HP = 6;
 	
 	private int MIN_DMG = 1;
 	private int MAX_DMG = 2;
 	
 	private double CRIT_CHANCE = 0.15;
 	private double CRIT_MULT = 1.5;
+	
+	private int ARMOR_VAL = 1;
 	
 	//----------------------------
 	
@@ -77,6 +79,8 @@ public class Watchman extends GCharacter {
 		this.maxHP = MAX_HP;
 		this.currentHP = this.maxHP;
 		
+		this.armor = ARMOR_VAL;
+		
 		this.minDmg = MIN_DMG;
 		this.maxDmg = MAX_DMG;
 		
@@ -101,6 +105,8 @@ public class Watchman extends GCharacter {
 		
 		this.maxHP = MAX_HP;
 		this.currentHP = this.maxHP;
+		
+		this.armor = ARMOR_VAL;
 		
 		this.minDmg = MIN_DMG;
 		this.maxDmg = MAX_DMG;

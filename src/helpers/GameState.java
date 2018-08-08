@@ -38,6 +38,10 @@ public class GameState {
 			File tempFolder = new File(GPath.SAVE + "temp");
 			File[] areaFileList = tempFolder.listFiles();
 			for(File areaFile : areaFileList) {
+				// If the file is the ReadMe file, ignore it
+				if(areaFile.getName().endsWith(".md")) {
+					continue;
+				}
 				
 				// Delete the older file in main if it exists to make room for the new one
 				File oldFile = new File(GPath.SAVE + areaFile.getName());
