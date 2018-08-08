@@ -16,6 +16,7 @@ import characters.GCharacter;
 import helpers.ImageHandler;
 import items.GItem;
 
+// Panel that displays information about focused items and enemies
 public class InfoScreen extends JPanel {
 
 	// Prevents warnings
@@ -32,6 +33,13 @@ public class InfoScreen extends JPanel {
 	private static int hpHeight = 50;
 	private static int hpFontSize = 28;
 	
+	// Armor Panel fields
+	private static JPanel armorPanel = new JPanel();
+	private static JLabel armorInfo = new JLabel();
+	private static int arWidth = 180;
+	private static int arHeight = 50;
+	private static int arFontSize = 28;
+	
 	// Name Panel fields
 	private static JPanel namePanel = new JPanel();
 	private static JLabel nameInfo = new JLabel();
@@ -40,7 +48,7 @@ public class InfoScreen extends JPanel {
 	private static int nameFontSize = 28;
 	private static Font usualNameFont;
 	
-	// Player Image Panel fields
+	// Object Image Panel fields
 	private static EntityImagePanel entityImagePanel = new EntityImagePanel(0, 0);
 	private static GCharacter focusedNPC = null;
 	private static GItem focusedItem = null;
@@ -76,6 +84,9 @@ public class InfoScreen extends JPanel {
 		InfoScreen.hpWidth = (int) (InfoScreen.hpWidth * GameInitializer.scaleFactor);
 		InfoScreen.hpHeight = (int) (InfoScreen.hpHeight * GameInitializer.scaleFactor);
 		InfoScreen.hpFontSize = (int) (InfoScreen.hpFontSize * GameInitializer.scaleFactor);
+		InfoScreen.arWidth = (int) (InfoScreen.arWidth * GameInitializer.scaleFactor);
+		InfoScreen.arHeight = (int) (InfoScreen.arHeight * GameInitializer.scaleFactor);
+		InfoScreen.arFontSize = (int) (InfoScreen.arFontSize * GameInitializer.scaleFactor);
 		InfoScreen.nameWidth = (int) (InfoScreen.nameWidth * GameInitializer.scaleFactor);
 		InfoScreen.nameHeight = (int) (InfoScreen.nameHeight * GameInitializer.scaleFactor);
 		InfoScreen.nameFontSize = (int) (InfoScreen.nameFontSize * GameInitializer.scaleFactor);
@@ -91,6 +102,14 @@ public class InfoScreen extends JPanel {
 		InfoScreen.healthPanel.add(InfoScreen.healthInfo);
 		this.add(InfoScreen.healthPanel);
 		InfoScreen.healthPanel.setBounds(infoWidth *9/54, infoHeight *16/27, hpWidth, hpHeight);
+		
+		// Set up armor panel
+		InfoScreen.armorInfo.setText("DEF: -");
+		InfoScreen.armorInfo.setFont(new Font(Font.SERIF, Font.BOLD, InfoScreen.arFontSize));
+		InfoScreen.armorPanel.add(InfoScreen.armorInfo);
+		InfoScreen.armorPanel.setBackground(new Color(130, 130, 130));
+		this.add(InfoScreen.armorPanel);
+		InfoScreen.armorPanel.setBounds(infoWidth *9/54, infoHeight *77/108, arWidth, arHeight);
 		
 		// Set up description panel
 		InfoScreen.descBox.setBackground(Color.LIGHT_GRAY);
@@ -148,6 +167,21 @@ public class InfoScreen extends JPanel {
 		
 		// Repaint the panel
 		InfoScreen.healthPanel.repaint();
+	}
+	
+	public static void updateArmorValues() {
+		// If we have no focused NPC, return
+		if(focusedNPC == null) {
+			return;
+		}
+		
+		// Get armor value
+		int armor = focusedNPC.getArmor();
+		
+		// Set armor text
+		InfoScreen.armorInfo.setText("DEF: " + Integer.toString(armor));
+		
+		InfoScreen.armorPanel.repaint();
 	}
 	
 	// Updates the values in the description panel
@@ -275,9 +309,11 @@ public class InfoScreen extends JPanel {
 		// Reinitialize visible components
 		InfoScreen.descBox.setVisible(false);
 		InfoScreen.healthPanel.setVisible(true);
+		InfoScreen.armorPanel.setVisible(true);
 		
 		// Reset text values
 		InfoScreen.healthInfo.setText("HP: - / -");
+		InfoScreen.armorInfo.setText("DEF: -");
 		InfoScreen.nameInfo.setText("-");
 		
 		// Reset color values
@@ -310,6 +346,7 @@ public class InfoScreen extends JPanel {
 	// Update the whole screen
 	public static void updateInfoScreen() {
 		InfoScreen.updateHealthValues();
+		InfoScreen.updateArmorValues();
 		InfoScreen.updateNameValues();
 		InfoScreen.updateDescValues();
 		InfoScreen.updateEntityImage();
@@ -332,6 +369,7 @@ public class InfoScreen extends JPanel {
 		// Make health panel visible and hide description box
 		InfoScreen.descBox.setVisible(false);
 		InfoScreen.healthPanel.setVisible(true);
+		InfoScreen.armorPanel.setVisible(true);
 		
 		// Update everything
 		InfoScreen.updateInfoScreen();
@@ -351,6 +389,7 @@ public class InfoScreen extends JPanel {
 		// Make description box visible and hide health panel
 		InfoScreen.descBox.setVisible(true);
 		InfoScreen.healthPanel.setVisible(false);
+		InfoScreen.armorPanel.setVisible(false);
 		
 		// Update everything
 		InfoScreen.updateInfoScreen();

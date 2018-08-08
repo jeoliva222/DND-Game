@@ -15,8 +15,9 @@ import managers.EntityManager;
 public class StatusScreen extends JPanel {
 	
 	// Width and height of the log screen
-	private static int statusHeight = GameScreen.getGHeight() * 3 / 4;
-	private static int statusWidth = StatusScreen.statusHeight * 4 / 9;
+	// 3/4 height by default
+	private static int statusHeight = GameScreen.getGHeight() * 5 / 6;
+	private static int statusWidth = StatusScreen.statusHeight * 6 / 15;
 
 	// Prevents warnings
 	private static final long serialVersionUID = 1L;
@@ -27,6 +28,13 @@ public class StatusScreen extends JPanel {
 	private static int hpWidth = 180;
 	private static int hpHeight = 50;
 	private static int hpFontSize = 28;
+	
+	// Armor Panel fields
+	private static JPanel armorPanel = new JPanel();
+	private static JLabel armorInfo = new JLabel();
+	private static int arWidth = 180;
+	private static int arHeight = 50;
+	private static int arFontSize = 28;
 	
 	// Player Image Panel fields
 	private static EntityImagePanel playerImagePanel = new EntityImagePanel(0, 0);
@@ -65,6 +73,9 @@ public class StatusScreen extends JPanel {
 		StatusScreen.hpWidth = (int) (StatusScreen.hpWidth * GameInitializer.scaleFactor);
 		StatusScreen.hpHeight = (int) (StatusScreen.hpHeight * GameInitializer.scaleFactor);
 		StatusScreen.hpFontSize = (int) (StatusScreen.hpFontSize * GameInitializer.scaleFactor);
+		StatusScreen.arWidth = (int) (StatusScreen.arWidth * GameInitializer.scaleFactor);
+		StatusScreen.arHeight = (int) (StatusScreen.arHeight * GameInitializer.scaleFactor);
+		StatusScreen.arFontSize = (int) (StatusScreen.arFontSize * GameInitializer.scaleFactor);
 		StatusScreen.piWidth = (int) (StatusScreen.piWidth * GameInitializer.scaleFactor);
 		StatusScreen.piHeight = (int) (StatusScreen.piHeight * GameInitializer.scaleFactor);
 		StatusScreen.pWeaponWidth = (int) (StatusScreen.pWeaponWidth * GameInitializer.scaleFactor);
@@ -78,7 +89,15 @@ public class StatusScreen extends JPanel {
 		StatusScreen.healthInfo.setFont(new Font(Font.SERIF, Font.BOLD, StatusScreen.hpFontSize));
 		StatusScreen.healthPanel.add(StatusScreen.healthInfo);
 		this.add(StatusScreen.healthPanel);
-		StatusScreen.healthPanel.setBounds(statusWidth *9/54, statusHeight *10/27, hpWidth, hpHeight);
+		StatusScreen.healthPanel.setBounds(statusWidth *9/54, statusHeight *9/27, hpWidth, hpHeight);
+		
+		// Set up armor panel
+		StatusScreen.armorInfo.setText("DEF: " + Integer.toString(EntityManager.getInstance().getPlayer().getArmor()));
+		StatusScreen.armorInfo.setFont(new Font(Font.SERIF, Font.BOLD, StatusScreen.arFontSize));
+		StatusScreen.armorPanel.add(StatusScreen.armorInfo);
+		StatusScreen.armorPanel.setBackground(new Color(130, 130, 130));
+		this.add(StatusScreen.armorPanel);
+		StatusScreen.armorPanel.setBounds(statusWidth *9/54, statusHeight *45/108, arWidth, arHeight);
 		
 		// Set up player image panel
 		StatusScreen.updatePlayerImage();
@@ -87,11 +106,11 @@ public class StatusScreen extends JPanel {
 		
 		// Set up the primary weapon panel
 		this.add(StatusScreen.primaryWeaponPanel);
-		StatusScreen.primaryWeaponPanel.setBounds(statusWidth *4/54, statusHeight *13/27, pWeaponWidth, pWeaponHeight);
+		StatusScreen.primaryWeaponPanel.setBounds(statusWidth *4/54, statusHeight *14/27, pWeaponWidth, pWeaponHeight);
 		
 		// Set up the primary weapon panel
 		this.add(StatusScreen.sheathedWeaponBanner);
-		StatusScreen.sheathedWeaponBanner.setBounds(statusWidth *4/54, statusHeight *21/27, sWeaponWidth, sWeaponHeight);
+		StatusScreen.sheathedWeaponBanner.setBounds(statusWidth *4/54, statusHeight *22/27, sWeaponWidth, sWeaponHeight);
 	}
 	
 	// Updates the values in the health panel
@@ -147,6 +166,18 @@ public class StatusScreen extends JPanel {
 		StatusScreen.playerImagePanel.repaint();
 	}
 	
+	// Updates the displayed armor value of the player
+	public static void updateArmorValues() {
+		// Fetch current armor value
+		int armor = EntityManager.getInstance().getPlayer().getArmor();
+		
+		// Update text
+		StatusScreen.armorInfo.setText("DEF: " + Integer.toString(armor));
+		
+		// Repaint the panel
+		StatusScreen.armorPanel.repaint();
+	}
+	
 	// Updates the weapon panel(s)
 	public static void updateWeapons() {
 		StatusScreen.primaryWeaponPanel.updateWeaponPanel();
@@ -157,6 +188,7 @@ public class StatusScreen extends JPanel {
 	public static void updateStatusScreen() {
 		StatusScreen.updateHealthValues();
 		StatusScreen.updatePlayerImage();
+		StatusScreen.updateArmorValues();
 	}
 	
 	// *******************
