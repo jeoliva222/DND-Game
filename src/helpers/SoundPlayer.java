@@ -22,7 +22,7 @@ import javax.sound.sampled.LineListener;
 // for game sound effects and music
 public class SoundPlayer {
 	
-	private static Sequencer midiSequence;
+	private static Sequencer midiSequence = null;
 	private static InputStream musicStream;
 	
 	public static void cacheSoundPlaying() {
@@ -83,25 +83,26 @@ public class SoundPlayer {
 	
 	/// Midi play with set volume for each channel
 	public static void playMidi(String midiPath, int volume) {
-        // Obtains the default Sequencer connected to a default device.
-        Sequencer sequencer;
 		try {
-			sequencer = MidiSystem.getSequencer();
-			sequencer.setLoopCount(Sequencer.LOOP_CONTINUOUSLY);
+			// Set Synthesizer and set loop parameter if not already done
+			if(SoundPlayer.midiSequence == null) {
+				SoundPlayer.midiSequence = MidiSystem.getSequencer();
+				SoundPlayer.midiSequence.setLoopCount(Sequencer.LOOP_CONTINUOUSLY);
+			}
 	        
 	        // Opens the device, indicating that it should now acquire any
 	        // system resources it requires and become operational.
-	        sequencer.open();
+			SoundPlayer.midiSequence.open();
 	        
-	        // create a stream from a file
+	        // Create a stream from a file
 	        SoundPlayer.musicStream = new BufferedInputStream(new FileInputStream(new File(midiPath)));
 
 	        // Sets the current sequence on which the sequencer operates.
 	        // The stream must point to MIDI file data.
-	        sequencer.setSequence(SoundPlayer.musicStream);
+	        SoundPlayer.midiSequence.setSequence(SoundPlayer.musicStream);
 	        
-			Track[] tracks = sequencer.getSequence().getTracks();
-			
+	        // Get the tracks for the sequence and set their volume to the specified level
+			Track[] tracks = SoundPlayer.midiSequence.getSequence().getTracks();
 			for(Track track : tracks) {
 				for(int x = 0; x < 16; x++) {
 					track.add(new MidiEvent(
@@ -110,8 +111,7 @@ public class SoundPlayer {
 			}
 	 
 	        // Starts playback of the MIDI data in the currently loaded sequence.
-	        sequencer.start();
-	        SoundPlayer.midiSequence = sequencer;
+			SoundPlayer.midiSequence.start();
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -120,26 +120,26 @@ public class SoundPlayer {
 	
 	// Play Midi without volume set
 	public static void playMidi(String midiPath) {
-        // Obtains the default Sequencer connected to a default device.
-        Sequencer sequencer;
 		try {
-			sequencer = MidiSystem.getSequencer();
-			sequencer.setLoopCount(Sequencer.LOOP_CONTINUOUSLY);
+			// Set Synthesizer and set loop parameter if not already done
+			if(SoundPlayer.midiSequence == null) {
+				SoundPlayer.midiSequence = MidiSystem.getSequencer();
+				SoundPlayer.midiSequence.setLoopCount(Sequencer.LOOP_CONTINUOUSLY);
+			}
 	        
 	        // Opens the device, indicating that it should now acquire any
 	        // system resources it requires and become operational.
-	        sequencer.open();
+			SoundPlayer.midiSequence.open();
 	        
-	        // create a stream from a file
+	        // Create a stream from a file
 	        SoundPlayer.musicStream = new BufferedInputStream(new FileInputStream(new File(midiPath)));
 
 	        // Sets the current sequence on which the sequencer operates.
 	        // The stream must point to MIDI file data.
-	        sequencer.setSequence(SoundPlayer.musicStream);
+	        SoundPlayer.midiSequence.setSequence(SoundPlayer.musicStream);
 	 
 	        // Starts playback of the MIDI data in the currently loaded sequence.
-	        sequencer.start();
-	        SoundPlayer.midiSequence = sequencer;
+	        SoundPlayer.midiSequence.start();
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -170,8 +170,7 @@ public class SoundPlayer {
 			try {
 				SoundPlayer.musicStream.close();
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				// Do nothing
 			}
 		}
 	}
