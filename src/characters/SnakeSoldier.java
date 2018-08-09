@@ -163,11 +163,7 @@ public class SnakeSoldier extends GCharacter {
 	@Override
 	public void playerInitiate() {
 		SoundPlayer.playWAV(GPath.createSoundPath("Beanpole_ATTACK.wav"));
-		if(this.state == SnakeSoldier.STATE_PREP_BITE) {
-			this.attackPlayer(1.5);
-		} else {
-			this.attackPlayer();
-		}
+		this.attackPlayer();
 	}
 	
 	@Override
@@ -251,9 +247,9 @@ public class SnakeSoldier extends GCharacter {
 					
 					// Decide whether to swipe or stab
 					int swipeBiteSlam = r.nextInt(10);
-					if(swipeBiteSlam <= 1) {
+					if(swipeBiteSlam <= 2) {
 						this.state = SnakeSoldier.STATE_PREP_BITE;
-					} else if(swipeBiteSlam <= 5) {
+					} else if(swipeBiteSlam <= 6) {
 						this.state = SnakeSoldier.STATE_PREP_SWIPE;
 					} else {
 						this.state = SnakeSoldier.STATE_PREP_SLAM;
@@ -309,9 +305,9 @@ public class SnakeSoldier extends GCharacter {
 							
 							// Randomly choose an attack
 							int attChoice = r.nextInt(10);
-							if(attChoice <= 1) {
+							if(attChoice <= 2) {
 								this.state = SnakeSoldier.STATE_PREP_BITE;
-							} else if(attChoice <= 5) {
+							} else if(attChoice <= 6) {
 								this.state = SnakeSoldier.STATE_PREP_SWIPE;
 							} else {
 								this.state = SnakeSoldier.STATE_PREP_SLAM;
@@ -321,6 +317,9 @@ public class SnakeSoldier extends GCharacter {
 				}
 				break;
 			case SnakeSoldier.STATE_PREP_BITE:
+				// Step in marked direction if possible
+				this.moveCharacter(this.xMarkDir, this.yMarkDir);
+				
 				// Mark tile with damage indicator
 				EntityManager.getInstance().getEffectManager().addEffect(new DamageIndicator(this.xPos + this.xMarkDir, this.yPos + this.yMarkDir));
 				

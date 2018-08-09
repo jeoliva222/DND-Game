@@ -14,7 +14,7 @@ public class Armory {
 			GPath.createImagePath(GPath.PICKUP, GPath.WEAPON, "bareFists.png"));
 	
 	// Padded Fists (Caestus)
-	public static final Fists caestus = new Fists("Caestus", 1, 3, 0.05, 2.0, 1.7, 
+	public static final Fists caestus = new Fists("Caestus", 1, 2, 0.00, 1.0, 2.5, 
 			"WEAPON (Fist): Studded with iron rivets. Charge attack to dish out extra pain!",
 			GPath.createImagePath(GPath.PICKUP, GPath.WEAPON, "caestus.png"));
 	
@@ -77,8 +77,8 @@ public class Armory {
 			"WEAPON (Dagger): A shard of glass from a broken mirror. Charge attack to shadowstep your opponents!",
 			GPath.createImagePath(GPath.PICKUP, GPath.WEAPON, "glassShard.png"));
 	
-	// Tailbone Dagger
-	public static final Dagger spineShiv = new Dagger("Spine Shiv", 2, 2, 0.3, 2.5, 1.0, 
+	// Spine Dagger
+	public static final Dagger spineShiv = new Dagger("Spine Shiv", 1, 3, 0.2, 2.0, 1.0, 
 			"WEAPON (Dagger): Knife formed from a sharpened bone. Charge attack to shadowstep your opponents!",
 			GPath.createImagePath(GPath.PICKUP, GPath.WEAPON, "spineShiv.png"));
 	
@@ -102,7 +102,7 @@ public class Armory {
 	//
 	
 	// Wooden Targe
-	public static final Shield woodenTarge = new Shield("Wooden Targe", 1, 2, 2, 0.1, 1.5, 1.0, 
+	public static final Shield woodenTarge = new Shield("Wooden Targe", 2, 2, 2, 0.15, 1.5, 1.0, 
 			"WEAPON (Shield): [2 Block] Block some incoming damage when charging. Charge attack to swing offhand weapon!",
 			GPath.createImagePath(GPath.PICKUP, GPath.WEAPON, "woodenTarge.png"));
 
