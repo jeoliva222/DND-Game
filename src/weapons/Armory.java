@@ -62,7 +62,7 @@ public class Armory {
 	// Ceremonial Spear
 	public static final Spear ceremonialSpear = new Spear("Ceremonial Spear", 2, 3, 0.15, 1.7, 1.0, 
 			"WEAPON (Spear): It feels wrong to use this.",
-			GPath.createImagePath(GPath.PICKUP, GPath.WEAPON, "ironSpear.png"));
+			GPath.createImagePath(GPath.PICKUP, GPath.WEAPON, "ceremonialSpear.png"));
 	
 	// Ministerial Staff Spear
 	public static final Spear ministerSpear = new Spear("Ministerial Staff", 3, 6, 0.15, 1.5, 1.2, 
@@ -78,16 +78,16 @@ public class Armory {
 			GPath.createImagePath(GPath.PICKUP, GPath.WEAPON, "glassShard.png"));
 	
 	// Tailbone Dagger
-	public static final Dagger tailboneDagger = new Dagger("Tailbone Dagger", 2, 2, 0.3, 2.5, 1.0, 
+	public static final Dagger spineShiv = new Dagger("Spine Shiv", 2, 2, 0.3, 2.5, 1.0, 
 			"WEAPON (Dagger): Knife formed from a sharpened bone. Charge attack to shadowstep your opponents!",
-			GPath.createImagePath(GPath.PICKUP, GPath.WEAPON, "glassShard.png"));
+			GPath.createImagePath(GPath.PICKUP, GPath.WEAPON, "spineShiv.png"));
 	
 	// Crossbow Weapons ----------------------------
 	//
 	
 	// Lowly Toy Crossbow
 	public static final Crossbow toyCrossbow = new Crossbow("Toy Crossbow", 1, 1, 0.1, 2.0, 2.0, 
-			"WEAPON (Crossbow): Charge to fire a bolt! Travels instantaneously.",
+			"WEAPON (Crossbow): Charge attack to fire a bolt! Travels instantaneously.",
 			GPath.createImagePath(GPath.TILE, GPath.GENERIC, "testProj.png"));
 	
 	// Bow Weapons ---------------------------------
@@ -95,7 +95,7 @@ public class Armory {
 	
 	// Lowly Twig Bow
 	public static final Bow twigBow = new Bow("Twig Bow", 1, 1, 0.05, 2.0, 3.0, 
-			"WEAPON (Bow): Charge to fire an arrow!",
+			"WEAPON (Bow): Charge attack to fire an arrow!",
 			GPath.createImagePath(GPath.TILE, GPath.GENERIC, "testProj.png"));
 	
 	// Shield Weapons ------------------------------
@@ -104,6 +104,6 @@ public class Armory {
 	// Wooden Targe
 	public static final Shield woodenTarge = new Shield("Wooden Targe", 1, 2, 2, 0.1, 1.5, 1.0, 
 			"WEAPON (Shield): [2 Block] Block some incoming damage when charging. Charge attack to swing offhand weapon!",
-			GPath.createImagePath(GPath.TILE, GPath.GENERIC, "testProj.png"));
+			GPath.createImagePath(GPath.PICKUP, GPath.WEAPON, "woodenTarge.png"));
 
 }

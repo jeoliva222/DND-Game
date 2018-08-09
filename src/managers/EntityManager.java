@@ -100,10 +100,6 @@ public class EntityManager {
 			if(!gchar.isAlive()) {
 				this.corpseManager.addCorpse(new Corpse(gchar));
 				hearse.add(gchar);
-				
-				// Also make sure to refresh the tile to clear the dead entity
-				///**** NOT SURE WHY THIS EXISTS?
-				//GameScreen.getTile(gchar.getXPos(), gchar.getYPos()).clearFG();
 			}
 		}
 		
@@ -124,7 +120,6 @@ public class EntityManager {
 	}
 	
 	// Removes projectiles that have made an impact from the reference list
-	// TODO
 	public void projectileCleaner() {
 		// Remove projectiles that have made an impact with something
 		ArrayList<GProjectile> hearse = new ArrayList<GProjectile>();
