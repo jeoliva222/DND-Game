@@ -62,7 +62,6 @@ public class GameScreen extends JPanel {
 		EntityManager em = EntityManager.getInstance();
 		
 		/// Set the active area
-		// TODO
 		int areaX = em.getPlayer().getAreaX();
 		int areaY = em.getPlayer().getAreaY();
 		int levelX = em.getPlayer().getLevelX();

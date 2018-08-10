@@ -26,5 +26,7 @@ public class ImageBank {
 	// Clears the bank of images
 	public static void clearBank() {
 		ImageBank.images.clear();
+		ImageBank.images = null;
+		ImageBank.images = new HashMap<String, Image>();
 	}
 }

@@ -248,6 +248,8 @@ public class GameTile extends JPanel {
 	
 	public void clearEffects() {
 		this.fxImages.clear();
+		this.fxImages = null;
+		this.fxImages = new HashMap<GEffect, Image>();
 		this.repaint();
 	}
 	
@@ -268,6 +270,8 @@ public class GameTile extends JPanel {
 	
 	public void clearProjs() {
 		this.projImages.clear();
+		this.projImages = null;
+		this.projImages = new HashMap<GProjectile, Image>();
 		this.repaint();
 	}
 	

@@ -17,6 +17,9 @@ public class IslandChecker {
 	public static boolean virusStart(int originX, int originY, int destX, int destY, MovableType mt) {
 		// Start by clearing checked coordinates list
 		IslandChecker.checkedCoords.clear();
+		IslandChecker.checkedCoords = null;
+		IslandChecker.checkedCoords = new ArrayList<Dimension>();
+		
 		
 		// Start the virus spread at the origin location
 		return virusSpread(originX, originY, destX, destY, mt);

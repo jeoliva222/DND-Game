@@ -299,6 +299,12 @@ public class Player implements Serializable {
 	// Actual damage calculations performed in GCharacter class
 	// Returns True if alive from damage, False if dead from damage
 	public boolean damagePlayer(int damage) {
+		// If damage is equal to or less than 0, do nothing and return
+		if(damage <= 0) {
+			return true;
+		}
+		
+		// Otherwise, deal damage, play hurt sound, and declare whether play is dead
 		this.currentHP = this.currentHP - damage;
 		if(this.isAlive()) {
 			SoundPlayer.playWAV(GPath.createSoundPath("Player_HURT.wav"), -15);
