@@ -356,7 +356,6 @@ public class DungeonLevels implements Serializable {
 		}, new ArrayList<GCharacter>() {{
 			add(new BunnyWarrior(6, 8, PatrolPattern.PATROL_CCW));
 			add(new Beanpole(5, 8, PatrolPattern.PATROL_CCW));
-			add(new Beanpole(5, 7, PatrolPattern.PATROL_CCW));
 			add(new Beep(6, 4));
 			add(new Beep(6, 5));
 			add(new Beep(8, 4));

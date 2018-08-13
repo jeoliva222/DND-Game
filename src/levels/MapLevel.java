@@ -61,7 +61,7 @@ public class MapLevel implements Serializable {
 					tt = new AltWall();
 				} else if (map[y][x] == 5) {
 					tt = new Pit();
-				}  else {
+				} else {
 					tt = new Wall();
 				}
 				
