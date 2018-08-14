@@ -9,6 +9,7 @@ import ai.LineDrawer;
 import ai.PathFinder;
 import ai.PatrolPattern;
 import effects.DamageIndicator;
+import effects.FireEffect;
 import helpers.GPath;
 import helpers.SoundPlayer;
 import managers.EntityManager;
@@ -22,6 +23,8 @@ public class SnakeCommander extends GCharacter {
 	// Modifiers/Statistics
 	
 	private int MAX_HP = 13;
+	
+	private int ARMOR_VAL = 1;
 	
 	private int MIN_DMG = 4;
 	private int MAX_DMG = 6;
@@ -55,7 +58,6 @@ public class SnakeCommander extends GCharacter {
 	
 	private int attCount = 0;
 	private int swipeMaxCount = 2;
-	private int fireMaxCount = 3;
 	
 	//----------------------------
 	
@@ -71,6 +73,8 @@ public class SnakeCommander extends GCharacter {
 		
 		this.maxHP = MAX_HP;
 		this.currentHP = this.maxHP;
+		
+		this.armor = ARMOR_VAL;
 		
 		this.minDmg = MIN_DMG;
 		this.maxDmg = MAX_DMG;
@@ -89,6 +93,8 @@ public class SnakeCommander extends GCharacter {
 		
 		this.maxHP = MAX_HP;
 		this.currentHP = this.maxHP;
+		
+		this.armor = ARMOR_VAL;
 		
 		this.minDmg = MIN_DMG;
 		this.maxDmg = MAX_DMG;
@@ -301,11 +307,27 @@ public class SnakeCommander extends GCharacter {
 						dy = -1;
 					}
 					
-					// Decide if snake should attempt a ranged swipe/bite/charge prep
+					// Decide if snake should attempt a ranged attack
+					// Attempt only 1/2 of the time
+					int shouldShoot = new Random().nextInt(2);
+					if((shouldShoot == 0) && (((Math.abs(distX) <= 4) && (Math.abs(distX) >= 2) && (Math.abs(distY) == 0)) ||
+							((Math.abs(distX) == 0) && (Math.abs(distY) >= 2) && (Math.abs(distY) <= 4)))) {
+						// Next, make sure there aren't any walls in the way
+						boolean hasAttLOS = LineDrawer.hasSight(this.xPos, this.yPos, plrX, plrY);
+						if(hasAttLOS) {
+							this.xMarkDir = dx;
+							this.yMarkDir = dy;
+							
+							// Choose a melee-based attack
+							this.chooseRangedAttack();
+						}
+					}
+					
+					// Decide if snake should attempt a moving melee attack
 					// Punishes running away and eager approaches
 					// Attempt only 1/2 of the time
-					int shouldAttack = new Random().nextInt(2);
-					if((shouldAttack == 0) && (((Math.abs(distX) <= 2) && (Math.abs(distY) == 0)) ||
+					int shouldMelee = new Random().nextInt(2);
+					if((shouldMelee == 0) && (((Math.abs(distX) <= 2) && (Math.abs(distY) == 0)) ||
 							((Math.abs(distX) == 0) && (Math.abs(distY) <= 2)))) {
 						// Next, make sure there aren't any walls in the way
 						boolean hasAttLOS = LineDrawer.hasSight(this.xPos, this.yPos, plrX, plrY);
@@ -418,6 +440,33 @@ public class SnakeCommander extends GCharacter {
 				
 				break;
 			case SnakeCommander.STATE_MID_SLAM:
+				// Try to turn to hit the player if they're next to us, but only do this once
+				
+				// Relative movement direction (Initialize at 0)
+				dx = 0;
+				dy = 0;
+				
+				// Recalculate relative movement directions
+				// X-movement
+				if(distX > 0) {
+					dx = 1;
+				} else if (distX < 0) {
+					dx = -1;
+				}
+				// Y-movement
+				if(distY > 0) {
+					dy = 1;
+				} else if (distY < 0) {
+					dy = -1;
+				}
+				
+				// Try to change direction to chase player, but only once
+				if(this.attCount == 0 && (this.xMarkDir != dx || this.yMarkDir != dy) && (dx == 0 || dy == 0)) {
+					this.attCount += 1;
+					this.xMarkDir = dx;
+					this.yMarkDir = dy;
+				}
+				
 				// Attack if next to player. Otherwise, continue rushing in the current direction
 				if((plrX == this.xPos + this.xMarkDir && plrY == this.yPos + this.yMarkDir)) {
 					this.playerInitiate();
@@ -431,7 +480,7 @@ public class SnakeCommander extends GCharacter {
 					// Change state to confirm that we hit
 					this.state = SnakeCommander.STATE_ATT_SLAM;
 				} else {
-					// Start to charge in player's direction
+					// Keep charging in player's direction
 					
 					// Try to move in the player's direction
 					if(this.moveCharacter(this.xMarkDir, this.yMarkDir)) {
@@ -442,6 +491,8 @@ public class SnakeCommander extends GCharacter {
 						// Mark tile with damage indicator
 						EntityManager.getInstance().getEffectManager().addEffect(new DamageIndicator(this.xPos + this.xMarkDir, this.yPos + this.yMarkDir));
 						
+						// Reset attack counter and switch states
+						this.attCount = 0;
 						this.state = SnakeCommander.STATE_ATT_SLAM;
 					}
 				}
@@ -452,12 +503,50 @@ public class SnakeCommander extends GCharacter {
 				this.state = SnakeCommander.STATE_PURSUE;
 				break;
 			case SnakeCommander.STATE_PREP_FIRE:
+				// Fetch reference to EntityManager
+				EntityManager em = EntityManager.getInstance();
+				
 				if(this.attCount == 0) {
+					// Mark tile(s) with damage indicators
+					em.getEffectManager().addEffect(new FireEffect(this.xPos + this.xMarkDir, this.yPos + this.yMarkDir, 3));
 					
+					// Check if player is in damaging spot(s)
+					if((plrX == this.xPos + this.xMarkDir && plrY == this.yPos + this.yMarkDir)) {
+						this.playerInitiate();
+					}
 				} else if(this.attCount == 1) {
+					// Mark tile(s) with damage indicators
+					em.getEffectManager().addEffect(new FireEffect(this.xPos + (this.xMarkDir*2), this.yPos + (this.yMarkDir*2), 2));
+					em.getEffectManager().addEffect(new FireEffect(this.xPos + (this.xMarkDir*2) + Math.abs(this.yMarkDir), this.yPos + (this.yMarkDir*2) + Math.abs(this.xMarkDir), 2));
+					em.getEffectManager().addEffect(new FireEffect(this.xPos + (this.xMarkDir*2) - Math.abs(this.yMarkDir), this.yPos + (this.yMarkDir*2) - Math.abs(this.xMarkDir), 2));
 					
+					// Check if player is in damaging spot(s)
+					if((plrX == this.xPos + this.xMarkDir && plrY == this.yPos + this.yMarkDir) ||
+							(plrX == this.xPos + (this.xMarkDir*2) && plrY == this.yPos + (this.yMarkDir*2)) ||
+							(plrX == this.xPos + (this.xMarkDir*2) + Math.abs(this.yMarkDir) && plrY == this.yPos + (this.yMarkDir*2) + Math.abs(this.xMarkDir)) ||
+							(plrX == this.xPos + (this.xMarkDir*2) - Math.abs(this.yMarkDir) && plrY == this.yPos + (this.yMarkDir*2) - Math.abs(this.xMarkDir))) {
+						this.playerInitiate();
+					}
 				} else if(this.attCount == 2) {
+					// Mark tile(s) with damage indicators
+					em.getEffectManager().addEffect(new FireEffect(this.xPos + (this.xMarkDir*3), this.yPos + (this.yMarkDir*3), 1));
+					em.getEffectManager().addEffect(new FireEffect(this.xPos + (this.xMarkDir*3) + Math.abs(this.yMarkDir), this.yPos + (this.yMarkDir*3) + Math.abs(this.xMarkDir), 1));
+					em.getEffectManager().addEffect(new FireEffect(this.xPos + (this.xMarkDir*3) - Math.abs(this.yMarkDir), this.yPos + (this.yMarkDir*3) - Math.abs(this.xMarkDir), 1));
+					em.getEffectManager().addEffect(new FireEffect(this.xPos + (this.xMarkDir*3) + (Math.abs(this.yMarkDir)*2), this.yPos + (this.yMarkDir*3) + (Math.abs(this.xMarkDir)*2), 1));
+					em.getEffectManager().addEffect(new FireEffect(this.xPos + (this.xMarkDir*3) - (Math.abs(this.yMarkDir)*2), this.yPos + (this.yMarkDir*3) - (Math.abs(this.xMarkDir)*2), 1));
 					
+					// Check if player is in damaging spot(s)
+					if((plrX == this.xPos + this.xMarkDir && plrY == this.yPos + this.yMarkDir) ||
+							(plrX == this.xPos + (this.xMarkDir*2) && plrY == this.yPos + (this.yMarkDir*2)) ||
+							(plrX == this.xPos + (this.xMarkDir*2) + Math.abs(this.yMarkDir) && plrY == this.yPos + (this.yMarkDir*2) + Math.abs(this.xMarkDir)) ||
+							(plrX == this.xPos + (this.xMarkDir*2) - Math.abs(this.yMarkDir) && plrY == this.yPos + (this.yMarkDir*2) - Math.abs(this.xMarkDir)) ||
+							(plrX == this.xPos + (this.xMarkDir*3) && plrY == this.yPos + (this.yMarkDir*3)) ||
+							(plrX == this.xPos + (this.xMarkDir*3) + Math.abs(this.yMarkDir) && plrY == this.yPos + (this.yMarkDir*3) + Math.abs(this.xMarkDir)) ||
+							(plrX == this.xPos + (this.xMarkDir*3) - Math.abs(this.yMarkDir) && plrY == this.yPos + (this.yMarkDir*3) - Math.abs(this.xMarkDir)) ||
+							(plrX == this.xPos + (this.xMarkDir*3) + (Math.abs(this.yMarkDir)*2) && plrY == this.yPos + (this.yMarkDir*3) + (Math.abs(this.xMarkDir)*2)) ||
+							(plrX == this.xPos + (this.xMarkDir*3) - (Math.abs(this.yMarkDir)*2) && plrY == this.yPos + (this.yMarkDir*3) - (Math.abs(this.xMarkDir)*2))) {
+						this.playerInitiate();
+					}
 				} else {
 					// Reset attack counter and change states
 					this.attCount = 0;
@@ -468,6 +557,10 @@ public class SnakeCommander extends GCharacter {
 				// Increment attack counter
 				this.attCount += 1;
 				break;
+			case SnakeCommander.STATE_ATT_FIRE:
+				// Cooldown for one turn
+				this.state = SnakeCommander.STATE_PURSUE;
+				break;
 			default:
 				System.out.println(this.getName() +
 						" couldn't take its turn. State = " + Integer.toString(this.state));
@@ -476,7 +569,7 @@ public class SnakeCommander extends GCharacter {
 			
 	}
 	
-	// Chooses the next attack for the Snake
+	// Chooses the next melee attack for the Snake
 	private void chooseMeleeAttack() {
 		// Decide whether to swipe, charge, or bite
 		int swipeBiteSlam = new Random().nextInt(10);
@@ -486,6 +579,17 @@ public class SnakeCommander extends GCharacter {
 			this.state = SnakeCommander.STATE_PREP_SWIPE;
 		} else {
 			this.state = SnakeCommander.STATE_PREP_SLAM;
+		}
+	}
+	
+	// Chooses the next ranged attack for the Snake
+	private void chooseRangedAttack() {
+		// Decide whether to use Flamethrower or Luger
+		int flameOrGun = new Random().nextInt(2);
+		if(flameOrGun == 0) {
+			this.state = SnakeCommander.STATE_PREP_FIRE;
+		} else {
+			this.state = SnakeCommander.STATE_PREP_FIRE;
 		}
 	}
 	
