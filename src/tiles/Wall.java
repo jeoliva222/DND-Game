@@ -9,18 +9,26 @@ public class Wall extends TileType {
 	// Serialization ID
 	private static final long serialVersionUID = 7537040445662266550L;
 
+	// Constructors
 	public Wall() {
 		this.moveType = MovableType.WALL;
 	}
 	
+	public Wall(String imagePath) {
+		this();
+		this.imagePath = imagePath;
+	}
+	
 	@Override
 	public String selectImage() {
-		// Fetch region path to display image from correct area
-		String regionPath = EntityManager.getInstance().getActiveArea().getTheme();
-		String imagePath = GPath.createImagePath(GPath.TILE, regionPath, "wall.png");
+		// Fetch the appropriate image path if we do not have one set
+		if(this.imagePath == null) {
+			// Fetch region path to display image from correct area
+			String regionPath = EntityManager.getInstance().getActiveArea().getTheme();
+			
+			this.imagePath = GPath.createImagePath(GPath.TILE, regionPath, "wall.png");
+		}
 		
-		// Return the full image path
-		this.imagePath = imagePath;
 		return imagePath;
 	}
 

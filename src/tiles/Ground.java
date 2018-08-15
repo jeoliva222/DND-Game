@@ -13,12 +13,23 @@ public class Ground extends TileType {
 	// Rarity of alternate images
 	private int rarity = 15;
 
+	// Constructors
 	public Ground() {
 		this.moveType = MovableType.GROUND;
 	}
 	
+	public Ground(String imagePath) {
+		this();
+		this.imagePath = imagePath;
+	}
+	
 	@Override
 	public String selectImage() {
+		// If we already have an imagePath, use that instead
+		if(this.imagePath != null) {
+			return this.imagePath;
+		}
+		
 		// Fetch region path to display image from correct area
 		String regionPath = EntityManager.getInstance().getActiveArea().getTheme();
 		String imagePath = null;
@@ -46,8 +57,7 @@ public class Ground extends TileType {
 
 	@Override
 	public void onStep() {
-		// TODO Auto-generated method stub
-		
+		// Do nothing
 	}
 
 }

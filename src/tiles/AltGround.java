@@ -14,12 +14,22 @@ public class AltGround extends TileType {
 		this.moveType = MovableType.GROUND;
 	}
 	
+	// Constructor
+	public AltGround(String imagePath) {
+		this();
+		this.imagePath = imagePath;
+	}
+	
 	@Override
 	public String selectImage() {
-		// Fetch region path to display image from correct area
-		String regionPath = EntityManager.getInstance().getActiveArea().getTheme();
+		// Fetch the appropriate image path if we do not have one set
+		if(this.imagePath == null) {
+			// Fetch region path to display image from correct area
+			String regionPath = EntityManager.getInstance().getActiveArea().getTheme();
 		
-		this.imagePath = GPath.createImagePath(GPath.TILE, regionPath, "altground.png");
+			this.imagePath = GPath.createImagePath(GPath.TILE, regionPath, "altground.png");
+		}
+		
 		return this.imagePath;
 	}
 

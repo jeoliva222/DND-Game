@@ -9,18 +9,28 @@ public class Pit extends TileType {
 	// Serialization ID
 	private static final long serialVersionUID = -4330118722143931032L;
 
-	// Constructor
+	// Constructors
 	public Pit() {	
 		this.moveType = MovableType.AIR;
+	}
+	
+	public Pit(String imagePath) {
+		this();
+		this.imagePath = imagePath;
 	}
 	
 	@Override
 	public String selectImage() {
 		// TODO Make pit image
 		
-		// Fetch region path to display image from correct area
-		String regionPath = EntityManager.getInstance().getActiveArea().getTheme();
-		this.imagePath = GPath.createImagePath(GPath.TILE, regionPath, "ground.png");
+		// Fetch the appropriate image path if we do not have one set
+		if(this.imagePath == null) {
+			// Fetch region path to display image from correct area
+			String regionPath = EntityManager.getInstance().getActiveArea().getTheme();
+			
+			this.imagePath = GPath.createImagePath(GPath.TILE, regionPath, "ground.png");
+		}
+		
 		return this.imagePath;
 	}
 

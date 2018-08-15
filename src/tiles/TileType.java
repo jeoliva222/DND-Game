@@ -12,17 +12,11 @@ public abstract class TileType implements Serializable {
 
 	protected String imagePath;
 	
-	protected String emptyPath = GPath.NULL;
-	
 	// Determines which entities can move on this type of tile
 	protected MovableType moveType;
 	
 	public String getImagePath() {
 		return this.imagePath;
-	}
-	
-	public String getEmptyImage() {
-		return this.emptyPath;
 	}
 	
 	public MovableType getMovableType() {

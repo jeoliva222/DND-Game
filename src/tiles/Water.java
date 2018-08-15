@@ -14,12 +14,23 @@ public class Water extends TileType {
 	// Rarity of alternate tile variants
 	private int rarity = 20;
 	
+	// Constructors
 	public Water() {
 		this.moveType = MovableType.WATER;
 	}
 	
+	public Water(String imagePath) {
+		this();
+		this.imagePath = imagePath;
+	}
+	
 	@Override
 	public String selectImage() {
+		// If we already have an imagePath, use that instead
+		if(this.imagePath != null) {
+			return this.imagePath;
+		}
+		
 		// Fetch region path to display image from correct area
 		String regionPath = EntityManager.getInstance().getActiveArea().getTheme();
 		String imagePath = null;
@@ -42,8 +53,7 @@ public class Water extends TileType {
 
 	@Override
 	public void onStep() {
-		// TODO Auto-generated method stub
-		//System.out.println("**splash**");
+		// Do nothing
 	}
 
 }
