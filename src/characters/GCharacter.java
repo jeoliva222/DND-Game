@@ -97,6 +97,12 @@ public abstract class GCharacter implements Serializable {
 	// Moves the character: Returns false if blocked, Returns true if moved successfully
 	public boolean moveCharacter(int dx, int dy) {
 		
+		// Check for collision with player
+		Player plr = EntityManager.getInstance().getPlayer();
+		if((this.xPos + dx) == plr.getXPos() && (this.yPos + dy) == plr.getYPos()) {
+			return false;
+		}
+		
 		// Check on collisions for other characters 
 		for(GCharacter npc : EntityManager.getInstance().getNPCManager().getCharacters()) {
 			if((this.xPos + dx) == npc.xPos && (this.yPos + dy) == npc.yPos) {
