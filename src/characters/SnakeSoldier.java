@@ -24,11 +24,11 @@ public class SnakeSoldier extends GCharacter {
 	
 	private int MAX_HP = 13;
 	
-	private int MIN_DMG = 4;
-	private int MAX_DMG = 6;
+	private int MIN_DMG = 3;
+	private int MAX_DMG = 5;
 	
-	private double CRIT_CHANCE = 0.1;
-	private double CRIT_MULT = 1.4;
+	private double CRIT_CHANCE = 0.15;
+	private double CRIT_MULT = 1.2;
 	
 	//----------------------------
 	
