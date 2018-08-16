@@ -477,7 +477,8 @@ public class SnakeCommander extends GCharacter {
 					// Mark tile with damage indicator
 					EntityManager.getInstance().getEffectManager().addEffect(new DamageIndicator(this.xPos + this.xMarkDir, this.yPos + this.yMarkDir));
 					
-					// Change state to confirm that we hit
+					// Reset attack counter and change state to confirm that we hit
+					this.attCount = 0;
 					this.state = SnakeCommander.STATE_ATT_SLAM;
 				} else {
 					// Keep charging in player's direction
