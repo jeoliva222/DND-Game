@@ -4,6 +4,7 @@ import java.util.Random;
 
 import characters.GCharacter;
 import characters.Player;
+import effects.GEffect;
 import gui.GameScreen;
 import gui.GameTile;
 import gui.LogScreen;
@@ -291,6 +292,11 @@ public abstract class GProjectile {
 	// What the projectile does when it disappears
 	public void onDeath() {
 		// Do nothing by default
+	}
+	
+	@Override
+	public int hashCode() {
+		return (this.name.hashCode() + this.owner.getName().hashCode());
 	}
 	
 	//-----------------------------

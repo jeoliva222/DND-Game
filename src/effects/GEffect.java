@@ -28,6 +28,33 @@ public class GEffect {
 		return (this.countDown < 0);
 	}
 	
+	@Override
+	public int hashCode() {
+		return this.filepath.hashCode() + (this.xPos * 23) + (this.yPos * 31);
+	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		// Return true if compared with self
+		if(obj == this) {
+			return true;
+		}
+		
+		// Returns false if null or not a GEffect
+		if(!(obj instanceof GEffect)) {
+			return false;
+		}
+		
+		// Object is a GEffect
+		GEffect fx = (GEffect) obj;
+		
+		// Otherwise performs checks various parameters to check equality
+		return (this.filepath.equals(fx.filepath) &&
+				this.xPos == fx.xPos &&
+				this.yPos == fx.yPos &&
+				this.countDown == fx.countDown);
+	}
+	
 	//----------------------
 	// Getters and setters
 	
