@@ -38,7 +38,8 @@ public class Shield extends Weapon {
 			// First, discharge shield
 			this.dischargeWeapon();
 			
-			// Try attack with off-hand weapon
+			// Try charged attack with off-hand weapon
+			em.getPlayer().getSheathedWeapon().chargeWeapon();
 			return em.getPlayer().getSheathedWeapon().tryAttack(dx, dy);
 		}
 		

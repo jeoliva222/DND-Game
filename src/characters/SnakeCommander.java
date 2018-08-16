@@ -142,7 +142,11 @@ public class SnakeCommander extends GCharacter {
 			statePath = "_PREP_SWIPE";
 			break;
 		case SnakeCommander.STATE_ATT_SWIPE:
-			statePath = "_ATT_SWIPE";
+			if(this.attCount % 2 == 0) {
+				statePath = "_ATT_SWIPE_ALT";
+			} else {
+				statePath = "_ATT_SWIPE";
+			}
 			break;
 		case SnakeCommander.STATE_PREP_SLAM:
 			statePath = "_ALERT";
@@ -365,13 +369,44 @@ public class SnakeCommander extends GCharacter {
 				this.state = SnakeCommander.STATE_PURSUE;
 				break;
 			case SnakeCommander.STATE_PREP_SWIPE:
+				// Use direction from player to mark squares
+				SoundPlayer.playWAV(GPath.createSoundPath("swing_ATT.wav"));
+				if(Math.abs(this.xMarkDir) > Math.abs(this.yMarkDir)) {
+					// Player to left/right
+					EntityManager.getInstance().getEffectManager().addEffect(new DamageIndicator(this.xPos + this.xMarkDir, this.yPos));
+					EntityManager.getInstance().getEffectManager().addEffect(new DamageIndicator(this.xPos + this.xMarkDir, this.yPos + 1));
+					EntityManager.getInstance().getEffectManager().addEffect(new DamageIndicator(this.xPos + this.xMarkDir, this.yPos - 1));
+					
+					// Attack player if in affected space
+					if((plrX == this.xPos + this.xMarkDir) &&
+							(plrY == this.yPos || plrY == this.yPos - 1 || plrY == this.yPos + 1)) {
+						this.playerInitiate();
+					}
+				} else {
+					// Player above/below
+					EntityManager.getInstance().getEffectManager().addEffect(new DamageIndicator(this.xPos, this.yPos + this.yMarkDir));
+					EntityManager.getInstance().getEffectManager().addEffect(new DamageIndicator(this.xPos + 1, this.yPos + this.yMarkDir));
+					EntityManager.getInstance().getEffectManager().addEffect(new DamageIndicator(this.xPos - 1, this.yPos + this.yMarkDir));
+					
+					// Attack player if in affected space
+					if((plrY == this.yPos + this.yMarkDir) &&
+							(plrX == this.xPos || plrX == this.xPos - 1 || plrX == this.xPos + 1)) {
+						this.playerInitiate();
+					}
+				}
+				
+				// Change state and increment attack counter
+				this.attCount += 1;
+				this.state = SnakeCommander.STATE_ATT_SWIPE;
+				break;
+			case SnakeCommander.STATE_ATT_SWIPE:
 				// Attack a specified number of times (swipeMaxCount)
 				if(this.attCount >= this.swipeMaxCount) {
 					// Reset attack counter
 					this.attCount = 0;
 					
-					// Change state
-					this.state = SnakeCommander.STATE_ATT_SWIPE;
+					// Change state + Cooldown period
+					this.state = SnakeCommander.STATE_PURSUE;
 					break;
 				} else {
 					// Increment attack counter
@@ -403,10 +438,7 @@ public class SnakeCommander extends GCharacter {
 						this.playerInitiate();
 					}
 				}
-				break;
-			case SnakeCommander.STATE_ATT_SWIPE:
-				// Cooldown period for one turn
-				this.state = SnakeCommander.STATE_PURSUE;
+				
 				break;
 			case SnakeCommander.STATE_PREP_SLAM:
 				// Attack if next to player. Otherwise, continue rushing in the current direction

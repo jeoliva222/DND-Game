@@ -102,8 +102,8 @@ public class Armory {
 	//
 	
 	// Wooden Targe
-	public static final Shield woodenTarge = new Shield("Wooden Targe", 2, 2, 2, 0.15, 1.5, 1.0, 
-			"WEAPON (Shield): [2 Block] Block some incoming damage when charging. Charge attack to swing offhand weapon!",
+	public static final Shield woodenTarge = new Shield("Wooden Targe", 1, 2, 2, 0.15, 1.5, 1.0, 
+			"WEAPON (Shield): [2 Block] Block some incoming damage when charging. Charge attacks occur with offhand weapon!",
 			GPath.createImagePath(GPath.PICKUP, GPath.WEAPON, "woodenTarge.png"));
 
 }
