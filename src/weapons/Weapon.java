@@ -79,14 +79,23 @@ public abstract class Weapon extends GItem {
 		if(this.isCharged) {
 			// Do nothing extra
 		} else {
-			LogScreen.log("Charged weapon...");
+			// Charge the equipped weapon and log it
+			//LogScreen.log("Charged weapon...");
 			this.isCharged = true;
+			
+			// Do your offhand weapon's action
+			EntityManager.getInstance().getPlayer().getSheathedWeapon().doOffhand();
 		}
 	}
 	
 	// Sets the charge of the weapon to false if it is currently charged
 	public void dischargeWeapon() {
 		if(this.isCharged) this.isCharged = false;
+	}
+	
+	// Does an action when offhanded and charging
+	public void doOffhand() {
+		// Do nothing by default
 	}
 	
 	public boolean use() {

@@ -113,8 +113,9 @@ public class Player implements Serializable {
 			return false;
 		}
 		
-		// Discharge weapon if player isn't attacking this turn
+		// Discharge weapons if player isn't attacking this turn
 		this.equippedWeapon.dischargeWeapon();
+		this.sheathedWeapon.dischargeWeapon();
 		
 		// Then check for barriers, out-of-bounds, and immovable spaces
 		TileType tt = null;
@@ -221,6 +222,10 @@ public class Player implements Serializable {
 			// If player is dead, don't do anything
 			return false;
 		}
+		
+		// Discharge weapons if player isn't attacking this turn
+		this.equippedWeapon.dischargeWeapon();
+		this.sheathedWeapon.dischargeWeapon();
 		
 		// Check for barriers, out-of-bounds, and immovable spaces
 		TileType tt;
@@ -362,9 +367,6 @@ public class Player implements Serializable {
 	
 	// Swaps equipped and sheathed weapon
 	public void swapEquippedWeapon() {
-		// Discharge current weapon
-		this.equippedWeapon.dischargeWeapon();
-		
 		// Store reference to equipped weapon
 		Weapon swapWep = this.equippedWeapon;
 		
@@ -376,6 +378,19 @@ public class Player implements Serializable {
 		
 		// Update status screen to show new weapon
 		StatusScreen.updateWeapons();
+	}
+	
+	// Charges both weapons the player has on them
+	public void chargeWeapons() {
+		this.equippedWeapon.chargeWeapon();
+		this.sheathedWeapon.chargeWeapon();
+       	LogScreen.log("Charged weapons...");
+	}
+	
+	// Discharges both weapons the player has on them
+	public void dischargeWeapons() {
+		this.equippedWeapon.dischargeWeapon();
+		this.sheathedWeapon.dischargeWeapon();
 	}
 	
 	// Checks if player is Alive

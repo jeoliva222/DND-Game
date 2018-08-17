@@ -33,14 +33,16 @@ public class Shield extends Weapon {
 		// Retrieve instance of EntityManager
 		EntityManager em = EntityManager.getInstance();
 		
+		// Attack multiplier
+		double attMult = 1.0;
+		
 		// If we are charged, lower block and try attack with off-hand weapon
 		if(this.isCharged) {
 			// First, discharge shield
 			this.dischargeWeapon();
 			
-			// Try charged attack with off-hand weapon
-			em.getPlayer().getSheathedWeapon().chargeWeapon();
-			return em.getPlayer().getSheathedWeapon().tryAttack(dx, dy);
+			// Modify attack multiplier if charged
+			attMult = this.chargeMult;
 		}
 		
 		// If not charged, attack normally
@@ -49,7 +51,7 @@ public class Shield extends Weapon {
 			if((em.getPlayer().getXPos() + dx) == npc.getXPos()
 					&& (em.getPlayer().getYPos() + dy) == npc.getYPos()) {
 				// Hit immediately adjacent characters
-				int dmg = this.calculateDamage(npc);
+				int dmg = this.calculateDamage(attMult, npc);
 				npc.damageCharacter(dmg);
 				LogScreen.log("Player bashed and dealt " + Integer.toString(dmg)
 					+ " damage to " + npc.getName() + ".", GColors.ATTACK);
@@ -89,11 +91,19 @@ public class Shield extends Weapon {
 		// If we're not charged, don't do anything
 		if(!this.isCharged) return;
 		
+		// Get instance of player
 		Player plr = EntityManager.getInstance().getPlayer();
 		
+		// Lower shield block
 		LogScreen.log("Lowered shield block.");
 		plr.addArmor(-(this.blockValue));
 		this.isCharged = false;
+	}
+	
+	@Override
+	public void doOffhand() {
+		// Charges the weapon in offhand
+		this.chargeWeapon();
 	}
 
 }

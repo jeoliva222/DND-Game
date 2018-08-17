@@ -417,13 +417,13 @@ public class GameWindow extends JFrame implements KeyListener {
         } 
         else if(e.getKeyCode() == KeyEvent.VK_SPACE) {
         	// Charge weapon and hold position for the turn
-        	EntityManager.getInstance().getPlayer().getWeapon().chargeWeapon();
+        	EntityManager.getInstance().getPlayer().chargeWeapons();
         	this.completeTurn(0, 0);
         	this.updateAll();
         } 
         else if (e.getKeyCode() == KeyEvent.VK_CONTROL) {
-        	// Hold position for the turn
-        	EntityManager.getInstance().getPlayer().getWeapon().dischargeWeapon();
+        	// Hold position for the turn, discharging player weapons
+        	EntityManager.getInstance().getPlayer().dischargeWeapons();
         	this.completeTurn(0, 0);
         	this.updateAll();
         }
@@ -438,11 +438,11 @@ public class GameWindow extends JFrame implements KeyListener {
         	this.updateAll();
         }
         else if(e.getKeyCode() == KeyEvent.VK_Z) {
-        	// Shift inventory selector to the left
+        	// Shift inventory selector to the left without consuming turn
         	InventoryScreen.shiftSelected(-1);
         }
         else if(e.getKeyCode() == KeyEvent.VK_X) {
-        	// Shift inventory selector to the right
+        	// Shift inventory selector to the right without consuming turn
         	InventoryScreen.shiftSelected(1);
         }
         else if(e.getKeyCode() == KeyEvent.VK_ENTER) {
@@ -453,15 +453,13 @@ public class GameWindow extends JFrame implements KeyListener {
         	this.updateAll();
         }
         else if(e.getKeyCode() == KeyEvent.VK_BACK_SPACE) {
-        	// Discards selected item
+        	// Discards selected item in inventory without consuming turn
         	InventoryScreen.discardSelected();
         	this.updateAll();
         }
         else if(e.getKeyCode() == KeyEvent.VK_SHIFT) {
-        	// Swaps active weapon
+        	// Swaps active weapon with offhand weapon without consuming turn
         	EntityManager.getInstance().getPlayer().swapEquippedWeapon();
-        	this.completeTurn(0, 0);
-        	this.updateAll();
         }
         else if(e.getKeyCode() == KeyEvent.VK_F9) {
         	// Load the player's save file

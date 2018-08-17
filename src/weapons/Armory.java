@@ -20,7 +20,7 @@ public class Armory {
 	
 	// Cactus Claws
 	public static final Fists cactusClaws = new Fists("Cactus Claws", 2, 2, 0.00, 1.0, 2.5, 
-			"WEAPON (Fist): Rake-like claws formed from cactus thorns. Gets consistent results.",
+			"WEAPON (Fist): Claws studded with cactus thorns. Gets consistent results.",
 			GPath.createImagePath(GPath.PICKUP, GPath.WEAPON, "cactusClaws.png"));
 
 	// Sword Weapons ----------------------------
@@ -50,12 +50,12 @@ public class Armory {
 	//
 	
 	// Long Stick Spear
-	public static final Spear longStick = new Spear("Long Stick", 1, 2, 0.1, 1.5, 1.0, 
+	public static final Spear longStick = new Spear("Long Stick", 1, 2, 0.15, 1.5, 1.0, 
 			"WEAPON (Spear): A pokey stick. Charge attack for a ranged stab!",
 			GPath.createImagePath(GPath.PICKUP, GPath.WEAPON, "longStick.png"));
 	
 	// Iron Spear
-	public static final Spear ironSpear = new Spear("Iron Spear", 1, 3, 0.1, 1.7, 1.0, 
+	public static final Spear ironSpear = new Spear("Iron Spear", 1, 3, 0.15, 1.4, 1.0, 
 			"WEAPON (Spear): Keep them at bay with this!",
 			GPath.createImagePath(GPath.PICKUP, GPath.WEAPON, "ironSpear.png"));
 	
@@ -103,7 +103,7 @@ public class Armory {
 	
 	// Wooden Targe
 	public static final Shield woodenTarge = new Shield("Wooden Targe", 1, 2, 2, 0.15, 1.5, 1.0, 
-			"WEAPON (Shield): [2 Block] Block some incoming damage when charging. Charge attacks occur with offhand weapon!",
+			"WEAPON (Shield): [2 Block] Block some incoming damage when charging. This works even when offhanded!",
 			GPath.createImagePath(GPath.PICKUP, GPath.WEAPON, "woodenTarge.png"));
 
 }
