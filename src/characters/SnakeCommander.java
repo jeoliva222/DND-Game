@@ -62,8 +62,8 @@ public class SnakeCommander extends GCharacter {
 	//----------------------------
 	
 	// File paths to images
-	private String imageDir = GPath.createImagePath(GPath.ENEMY, GPath.SNAKE_SOLDIER);
-	private String scImage_base = "snakesoldier";
+	private String imageDir = GPath.createImagePath(GPath.ENEMY, GPath.SNAKE_COMMANDER);
+	private String scImage_base = "snakecommander";
 	
 	private String scImage_DEAD = GPath.createImagePath(GPath.ENEMY, GPath.BWARRIOR, "bunnywarrior_dead.png");
 
@@ -112,6 +112,7 @@ public class SnakeCommander extends GCharacter {
 		return "Snake Commander";
 	}
 	
+	// TODO
 	@Override
 	public String getImage() {
 		String imgPath = this.imageDir + this.scImage_base;
@@ -121,7 +122,7 @@ public class SnakeCommander extends GCharacter {
 		if(this.currentHP > (this.maxHP / 2)) {
 			hpPath = "_full";
 		} else if(this.currentHP > 0) {
-			hpPath = "_fatal";
+			hpPath = "_full";
 		} else {
 			return GPath.NULL;
 		}
@@ -158,10 +159,14 @@ public class SnakeCommander extends GCharacter {
 			statePath = "_ATT_SWIPE";
 			break;
 		case SnakeCommander.STATE_PREP_FIRE:
-			statePath = "_ALERT";
+			statePath = "_PREP_FIRE";
 			break;
 		case SnakeCommander.STATE_ATT_FIRE:
-			statePath = "_ALERT";
+			if(this.attCount % 2 == 0) {
+				statePath = "_ATT_FIRE";
+			} else {
+				statePath = "_ATT_FIRE_ALT";
+			}
 			break;
 		default:
 			System.out.println
@@ -536,18 +541,22 @@ public class SnakeCommander extends GCharacter {
 				this.state = SnakeCommander.STATE_PURSUE;
 				break;
 			case SnakeCommander.STATE_PREP_FIRE:
+				// Mark tile(s) with damage indicators
+				EntityManager.getInstance().getEffectManager().addEffect(new FireEffect(this.xPos + this.xMarkDir, this.yPos + this.yMarkDir, 3));
+				
+				// Check if player is in damaging spot(s)
+				if((plrX == this.xPos + this.xMarkDir && plrY == this.yPos + this.yMarkDir)) {
+					this.playerInitiate();
+				}
+				
+				// Change states
+				this.state = SnakeCommander.STATE_ATT_FIRE;
+				break;
+			case SnakeCommander.STATE_ATT_FIRE:
 				// Fetch reference to EntityManager
 				EntityManager em = EntityManager.getInstance();
 				
 				if(this.attCount == 0) {
-					// Mark tile(s) with damage indicators
-					em.getEffectManager().addEffect(new FireEffect(this.xPos + this.xMarkDir, this.yPos + this.yMarkDir, 3));
-					
-					// Check if player is in damaging spot(s)
-					if((plrX == this.xPos + this.xMarkDir && plrY == this.yPos + this.yMarkDir)) {
-						this.playerInitiate();
-					}
-				} else if(this.attCount == 1) {
 					// Mark tile(s) with damage indicators
 					em.getEffectManager().addEffect(new FireEffect(this.xPos + (this.xMarkDir*2), this.yPos + (this.yMarkDir*2), 2));
 					em.getEffectManager().addEffect(new FireEffect(this.xPos + (this.xMarkDir*2) + Math.abs(this.yMarkDir), this.yPos + (this.yMarkDir*2) + Math.abs(this.xMarkDir), 2));
@@ -560,7 +569,7 @@ public class SnakeCommander extends GCharacter {
 							(plrX == this.xPos + (this.xMarkDir*2) - Math.abs(this.yMarkDir) && plrY == this.yPos + (this.yMarkDir*2) - Math.abs(this.xMarkDir))) {
 						this.playerInitiate();
 					}
-				} else if(this.attCount == 2) {
+				} else if(this.attCount == 1) {
 					// Mark tile(s) with damage indicators
 					em.getEffectManager().addEffect(new FireEffect(this.xPos + (this.xMarkDir*3), this.yPos + (this.yMarkDir*3), 1));
 					em.getEffectManager().addEffect(new FireEffect(this.xPos + (this.xMarkDir*3) + Math.abs(this.yMarkDir), this.yPos + (this.yMarkDir*3) + Math.abs(this.xMarkDir), 1));
@@ -583,16 +592,12 @@ public class SnakeCommander extends GCharacter {
 				} else {
 					// Reset attack counter and change states
 					this.attCount = 0;
-					this.state = SnakeCommander.STATE_ATT_FIRE;
+					this.state = SnakeCommander.STATE_PURSUE;
 					break;
 				}
-				
+
 				// Increment attack counter
 				this.attCount += 1;
-				break;
-			case SnakeCommander.STATE_ATT_FIRE:
-				// Cooldown for one turn
-				this.state = SnakeCommander.STATE_PURSUE;
 				break;
 			default:
 				System.out.println(this.getName() +
