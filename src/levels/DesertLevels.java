@@ -9,6 +9,7 @@ import characters.ArrowTurret;
 import characters.Bitester;
 import characters.BreakableWall;
 import characters.BunnyWarrior;
+import characters.Cactian;
 import characters.EliteArrowTurret;
 import characters.EliteBeanpole;
 import characters.EliteBitester;
@@ -411,6 +412,9 @@ public class DesertLevels implements Serializable {
 			{1, 3, 1, 1, 1, 1, 1, 1, 1, 1}
 		}, new ExtraTile[] {
 		}, new ArrayList<GCharacter>() {{
+			add(new Cactian(3, 2));
+			add(new Cactian(6, 5));
+			add(new Cactian(2, 7));
 		}}, new ArrayList<GPickup>() {{
 		}});
 		
@@ -910,7 +914,7 @@ public class DesertLevels implements Serializable {
 			{4, 0, 0, 0, 0, 0, 0, 0, 0, 4},
 			{4, 0, 0, 0, 0, 0, 0, 0, 0, 4},
 			{4, 0, 0, 4, 0, 0, 4, 0, 0, 4},
-			{4, 0, 4, 4, 4, 4, 4, 4, 0, 4}
+			{4, 4, 4, 4, 4, 4, 4, 4, 4, 4}
 		}, new ExtraTile[] {
 				new ExtraTile(2, 1, 
 						new GroundButton(TriggerType.ENEMY_AND_TILE, false, GButton.VEILED, new ArrayList<GCharacter>() {{
@@ -931,12 +935,14 @@ public class DesertLevels implements Serializable {
 						}}, new ArrayList<ExtraTile>() {{
 							add(new ExtraTile(3, 1, new AltGround()));
 							add(new ExtraTile(2, 5, new AltGround()));
+							add(new ExtraTile(8, 9, new AltGround()));
 						}})),
 				new ExtraTile(7, 8, 
 						new GroundButton(TriggerType.ENEMY_AND_TILE, false, GButton.VISIBLE, new ArrayList<GCharacter>() {{
 						}}, new ArrayList<ExtraTile>() {{
 							add(new ExtraTile(6, 1, new AltGround()));
 							add(new ExtraTile(7, 5, new AltGround()));
+							add(new ExtraTile(1, 9, new AltGround()));
 						}}))
 		}, new ArrayList<GCharacter>() {{
 			add(new SnakeCommander(4, 5, PatrolPattern.STATIONARY));
