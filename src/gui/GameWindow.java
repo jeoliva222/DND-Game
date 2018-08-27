@@ -307,6 +307,7 @@ public class GameWindow extends JFrame implements KeyListener {
 		LogScreen.displayLogs();
 		StatusScreen.updateStatusScreen();
 		InfoScreen.updateInfoScreen();
+		StatusScreen.updateWeapons();
 	}
 	
 	// Saves the game to a save file

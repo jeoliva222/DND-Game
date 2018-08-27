@@ -2,8 +2,6 @@ package tiles;
 
 import java.io.Serializable;
 
-import helpers.GPath;
-
 // Abstract class that helps determine what rules a GameTile should abide by
 public abstract class TileType implements Serializable {
 	

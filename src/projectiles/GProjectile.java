@@ -4,7 +4,6 @@ import java.util.Random;
 
 import characters.GCharacter;
 import characters.Player;
-import effects.GEffect;
 import gui.GameScreen;
 import gui.GameTile;
 import gui.LogScreen;

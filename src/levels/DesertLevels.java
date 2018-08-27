@@ -592,6 +592,10 @@ public class DesertLevels implements Serializable {
 			{1, 1, 3, 1, 1, 1, 1, 1, 1, 1}
 		}, new ExtraTile[] {
 		}, new ArrayList<GCharacter>() {{
+			add(new Cactian(4, 5));
+			add(new Cactian(7, 7));
+			add(new Cactian(6, 1));
+			add(new SandBeep(6, 4));
 		}}, new ArrayList<GPickup>() {{
 		}});
 		
@@ -610,6 +614,10 @@ public class DesertLevels implements Serializable {
 			{1, 1, 1, 1, 1, 1, 0, 4, 1, 1}
 		}, new ExtraTile[] {
 		}, new ArrayList<GCharacter>() {{
+			add(new Cactian(4, 5));
+			add(new Cactian(1, 8));
+			add(new EliteBunnyWarrior(6, 3));
+			add(new BunnyWarrior(7, 3));
 		}}, new ArrayList<GPickup>() {{
 		}});
 		

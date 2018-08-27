@@ -96,8 +96,15 @@ public class WeaponBanner extends JPanel {
 		// Fetches player's current sheathed weapon for reference
 		Weapon newWep = EntityManager.getInstance().getPlayer().getSheathedWeapon();
 		
-		// Updates the weapon and border image
+		// Updates the weapon image
 		this.setWeaponPath(newWep.imagePath);
+		
+		// Set border image
+		if(newWep.isCharged) {
+			this.setBorderPath(GPath.createImagePath(GPath.TILE, GPath.GENERIC, "area_charge.png"));
+		} else {
+			this.setBorderPath(GPath.BORDER);
+		}
 		
 		// Sets the new name value
 		this.nameLabel.setText(newWep.name);
