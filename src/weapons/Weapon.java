@@ -102,6 +102,9 @@ public abstract class Weapon extends GItem {
 		// Retrieve the currently used weapon
 		Weapon oldWep = EntityManager.getInstance().getPlayer().getWeapon();
 		
+		// Discharge current weapon
+		oldWep.dischargeWeapon();
+		
 		// Set player's new weapon
 		EntityManager.getInstance().getPlayer().setWeapon(this);
 		

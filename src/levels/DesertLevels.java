@@ -18,6 +18,7 @@ import characters.EliteSandBeep;
 import characters.GCharacter;
 import characters.SandBeep;
 import characters.SandWurm;
+import characters.SaveCrystal;
 import characters.SnakeCommander;
 import characters.SnakeSoldier;
 import helpers.GPath;
@@ -766,8 +767,8 @@ public class DesertLevels implements Serializable {
 			{4, 4, 1, 0, 0, 0, 0, 1, 4, 4},
 			{0, 4, 4, 4, 1, 1, 4, 4, 4, 0},
 			{0, 0, 0, 4, 1, 1, 4, 0, 0, 0},
-			{4, 0, 0, 4, 0, 0, 4, 0, 0, 4},
 			{4, 0, 0, 4, 0, 4, 4, 0, 0, 4},
+			{4, 0, 0, 4, 0, 0, 4, 0, 0, 4},
 			{4, 0, 0, 4, 0, 0, 4, 0, 0, 4},
 			{4, 0, 0, 4, 4, 0, 4, 0, 0, 4},
 			{4, 4, 4, 4, 0, 0, 4, 4, 4, 4}
@@ -783,6 +784,7 @@ public class DesertLevels implements Serializable {
 							add(new ExtraTile(6, 7, new AltGround()));
 						}}))
 		}, new ArrayList<GCharacter>() {{
+			add(new SaveCrystal(5, 6));
 		}}, new ArrayList<GPickup>() {{
 		}});
 		
