@@ -42,7 +42,7 @@ public class LineDrawer {
 		if((dx == 0) || (dy == 0)) {
 			ArrayList <GameTile> tiles =
 					LineDrawer.drawStraightLine(originX, originY, destX, destY, xDir, yDir);
-			return LineDrawer.isLOS(tiles);
+			return LineDrawer.isLOS(tiles, originX, originY, destX, destY);
 		} else {
 			slope = (double) dy / dx;
 		}
@@ -52,25 +52,57 @@ public class LineDrawer {
 			// Dominant direction is Y
 			ArrayList <GameTile> tiles =
 					LineDrawer.drawYLine(originX, originY, destX, destY, xDir, yDir, slope);
-			return LineDrawer.isLOS(tiles);
+			return LineDrawer.isLOS(tiles, originX, originY, destX, destY);
 		} else {
 			// Dominant direction is X
 			ArrayList <GameTile> tiles =
 					LineDrawer.drawXLine(originX, originY, destX, destY, xDir, yDir, slope);
-			return LineDrawer.isLOS(tiles);
+			return LineDrawer.isLOS(tiles, originX, originY, destX, destY);
 		}
 	}
 	
 	// Returns a boolean indicating whether it detected any walls in the list of tiles
-	public static boolean isLOS(ArrayList<GameTile> tiles) {
-		// Check through all tiles and return false if we hit a wall
-		for(GameTile tile : tiles) {
+	public static boolean isLOS(ArrayList<GameTile> tiles, int originX, int originY, int destX, int destY) {	
+		// Initialize variables
+		int lastX = originX;
+		int lastY = originY;
+		boolean botDiag = false;
+		boolean topDiag = false;
+		
+		// Check through all tiles and return false if we hit a wall or if we hit diagonal walls
+		for(int i = 0; i < tiles.size(); i++) {
+			// Fetch reference to the tile
+			GameTile tile = tiles.get(i);
+			
+			// Check for adjacent walls if our LOS path goes diagonally
+			
+			// Get distance from last tile in our LOS path
+			int distX = Math.abs(tile.getGridX() - lastX);
+			int distY = Math.abs(tile.getGridY() - lastY);
+			
+			// If we're diagonal from last tile, then check for walls on the sides of the diagonal
+			if(distX == 1 && distY == 1) {
+				botDiag = botDiag || (GameScreen.getTile(lastX, tile.getGridY()).getTileType().getMovableType() == MovableType.WALL);
+				topDiag = topDiag || (GameScreen.getTile(tile.getGridX(), lastY).getTileType().getMovableType() == MovableType.WALL);
+				if(botDiag && topDiag)
+				{
+					// If there are walls on the sides of the diagonal, check if this tile is our destination
+					// Return true if so; False if not
+					return ((tile.getGridX() == destX) && (tile.getGridY() == destY));
+				}
+			}
+			
+			// Check if current tile is not a wall
 			TileType tt = tile.getTileType();
 			if(tt.getMovableType() == MovableType.WALL) {
 				return false;
 			}
+			
+			// Set last coordinate positions
+			lastX = tile.getGridX();
+			lastY = tile.getGridY();
 		}
-		// If no walls hit, then return true
+		// If no walls hit and no diagonal wall blockage, then return true
 		return true;
 	}
 	
@@ -89,6 +121,11 @@ public class LineDrawer {
 			currentX += xDir;
 			currentY += yDir;
 		}
+		
+		// Add destination tile
+		tiles.add(GameScreen.getTile(destX, destY));
+		
+		// Return list of tiles
 		return tiles;
 	}
 
@@ -154,6 +191,9 @@ public class LineDrawer {
 			currentX += (0.5 * xDir);
 			currentX = LineDrawer.round(currentX, 1);
 		}
+		
+		// Add destination tile
+		tiles.add(GameScreen.getTile(destX, destY));
 		
 		// Return all the tiles we marked
 		return tiles;
@@ -221,6 +261,8 @@ public class LineDrawer {
 			currentY += (0.5 * yDir);
 			currentY = LineDrawer.round(currentY, 1);
 		}
+		// Add destination tile
+		tiles.add(GameScreen.getTile(destX, destY));
 		
 		// Return all the tiles we marked
 		return tiles;
