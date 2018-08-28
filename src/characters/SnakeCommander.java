@@ -122,7 +122,7 @@ public class SnakeCommander extends GCharacter {
 		if(this.currentHP > (this.maxHP / 2)) {
 			hpPath = "_full";
 		} else if(this.currentHP > 0) {
-			hpPath = "_full";
+			hpPath = "_fatal";
 		} else {
 			return GPath.NULL;
 		}
