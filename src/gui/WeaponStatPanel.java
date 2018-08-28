@@ -144,7 +144,7 @@ public class WeaponStatPanel extends JPanel {
 		
 		// Set border image
 		if(newWep.isCharged) {
-			this.setBorderPath(GPath.createImagePath(GPath.TILE, GPath.GENERIC, "area_charge.png"));
+			this.setBorderPath(GPath.IMAGE + "template_charge.png");
 		} else {
 			this.setBorderPath(GPath.BORDER);
 		}
