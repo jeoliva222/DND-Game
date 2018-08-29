@@ -750,13 +750,15 @@ public class DesertLevels implements Serializable {
 			{1, 1, 1, 4, 4, 0, 0, 0, 0, 0},
 			{1, 1, 4, 4, 4, 4, 4, 0, 0, 4},
 			{1, 4, 4, 0, 0, 0, 0, 0, 0, 4},
-			{1, 4, 0, 0, 0, 0, 0, 0, 0, 4},
-			{1, 4, 0, 0, 0, 0, 0, 0, 4, 4},
+			{1, 4, 0, 0, 4, 0, 4, 4, 0, 4},
+			{1, 4, 0, 0, 4, 0, 0, 0, 0, 4},
 			{1, 4, 0, 0, 4, 4, 4, 4, 4, 4}
 		}, new ExtraTile[] {
 		}, new ArrayList<GCharacter>() {{
-			add(new SnakeCommander(7, 8, PatrolPattern.STATIONARY));
+			add(new SnakeCommander(8, 8, PatrolPattern.SURFACE_CW));
+			add(new SnakeCommander(8, 7, PatrolPattern.SURFACE_CW));
 		}}, new ArrayList<GPickup>() {{
+			add(new GPickup(8, 8, new MediumHealthPotion()));
 		}});
 		
 		//-------------------
@@ -797,12 +799,53 @@ public class DesertLevels implements Serializable {
 			{0, 0, 0, 0, 0, 4, 1, 1, 1, 1},
 			{0, 0, 0, 0, 0, 4, 4, 1, 1, 3},
 			{4, 4, 4, 4, 0, 0, 4, 4, 1, 1},
-			{4, 0, 0, 0, 0, 0, 0, 4, 4, 1},
-			{4, 0, 0, 0, 0, 0, 0, 0, 4, 1},
-			{4, 0, 0, 0, 0, 0, 0, 0, 4, 1},
+			{4, 0, 0, 0, 0, 0, 4, 4, 4, 1},
+			{4, 0, 0, 0, 0, 0, 4, 0, 4, 1},
+			{4, 0, 0, 0, 0, 0, 4, 0, 4, 1},
 			{4, 0, 0, 4, 4, 4, 4, 4, 4, 1}
 		}, new ExtraTile[] {
+				new ExtraTile(2, 7, 
+						new GroundButton(TriggerType.ENEMY_AND_TILE, false, GButton.VEILED, new ArrayList<GCharacter>() {{
+						}}, new ArrayList<ExtraTile>() {{
+							add(new ExtraTile(6, 6, new AltGround()));
+							add(new ExtraTile(6, 7, new AltGround()));
+							add(new ExtraTile(6, 8, new AltGround()));
+							add(new ExtraTile(4, 5, new AltWall()));
+							add(new ExtraTile(5, 5, new AltWall()));
+							add(new ExtraTile(3, 8, new AltGround()));
+							add(new ExtraTile(4, 6, new AltGround()));
+						}})),
+				new ExtraTile(3, 8, 
+						new GroundButton(TriggerType.ENEMY_AND_TILE, false, GButton.VEILED, new ArrayList<GCharacter>() {{
+						}}, new ArrayList<ExtraTile>() {{
+							add(new ExtraTile(6, 6, new AltGround()));
+							add(new ExtraTile(6, 7, new AltGround()));
+							add(new ExtraTile(6, 8, new AltGround()));
+							add(new ExtraTile(4, 5, new AltWall()));
+							add(new ExtraTile(5, 5, new AltWall()));
+							add(new ExtraTile(2, 7, new AltGround()));
+							add(new ExtraTile(4, 6, new AltGround()));
+						}})),
+				new ExtraTile(4, 6, 
+						new GroundButton(TriggerType.ENEMY_AND_TILE, false, GButton.VEILED, new ArrayList<GCharacter>() {{
+						}}, new ArrayList<ExtraTile>() {{
+							add(new ExtraTile(6, 6, new AltGround()));
+							add(new ExtraTile(6, 7, new AltGround()));
+							add(new ExtraTile(6, 8, new AltGround()));
+							add(new ExtraTile(4, 5, new AltWall()));
+							add(new ExtraTile(5, 5, new AltWall()));
+							add(new ExtraTile(3, 8, new AltGround()));
+							add(new ExtraTile(2, 7, new AltGround()));
+						}})),
+				new ExtraTile(7, 7, 
+						new GroundButton(TriggerType.ENEMY_AND_TILE, true, GButton.VISIBLE, new ArrayList<GCharacter>() {{
+						}}, new ArrayList<ExtraTile>() {{
+							add(new ExtraTile(4, 5, new AltGround()));
+							add(new ExtraTile(5, 5, new AltGround()));
+						}})),
 		}, new ArrayList<GCharacter>() {{
+			add(new SnakeCommander(7, 7, PatrolPattern.STATIONARY));
+			add(new SnakeSoldier(7, 8, PatrolPattern.STATIONARY));
 		}}, new ArrayList<GPickup>() {{
 		}});
 		

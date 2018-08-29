@@ -60,7 +60,7 @@ public class Armory {
 			GPath.createImagePath(GPath.PICKUP, GPath.WEAPON, "ironSpear.png"));
 	
 	// Ceremonial Spear
-	public static final Spear ceremonialSpear = new Spear("Ceremonial Spear", 2, 3, 0.15, 1.7, 1.0, 
+	public static final Spear ceremonialSpear = new Spear("Ceremonial Spear", 2, 3, 0.15, 1.75, 1.0, 
 			"WEAPON (Spear): It feels wrong to use this.",
 			GPath.createImagePath(GPath.PICKUP, GPath.WEAPON, "ceremonialSpear.png"));
 	
@@ -105,5 +105,13 @@ public class Armory {
 	public static final Shield woodenTarge = new Shield("Wooden Targe", 1, 2, 2, 0.15, 1.5, 1.0, 
 			"WEAPON (Shield): [2 Block] Block some incoming damage when charging. This works even when offhanded!",
 			GPath.createImagePath(GPath.PICKUP, GPath.WEAPON, "woodenTarge.png"));
+	
+	// Hammer Weapons ----------------------------
+	//
+	
+	// Bone Club
+	public static final Hammer boneClub = new Hammer("Bone Club", 2, 3, 0.05, 1.75, 1.5, 
+			"WEAPON (Hammer): Club improvised from a sturdy bone. Charge attacks deal extra damage and ignore half of an enemy's armor!",
+			GPath.createImagePath(GPath.TILE, GPath.GENERIC, "testProj.png"));
 
 }
