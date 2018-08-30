@@ -468,17 +468,21 @@ public class SandWurm extends GCharacter {
 				continue;
 			}
 			
-			// If NPC can't move here, return without moving
+			// If NPC can't move here, don't move to this spot
 			if(!(tt instanceof Ground)) {
 				continue;
 			}
 			
 			// Check for collisions with other NPCs
+			boolean collisionFlag = false;
 			for(GCharacter npc : EntityManager.getInstance().getNPCManager().getCharacters()) {
 				if((newX) == npc.xPos && (newY) == npc.yPos) {
-					continue;
+					collisionFlag = true;
 				}
 			}
+			
+			// If we collided with another NPC, then don't move to this spot
+			if(collisionFlag) continue;
 			
 			// Finally, check for collision with the player
 			Player player = EntityManager.getInstance().getPlayer();
