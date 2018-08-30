@@ -205,9 +205,10 @@ public class Cactian extends GCharacter {
 		
 		switch(this.state) {
 			case Cactian.STATE_IDLE:
-				// If next to the player, then awaken
+				// If next to the player or damaged, awaken and alert other Cactians on this screen
 				if(((Math.abs(distX) <= 1) && (Math.abs(distY) == 0)) ||
-						((Math.abs(distX) == 0) && (Math.abs(distY) <= 1))) {
+						((Math.abs(distX) == 0) && (Math.abs(distY) <= 1)) ||
+						this.currentHP != MAX_HP) {
 					SoundPlayer.playWAV(GPath.createSoundPath("Beanpole_ALERT.wav"));
 					this.state = Cactian.STATE_ALERTED;
 				} else if(this.shouldAwaken) {

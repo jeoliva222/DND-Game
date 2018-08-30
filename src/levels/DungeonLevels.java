@@ -1171,8 +1171,8 @@ public class DungeonLevels implements Serializable {
 			{1, 1, 1, 1, 1, 1, 1, 1, 3, 3},
 			{3, 3, 3, 3, 0, 3, 3, 3, 3, 3},
 			{3, 3, 3, 3, 1, 3, 3, 3, 3, 3},
-			{3, 3, 3, 3, 3, 3, 3, 3, 3, 3},
-			{3, 3, 3, 3, 3, 3, 3, 3, 3, 3}
+			{3, 3, 3, 3, 3, 3, 3, 3, 1, 1},
+			{3, 3, 3, 3, 3, 3, 3, 3, 1, 3}
 		}, new ExtraTile[] {
 				new ExtraTile(4, 6, new GroundButton(TriggerType.SOUND, false, GPath.createSoundPath("king_warning.wav"))),
 				new ExtraTile(4, 7, 
@@ -1231,6 +1231,53 @@ public class DungeonLevels implements Serializable {
 			add(new GPickup(5, 2, new MediumMaxPotion()));
 		}});
 		
+		//-------------------
+		
+		MapLevel secretTunnel = new MapLevel(new int[][] { // TODO Add Key-door
+			{3, 3, 3, 3, 3, 3, 3, 3, 1, 3},
+			{3, 3, 3, 3, 3, 3, 3, 3, 1, 3},
+			{3, 3, 3, 3, 3, 3, 3, 3, 0, 3},
+			{3, 3, 3, 3, 3, 3, 3, 3, 0, 3},
+			{3, 3, 3, 3, 3, 3, 3, 3, 4, 3},
+			{3, 3, 3, 3, 3, 3, 3, 3, 0, 3},
+			{3, 3, 3, 3, 3, 3, 3, 3, 1, 3},
+			{3, 3, 3, 3, 3, 3, 3, 3, 1, 3},
+			{3, 3, 3, 3, 3, 3, 3, 3, 0, 3},
+			{3, 3, 3, 3, 3, 3, 3, 3, 0, 3}
+		}, new ExtraTile[] {
+		}, new ArrayList<GCharacter>() {{
+		}}, new ArrayList<GPickup>() {{
+		}});
+		
+		//-------------------
+		
+		MapLevel secretRoom = new MapLevel(new int[][] {
+			{3, 3, 3, 3, 3, 3, 3, 3, 1, 3},
+			{3, 3, 3, 3, 3, 1, 1, 3, 0, 3},
+			{3, 3, 3, 3, 3, 1, 1, 1, 1, 3},
+			{3, 3, 3, 3, 3, 3, 3, 3, 0, 3},
+			{3, 3, 3, 3, 3, 3, 3, 3, 1, 3},
+			{3, 0, 1, 1, 1, 0, 4, 0, 0, 3},
+			{3, 0, 1, 0, 1, 0, 4, 0, 3, 3},
+			{3, 1, 0, 1, 1, 1, 4, 1, 3, 3},
+			{3, 0, 1, 1, 0, 1, 4, 1, 3, 3},
+			{3, 3, 3, 3, 3, 3, 3, 3, 3, 3}
+		}, new ExtraTile[] {
+				new ExtraTile(7, 8, 
+						new GroundButton(TriggerType.ENEMY_AND_TILE, false, GButton.VISIBLE, new ArrayList<GCharacter>() {{
+						}}, new ArrayList<ExtraTile>() {{
+							add(new ExtraTile(6, 5, new Ground()));
+							add(new ExtraTile(6, 6, new Ground()));
+							add(new ExtraTile(6, 7, new Ground()));
+							add(new ExtraTile(6, 8, new Ground()));
+							add(new ExtraTile(8, 4, new AltWall()));
+							add(new ExtraTile(8, 5, new AltWall()));
+						}})),
+		}, new ArrayList<GCharacter>() {{
+			add(new SaveCrystal(5, 1));
+		}}, new ArrayList<GPickup>() {{
+		}});
+		
 		
 		//************************************************
 		// CONSTRUCTOR: AREA DEFINITION
@@ -1241,8 +1288,8 @@ public class DungeonLevels implements Serializable {
 			{topCorner	 , 	turretWave,    topCross, 	topFlooded, 	topCorner2, 	treasureRoom},
 			{topStart 	 , 		  moat, 	 ambush, 	lootCloset, 	  topFinal, 	  throneRoom},
 			{crossroads	 , 		shrine, 	  halls,         start,	  kingCorridor, 	   finalHall},
-			{bottomStart , 	   flooded, 	 armory,  	  entryway,    bottomFinal, 			null},
-			{bottomCorner, 		puzzle, bottomCross, 	pillarHide,  bottomCorner2, 			null}
+			{bottomStart , 	   flooded, 	 armory,  	  entryway,    bottomFinal, 	secretTunnel},
+			{bottomCorner, 		puzzle, bottomCross, 	pillarHide,  bottomCorner2, 	  secretRoom}
 			//
 		});
 	

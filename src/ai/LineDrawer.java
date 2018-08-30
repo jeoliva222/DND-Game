@@ -74,6 +74,9 @@ public class LineDrawer {
 			// Fetch reference to the tile
 			GameTile tile = tiles.get(i);
 			
+			// Check if tile is our destination
+			if((tile.getGridX() == destX) && (tile.getGridY() == destY)) return true;
+			
 			// Check for adjacent walls if our LOS path goes diagonally
 			
 			// Get distance from last tile in our LOS path
@@ -86,9 +89,8 @@ public class LineDrawer {
 				topDiag = topDiag || (GameScreen.getTile(tile.getGridX(), lastY).getTileType().getMovableType() == MovableType.WALL);
 				if(botDiag && topDiag)
 				{
-					// If there are walls on the sides of the diagonal, check if this tile is our destination
-					// Return true if so; False if not
-					return ((tile.getGridX() == destX) && (tile.getGridY() == destY));
+					// If there are walls on both sides of the diagonal, return false
+					return false;
 				}
 			}
 			
@@ -102,8 +104,9 @@ public class LineDrawer {
 			lastX = tile.getGridX();
 			lastY = tile.getGridY();
 		}
-		// If no walls hit and no diagonal wall blockage, then return true
-		return true;
+		
+		// If we didn't reach our destination, return false
+		return false;
 	}
 	
 	// Deals with straight line drawing, returning the set of intersecting GameTiles

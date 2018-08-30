@@ -6,6 +6,7 @@ import java.util.ArrayList;
 
 import ai.PatrolPattern;
 import characters.ArrowTurret;
+import characters.Beanpole;
 import characters.Bitester;
 import characters.BreakableWall;
 import characters.BunnyWarrior;
@@ -191,14 +192,14 @@ public class DesertLevels implements Serializable {
 			{1, 1, 1, 1, 1, 1, 1, 3, 3, 3},
 			{1, 1, 1, 3, 2, 1, 1, 2, 3, 3},
 			{1, 1, 1, 3, 3, 1, 1, 1, 3, 3},
-			{1, 1, 1, 1, 1, 3, 1, 3, 1, 3},
+			{1, 1, 1, 1, 1, 1, 3, 3, 1, 3},
 			{1, 1, 1, 1, 1, 1, 1, 1, 1, 3},
 			{1, 1, 1, 1, 1, 1, 1, 1, 2, 3},
 			{1, 1, 3, 1, 1, 1, 1, 1, 3, 3},
 			{1, 1, 1, 1, 1, 1, 1, 1, 1, 3}
 		}, new ExtraTile[] {
 		}, new ArrayList<GCharacter>() {{
-			add(new EliteSandBeep(5, 4));
+			add(new SandBeep(5, 4));
 			add(new SandWurm(2, 3));
 			add(new SandWurm(6, 7));
 		}}, new ArrayList<GPickup>() {{
@@ -246,7 +247,10 @@ public class DesertLevels implements Serializable {
 		}, new ArrayList<GCharacter>() {{
 			add(new EliteArrowTurret(4, 3, 1, 0, 2, true));
 			add(new SandWurm(5, 5));
+			add(new SandBeep(2, 3));
+			add(new BreakableWall(7, 6));
 		}}, new ArrayList<GPickup>() {{
+			add(new GPickup(7, 6, new SmallHealthPotion()));
 		}});
 		
 		//-------------------
@@ -257,13 +261,16 @@ public class DesertLevels implements Serializable {
 			{1, 1, 1, 4, 4, 4, 4, 4, 4, 4},
 			{1, 1, 1, 1, 0, 0, 0, 4, 0, 0},
 			{1, 1, 1, 0, 0, 0, 1, 4, 0, 0},
-			{1, 1, 3, 4, 0, 0, 4, 1, 0, 0},
+			{1, 1, 1, 4, 0, 0, 4, 1, 0, 0},
 			{1, 1, 1, 4, 0, 0, 4, 0, 4, 0},
 			{1, 3, 1, 4, 4, 0, 0, 0, 4, 4},
 			{1, 1, 1, 4, 4, 4, 4, 4, 4, 1},
 			{1, 1, 1, 1, 1, 1, 1, 1, 1, 1}
 		}, new ExtraTile[] {
 		}, new ArrayList<GCharacter>() {{
+			add(new Cactian(6, 4));
+			add(new Cactian(2, 5));
+			add(new SaveCrystal(7, 5));
 		}}, new ArrayList<GPickup>() {{
 		}});
 		
@@ -324,7 +331,9 @@ public class DesertLevels implements Serializable {
 			{1, 4, 0, 0, 0, 0, 0, 0, 4, 1}
 		}, new ExtraTile[] {
 		}, new ArrayList<GCharacter>() {{
-			add(new SnakeSoldier(5, 4, PatrolPattern.SURFACE_CW));
+			add(new SnakeCommander(5, 4, PatrolPattern.SURFACE_CW));
+			add(new SnakeSoldier(6, 5, PatrolPattern.STATIONARY));
+			add(new SnakeSoldier(3, 5, PatrolPattern.STATIONARY));
 		}}, new ArrayList<GPickup>() {{
 		}});
 		
@@ -348,7 +357,10 @@ public class DesertLevels implements Serializable {
 							add(new Dimension(5, 3));
 						}}))	
 		}, new ArrayList<GCharacter>() {{
+			add(new SnakeSoldier(1, 5, PatrolPattern.STATIONARY));
+			add(new SaveCrystal(7, 4));
 		}}, new ArrayList<GPickup>() {{
+			add(new GPickup(1, 4, new MediumHealthPotion()));
 		}});
 		
 		//------------------- // ROW 2
@@ -362,8 +374,8 @@ public class DesertLevels implements Serializable {
 			{3, 4, 4, 0, 0, 4, 0, 1, 4, 1},
 			{3, 4, 0, 4, 0, 0, 1, 2, 4, 1},
 			{3, 4, 4, 4, 4, 4, 0, 4, 2, 1},
-			{3, 1, 4, 4, 0, 0, 0, 4, 4, 1},
-			{3, 4, 4, 0, 0, 0, 0, 1, 4, 1}
+			{1, 1, 4, 4, 0, 0, 0, 4, 4, 1},
+			{3, 1, 4, 0, 0, 0, 0, 1, 4, 1}
 		}, new ExtraTile[] {
 				new ExtraTile(3, 5, 
 						new GroundButton(TriggerType.WALL_GROUND, false, GButton.VEILED, new ArrayList<Dimension>() {{
@@ -371,6 +383,7 @@ public class DesertLevels implements Serializable {
 							add(new Dimension(5, 4));
 						}}))
 		}, new ArrayList<GCharacter>() {{
+			add(new BreakableWall(1, 8));
 			add(new SnakeSoldier(7, 3, PatrolPattern.STATIONARY));
 			add(new SandBeep(2, 6));
 			add(new Bitester(1, 4));
@@ -393,6 +406,7 @@ public class DesertLevels implements Serializable {
 			{1, 1, 1, 1, 1, 1, 3, 3, 1, 1}
 		}, new ExtraTile[] {
 		}, new ArrayList<GCharacter>() {{
+			add(new Cactian(2, 4));
 			add(new SandWurm(4, 3));
 			add(new SandWurm(7, 4));
 		}}, new ArrayList<GPickup>() {{
@@ -504,7 +518,7 @@ public class DesertLevels implements Serializable {
 			add(new ArrowTurret(2, 6, 1, 0, 5));
 			add(new ArrowTurret(8, 5, -1, 0, 5));
 			add(new ArrowTurret(8, 3, -1, 0, 5));
-			add(new SnakeSoldier(5, 0, PatrolPattern.STATIONARY));
+			add(new SnakeCommander(5, 0, PatrolPattern.STATIONARY));
 		}}, new ArrayList<GPickup>() {{
 		}});
 		
@@ -553,7 +567,7 @@ public class DesertLevels implements Serializable {
 							add(new ExtraTile(7, 2, new AltGround()));
 						}})),
 		}, new ArrayList<GCharacter>() {{
-			add(new SnakeSoldier(4, 2, PatrolPattern.STATIONARY));
+			add(new SnakeCommander(4, 2, PatrolPattern.STATIONARY));
 		}}, new ArrayList<GPickup>() {{
 		}});
 		
@@ -568,9 +582,14 @@ public class DesertLevels implements Serializable {
 			{3, 1, 1, 1, 0, 0, 0, 0, 1, 1},
 			{3, 1, 3, 0, 0, 4, 2, 2, 1, 3},
 			{3, 1, 0, 0, 0, 0, 4, 2, 2, 1},
-			{3, 1, 1, 0, 4, 0, 4, 4, 2, 1},
+			{3, 0, 1, 0, 4, 0, 4, 4, 2, 1},
 			{3, 3, 1, 0, 0, 0, 1, 2, 4, 1}
 		}, new ExtraTile[] {
+				new ExtraTile(1, 8, 
+						new GroundButton(TriggerType.ENEMY_AND_TILE, false, GButton.VEILED, new ArrayList<GCharacter>() {{
+						}}, new ArrayList<ExtraTile>() {{
+							add(new ExtraTile(1, 0, new Ground()));
+						}})),
 		}, new ArrayList<GCharacter>() {{
 			add(new SandBeep(2, 1));
 			add(new SandBeep(3, 8));
@@ -617,8 +636,8 @@ public class DesertLevels implements Serializable {
 		}, new ArrayList<GCharacter>() {{
 			add(new Cactian(4, 5));
 			add(new Cactian(1, 8));
-			add(new EliteBunnyWarrior(6, 3));
-			add(new BunnyWarrior(7, 3));
+			add(new EliteBunnyWarrior(6, 3, PatrolPattern.WANDER));
+			add(new BunnyWarrior(7, 3, PatrolPattern.WANDER));
 		}}, new ArrayList<GPickup>() {{
 		}});
 		
@@ -660,8 +679,10 @@ public class DesertLevels implements Serializable {
 			{1, 1, 1, 1, 1, 3, 1, 1, 1, 1}
 		}, new ExtraTile[] {
 		}, new ArrayList<GCharacter>() {{
+			add(new Cactian(7, 2));
+			add(new Cactian(8, 6));
 			add(new SandWurm(4, 3));
-			add(new EliteSandBeep(6, 7));
+			add(new SandBeep(6, 7));
 		}}, new ArrayList<GPickup>() {{
 		}});
 		
@@ -680,6 +701,10 @@ public class DesertLevels implements Serializable {
 			{1, 3, 1, 1, 3, 1, 1, 1, 3, 3}
 		}, new ExtraTile[] {
 		}, new ArrayList<GCharacter>() {{
+			add(new Cactian(3, 3));
+			add(new Cactian(4, 8));
+			add(new Cactian(8, 4));
+			add(new SandWurm(5, 5));
 		}}, new ArrayList<GPickup>() {{
 		}});
 		
@@ -688,17 +713,23 @@ public class DesertLevels implements Serializable {
 		MapLevel d63 = new MapLevel(new int[][] {
 			{1, 1, 1, 1, 1, 1, 1, 1, 1, 3},
 			{3, 1, 1, 1, 1, 1, 1, 1, 3, 3},
-			{3, 1, 1, 1, 1, 1, 1, 3, 1, 3},
-			{1, 1, 1, 3, 1, 1, 3, 1, 3, 3},
+			{3, 1, 1, 1, 1, 1, 1, 3, 3, 3},
+			{1, 1, 1, 3, 1, 1, 3, 1, 1, 3},
 			{3, 1, 1, 1, 1, 3, 1, 3, 1, 3},
 			{1, 1, 1, 1, 1, 3, 1, 1, 1, 3},
 			{1, 1, 1, 1, 1, 1, 1, 3, 1, 3},
 			{3, 1, 1, 1, 1, 3, 1, 1, 1, 3},
-			{1, 1, 1, 3, 1, 1, 3, 3, 3, 3},
+			{1, 1, 1, 3, 1, 1, 3, 3, 1, 3},
 			{3, 3, 1, 1, 1, 3, 3, 1, 1, 3}
 		}, new ExtraTile[] {
 		}, new ArrayList<GCharacter>() {{
+			add(new Cactian(8, 3));
+			add(new Cactian(8, 8));
+			add(new Cactian(6, 2));
+			add(new SandBeep(3, 2));
+			add(new SandBeep(4, 7));
 		}}, new ArrayList<GPickup>() {{
+			add(new GPickup(8, 4, new SmallHealthPotion()));
 		}});
 		
 		//------------------- // ROW 4
@@ -706,8 +737,8 @@ public class DesertLevels implements Serializable {
 		MapLevel d04 = new MapLevel(new int[][] {
 			{3, 3, 1, 0, 0, 0, 2, 2, 4, 1},
 			{3, 1, 3, 1, 0, 1, 1, 2, 4, 1},
-			{3, 1, 1, 0, 1, 3, 1, 4, 1, 1},
-			{3, 1, 3, 0, 1, 0, 1, 4, 1, 1},
+			{3, 1, 1, 0, 1, 1, 1, 4, 1, 1},
+			{3, 1, 1, 0, 1, 0, 1, 4, 1, 1},
 			{3, 1, 1, 1, 0, 1, 3, 3, 1, 1},
 			{3, 3, 4, 4, 0, 1, 1, 3, 1, 1},
 			{3, 3, 0, 0, 0, 1, 4, 1, 3, 1},
@@ -716,6 +747,11 @@ public class DesertLevels implements Serializable {
 			{3, 4, 4, 4, 2, 1, 1, 1, 1, 1}
 		}, new ExtraTile[] {
 		}, new ArrayList<GCharacter>() {{
+			add(new SnakeSoldier(1, 7, PatrolPattern.STATIONARY));
+			add(new SnakeSoldier(1, 1, PatrolPattern.STATIONARY));
+			add(new SandBeep(2, 8));
+			add(new Cactian(5, 2));
+			add(new Cactian(2, 3));
 		}}, new ArrayList<GPickup>() {{
 		}});
 		
@@ -727,7 +763,7 @@ public class DesertLevels implements Serializable {
 			{1, 1, 1, 1, 4, 1, 1, 1, 1, 1},
 			{1, 1, 1, 0, 0, 1, 1, 4, 1, 1},
 			{1, 1, 1, 4, 0, 1, 0, 4, 1, 1},
-			{1, 1, 1, 1, 1, 3, 0, 1, 1, 1},
+			{1, 1, 1, 1, 1, 1, 0, 1, 1, 1},
 			{1, 1, 4, 1, 0, 0, 0, 1, 0, 1},
 			{1, 1, 1, 4, 1, 1, 4, 4, 1, 1},
 			{1, 1, 1, 1, 4, 0, 4, 1, 1, 1},
@@ -737,6 +773,7 @@ public class DesertLevels implements Serializable {
 			add(new EliteBunnyWarrior(6, 5, PatrolPattern.SURFACE_CW));
 			add(new EliteBeanpole(5, 2));
 			add(new EliteBeanpole(3, 6));
+			add(new Cactian(5, 5));
 		}}, new ArrayList<GPickup>() {{
 		}});
 		
@@ -856,7 +893,7 @@ public class DesertLevels implements Serializable {
 			{1, 1, 3, 1, 1, 1, 3, 1, 3, 3},
 			{1, 1, 3, 3, 1, 3, 1, 1, 3, 1},
 			{1, 1, 1, 3, 1, 1, 1, 3, 3, 1},
-			{3, 1, 1, 1, 1, 3, 1, 1, 1, 1},
+			{3, 1, 1, 1, 1, 1, 1, 1, 1, 1},
 			{1, 3, 1, 1, 1, 1, 1, 3, 1, 3},
 			{1, 1, 1, 3, 1, 1, 1, 1, 3, 3},
 			{1, 1, 1, 1, 1, 1, 3, 1, 1, 1},
@@ -864,6 +901,10 @@ public class DesertLevels implements Serializable {
 			{1, 1, 1, 1, 1, 1, 1, 1, 1, 1}
 		}, new ExtraTile[] {
 		}, new ArrayList<GCharacter>() {{
+			add(new Beanpole(5, 5, PatrolPattern.SURFACE_CW));
+			add(new Cactian(4, 7));
+			add(new Cactian(6, 2));
+			add(new Cactian(5, 4));
 		}}, new ArrayList<GPickup>() {{
 		}});
 		
