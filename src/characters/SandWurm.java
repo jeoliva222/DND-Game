@@ -15,12 +15,12 @@ import gui.InfoScreen;
 import helpers.GPath;
 import helpers.SoundPlayer;
 import managers.EntityManager;
-import projectiles.MusicNote;
+import projectiles.SandwurmSpit;
 import tiles.Ground;
 import tiles.MovableType;
 import tiles.TileType;
 
-// Class that represents the Sandwurm enemy found in the Desert area
+// Class that represents the SandWurm enemy found in the Desert area
 public class SandWurm extends GCharacter {
 
 	// Serialization ID
@@ -136,11 +136,17 @@ public class SandWurm extends GCharacter {
 			// No extra path
 			break;
 		case SandWurm.STATE_PREP_SPIT:
+			statePath = "_PREP_SPIT";
+			break;
 		case SandWurm.STATE_BURROW:
+			statePath = "_ALERT";
+			break;
 		case SandWurm.STATE_PREP:
 			statePath = "_PREP_BITE";
 			break;
 		case SandWurm.STATE_ATT_SPIT:
+			statePath = "_ATT_SPIT";
+			break;
 		case SandWurm.STATE_ATT:
 			statePath = "_ATT_BITE";
 			break;
@@ -173,7 +179,7 @@ public class SandWurm extends GCharacter {
 	
 	@Override
 	public void onDeath() {
-		// TODO : Do nothing for now
+		// Nothing
 	}
 	
 	// Override that increments a damaged counter on hit
@@ -195,6 +201,7 @@ public class SandWurm extends GCharacter {
 	
 	@Override
 	// Moves the character: Returns false if blocked, Returns true if moved successfully
+	// Override makes it so SandWurm only moves on sand (Ground) and not planks (AltGround)
 	public boolean moveCharacter(int dx, int dy) {
 		
 		// Check on collisions for other characters 
@@ -394,7 +401,7 @@ public class SandWurm extends GCharacter {
 				
 				// Spit at the player
 				EntityManager.getInstance().getProjectileManager()
-				.addProjectile(new MusicNote((this.xPos + dx),
+				.addProjectile(new SandwurmSpit((this.xPos + dx),
 										(this.yPos + dy),
 										dx,
 										dy, this));

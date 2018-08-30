@@ -106,6 +106,7 @@ public class SandBeep extends GCharacter {
 		String imgPath = this.imageDir + this.bpImage_base;
 		String hpPath = "";
 		String statePath = "";
+		String hopPath = "";
 		
 		if(this.currentHP > (this.maxHP / 2)) {
 			hpPath = "_full";
@@ -116,25 +117,29 @@ public class SandBeep extends GCharacter {
 			return GPath.NULL;
 		}
 		
-		switch(this.state) {
-		case SandBeep.STATE_IDLE:
-			// No extra path
-			break;
-		case SandBeep.STATE_PREP:
-			statePath = "_PREP";
-			break;
-		case SandBeep.STATE_ATT:
-			if(this.cooldownCount < 1) {
-				statePath = "_ATT";
-			}
-			break;
-		default:
-			System.out.println
-				(this.getName() + " couldn't find a proper image: " + Integer.toString(this.state));
-			return GPath.NULL;
+		if(this.doExtraHop) {
+			hopPath = "_ALT";
 		}
 		
-		return (imgPath + hpPath + statePath + ".png");
+		switch(this.state) {
+			case SandBeep.STATE_IDLE:
+				// No extra path
+				break;
+			case SandBeep.STATE_PREP:
+				statePath = "_PREP";
+				break;
+			case SandBeep.STATE_ATT:
+				if(this.cooldownCount < 1) {
+					statePath = "_ATT";
+				}
+				break;
+			default:
+				System.out.println
+					(this.getName() + " couldn't find a proper image: " + Integer.toString(this.state));
+				return GPath.NULL;
+			}
+		
+		return (imgPath + hpPath + statePath + hopPath + ".png");
 	}
 	
 	public String getCorpseImage() {
@@ -284,8 +289,7 @@ public class SandBeep extends GCharacter {
 				// Play hop sound
 				this.playHopSound();
 
-				// Change state and toggle whether we do a double hop next time
-				this.doExtraHop = !(this.doExtraHop);
+				// Change state
 				this.state = SandBeep.STATE_ATT;
 				break;
 			case SandBeep.STATE_ATT:
@@ -300,7 +304,8 @@ public class SandBeep extends GCharacter {
 					this.cooldownCount = 0;
 					this.state = SandBeep.STATE_PREP;
 				} else {
-					// If not, do nothing
+					// If not, toggle extra hop parameter
+					this.doExtraHop = !(this.doExtraHop);
 				}
 				
 				break;

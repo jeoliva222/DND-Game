@@ -6,7 +6,6 @@ import helpers.GPath;
 
 public class Arrow extends GProjectile {
 	
-	///*** TEMP
 	private String basePath = GPath.createImagePath(GPath.ENEMY, GPath.ARROW_TURRET);
 
 	public Arrow(int xPos, int yPos, int dx, int dy, GCharacter owner) {
