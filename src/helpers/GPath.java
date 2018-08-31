@@ -98,6 +98,8 @@ public class GPath {
 	
 	public static String ELITE_BEEP = "elite_beep" + File.separator;
 	
+	public static String CACTIAN = "cactian" + File.separator;
+	
 	public static String GAZER = "its_gaze" + File.separator;
 	
 	public static String HOPTOOTH = "hoptooth" + File.separator;

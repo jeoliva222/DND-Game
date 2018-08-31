@@ -50,16 +50,20 @@ public class Cactian extends GCharacter {
 	protected int markX = 0;
 	protected int markY = 0;
 	
+	// Determines if Cactian should awake this turn
 	protected boolean shouldAwaken = false;
+	
+	// Determines what "step" the Cactian is on in their walk cycle
+	protected boolean whichStep = false;
 	
 	//----------------------------
 	
 	// File paths to images
-	private String imageDir = GPath.createImagePath(GPath.ENEMY, GPath.BEANPOLE);
-	private String bpImage_base = "beanpole";
+	private String imageDir = GPath.createImagePath(GPath.ENEMY, GPath.CACTIAN);
+	private String ctImage_base = "cactian";
 	
-	private String bpImage_DEAD = GPath.createImagePath(GPath.ENEMY, GPath.BEANPOLE, "beanpole_dead.png");
-	private String bpImage_DEAD_CRIT = GPath.createImagePath(GPath.ENEMY, GPath.BEANPOLE, "beanpole_dead_CRIT.png");
+	private String ctImage_DEAD = GPath.createImagePath(GPath.ENEMY, GPath.BEANPOLE, "beanpole_dead.png");
+	private String ctImage_DEAD_CRIT = GPath.createImagePath(GPath.ENEMY, GPath.BEANPOLE, "beanpole_dead_CRIT.png");
 
 	// Constructors
 	public Cactian(int startX, int startY) {
@@ -112,14 +116,14 @@ public class Cactian extends GCharacter {
 	
 	@Override
 	public String getImage() {
-		String imgPath = this.imageDir + this.bpImage_base;
+		String imgPath = this.imageDir + this.ctImage_base;
 		String hpPath = "";
 		String statePath = "";
 		
 		if(this.currentHP > (this.maxHP / 2)) {
 			hpPath = "_full";
 		} else if(this.currentHP > 0) {
-			hpPath = "_fatal";
+			hpPath = "_full";
 		} else {
 			hpPath = "_dead";
 			return (imgPath + hpPath + ".png");
@@ -127,18 +131,24 @@ public class Cactian extends GCharacter {
 		
 		switch(this.state) {
 			case Cactian.STATE_IDLE:
-				// TODO
+				// No extra path
 				break;
 			case Cactian.STATE_PURSUE:
-				// No extra path
+				if(this.whichStep) {
+					statePath = "_PURSUE_STEP1";
+				} else {
+					statePath = "_PURSUE_STEP2";
+				}
 				break;
 			case Cactian.STATE_ALERTED:
 			case Cactian.STATE_AWAKEN:
+				statePath = "_ALERT";
+				break;
 			case Cactian.STATE_PREP:
-				statePath = "_PREP";
+				statePath = "_PURSUE";
 				break;
 			case Cactian.STATE_ATT:
-				statePath = "_ATT";
+				statePath = "_PURSUE";
 				break;
 			default:
 				System.out.println
@@ -151,9 +161,9 @@ public class Cactian extends GCharacter {
 	
 	public String getCorpseImage() {
 		if(this.currentHP < -(this.maxHP / 2)) {
-			return this.bpImage_DEAD_CRIT;
+			return this.ctImage_DEAD_CRIT;
 		} else {
-			return this.bpImage_DEAD;
+			return this.ctImage_DEAD;
 		}
 	}
 	
@@ -288,6 +298,9 @@ public class Cactian extends GCharacter {
 					int changeY = nextStep.height - this.yPos;
 					this.moveCharacter(changeX, changeY);
 				}
+				
+				// Alternate step pattern
+				this.whichStep = !(this.whichStep);
 				break;
 			case Cactian.STATE_PREP:
 				// Shoot projectile in player's direction
