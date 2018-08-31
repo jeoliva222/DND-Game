@@ -270,7 +270,7 @@ public class DesertLevels implements Serializable {
 		}, new ArrayList<GCharacter>() {{
 			add(new Cactian(6, 4));
 			add(new Cactian(2, 5));
-			add(new SaveCrystal(7, 5));
+			add(new SaveCrystal(8, 3));
 		}}, new ArrayList<GPickup>() {{
 		}});
 		

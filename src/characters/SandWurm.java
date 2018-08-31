@@ -67,8 +67,8 @@ public class SandWurm extends GCharacter {
 	private String imageDir = GPath.createImagePath(GPath.ENEMY, GPath.SANDWURM);
 	private String swImage_base = "sandwurm";
 	
-	private String swImage_DEAD = GPath.createImagePath(GPath.ENEMY, GPath.BEANPOLE, "beanpole_dead.png");
-	private String swImage_DEAD_CRIT = GPath.createImagePath(GPath.ENEMY, GPath.BEANPOLE, "beanpole_dead_CRIT.png");
+	private String swImage_DEAD = GPath.createImagePath(GPath.ENEMY, GPath.SANDWURM, "sandwurm_dead.png");
+	private String swImage_DEAD_CRIT = GPath.createImagePath(GPath.ENEMY, GPath.SANDWURM, "sandwurm_dead.png");
 
 	// Constructors
 	public SandWurm(int startX, int startY) {
@@ -121,9 +121,8 @@ public class SandWurm extends GCharacter {
 		if(this.currentHP > (this.maxHP / 2)) {
 			hpPath = "_full";
 		} else if(this.currentHP > 0) {
-			hpPath = "_full";
+			hpPath = "_fatal";
 		} else {
-			hpPath = "_dead";
 			return GPath.NULL;
 		}
 		
@@ -160,7 +159,7 @@ public class SandWurm extends GCharacter {
 	}
 	
 	public String getCorpseImage() {
-		if(this.currentHP < -(this.maxHP)) {
+		if(this.currentHP < -(this.maxHP / 2)) {
 			return this.swImage_DEAD_CRIT;
 		} else {
 			return this.swImage_DEAD;
