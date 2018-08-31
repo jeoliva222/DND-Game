@@ -15,7 +15,6 @@ import characters.EliteArrowTurret;
 import characters.EliteBeanpole;
 import characters.EliteBitester;
 import characters.EliteBunnyWarrior;
-import characters.EliteSandBeep;
 import characters.GCharacter;
 import characters.SandBeep;
 import characters.SandWurm;
@@ -917,12 +916,18 @@ public class DesertLevels implements Serializable {
 			{1, 3, 3, 1, 1, 3, 1, 1, 1, 3},
 			{1, 1, 1, 1, 1, 1, 3, 1, 1, 3},
 			{3, 1, 1, 1, 3, 1, 1, 3, 1, 3},
-			{3, 1, 1, 1, 1, 3, 1, 1, 1, 3},
-			{1, 1, 3, 1, 1, 1, 1, 1, 3, 3},
+			{3, 1, 1, 1, 1, 1, 1, 1, 1, 3},
+			{1, 1, 1, 1, 1, 1, 1, 1, 3, 3},
 			{1, 1, 1, 1, 3, 1, 1, 3, 3, 3},
 			{1, 3, 1, 1, 1, 1, 1, 1, 3, 3}
 		}, new ExtraTile[] {
 		}, new ArrayList<GCharacter>() {{
+			add(new SandWurm(2, 2));
+			add(new SandWurm(6, 6));
+			add(new Cactian(7, 3));
+			add(new Cactian(7, 4));
+			add(new Cactian(2, 7));
+			add(new Cactian(5, 6));
 		}}, new ArrayList<GPickup>() {{
 		}});
 		
@@ -941,6 +946,10 @@ public class DesertLevels implements Serializable {
 			{3, 1, 1, 1, 1, 1, 1, 1, 1, 1}
 		}, new ExtraTile[] {
 		}, new ArrayList<GCharacter>() {{
+			add(new EliteBitester(2, 2, PatrolPattern.SURFACE_CW));
+			add(new SandWurm(2, 4));
+			add(new EliteBunnyWarrior(4, 8, PatrolPattern.SURFACE_CCW));
+			add(new EliteBunnyWarrior(6, 3, PatrolPattern.SURFACE_CCW));
 		}}, new ArrayList<GPickup>() {{
 		}});
 		
