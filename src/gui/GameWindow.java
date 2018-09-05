@@ -135,7 +135,7 @@ public class GameWindow extends JFrame implements KeyListener {
 		SoundPlayer.cacheSoundPlaying();
 		
 		// Start playing music
-		SoundPlayer.playMidi(EntityManager.getInstance().getActiveArea().getMusic(), 30);
+		SoundPlayer.playMidi(EntityManager.getInstance().getActiveArea().getMusic(), 15);
 	}
 	
 	// Moves the player x-wise/y-wise then updates the screen to show it

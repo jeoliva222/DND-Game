@@ -89,6 +89,9 @@ public class SoundPlayer {
 				SoundPlayer.midiSequence = MidiSystem.getSequencer();
 				SoundPlayer.midiSequence.setLoopCount(Sequencer.LOOP_CONTINUOUSLY);
 			}
+			
+			// Calculate gain
+			double gain = (double) volume / 100.0;
 	        
 	        // Opens the device, indicating that it should now acquire any
 	        // system resources it requires and become operational.
@@ -105,8 +108,9 @@ public class SoundPlayer {
 			Track[] tracks = SoundPlayer.midiSequence.getSequence().getTracks();
 			for(Track track : tracks) {
 				for(int x = 0; x < 16; x++) {
+					
 					track.add(new MidiEvent(
-							new ShortMessage(ShortMessage.CONTROL_CHANGE, x, 7, volume), 0));
+							new ShortMessage(ShortMessage.CONTROL_CHANGE, x, 7, (int)(gain*127)), 0));
 				}
 			}
 	 

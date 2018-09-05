@@ -13,6 +13,8 @@ public class KeyDoor extends TileType {
 	public static final int GREEN = 1;
 	public static final int RED = 2;
 	public static final int BLUE = 3;
+	public static final int SNAKEBASE = 4;
+	public static final int COMMANDER = 5;
 	
 	// Key-code unique to the specific instance of the door
 	protected int keycode;
@@ -35,6 +37,10 @@ public class KeyDoor extends TileType {
 				return GPath.createImagePath(GPath.TILE, GPath.DOOR, "red_door.png");
 			case BLUE:
 				return GPath.createImagePath(GPath.TILE, GPath.DOOR, "blue_door.png");
+			case SNAKEBASE:
+				return GPath.createImagePath(GPath.TILE, GPath.DOOR, "snakebase_door.png");
+			case COMMANDER:
+				return GPath.createImagePath(GPath.TILE, GPath.DOOR, "commander_door.png");
 			default:
 				System.out.println("Couldn't find the right door image!");
 				return GPath.NULL;

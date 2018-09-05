@@ -535,6 +535,7 @@ public class DesertLevels implements Serializable {
 			{4, 4, 4, 0, 1, 1, 1, 1, 3, 3},
 			{1, 1, 1, 1, 1, 1, 1, 1, 1, 3}
 		}, new ExtraTile[] {
+				new ExtraTile(3, 8, new KeyDoor(KeyDoor.COMMANDER)),
 				new ExtraTile(2, 7, 
 						new GroundButton(TriggerType.ENEMY_AND_TILE, false, GButton.VEILED, new ArrayList<GCharacter>() {{
 							add(new ArrowTurret(1, 2, 0, 1, 3, 2));
@@ -733,7 +734,7 @@ public class DesertLevels implements Serializable {
 		
 		//------------------- // ROW 4
 		
-		MapLevel d04 = new MapLevel(new int[][] {
+		MapLevel d04 = new MapLevel(new int[][] { //TODO
 			{3, 3, 1, 0, 0, 0, 2, 2, 4, 1},
 			{3, 1, 3, 1, 0, 1, 1, 2, 4, 1},
 			{3, 1, 1, 0, 1, 1, 1, 4, 1, 1},
@@ -752,6 +753,7 @@ public class DesertLevels implements Serializable {
 			add(new Cactian(5, 2));
 			add(new Cactian(2, 3));
 		}}, new ArrayList<GPickup>() {{
+			add(new GPickup(1, 8, new GKey(KeyDoor.SNAKEBASE)));
 		}});
 		
 		//-------------------
@@ -799,7 +801,7 @@ public class DesertLevels implements Serializable {
 		
 		//-------------------
 		
-		MapLevel d34 = new MapLevel(new int[][] {//TODO Add Key doors
+		MapLevel d34 = new MapLevel(new int[][] {
 			{1, 1, 2, 2, 2, 2, 2, 2, 1, 1},
 			{4, 1, 1, 2, 2, 2, 2, 1, 1, 4},
 			{4, 4, 1, 0, 0, 0, 0, 1, 4, 4},
@@ -811,6 +813,7 @@ public class DesertLevels implements Serializable {
 			{4, 0, 0, 4, 4, 0, 4, 0, 0, 4},
 			{4, 4, 4, 4, 0, 0, 4, 4, 4, 4}
 		}, new ExtraTile[] {
+				new ExtraTile(4, 5, new KeyDoor(KeyDoor.SNAKEBASE)),
 				new ExtraTile(1, 8, 
 						new GroundButton(TriggerType.ENEMY_AND_TILE, false, GButton.VISIBLE, new ArrayList<GCharacter>() {{
 						}}, new ArrayList<ExtraTile>() {{
@@ -824,6 +827,8 @@ public class DesertLevels implements Serializable {
 		}, new ArrayList<GCharacter>() {{
 			add(new SaveCrystal(5, 6));
 		}}, new ArrayList<GPickup>() {{
+			add(new GPickup(2, 8, new GKey(KeyDoor.COMMANDER)));
+			add(new GPickup(7, 8, new GKey(KeyDoor.COMMANDER)));
 		}});
 		
 		//-------------------
@@ -1209,7 +1214,7 @@ public class DesertLevels implements Serializable {
 		
 		//-------------------
 		
-		MapLevel d56 = new MapLevel(new int[][] {//TODO Add Key door
+		MapLevel d56 = new MapLevel(new int[][] {
 			{4, 4, 0, 0, 2, 2, 2, 2, 2, 2},
 			{4, 4, 4, 0, 2, 2, 2, 2, 2, 2},
 			{4, 0, 0, 0, 2, 1, 1, 2, 2, 2},
@@ -1221,7 +1226,7 @@ public class DesertLevels implements Serializable {
 			{4, 0, 0, 0, 4, 2, 3, 2, 2, 2},
 			{4, 4, 4, 4, 4, 3, 3, 3, 3, 3}
 		}, new ExtraTile[] {
-				new ExtraTile(1, 6, new KeyDoor(KeyDoor.BLUE))
+				new ExtraTile(1, 6, new KeyDoor(KeyDoor.COMMANDER))
 		}, new ArrayList<GCharacter>() {{
 		}}, new ArrayList<GPickup>() {{
 			add(new GPickup(3, 8, Armory.ceremonialSpear));

@@ -163,7 +163,7 @@ public class SandBeep extends GCharacter {
 	
 	@Override
 	public void onDeath() {
-		if(this.currentHP < -(this.maxHP)) {
+		if(this.currentHP < -(this.maxHP / 2)) {
 			SoundPlayer.playWAV(GPath.createSoundPath("Bitester_DEATH_CRIT.wav"));
 		} else {
 			this.playDeathSound();

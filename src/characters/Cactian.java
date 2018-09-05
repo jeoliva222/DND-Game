@@ -10,7 +10,7 @@ import ai.PatrolPattern;
 import helpers.GPath;
 import helpers.SoundPlayer;
 import managers.EntityManager;
-import projectiles.Arrow;
+import projectiles.CactianNeedle;
 import tiles.MovableType;
 
 // Class representing the 'Cactian' enemy found in the Poacher's Desert area
@@ -25,7 +25,7 @@ public class Cactian extends GCharacter {
 	
 	private int ARMOR_VAL = 1;
 	
-	private int MIN_DMG = 2;
+	private int MIN_DMG = 3;
 	private int MAX_DMG = 4;
 	
 	private double CRIT_CHANCE = 0.1;
@@ -62,8 +62,8 @@ public class Cactian extends GCharacter {
 	private String imageDir = GPath.createImagePath(GPath.ENEMY, GPath.CACTIAN);
 	private String ctImage_base = "cactian";
 	
-	private String ctImage_DEAD = GPath.createImagePath(GPath.ENEMY, GPath.BEANPOLE, "beanpole_dead.png");
-	private String ctImage_DEAD_CRIT = GPath.createImagePath(GPath.ENEMY, GPath.BEANPOLE, "beanpole_dead_CRIT.png");
+	private String ctImage_DEAD = GPath.createImagePath(GPath.ENEMY, GPath.CACTIAN, "cactian_dead.png");
+	private String ctImage_DEAD_CRIT = GPath.createImagePath(GPath.ENEMY, GPath.CACTIAN, "cactian_dead.png");
 
 	// Constructors
 	public Cactian(int startX, int startY) {
@@ -123,7 +123,7 @@ public class Cactian extends GCharacter {
 		if(this.currentHP > (this.maxHP / 2)) {
 			hpPath = "_full";
 		} else if(this.currentHP > 0) {
-			hpPath = "_full";
+			hpPath = "_fatal";
 		} else {
 			hpPath = "_dead";
 			return (imgPath + hpPath + ".png");
@@ -145,10 +145,10 @@ public class Cactian extends GCharacter {
 				statePath = "_ALERT";
 				break;
 			case Cactian.STATE_PREP:
-				statePath = "_PURSUE";
+				statePath = "_PREP_SHOOT";
 				break;
 			case Cactian.STATE_ATT:
-				statePath = "_PURSUE";
+				statePath = "_ATT_SHOOT";
 				break;
 			default:
 				System.out.println
@@ -306,7 +306,7 @@ public class Cactian extends GCharacter {
 				// Shoot projectile in player's direction
 				// TODO
 				EntityManager.getInstance().getProjectileManager()
-				.addProjectile(new Arrow((this.xPos + this.markX),
+				.addProjectile(new CactianNeedle((this.xPos + this.markX),
 										(this.yPos + this.markY),
 										this.markX,
 										this.markY, this));

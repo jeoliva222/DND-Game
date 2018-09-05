@@ -55,6 +55,16 @@ public class GKey extends GItem {
 				this.description = "You see deep terrors looming behind the color of this key.";
 				this.imagePath = GPath.createImagePath(GPath.PICKUP, GPath.KEY, "blue_key.png");
 				break;
+			case KeyDoor.SNAKEBASE:
+				this.name = "Snake Base Key";
+				this.description = "Key to the snake's stronghold at the center of the desert.";
+				this.imagePath = GPath.createImagePath(GPath.PICKUP, GPath.KEY, "snakebase_key.png");
+				break;
+			case KeyDoor.COMMANDER:
+				this.name = "Commander's Key";
+				this.description = "A high-level access key held only by commanders. Use it to unlock doors of the snake clan.";
+				this.imagePath = GPath.createImagePath(GPath.PICKUP, GPath.KEY, "commander_key.png");
+				break;
 			default:
 				System.out.println("Keycode not found!");
 				this.name = "MISSING NO. KEY";
