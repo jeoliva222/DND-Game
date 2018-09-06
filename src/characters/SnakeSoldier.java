@@ -120,12 +120,14 @@ public class SnakeSoldier extends GCharacter {
 		case SnakeSoldier.STATE_PURSUE:
 			// No extra path
 			break;
-		case SnakeSoldier.STATE_PREP_BITE:
+		case SnakeSoldier.STATE_ALERTED:
 			statePath = "_ALERT";
 			break;
-		case SnakeSoldier.STATE_ALERTED:
+		case SnakeSoldier.STATE_PREP_BITE:
+			statePath = "_PREP_BITE";
+			break;
 		case SnakeSoldier.STATE_ATT_BITE:
-			statePath = "_ALERT";
+			statePath = "_ATT_BITE";
 			break;
 		case SnakeSoldier.STATE_PREP_SWIPE:
 			statePath = "_PREP_SWIPE";
