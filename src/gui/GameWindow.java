@@ -1,8 +1,12 @@
 package gui;
 
 import java.awt.Dimension;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
@@ -128,6 +132,21 @@ public class GameWindow extends JFrame implements KeyListener {
 	        	GameState.deleteTempSaves();
 	            System.exit(0);
 	        }
+	    });
+	    
+	    //TODO Temporary hack to avoid bug where hitting 'TAB' over the weapon panel loses focus
+	    this.addFocusListener(new FocusListener() {
+	    	@Override
+	    	public void focusLost(FocusEvent fe) {
+	    		// TODO - Temporary hack to get around game losing focus
+	    		GameWindow.this.requestFocus();
+	    		System.out.println("Focus on main window lost, then regained.");
+	    	}
+
+			@Override
+			public void focusGained(FocusEvent arg0) {
+				//System.out.println("Focus on window regained");
+			}
 	    });
 		
 		// "Caches" sound playing code by playing a silent sound.
@@ -370,13 +389,12 @@ public class GameWindow extends JFrame implements KeyListener {
 		GameWindow.getScreen().loadLevel(em.getActiveArea().getLevel(levelX, levelY));
 		
 		// Change music
-		SoundPlayer.changeMidi(em.getActiveArea().getMusic(), 30);
+		SoundPlayer.changeMidi(em.getActiveArea().getMusic(), 15);
 		
 		// Log that we loaded the screen
 		LogScreen.log("Loaded game...");
 		
 		// Updated the screen to show the changes
-		StatusScreen.updateWeapons();
 		this.updateAll();
 	}
 	
@@ -466,6 +484,10 @@ public class GameWindow extends JFrame implements KeyListener {
         	// Load the player's save file
         	this.loadGame();
         }
+        else if(e.getKeyCode() == KeyEvent.VK_TAB) { //TODO
+        	/// TEST - Tab hitting
+        	System.out.println("Tab pressed");
+        } 
 //      else if(e.getKeyCode() == KeyEvent.VK_F5) {
 //    	/// TEST ***
 //    	this.saveGame();
