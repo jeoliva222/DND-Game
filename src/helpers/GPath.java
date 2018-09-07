@@ -122,7 +122,7 @@ public class GPath {
 	
 	public static String SNAKE_SOLDIER = "snake_soldier" + File.separator;
 	
-	public static String ELITE_SNAKE_SOLDIER = "elite_snake_soldier" + File.separator;
+	public static String SNAKETANK = "snaketank" + File.separator;
 	
 	public static String WATCHMAN = "watchman" + File.separator;
 	

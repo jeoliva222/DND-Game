@@ -35,7 +35,6 @@ import tiles.Ground;
 import tiles.GroundButton;
 import tiles.KeyDoor;
 import tiles.TriggerType;
-import tiles.Wall;
 import weapons.Armory;
 
 // Contains definitions of all the Poacher's Desert levels
@@ -639,6 +638,7 @@ public class DesertLevels implements Serializable {
 			add(new EliteBunnyWarrior(6, 3, PatrolPattern.WANDER));
 			add(new BunnyWarrior(7, 3, PatrolPattern.WANDER));
 		}}, new ArrayList<GPickup>() {{
+			add(new GPickup(7, 3, new SmallHealthPotion()));
 		}});
 		
 		//-------------------
@@ -965,15 +965,19 @@ public class DesertLevels implements Serializable {
 			{1, 1, 1, 1, 1, 3, 1, 1, 1, 1},
 			{1, 1, 3, 1, 1, 2, 1, 1, 1, 1},
 			{1, 1, 1, 1, 1, 2, 2, 1, 1, 1},
-			{1, 1, 1, 1, 1, 3, 2, 1, 1, 1},
-			{1, 1, 1, 1, 1, 2, 2, 3, 1, 4},
+			{1, 1, 1, 1, 1, 1, 2, 1, 1, 1},
+			{1, 1, 1, 1, 1, 2, 2, 1, 1, 4},
 			{1, 1, 1, 3, 1, 1, 2, 2, 1, 4},
 			{1, 1, 1, 1, 1, 1, 1, 2, 4, 4},
-			{3, 1, 1, 1, 1, 1, 2, 2, 4, 4},
+			{3, 1, 1, 1, 1, 1, 2, 2, 2, 4},
 			{1, 1, 1, 1, 3, 2, 2, 4, 4, 4}
 		}, new ExtraTile[] {
 		}, new ArrayList<GCharacter>() {{
+			add(new Cactian(5, 4));
+			add(new Cactian(7, 5));
+			add(new BreakableWall(8, 8));
 		}}, new ArrayList<GPickup>() {{
+			add(new GPickup(8, 8, new SmallHealthPotion()));
 		}});
 		
 		//-------------------

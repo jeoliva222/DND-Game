@@ -304,7 +304,6 @@ public class Cactian extends GCharacter {
 				break;
 			case Cactian.STATE_PREP:
 				// Shoot projectile in player's direction
-				// TODO
 				EntityManager.getInstance().getProjectileManager()
 				.addProjectile(new CactianNeedle((this.xPos + this.markX),
 										(this.yPos + this.markY),
