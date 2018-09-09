@@ -21,14 +21,12 @@ public class Pit extends TileType {
 	
 	@Override
 	public String selectImage() {
-		// TODO Make pit image
-		
 		// Fetch the appropriate image path if we do not have one set
 		if(this.imagePath == null) {
 			// Fetch region path to display image from correct area
 			String regionPath = EntityManager.getInstance().getActiveArea().getTheme();
 			
-			this.imagePath = GPath.createImagePath(GPath.TILE, regionPath, "ground.png");
+			this.imagePath = GPath.createImagePath(GPath.TILE, regionPath, "pit.png");
 		}
 		
 		return this.imagePath;
