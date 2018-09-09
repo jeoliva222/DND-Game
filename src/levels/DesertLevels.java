@@ -21,6 +21,7 @@ import characters.SandWurm;
 import characters.SaveCrystal;
 import characters.SnakeCommander;
 import characters.SnakeSoldier;
+import characters.bosses.SnakeTank;
 import helpers.GPath;
 import items.GKey;
 import items.GPickup;
@@ -566,7 +567,7 @@ public class DesertLevels implements Serializable {
 							add(new ExtraTile(7, 2, new AltGround()));
 						}})),
 		}, new ArrayList<GCharacter>() {{
-			add(new SnakeCommander(4, 2, PatrolPattern.STATIONARY));
+			add(new SnakeTank(4, 2));
 		}}, new ArrayList<GPickup>() {{
 		}});
 		

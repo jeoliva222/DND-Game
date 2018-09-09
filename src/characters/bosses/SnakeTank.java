@@ -86,41 +86,42 @@ public class SnakeTank extends GCharacter {
 		String imgPath = this.imageDir + this.stImage_base;
 		String hpPath = "";
 		String statePath = "";
-		
 		if(this.currentHP > 0) {
 			hpPath = "_full";
+			// TEMP TODO
+			return this.imageDir + this.stImage_base + "_full.png";
 		} else {
 			hpPath = "_dead";
 			return (imgPath + hpPath + ".png");
 		}
 		
-		switch(this.state) {
-			case SnakeTank.STATE_IDLE:
-			case SnakeTank.STATE_PURSUE:
-				// No extra path
-				break;
-			case SnakeTank.STATE_ALERTED:
-				statePath = "_ALERT";
-				break;
-			case SnakeTank.STATE_PREP_CHAINGUN:
-				statePath = "_PREP_SHOOT";
-				break;
-			case SnakeTank.STATE_ATT_CHAINGUN:
-				statePath = "_ATT_SHOOT";
-				break;
-			case SnakeTank.STATE_PREP_NUKE:
-				statePath = "_PREP_SHOOT";
-				break;
-			case SnakeTank.STATE_ATT_NUKE:
-				statePath = "_ATT_SHOOT";
-				break;
-			default:
-				System.out.println
-					(this.getName() + " couldn't find a proper image: " + Integer.toString(this.state));
-				return GPath.NULL;
-		}
-		
-		return (imgPath + hpPath + statePath + ".png");
+//		switch(this.state) {
+//			case SnakeTank.STATE_IDLE:
+//			case SnakeTank.STATE_PURSUE:
+//				// No extra path
+//				break;
+//			case SnakeTank.STATE_ALERTED:
+//				statePath = "_ALERT";
+//				break;
+//			case SnakeTank.STATE_PREP_CHAINGUN:
+//				statePath = "_PREP_SHOOT";
+//				break;
+//			case SnakeTank.STATE_ATT_CHAINGUN:
+//				statePath = "_ATT_SHOOT";
+//				break;
+//			case SnakeTank.STATE_PREP_NUKE:
+//				statePath = "_PREP_SHOOT";
+//				break;
+//			case SnakeTank.STATE_ATT_NUKE:
+//				statePath = "_ATT_SHOOT";
+//				break;
+//			default:
+//				System.out.println
+//					(this.getName() + " couldn't find a proper image: " + Integer.toString(this.state));
+//				return GPath.NULL;
+//		}
+//		
+//		return (imgPath + hpPath + statePath + ".png");
 	}
 	
 	public String getCorpseImage() {
