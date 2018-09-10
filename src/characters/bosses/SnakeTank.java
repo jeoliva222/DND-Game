@@ -1,16 +1,24 @@
 package characters.bosses;
 
 import java.awt.Dimension;
+import java.util.Random;
 
 import ai.DumbFollow;
+import ai.IdleController;
 import ai.LineDrawer;
 import ai.PathFinder;
 import ai.PatrolPattern;
 import characters.GCharacter;
 import characters.Player;
+import effects.DamageIndicator;
+import effects.GEffect;
+import gui.GameScreen;
 import helpers.GPath;
 import helpers.SoundPlayer;
 import managers.EntityManager;
+import projectiles.GProjectile;
+import projectiles.SnakeCannonball;
+import tiles.AltWall;
 import tiles.MovableType;
 
 // Class representing the Boss enemy of the Desert area (Tank form)
@@ -25,8 +33,8 @@ public class SnakeTank extends GCharacter {
 	
 	private int ARMOR_VAL = 10;
 	
-	private int MIN_DMG = 3;
-	private int MAX_DMG = 6;
+	private int MIN_DMG = 4;
+	private int MAX_DMG = 8;
 	
 	private double CRIT_CHANCE = 0.1;
 	private double CRIT_MULT = 1.5;
@@ -47,6 +55,23 @@ public class SnakeTank extends GCharacter {
 	//----------------------------
 	
 	// Additional parameters
+	
+	// If tank did a double shot, indicates that it should put a one
+	// turn delay before firing again
+	private boolean delayNextShot = false;
+	
+	// If tank hit player with chaingun barrage, sets flag
+	// so the tank does not move next turn
+	private boolean hitShots = false;
+	
+	// Attack counter for deciding behavior
+	private int attCount = 0;
+	
+	// Determines time spent on cannon phase before switching
+	private final int cannonMax = 40;
+	
+	// Determines time spent on chaingun phase before switching
+	private final int chaingunMax = 2;
 	
 	//----------------------------
 	
@@ -83,17 +108,19 @@ public class SnakeTank extends GCharacter {
 	
 	@Override
 	public String getImage() {
-		String imgPath = this.imageDir + this.stImage_base;
-		String hpPath = "";
-		String statePath = "";
-		if(this.currentHP > 0) {
-			hpPath = "_full";
-			// TEMP TODO
-			return this.imageDir + this.stImage_base + "_full.png";
-		} else {
-			hpPath = "_dead";
-			return (imgPath + hpPath + ".png");
-		}
+		
+		// TEMP TODO
+		return this.imageDir + this.stImage_base + "_full.png";
+		
+//		String imgPath = this.imageDir + this.stImage_base;
+//		String hpPath = "";
+//		String statePath = "";
+//		if(this.currentHP > 0) {
+//			hpPath = "_full";
+//		} else {
+//			hpPath = "_dead";
+//			return (imgPath + hpPath + ".png");
+//		}
 		
 //		switch(this.state) {
 //			case SnakeTank.STATE_IDLE:
@@ -154,6 +181,9 @@ public class SnakeTank extends GCharacter {
 			return;
 		}
 		
+		// Initialize randomizer
+		Random r = new Random();
+		
 		// Get player's location
 		int plrX = player.getXPos();
 		int plrY = player.getYPos();
@@ -163,26 +193,150 @@ public class SnakeTank extends GCharacter {
 		int distY = plrY - this.yPos;
 		
 		switch(this.state) {
-			case SnakeTank.STATE_IDLE:
-				// If next to the player or damaged, become active
-				if(((Math.abs(distX) <= 1) && (Math.abs(distY) == 0)) ||
-						((Math.abs(distX) == 0) && (Math.abs(distY) <= 1)) ||
-						this.currentHP != MAX_HP) {
-					SoundPlayer.playWAV(GPath.createSoundPath("Beanpole_ALERT.wav"));
+			case SnakeTank.STATE_IDLE: //----------------------------------------------
+				// If player enters the arena, alert and close the arena
+				if((plrX == 4 || plrX == 5) && plrY == 2) {		
+					// Close the doors to the arena
+					GameScreen.getTile(4, 1).setTileType(new AltWall());
+					GameScreen.getTile(5, 1).setTileType(new AltWall());
+					
+					// Change music to Boss music
+					SoundPlayer.changeMidi(GPath.createSoundPath("d_e3m8.mid"));
+					
+					// Change state to alerted
 					this.state = SnakeTank.STATE_ALERTED;
-				} else {
-					// Do nothing
 				}
 				break;
-			case SnakeTank.STATE_ALERTED:
+			case SnakeTank.STATE_ALERTED: //--------------------------------------------
 				// Start to chase player
 				this.state = SnakeTank.STATE_PURSUE;
 				break;
-			case SnakeTank.STATE_PURSUE:	
+			case SnakeTank.STATE_PURSUE: //---------------------------------------------
+				// Relative movement direction (Initialize at 0)
+				int dx = 0;
+				int dy = 0;
+				
+				// Calculate relative movement directions
+				// X-movement
+				if(distX > 0) {
+					dx = 1;
+				} else if (distX < 0) {
+					dx = -1;
+				}
+				// Y-movement
+				if(distY > 0) {
+					dy = 1;
+				} else if (distY < 0) {
+					dy = -1;
+				}
+				
+				// Blindly pursue the target (No need for path-finding)
+				DumbFollow.blindPursue(distX, distY, dx, dy, this);
+				
+				// If we're done firing our cannon, switch to another phase
+				if(this.attCount >= this.cannonMax) {
+					// Reset attack counter
+					this.attCount = 0;
+					
+					// Change state
+					this.state = SnakeTank.STATE_PREP_CHAINGUN;
+					break;
+				}
+				
+				// Controls firing of cannonballs
+				if(!this.delayNextShot) {
+					// Randomize our shot pattern
+					int shouldFire = r.nextInt(6);
+					
+					if(shouldFire < 2) {
+						// Don't shoot, and increment counter by 1
+						this.attCount += 1;
+					} else if (shouldFire < 5) {
+						// Shoot a cannonball, and increment counter by 2
+						this.addProjectile(new SnakeCannonball(this.xPos - 1, this.yPos, -1, 0, this));
+						this.attCount += 2;
+					} else {
+						// Shoot 2 cannonballs (Randomly on higher or lower lane)
+						// Increment counter by 3
+						
+						// Shoot one of the two straight ahead
+						this.addProjectile(new SnakeCannonball(this.xPos - 1, this.yPos, -1, 0, this));
+						
+						// Shoot the other on either the higher or lower lane
+						// Checks to make sure it doesn't shoot it into a wall
+						// If no walls to hit, decided randomly
+						if(this.yPos == 5) {
+							this.addProjectile(new SnakeCannonball(this.xPos - 1, this.yPos - 1, -1, 0, this));
+						} else if(this.yPos == 2) {
+							this.addProjectile(new SnakeCannonball(this.xPos - 1, this.yPos + 1, -1, 0, this));
+						} else if(r.nextInt(1) == 0) {
+							this.addProjectile(new SnakeCannonball(this.xPos - 1, this.yPos - 1, -1, 0, this));
+						} else {
+							this.addProjectile(new SnakeCannonball(this.xPos - 1, this.yPos + 1, -1, 0, this));
+						}
+						
+						// Delay our next shot to avoid unfair scenarios
+						this.delayNextShot = true;
+						this.attCount += 3;
+					}
+				} else {
+					// Reset flag to indicate that our shot has been delayed
+					this.delayNextShot = false;
+				}
+				
 				break;
 			case SnakeTank.STATE_PREP_CHAINGUN:
+				if(this.attCount == 0) {
+					// Move, but do nothing yet
+					// Blindly pursue the target (No need for path-finding)
+					DumbFollow.blindPursue(distX, distY, this);
+				} else if(this.attCount == 1) {
+					// Don't move, and do nothing
+				} else {
+					// Fire the guns, and then change state TODO
+					for(int i = 7; i >= 4; i--) {
+						this.addEffect(new DamageIndicator(i, this.yPos));
+						if(plrX == i && plrY == this.yPos) {
+							this.playerInitiate();
+							this.hitShots = true;
+						}
+					}
+					
+					// Reset attack counter and change state
+					this.attCount = 0;
+					this.state = SnakeTank.STATE_ATT_CHAINGUN;
+					break;
+				}
+				
+				// Increment attack counter
+				this.attCount += 1;
 				break;
 			case SnakeTank.STATE_ATT_CHAINGUN:
+				// Check if we're done using the chaingun
+				if(this.attCount >= (this.chaingunMax - 1)) {
+					this.attCount = 0;
+					this.state = SnakeTank.STATE_PURSUE;
+					break;
+				}
+				
+				// If we didn't hit last barrage, move towards player
+				if(!this.hitShots) {
+					DumbFollow.blindPursue(distX, distY, this);
+				} else {
+					this.hitShots = false;
+				}
+				
+				// Fire the guns, and then change state TODO
+				for(int i = 7; i >= 4; i--) {
+					this.addEffect(new DamageIndicator(i, this.yPos));
+					if(plrX == i && plrY == this.yPos) {
+						this.playerInitiate();
+						this.hitShots = true;
+					}
+				}
+
+				// Increment attack counter
+				this.attCount += 1;
 				break;
 			case SnakeTank.STATE_PREP_NUKE:
 				break;
@@ -196,6 +350,16 @@ public class SnakeTank extends GCharacter {
 				return;
 		}
 			
+	}
+	
+	// Shortening of adding effect for convenience and easy code reading
+	private void addEffect(GEffect fx) {
+		EntityManager.getInstance().getEffectManager().addEffect(fx);
+	}
+	
+	// Shortening of adding projectile for convenience and easy code reading
+	private void addProjectile(GProjectile proj) {
+		EntityManager.getInstance().getProjectileManager().addProjectile(proj);
 	}
 	
 }

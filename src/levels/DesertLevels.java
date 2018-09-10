@@ -338,7 +338,7 @@ public class DesertLevels implements Serializable {
 		
 		//-------------------
 		
-		MapLevel d61 = new MapLevel(new int[][] {
+		MapLevel d61 = new MapLevel(new int[][] { // TODO Marker
 			{1, 1, 1, 1, 1, 1, 1, 1, 1, 3},
 			{4, 4, 4, 4, 1, 1, 4, 4, 4, 4},
 			{0, 0, 0, 4, 1, 1, 4, 0, 0, 4},
@@ -347,8 +347,8 @@ public class DesertLevels implements Serializable {
 			{4, 0, 0, 4, 1, 1, 4, 0, 1, 4},
 			{4, 4, 0, 4, 1, 1, 4, 0, 1, 4},
 			{1, 4, 4, 4, 1, 1, 4, 0, 0, 4},
-			{1, 1, 4, 4, 1, 1, 0, 0, 0, 4},
-			{1, 1, 1, 1, 1, 1, 4, 0, 0, 4}
+			{1, 1, 4, 4, 0, 0, 0, 0, 0, 4},
+			{1, 1, 1, 4, 0, 0, 4, 4, 4, 4}
 		}, new ExtraTile[] {
 				new ExtraTile(2, 6, 
 						new GroundButton(TriggerType.WALL_GROUND, false, new ArrayList<Dimension>() {{
@@ -523,13 +523,13 @@ public class DesertLevels implements Serializable {
 		
 		//-------------------
 		
-		MapLevel d62 = new MapLevel(new int[][] {
-			{1, 1, 1, 1, 1, 1, 4, 0, 0, 4},
-			{4, 4, 4, 4, 4, 4, 4, 0, 0, 4},
-			{4, 4, 4, 4, 0, 5, 5, 0, 0, 4},
-			{4, 0, 0, 4, 0, 5, 5, 0, 0, 4},
-			{4, 0, 0, 4, 0, 5, 5, 0, 0, 4},
-			{4, 0, 0, 4, 0, 5, 5, 0, 0, 4},
+		MapLevel d62 = new MapLevel(new int[][] { // TODO Marker
+			{1, 1, 1, 4, 0, 0, 4, 4, 4, 4},
+			{4, 4, 4, 4, 0, 0, 4, 4, 4, 4},
+			{4, 4, 4, 4, 0, 0, 5, 5, 0, 4},
+			{4, 0, 0, 4, 0, 0, 5, 5, 0, 4},
+			{4, 0, 0, 4, 0, 0, 5, 5, 0, 4},
+			{4, 0, 0, 4, 0, 0, 5, 5, 0, 4},
 			{4, 0, 0, 4, 4, 4, 4, 4, 4, 4},
 			{0, 0, 0, 0, 4, 2, 2, 2, 2, 3},
 			{4, 4, 4, 0, 1, 1, 1, 1, 3, 3},
@@ -552,22 +552,22 @@ public class DesertLevels implements Serializable {
 							add(new ExtraTile(3, 7, new AltGround()));
 							add(new ExtraTile(0, 7, new AltGround()));
 						}})),
-				new ExtraTile(7, 2, 
-						new GroundButton(TriggerType.ENEMY_AND_TILE, false, GButton.VEILED, new ArrayList<GCharacter>() {{
-						}}, new ArrayList<ExtraTile>() {{
-							add(new ExtraTile(7, 1, new AltWall()));
-							add(new ExtraTile(8, 1, new AltWall()));
-							add(new ExtraTile(8, 2, new AltGround()));
-						}})),
-				new ExtraTile(8, 2, 
-						new GroundButton(TriggerType.ENEMY_AND_TILE, false, GButton.VEILED, new ArrayList<GCharacter>() {{
-						}}, new ArrayList<ExtraTile>() {{
-							add(new ExtraTile(7, 1, new AltWall()));
-							add(new ExtraTile(8, 1, new AltWall()));
-							add(new ExtraTile(7, 2, new AltGround()));
-						}})),
+//				new ExtraTile(7, 2, 
+//						new GroundButton(TriggerType.ENEMY_AND_TILE, false, GButton.VEILED, new ArrayList<GCharacter>() {{
+//						}}, new ArrayList<ExtraTile>() {{
+//							add(new ExtraTile(7, 1, new AltWall()));
+//							add(new ExtraTile(8, 1, new AltWall()));
+//							add(new ExtraTile(8, 2, new AltGround()));
+//						}})),
+//				new ExtraTile(8, 2, 
+//						new GroundButton(TriggerType.ENEMY_AND_TILE, false, GButton.VEILED, new ArrayList<GCharacter>() {{
+//						}}, new ArrayList<ExtraTile>() {{
+//							add(new ExtraTile(7, 1, new AltWall()));
+//							add(new ExtraTile(8, 1, new AltWall()));
+//							add(new ExtraTile(7, 2, new AltGround()));
+//						}})),
 		}, new ArrayList<GCharacter>() {{
-			add(new SnakeTank(4, 2));
+			add(new SnakeTank(8, 2));
 		}}, new ArrayList<GPickup>() {{
 		}});
 		
@@ -735,7 +735,7 @@ public class DesertLevels implements Serializable {
 		
 		//------------------- // ROW 4
 		
-		MapLevel d04 = new MapLevel(new int[][] { //TODO
+		MapLevel d04 = new MapLevel(new int[][] {
 			{3, 3, 1, 0, 0, 0, 2, 2, 4, 1},
 			{3, 1, 3, 1, 0, 1, 1, 2, 4, 1},
 			{3, 1, 1, 0, 1, 1, 1, 4, 1, 1},
