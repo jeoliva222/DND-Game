@@ -252,12 +252,18 @@ public class SnakeTank extends GCharacter {
 						// Don't shoot, and increment counter by 1
 						this.attCount += 1;
 					} else if (shouldFire < 5) {
+						// Play sound
+						this.playCannonSound();
+						
 						// Shoot a cannonball, and increment counter by 2
 						this.addProjectile(new SnakeCannonball(this.xPos - 1, this.yPos, -1, 0, this));
 						this.attCount += 2;
 					} else {
 						// Shoot 2 cannonballs (Randomly on higher or lower lane)
 						// Increment counter by 3
+						
+						// Play sound
+						this.playCannonSound();
 						
 						// Shoot one of the two straight ahead
 						this.addProjectile(new SnakeCannonball(this.xPos - 1, this.yPos, -1, 0, this));
@@ -285,12 +291,12 @@ public class SnakeTank extends GCharacter {
 				}
 				
 				break;
-			case SnakeTank.STATE_PREP_CHAINGUN:
-				if(this.attCount == 0) {
+			case SnakeTank.STATE_PREP_CHAINGUN: //---------------------------------------------
+				if(this.attCount <= 1) {
 					// Move, but do nothing yet
 					// Blindly pursue the target (No need for path-finding)
 					DumbFollow.blindPursue(distX, distY, this);
-				} else if(this.attCount == 1) {
+				} else if(this.attCount == 2) {
 					// Don't move, and do nothing
 				} else {
 					// Fire the guns, and then change state TODO
@@ -311,7 +317,7 @@ public class SnakeTank extends GCharacter {
 				// Increment attack counter
 				this.attCount += 1;
 				break;
-			case SnakeTank.STATE_ATT_CHAINGUN:
+			case SnakeTank.STATE_ATT_CHAINGUN: //---------------------------------------------
 				// Check if we're done using the chaingun
 				if(this.attCount >= (this.chaingunMax - 1)) {
 					this.attCount = 0;
@@ -350,6 +356,32 @@ public class SnakeTank extends GCharacter {
 				return;
 		}
 			
+	}
+	
+	// Choose random cannon fire sound to play
+	private void playCannonSound() {
+		// Decide sound to play
+		Random r = new Random();
+		int whichSound = r.nextInt(4);
+		
+		// Play the sound
+		switch(whichSound) {
+			case 0:
+				SoundPlayer.playWAV(GPath.createSoundPath("CannonFire1.wav"));
+				break;
+			case 1:
+				SoundPlayer.playWAV(GPath.createSoundPath("CannonFire2.wav"));
+				break;
+			case 2:
+				SoundPlayer.playWAV(GPath.createSoundPath("CannonFire3.wav"));
+				break;
+			case 3:
+				SoundPlayer.playWAV(GPath.createSoundPath("CannonFire4.wav"));
+				break;
+			default:
+				SoundPlayer.playWAV(GPath.createSoundPath("CannonFire1.wav"));
+				break;
+		}
 	}
 	
 	// Shortening of adding effect for convenience and easy code reading
