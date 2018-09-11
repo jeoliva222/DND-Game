@@ -299,7 +299,7 @@ public class SnakeTank extends GCharacter {
 				} else if(this.attCount == 2) {
 					// Don't move, and do nothing
 				} else {
-					// Fire the guns, and then change state TODO
+					// Fire the guns, and then change state
 					for(int i = 7; i >= 4; i--) {
 						this.addEffect(new DamageIndicator(i, this.yPos));
 						if(plrX == i && plrY == this.yPos) {
@@ -318,13 +318,6 @@ public class SnakeTank extends GCharacter {
 				this.attCount += 1;
 				break;
 			case SnakeTank.STATE_ATT_CHAINGUN: //---------------------------------------------
-				// Check if we're done using the chaingun
-				if(this.attCount >= (this.chaingunMax - 1)) {
-					this.attCount = 0;
-					this.state = SnakeTank.STATE_PURSUE;
-					break;
-				}
-				
 				// If we didn't hit last barrage, move towards player
 				if(!this.hitShots) {
 					DumbFollow.blindPursue(distX, distY, this);
@@ -332,7 +325,15 @@ public class SnakeTank extends GCharacter {
 					this.hitShots = false;
 				}
 				
-				// Fire the guns, and then change state TODO
+				// Check if we're done using the chaingun
+				if(this.attCount >= (this.chaingunMax - 1)) {
+					// Reset attack counter and change state
+					this.attCount = 0;
+					this.state = SnakeTank.STATE_PURSUE;
+					break;
+				}
+				
+				// Continue firing the guns
 				for(int i = 7; i >= 4; i--) {
 					this.addEffect(new DamageIndicator(i, this.yPos));
 					if(plrX == i && plrY == this.yPos) {
