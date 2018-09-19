@@ -120,7 +120,6 @@ public class KingBonBon extends GCharacter {
 	
 	//----------------------------
 	
-	/// TEMP TODO
 	// File paths to images
 	private String imageDir = GPath.createImagePath(GPath.ENEMY, GPath.KINGBONBON);
 	private String bbImage_base = "kingbonbon";
@@ -150,7 +149,6 @@ public class KingBonBon extends GCharacter {
 		return "King Bon Bon";
 	}
 	
-	/// TEMP TODO
 	@Override
 	public String getImage() {
 		String imgPath = this.imageDir + this.bbImage_base;
@@ -273,7 +271,6 @@ public class KingBonBon extends GCharacter {
 		return this.isAlive();
 	}
 	
-	/// LOTS of code needed here! TODO
 	@Override
 	public void takeTurn() {
 		// Fetch reference to the player

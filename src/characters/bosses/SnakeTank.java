@@ -64,14 +64,23 @@ public class SnakeTank extends GCharacter {
 	// so the tank does not move next turn
 	private boolean hitShots = false;
 	
+	// Flag to alternate between chaingun and nuke attack
+	private boolean shouldNuke = false;
+	
+	// Flag marking whether Tank's nuke has blown up yet
+	protected boolean nukeDead = false;
+	
 	// Attack counter for deciding behavior
 	private int attCount = 0;
 	
 	// Determines time spent on cannon phase before switching
-	private final int cannonMax = 40;
+	private final int cannonMax = 10;
 	
 	// Determines time spent on chaingun phase before switching
 	private final int chaingunMax = 2;
+	
+	// Determines time spent prepping the Nuke to fire
+	private final int nukeMax = 3;
 	
 	//----------------------------
 	
@@ -151,8 +160,10 @@ public class SnakeTank extends GCharacter {
 //		return (imgPath + hpPath + statePath + ".png");
 	}
 	
+	// TODO
 	public String getCorpseImage() {
-		return this.stImage_DEAD;
+		//return this.stImage_DEAD; 
+		return GPath.NULL;
 	}
 	
 	public void populateMoveTypes() {
@@ -238,8 +249,16 @@ public class SnakeTank extends GCharacter {
 					// Reset attack counter
 					this.attCount = 0;
 					
-					// Change state
-					this.state = SnakeTank.STATE_PREP_CHAINGUN;
+					// Change state to chaingun or nuke (alternate between)
+					if(this.shouldNuke) {
+						this.state = SnakeTank.STATE_PREP_NUKE;
+					} else {
+						this.state = SnakeTank.STATE_PREP_CHAINGUN;
+					}
+					
+					// Flip Nuke flag
+					this.shouldNuke = !this.shouldNuke;
+					
 					break;
 				}
 				
@@ -346,10 +365,57 @@ public class SnakeTank extends GCharacter {
 				this.attCount += 1;
 				break;
 			case SnakeTank.STATE_PREP_NUKE:
+				// Move to middle of arena if on edges
+				if(this.yPos == 2) {
+					this.moveCharacter(0, 1);
+				} else if (this.yPos == 5) {
+					this.moveCharacter(0, -1);
+				}
+				
+				// Check if we have charged our Nuke long enough
+				if(this.attCount >= this.nukeMax) {
+					// Reset attack counter
+					this.attCount = 0;
+					
+					//If we've charged long enough, then fire the Nuke
+					for(GCharacter npc: EntityManager.getInstance().getNPCManager().getCharacters()) {
+						if(npc != this && npc instanceof SnakeNuke) {
+							// Set was fired to true, and break from 'for' loop
+							SnakeNuke nuke = (SnakeNuke) npc;
+							nuke.wasFired = true;
+							break;
+						}
+					}
+					
+					// Change state and break
+					this.state = SnakeTank.STATE_ATT_NUKE;
+					break;
+				}
+				
+				this.attCount += 1;
 				break;
 			case SnakeTank.STATE_ATT_NUKE:
+				// Swat Nuke to the side if it is coming at us and we've been hit once before
+				
+				// Get reference to the Nuke
+				for(GCharacter npc: EntityManager.getInstance().getNPCManager().getCharacters()) {
+					if(npc != this && npc instanceof SnakeNuke) {
+						// Get Nuke Instance from NPC
+						SnakeNuke nuke = (SnakeNuke) npc;
+						
+						// TODO - Swat the Nuke if next to us and headed in our direction
+					}
+				}
+				
+				// Switch states
+				this.state = SnakeTank.STATE_POST_NUKE;
 				break;
 			case SnakeTank.STATE_POST_NUKE:
+				// If our nuke is dead, then switch back to pursue state
+				if(this.nukeDead) {
+					this.nukeDead = false;
+					this.state = SnakeTank.STATE_PURSUE;
+				}
 				break;
 			default:
 				System.out.println(this.getName() +
