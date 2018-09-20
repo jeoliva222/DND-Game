@@ -1,19 +1,14 @@
 package characters.bosses;
 
-import java.awt.Dimension;
 import java.util.Random;
 
 import ai.DumbFollow;
-import ai.IdleController;
-import ai.LineDrawer;
-import ai.PathFinder;
 import ai.PatrolPattern;
 import characters.GCharacter;
 import characters.Player;
 import effects.DamageIndicator;
 import effects.GEffect;
 import gui.GameScreen;
-import gui.InfoScreen;
 import helpers.GPath;
 import helpers.SoundPlayer;
 import managers.EntityManager;
@@ -76,8 +71,14 @@ public class SnakeTank extends GCharacter {
 	// Attack counter for deciding behavior
 	private int attCount = 0;
 	
+	// Times nuke has been sent over to player without them deflecting successfully
+	private int nukeMissCount = 0;
+	
+	// Maximum count that nukeMissCount can achieve
+	private final int nukeMissMax = 3;
+	
 	// Determines time spent on cannon phase before switching
-	private final int cannonMax = 10;
+	private final int cannonMax = 40;
 	
 	// Determines time spent on chaingun phase before switching
 	private final int chaingunMax = 2;
@@ -185,8 +186,11 @@ public class SnakeTank extends GCharacter {
 	}
 	
 	// Override that triggers Tank to deflect next redirected Nuke
+	// Also tells tank to do chaingun as next attack
 	@Override
 	public boolean damageCharacter(int damage) {
+		this.nukeMissCount = 0;
+		this.shouldNuke = false;
 		if(damage > 0) this.willDeflect = true;
 		return super.damageCharacter(damage);
 	}
@@ -255,7 +259,7 @@ public class SnakeTank extends GCharacter {
 				DumbFollow.blindPursue(distX, distY, dx, dy, this);
 				
 				// If we're done firing our cannon, switch to another phase
-				if(this.attCount >= this.cannonMax) {
+				if(this.attCount >= (this.cannonMax / (this.nukeMissCount + 1))) {
 					// Reset attack counter
 					this.attCount = 0;
 					
@@ -266,8 +270,8 @@ public class SnakeTank extends GCharacter {
 						this.state = SnakeTank.STATE_PREP_CHAINGUN;
 					}
 					
-					// Flip Nuke flag
-					this.shouldNuke = !this.shouldNuke;
+					// Set flag to do Nuke attack next time
+					this.shouldNuke = true;
 					
 					break;
 				}
@@ -395,6 +399,11 @@ public class SnakeTank extends GCharacter {
 							nuke.wasFired = true;
 							break;
 						}
+					}
+					
+					// Set that we've fired one nuke
+					if(this.nukeMissCount < this.nukeMissMax) {
+						this.nukeMissCount += 1;
 					}
 					
 					// Change state and break
