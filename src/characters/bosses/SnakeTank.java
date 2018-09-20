@@ -13,6 +13,7 @@ import characters.Player;
 import effects.DamageIndicator;
 import effects.GEffect;
 import gui.GameScreen;
+import gui.InfoScreen;
 import helpers.GPath;
 import helpers.SoundPlayer;
 import managers.EntityManager;
@@ -50,7 +51,6 @@ public class SnakeTank extends GCharacter {
 	private static final int STATE_ATT_CHAINGUN = 4;
 	private static final int STATE_PREP_NUKE = 5;
 	private static final int STATE_ATT_NUKE = 6;
-	private static final int STATE_POST_NUKE = 7;
 	
 	//----------------------------
 	
@@ -69,6 +69,9 @@ public class SnakeTank extends GCharacter {
 	
 	// Flag marking whether Tank's nuke has blown up yet
 	protected boolean nukeDead = false;
+	
+	// Flag indicating whether we've been damaged by the Nuke and will try to deflect it next time
+	private boolean willDeflect = false;
 	
 	// Attack counter for deciding behavior
 	private int attCount = 0;
@@ -179,6 +182,13 @@ public class SnakeTank extends GCharacter {
 	@Override
 	public void onDeath() {
 		SoundPlayer.playWAV(GPath.createSoundPath("Beanpole_DEATH.wav"));
+	}
+	
+	// Override that triggers Tank to deflect next redirected Nuke
+	@Override
+	public boolean damageCharacter(int damage) {
+		if(damage > 0) this.willDeflect = true;
+		return super.damageCharacter(damage);
 	}
 
 	@Override
@@ -364,7 +374,7 @@ public class SnakeTank extends GCharacter {
 				// Increment attack counter
 				this.attCount += 1;
 				break;
-			case SnakeTank.STATE_PREP_NUKE:
+			case SnakeTank.STATE_PREP_NUKE: //---------------------------------------------
 				// Move to middle of arena if on edges
 				if(this.yPos == 2) {
 					this.moveCharacter(0, 1);
@@ -394,7 +404,7 @@ public class SnakeTank extends GCharacter {
 				
 				this.attCount += 1;
 				break;
-			case SnakeTank.STATE_ATT_NUKE:
+			case SnakeTank.STATE_ATT_NUKE: //---------------------------------------------
 				// Swat Nuke to the side if it is coming at us and we've been hit once before
 				
 				// Get reference to the Nuke
@@ -403,21 +413,29 @@ public class SnakeTank extends GCharacter {
 						// Get Nuke Instance from NPC
 						SnakeNuke nuke = (SnakeNuke) npc;
 						
-						// TODO - Swat the Nuke if next to us and headed in our direction
+						// Swat the Nuke if next to us and headed in our direction
+						if(this.willDeflect && nuke.getXPos() == (this.xPos - 1) && 
+								nuke.getYPos() == this.yPos && nuke.xSpeed == 1) {
+							if(this.yPos >= 4) {
+								nuke.setDirection(0, -1);
+							} else {
+								nuke.setDirection(0, 1);
+							}
+						}
 					}
 				}
 				
-				// Switch states
-				this.state = SnakeTank.STATE_POST_NUKE;
-				break;
-			case SnakeTank.STATE_POST_NUKE:
-				// If our nuke is dead, then switch back to pursue state
+				// If our nuke is dead, then reset flags and switch back to pursue state
 				if(this.nukeDead) {
 					this.nukeDead = false;
+					this.attCount = 0;
 					this.state = SnakeTank.STATE_PURSUE;
+					break;
 				}
+				
+				this.attCount += 1;
 				break;
-			default:
+			default: //---------------------------------------------
 				System.out.println(this.getName() +
 						" couldn't take its turn. State = " + Integer.toString(this.state));
 				return;

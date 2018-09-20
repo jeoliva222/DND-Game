@@ -46,8 +46,8 @@ public class SnakeNuke extends GCharacter {
 	private final int yHide = 0;
 	
 	// X and Y directional speeds
-	private int xSpeed = 0;
-	private int ySpeed = 0;
+	protected int xSpeed = 0;
+	protected int ySpeed = 0;
 	
 	// Flag determining if Nuke was fired from SnakeTank
 	protected boolean wasFired = false;
