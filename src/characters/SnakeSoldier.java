@@ -136,13 +136,13 @@ public class SnakeSoldier extends GCharacter {
 			statePath = "_ATT_SWIPE";
 			break;
 		case SnakeSoldier.STATE_PREP_SLAM:
-			statePath = "_ALERT";
+			statePath = "_PREP_SLAM";
 			break;
 		case SnakeSoldier.STATE_MID_SLAM:
-			statePath = "_PREP_SWIPE";
+			statePath = "_MID_SLAM";
 			break;
 		case SnakeSoldier.STATE_ATT_SLAM:
-			statePath = "_ATT_SWIPE";
+			statePath = "_ATT_SLAM";
 			break;
 		default:
 			System.out.println
