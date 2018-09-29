@@ -14,6 +14,7 @@ import effects.FireEffect;
 import effects.FloodEffect;
 import effects.GEffect;
 import effects.RubbleEffect;
+import effects.SmallFireEffect;
 import effects.ThunderEffect;
 import effects.WarningIndicator;
 import gui.GameScreen;
@@ -178,7 +179,7 @@ public class KingBonBon extends GCharacter {
 				statePath = "_PREP_STAB";
 				break;
 			case KingBonBon.STATE_ATT_STAB:
-				statePath = "_ALERT";
+				statePath = "_ALERT_ALT";
 				break;
 			case KingBonBon.STATE_PREP_SWIPE:
 				if(this.attCount < 1) {
@@ -188,10 +189,10 @@ public class KingBonBon extends GCharacter {
 				}
 				break;
 			case KingBonBon.STATE_ATT_SWIPE:
-				statePath = "_ATT_SWING";
+				statePath = "_ATT_SWING_ALT";
 				break;
 			case KingBonBon.STATE_PREP_SLAM:
-				if(this.attCount <= 1) {
+				if(this.attCount <= 2) {
 					statePath = "_PREP_SLAM";
 				} else {
 					statePath = "_ATT_SLAM";
@@ -396,6 +397,10 @@ public class KingBonBon extends GCharacter {
 					if(whichAttack < 6) {
 						this.state = KingBonBon.STATE_PREP_STAB;
 					} else if(whichAttack < 12) {
+						// Add swipe warning effects
+						this.addEffect(new SmallFireEffect(this.xPos + this.xMarkDir, this.yPos + this.yMarkDir));
+						this.addEffect(new SmallFireEffect(this.xPos + this.xMarkDir + Math.abs(this.yMarkDir), this.yPos + this.yMarkDir + Math.abs(this.xMarkDir)));
+						this.addEffect(new SmallFireEffect(this.xPos + this.xMarkDir - Math.abs(this.yMarkDir), this.yPos + this.yMarkDir - Math.abs(this.xMarkDir)));
 						this.state = KingBonBon.STATE_PREP_SWIPE;
 					} else {
 						this.state = KingBonBon.STATE_PREP_SLAM;
@@ -452,6 +457,12 @@ public class KingBonBon extends GCharacter {
 						// Attempt only 1/5 of the time.
 						this.xMarkDir = dx;
 						this.yMarkDir = dy;
+						
+						// Add swipe warning effects
+						this.addEffect(new SmallFireEffect(this.xPos + this.xMarkDir, this.yPos + this.yMarkDir));
+						this.addEffect(new SmallFireEffect(this.xPos + this.xMarkDir + Math.abs(this.yMarkDir), this.yPos + this.yMarkDir + Math.abs(this.xMarkDir)));
+						this.addEffect(new SmallFireEffect(this.xPos + this.xMarkDir - Math.abs(this.yMarkDir), this.yPos + this.yMarkDir - Math.abs(this.xMarkDir)));
+						
 						this.state = KingBonBon.STATE_PREP_SWIPE;
 					}  else if((shouldAttack < 7) && (((Math.abs(distX) <= 2) && (Math.abs(distY) == 0)) ||
 							((Math.abs(distX) == 0) && (Math.abs(distY) <= 2)))) {
@@ -545,10 +556,18 @@ public class KingBonBon extends GCharacter {
 						}
 					}
 					
+					// Add second swipe warning effects
+					this.addEffect(new SmallFireEffect(this.xPos + (this.xMarkDir*2), this.yPos + (this.yMarkDir*2)));
+					this.addEffect(new SmallFireEffect(this.xPos + (this.xMarkDir*2) + Math.abs(this.yMarkDir),
+							this.yPos + (this.yMarkDir*2) + Math.abs(this.xMarkDir)));
+					this.addEffect(new SmallFireEffect(this.xPos + (this.xMarkDir*2) - Math.abs(this.yMarkDir),
+							this.yPos + (this.yMarkDir*2) - Math.abs(this.xMarkDir)));
+					
 					// Increase attack counter
 					this.attCount += 1;
 				} else {
 					// Use direction from player to mark squares
+					SoundPlayer.playWAV(GPath.createSoundPath("fire_ATT.wav"));
 					if(Math.abs(this.xMarkDir) > Math.abs(this.yMarkDir)) {
 						// Player to left/right
 						this.addEffect(new FireEffect(this.xPos + (this.xMarkDir*2), this.yPos));
@@ -587,7 +606,7 @@ public class KingBonBon extends GCharacter {
 				this.attCount += 1;
 				
 				// Prepare for the slam
-				if(this.attCount <= 2) {
+				if(this.attCount <= 3) {
 					// Do nothing if still prepping
 				} else {
 					// Slam the ground, marking it up
