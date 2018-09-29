@@ -65,7 +65,7 @@ public class SnakeCommander extends GCharacter {
 	private String imageDir = GPath.createImagePath(GPath.ENEMY, GPath.SNAKE_COMMANDER);
 	private String scImage_base = "snakecommander";
 	
-	private String scImage_DEAD = GPath.createImagePath(GPath.ENEMY, GPath.BWARRIOR, "bunnywarrior_dead.png");
+	private String scImage_DEAD = GPath.createImagePath(GPath.ENEMY, GPath.SNAKE_COMMANDER, "snakecommander_dead.png");
 
 	// Constructors
 	public SnakeCommander(int startX, int startY) {
@@ -152,13 +152,13 @@ public class SnakeCommander extends GCharacter {
 			}
 			break;
 		case SnakeCommander.STATE_PREP_SLAM:
-			statePath = "_ALERT";
+			statePath = "_PREP_SLAM";
 			break;
 		case SnakeCommander.STATE_MID_SLAM:
-			statePath = "_PREP_SWIPE";
+			statePath = "_MID_SLAM";
 			break;
 		case SnakeCommander.STATE_ATT_SLAM:
-			statePath = "_ATT_SWIPE";
+			statePath = "_ATT_SLAM";
 			break;
 		case SnakeCommander.STATE_PREP_FIRE:
 			statePath = "_PREP_FIRE";
