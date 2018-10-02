@@ -420,7 +420,7 @@ public class SandWurm extends GCharacter {
 
 	}
 	
-	private boolean warpWurm(int plrX, int plrY) {
+	private boolean warpWurm(int destX, int destY) {
 		// Initialize list of populated coordinates
 		ArrayList<Dimension> badCoords = new ArrayList<Dimension>();
 		
@@ -434,10 +434,10 @@ public class SandWurm extends GCharacter {
 		
 		// Initialize potential warp coordinates
 		Dimension[] warpSpots = new Dimension[] {
-				new Dimension(plrX + (3 + r.nextInt(2)), plrY),
-				new Dimension(plrX - (3 + r.nextInt(2)), plrY),
-				new Dimension(plrX, plrY + (3 + r.nextInt(2))),
-				new Dimension(plrX, plrY - (3 + r.nextInt(2)))
+				new Dimension(destX + (3 + r.nextInt(2)), destY),
+				new Dimension(destX - (3 + r.nextInt(2)), destY),
+				new Dimension(destX, destY + (3 + r.nextInt(2))),
+				new Dimension(destX, destY - (3 + r.nextInt(2)))
 		};
 		
 		// Shuffle the potential warp coordinates
@@ -458,6 +458,19 @@ public class SandWurm extends GCharacter {
 			int newX = coord.width;
 			int newY = coord.height;
 			
+			// Check for collisions with other NPCs
+			boolean collisionFlag = false;
+			for(Dimension dim: badCoords) {
+				if((newX) == dim.width && (newY) == dim.height) {
+					// If we collided with an NPC's position, set a collision flag
+					collisionFlag = true;
+					break;
+				}
+			}
+			
+			// If we collided with another NPC, then don't move to this spot
+			if(collisionFlag) continue;
+			
 			// Then check for barriers, out-of-bounds, and immovable spaces
 			TileType tt;
 			try {
@@ -471,17 +484,6 @@ public class SandWurm extends GCharacter {
 			if(!(tt instanceof Ground)) {
 				continue;
 			}
-			
-			// Check for collisions with other NPCs
-			boolean collisionFlag = false;
-			for(GCharacter npc : EntityManager.getInstance().getNPCManager().getCharacters()) {
-				if((newX) == npc.xPos && (newY) == npc.yPos) {
-					collisionFlag = true;
-				}
-			}
-			
-			// If we collided with another NPC, then don't move to this spot
-			if(collisionFlag) continue;
 			
 			// Finally, check for collision with the player
 			Player player = EntityManager.getInstance().getPlayer();
