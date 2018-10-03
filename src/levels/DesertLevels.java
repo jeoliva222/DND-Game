@@ -26,6 +26,7 @@ import characters.bosses.SnakeTank;
 import helpers.GPath;
 import items.GKey;
 import items.GPickup;
+import items.LargeHealthPotion;
 import items.MediumHealthPotion;
 import items.SmallHealthPotion;
 import items.SmallMaxPotion;
@@ -37,6 +38,7 @@ import tiles.Ground;
 import tiles.GroundButton;
 import tiles.KeyDoor;
 import tiles.TriggerType;
+import tiles.WaterButton;
 import weapons.Armory;
 
 // Contains definitions of all the Poacher's Desert levels
@@ -874,9 +876,10 @@ public class DesertLevels implements Serializable {
 							add(new ExtraTile(5, 5, new AltGround()));
 						}})),
 		}, new ArrayList<GCharacter>() {{
-			add(new SnakeCommander(7, 7, PatrolPattern.STATIONARY));
+			add(new SnakeSoldier(7, 7, PatrolPattern.STATIONARY));
 			add(new SnakeSoldier(7, 8, PatrolPattern.STATIONARY));
 		}}, new ArrayList<GPickup>() {{
+			add(new GPickup(7, 8, new SmallHealthPotion()));
 		}});
 		
 		//-------------------
@@ -962,6 +965,7 @@ public class DesertLevels implements Serializable {
 			{1, 1, 1, 1, 3, 2, 2, 4, 4, 4}
 		}, new ExtraTile[] {
 		}, new ArrayList<GCharacter>() {{
+			add(new SnakeSoldier(4, 7, PatrolPattern.SURFACE_CW));
 			add(new Cactian(5, 4));
 			add(new Cactian(7, 5));
 			add(new BreakableWall(8, 8));
@@ -1053,25 +1057,44 @@ public class DesertLevels implements Serializable {
 		
 		//-------------------
 		
-		MapLevel d45 = new MapLevel(new int[][] {
+		MapLevel d45 = new MapLevel(new int[][] { // TODO
 			{4, 0, 0, 4, 4, 4, 4, 4, 4, 1},
 			{4, 0, 4, 0, 4, 0, 0, 0, 4, 1},
 			{4, 0, 0, 0, 0, 0, 0, 0, 4, 1},
 			{4, 0, 0, 0, 0, 0, 0, 0, 4, 1},
-			{4, 5, 5, 5, 5, 5, 5, 0, 4, 1},
+			{4, 5, 5, 5, 5, 5, 5, 5, 4, 1},
 			{4, 0, 0, 0, 0, 0, 0, 0, 4, 4},
 			{4, 0, 0, 0, 0, 0, 0, 0, 4, 4},
 			{4, 0, 0, 0, 0, 0, 0, 0, 4, 4},
 			{4, 0, 4, 4, 4, 4, 4, 4, 4, 4},
 			{4, 0, 4, 1, 1, 1, 1, 0, 4, 4}
 		}, new ExtraTile[] {
+				new ExtraTile(1, 7, 
+						new GroundButton(TriggerType.ENEMY_AND_TILE, false, GButton.VEILED, new ArrayList<GCharacter>() {{
+						}}, new ArrayList<ExtraTile>() {{
+							add(new ExtraTile(1, 8, new AltWall()));
+						}})),
 				new ExtraTile(3, 1, 
 						new GroundButton(TriggerType.ENEMY_AND_TILE, false, GButton.VISIBLE, new ArrayList<GCharacter>() {{
 						}}, new ArrayList<ExtraTile>() {{
 							add(new ExtraTile(7, 8, new AltGround()));
+						}})),
+				new ExtraTile(7, 6, 
+						new GroundButton(TriggerType.ENEMY_AND_TILE, false, GButton.VISIBLE, new ArrayList<GCharacter>() {{
+						}}, new ArrayList<ExtraTile>() {{
+							add(new ExtraTile(1, 6, 
+									new GroundButton(TriggerType.ENEMY_AND_TILE, false, GButton.VISIBLE, new ArrayList<GCharacter>() {{
+									}}, new ArrayList<ExtraTile>() {{
+										add(new ExtraTile(1, 8, new AltGround()));
+										add(new ExtraTile(7, 4, new AltGround()));
+									}})));
 						}}))
 		}, new ArrayList<GCharacter>() {{
-			add(new BreakableWall(3, 1));
+			add(new BreakableWall(3, 1, 20));
+			add(new Cactian(3, 6));
+			add(new Cactian(5, 1));
+			add(new Cactian(6, 1));
+			add(new Cactian(7, 1));
 		}}, new ArrayList<GPickup>() {{
 		}});
 		
@@ -1082,14 +1105,19 @@ public class DesertLevels implements Serializable {
 			{1, 1, 1, 1, 1, 2, 1, 1, 2, 2},
 			{1, 1, 1, 1, 2, 2, 1, 2, 2, 2},
 			{1, 1, 1, 1, 1, 2, 2, 2, 2, 2},
-			{1, 1, 1, 1, 1, 3, 2, 2, 2, 2},
+			{1, 1, 1, 1, 1, 1, 2, 2, 2, 2},
 			{4, 1, 1, 2, 2, 2, 2, 2, 2, 2},
 			{4, 4, 1, 1, 2, 2, 2, 1, 2, 2},
-			{4, 4, 0, 1, 1, 2, 2, 1, 3, 2},
+			{4, 4, 0, 1, 1, 2, 2, 1, 1, 2},
 			{4, 4, 0, 2, 2, 2, 2, 2, 2, 2},
 			{4, 4, 0, 0, 2, 2, 2, 2, 2, 2}
 		}, new ExtraTile[] {
 		}, new ArrayList<GCharacter>() {{
+			add(new EliteBitester(6, 6));
+			add(new EliteBitester(8, 3));
+			add(new EliteBitester(7, 8));
+			add(new Cactian(5, 4));
+			add(new Cactian(7, 7));
 		}}, new ArrayList<GPickup>() {{
 		}});
 		
@@ -1100,7 +1128,7 @@ public class DesertLevels implements Serializable {
 			{2, 1, 2, 1, 2, 1, 1, 1, 3, 3},
 			{2, 2, 2, 2, 2, 2, 1, 3, 2, 3},
 			{2, 2, 2, 2, 2, 2, 2, 2, 2, 3},
-			{2, 2, 2, 2, 2, 2, 2, 1, 3, 3},
+			{2, 2, 2, 2, 2, 2, 2, 1, 1, 3},
 			{2, 2, 2, 2, 1, 2, 2, 2, 1, 3},
 			{2, 2, 2, 1, 1, 2, 2, 2, 2, 3},
 			{2, 2, 2, 2, 2, 2, 2, 2, 2, 3},
@@ -1108,7 +1136,13 @@ public class DesertLevels implements Serializable {
 			{2, 2, 2, 2, 2, 2, 2, 2, 2, 3}
 		}, new ExtraTile[] {
 		}, new ArrayList<GCharacter>() {{
+			add(new EliteBitester(5, 8, PatrolPattern.SURFACE_CCW));
+			add(new EliteBitester(3, 7, PatrolPattern.SURFACE_CW));
+			add(new EliteBitester(2, 3));
+			add(new Cactian(8, 4));
 		}}, new ArrayList<GPickup>() {{
+			add(new GPickup(4, 6, new SmallHealthPotion()));
+			add(new GPickup(8, 2, new SmallHealthPotion()));
 		}});
 		
 		//------------------- // ROW 6
@@ -1165,25 +1199,42 @@ public class DesertLevels implements Serializable {
 			{3, 3, 3, 3, 3, 3, 3, 3, 3, 3}
 		}, new ExtraTile[] {
 		}, new ArrayList<GCharacter>() {{
+			add(new SandBeep(8, 5));
+			add(new SnakeCommander(5, 4, PatrolPattern.SURFACE_CW));
+			add(new Cactian(6, 8));
 		}}, new ArrayList<GPickup>() {{
+			add(new GPickup(5, 8, new SmallHealthPotion()));
 		}});
 		
 		//-------------------
 		
 		MapLevel d36 = new MapLevel(new int[][] {
 			{4, 0, 4, 4, 4, 4, 4, 4, 0, 4},
-			{0, 0, 4, 4, 4, 4, 4, 4, 0, 0},
-			{4, 4, 4, 1, 1, 1, 1, 4, 4, 4},
-			{4, 4, 1, 1, 1, 1, 1, 1, 4, 4},
-			{4, 1, 1, 1, 1, 1, 1, 1, 1, 4},
-			{1, 1, 1, 1, 1, 3, 1, 1, 3, 1},
-			{1, 1, 1, 1, 1, 1, 3, 3, 1, 3},
+			{0, 0, 4, 4, 0, 0, 4, 4, 0, 0},
+			{4, 4, 4, 0, 4, 4, 0, 4, 4, 4},
+			{4, 4, 1, 1, 1, 1, 1, 2, 4, 4},
+			{4, 1, 1, 1, 1, 1, 1, 2, 2, 4},
+			{1, 1, 1, 1, 1, 3, 2, 2, 3, 1},
+			{1, 1, 1, 1, 1, 2, 3, 3, 1, 3},
 			{1, 1, 1, 1, 1, 1, 3, 1, 1, 1},
 			{3, 1, 1, 1, 3, 1, 1, 1, 3, 1},
 			{3, 3, 3, 3, 3, 3, 3, 3, 3, 3}
 		}, new ExtraTile[] {
+				new ExtraTile(8, 4, 
+						new WaterButton(TriggerType.ENEMY_AND_TILE, false, GButton.VEILED, new ArrayList<GCharacter>() {{
+						}}, new ArrayList<ExtraTile>() {{
+							add(new ExtraTile(4, 2, new AltGround()));
+							add(new ExtraTile(5, 2, new AltGround()));
+						}}))
 		}, new ArrayList<GCharacter>() {{
+			add(new BreakableWall(4, 1));
+			add(new BreakableWall(5, 1));
+			add(new SandBeep(7, 7));
+			add(new SnakeSoldier(3, 2, PatrolPattern.STATIONARY));
+			add(new SnakeSoldier(6, 2, PatrolPattern.STATIONARY));
 		}}, new ArrayList<GPickup>() {{
+			add(new GPickup(4, 1, new SmallHealthPotion()));
+			add(new GPickup(5, 1, new SmallMaxPotion()));
 		}});
 		
 		//-------------------
@@ -1203,6 +1254,7 @@ public class DesertLevels implements Serializable {
 		}, new ArrayList<GCharacter>() {{
 		}}, new ArrayList<GPickup>() {{
 			add(new GPickup(1, 6, Armory.spineShiv));
+			add(new GPickup(8, 7, new LargeHealthPotion()));
 		}});
 		
 		//-------------------
@@ -1221,8 +1273,13 @@ public class DesertLevels implements Serializable {
 		}, new ExtraTile[] {
 				new ExtraTile(1, 6, new KeyDoor(KeyDoor.COMMANDER))
 		}, new ArrayList<GCharacter>() {{
+			add(new SnakeCommander(2, 4, PatrolPattern.SURFACE_CW));
+			add(new EliteBitester(5, 3, PatrolPattern.SURFACE_CCW));
+			add(new EliteBitester(8, 7));
 		}}, new ArrayList<GPickup>() {{
 			add(new GPickup(3, 8, Armory.ceremonialSpear));
+			add(new GPickup(2, 7, new MediumHealthPotion()));
+			add(new GPickup(2, 8, new SmallMaxPotion()));
 		}});
 		
 		//-------------------
@@ -1236,10 +1293,15 @@ public class DesertLevels implements Serializable {
 			{1, 2, 2, 2, 2, 2, 2, 2, 2, 3},
 			{2, 2, 2, 2, 2, 2, 2, 1, 3, 3},
 			{2, 2, 2, 1, 2, 2, 1, 1, 1, 3},
-			{2, 2, 1, 3, 2, 2, 1, 3, 3, 3},
+			{2, 2, 1, 3, 2, 2, 1, 3, 1, 3},
 			{3, 3, 3, 3, 3, 3, 3, 3, 3, 3}
 		}, new ExtraTile[] {
 		}, new ArrayList<GCharacter>() {{
+			add(new EliteBitester(6, 4, PatrolPattern.SURFACE_CCW));
+			add(new EliteBitester(4, 3));
+			add(new Bitester(1, 8));
+			add(new SandBeep(3, 7));
+			add(new Cactian(8, 8));
 		}}, new ArrayList<GPickup>() {{
 			add(new GPickup(8, 7, new GKey(KeyDoor.BLUE)));
 		}});
