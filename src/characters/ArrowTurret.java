@@ -171,6 +171,10 @@ public class ArrowTurret extends GCharacter {
 	public void onDeath() {
 		// Doesn't die, so nothing
 	}
-
+	
+	// Makes the turret stop shooting
+	public void setInactive() {
+		this.state = ArrowTurret.STATE_INACTIVE;
+	}
 
 }

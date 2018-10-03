@@ -4,6 +4,7 @@ import java.util.Random;
 
 import ai.DumbFollow;
 import ai.PatrolPattern;
+import characters.ArrowTurret;
 import characters.GCharacter;
 import characters.Player;
 import effects.DamageIndicator;
@@ -14,6 +15,7 @@ import helpers.SoundPlayer;
 import managers.EntityManager;
 import projectiles.GProjectile;
 import projectiles.SnakeCannonball;
+import tiles.AltGround;
 import tiles.AltWall;
 import tiles.MovableType;
 
@@ -78,7 +80,7 @@ public class SnakeTank extends GCharacter {
 	private final int nukeMissMax = 3;
 	
 	// Determines time spent on cannon phase before switching
-	private final int cannonMax = 40;
+	private final int cannonMax = 10;
 	
 	// Determines time spent on chaingun phase before switching
 	private final int chaingunMax = 2;
@@ -183,6 +185,16 @@ public class SnakeTank extends GCharacter {
 	@Override
 	public void onDeath() {
 		SoundPlayer.playWAV(GPath.createSoundPath("Beanpole_DEATH.wav"));
+		
+		// Close the pits in the arena
+		for(int x = 6; x < 8; x++) {
+			for(int y = 2; y < 6; y++) {
+				GameScreen.getTile(x, y).setTileType(new AltGround());
+			}
+		}
+		
+		// Spawn General Hanz (Enter 2nd form)
+		EntityManager.getInstance().getNPCManager().addCharacter(new SnakeGeneral(this.xPos, this.yPos));
 	}
 	
 	// Override that triggers Tank to deflect next redirected Nuke
@@ -227,6 +239,15 @@ public class SnakeTank extends GCharacter {
 					
 					// Change music to Boss music
 					SoundPlayer.changeMidi(GPath.createSoundPath("d_e3m8.mid"));
+					
+					// Turn off the arrow turrets on the same screen
+					for(GCharacter npc: EntityManager.getInstance().getNPCManager().getCharacters()) {
+						if(npc != this && npc instanceof ArrowTurret) {
+							// Set was fired to true, and break from 'for' loop
+							ArrowTurret turret = (ArrowTurret) npc;
+							turret.setInactive();
+						}
+					}
 					
 					// Change state to alerted
 					this.state = SnakeTank.STATE_ALERTED;

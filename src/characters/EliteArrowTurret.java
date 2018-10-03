@@ -149,4 +149,9 @@ public class EliteArrowTurret extends ArrowTurret {
 		}
 	}
 	
+	// Makes the turret stop shooting
+	public void setInactive() {
+		this.state = EliteArrowTurret.STATE_INACTIVE;
+	}
+	
 }

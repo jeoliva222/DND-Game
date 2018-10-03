@@ -552,21 +552,7 @@ public class DesertLevels implements Serializable {
 						}}, new ArrayList<ExtraTile>() {{
 							add(new ExtraTile(3, 7, new AltGround()));
 							add(new ExtraTile(0, 7, new AltGround()));
-						}})),
-//				new ExtraTile(7, 2, 
-//						new GroundButton(TriggerType.ENEMY_AND_TILE, false, GButton.VEILED, new ArrayList<GCharacter>() {{
-//						}}, new ArrayList<ExtraTile>() {{
-//							add(new ExtraTile(7, 1, new AltWall()));
-//							add(new ExtraTile(8, 1, new AltWall()));
-//							add(new ExtraTile(8, 2, new AltGround()));
-//						}})),
-//				new ExtraTile(8, 2, 
-//						new GroundButton(TriggerType.ENEMY_AND_TILE, false, GButton.VEILED, new ArrayList<GCharacter>() {{
-//						}}, new ArrayList<ExtraTile>() {{
-//							add(new ExtraTile(7, 1, new AltWall()));
-//							add(new ExtraTile(8, 1, new AltWall()));
-//							add(new ExtraTile(7, 2, new AltGround()));
-//						}})),
+						}}))
 		}, new ArrayList<GCharacter>() {{
 			add(new SnakeTank(8, 2));
 			add(new SnakeNuke(8, 0));

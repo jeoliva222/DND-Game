@@ -1,4 +1,4 @@
-package characters;
+package characters.bosses;
 
 import java.awt.Dimension;
 import java.util.Random;
@@ -8,29 +8,35 @@ import ai.IdleController;
 import ai.LineDrawer;
 import ai.PathFinder;
 import ai.PatrolPattern;
+import characters.GCharacter;
+import characters.Player;
 import effects.DamageIndicator;
 import effects.FireEffect;
+import gui.GameScreen;
+import gui.LogScreen;
 import helpers.GPath;
 import helpers.SoundPlayer;
 import managers.EntityManager;
+import tiles.AltGround;
 import tiles.MovableType;
 
-public class SnakeCommander extends GCharacter {
+// Class representing the 2nd Phase of the Desert area boss
+public class SnakeGeneral extends GCharacter {
 
 	// Serialization ID
-	private static final long serialVersionUID = -1866293970157816628L;
-
+	private static final long serialVersionUID = 4882048520306329195L;
+	
 	// Modifiers/Statistics
+
+	private int MAX_HP = 50;
 	
-	private int MAX_HP = 13;
+	private int ARMOR_VAL = 0;
 	
-	private int ARMOR_VAL = 1;
+	private int MIN_DMG = 4;
+	private int MAX_DMG = 7;
 	
-	private int MIN_DMG = 3;
-	private int MAX_DMG = 5;
-	
-	private double CRIT_CHANCE = 0.15;
-	private double CRIT_MULT = 1.2;
+	private double CRIT_CHANCE = 0.1;
+	private double CRIT_MULT = 1.3;
 	
 	//----------------------------
 	
@@ -63,12 +69,12 @@ public class SnakeCommander extends GCharacter {
 	
 	// File paths to images
 	private String imageDir = GPath.createImagePath(GPath.ENEMY, GPath.SNAKE_COMMANDER);
-	private String scImage_base = "snakecommander";
+	private String sgImage_base = "snakecommander";
 	
-	private String scImage_DEAD = GPath.createImagePath(GPath.ENEMY, GPath.SNAKE_COMMANDER, "snakecommander_dead.png");
+	private String sgImage_DEAD = GPath.createImagePath(GPath.ENEMY, GPath.SNAKE_COMMANDER, "snakecommander_dead.png");
 
 	// Constructors
-	public SnakeCommander(int startX, int startY) {
+	public SnakeGeneral(int startX, int startY) {
 		super(startX, startY);
 		
 		this.maxHP = MAX_HP;
@@ -82,40 +88,20 @@ public class SnakeCommander extends GCharacter {
 		this.critChance = CRIT_CHANCE;
 		this.critMult = CRIT_MULT;
 		
-		this.state = SnakeCommander.STATE_IDLE;
-		this.patrolPattern = PatrolPattern.PATROL;
-		
-		this.imagePath = this.getImage();
-	}
-	
-	public SnakeCommander(int startX, int startY, PatrolPattern patpat) {
-		super(startX, startY);
-		
-		this.maxHP = MAX_HP;
-		this.currentHP = this.maxHP;
-		
-		this.armor = ARMOR_VAL;
-		
-		this.minDmg = MIN_DMG;
-		this.maxDmg = MAX_DMG;
-		
-		this.critChance = CRIT_CHANCE;
-		this.critMult = CRIT_MULT;
-		
-		this.state = SnakeCommander.STATE_IDLE;
-		this.patrolPattern = patpat;
+		this.state = SnakeGeneral.STATE_IDLE;
+		this.patrolPattern = PatrolPattern.STATIONARY;
 		
 		this.imagePath = this.getImage();
 	}
 	
 	public String getName() {
-		return "Snake Commander";
+		return "General Hanz";
 	}
 	
 	// TODO
 	@Override
 	public String getImage() {
-		String imgPath = this.imageDir + this.scImage_base;
+		String imgPath = this.imageDir + this.sgImage_base;
 		String hpPath = "";
 		String statePath = "";
 		
@@ -128,42 +114,42 @@ public class SnakeCommander extends GCharacter {
 		}
 		
 		switch(this.state) {
-		case SnakeCommander.STATE_IDLE:
-		case SnakeCommander.STATE_PURSUE:
+		case SnakeGeneral.STATE_IDLE:
+		case SnakeGeneral.STATE_PURSUE:
 			// No extra path
 			break;
-		case SnakeCommander.STATE_ALERTED:
+		case SnakeGeneral.STATE_ALERTED:
 			statePath = "_ALERT";
 			break;
-		case SnakeCommander.STATE_PREP_BITE:
+		case SnakeGeneral.STATE_PREP_BITE:
 			statePath = "_PREP_BITE";
 			break;
-		case SnakeCommander.STATE_ATT_BITE:
+		case SnakeGeneral.STATE_ATT_BITE:
 			statePath = "_ATT_BITE";
 			break;
-		case SnakeCommander.STATE_PREP_SWIPE:
+		case SnakeGeneral.STATE_PREP_SWIPE:
 			statePath = "_PREP_SWIPE";
 			break;
-		case SnakeCommander.STATE_ATT_SWIPE:
+		case SnakeGeneral.STATE_ATT_SWIPE:
 			if(this.attCount % 2 == 0) {
 				statePath = "_ATT_SWIPE_ALT";
 			} else {
 				statePath = "_ATT_SWIPE";
 			}
 			break;
-		case SnakeCommander.STATE_PREP_SLAM:
+		case SnakeGeneral.STATE_PREP_SLAM:
 			statePath = "_PREP_SLAM";
 			break;
-		case SnakeCommander.STATE_MID_SLAM:
+		case SnakeGeneral.STATE_MID_SLAM:
 			statePath = "_MID_SLAM";
 			break;
-		case SnakeCommander.STATE_ATT_SLAM:
+		case SnakeGeneral.STATE_ATT_SLAM:
 			statePath = "_ATT_SLAM";
 			break;
-		case SnakeCommander.STATE_PREP_FIRE:
+		case SnakeGeneral.STATE_PREP_FIRE:
 			statePath = "_PREP_FIRE";
 			break;
-		case SnakeCommander.STATE_ATT_FIRE:
+		case SnakeGeneral.STATE_ATT_FIRE:
 			if(this.attCount % 2 == 0) {
 				statePath = "_ATT_FIRE";
 			} else {
@@ -180,7 +166,7 @@ public class SnakeCommander extends GCharacter {
 	}
 	
 	public String getCorpseImage() {
-		return this.scImage_DEAD;
+		return this.sgImage_DEAD;
 	}
 	
 	public void populateMoveTypes() {
@@ -204,6 +190,16 @@ public class SnakeCommander extends GCharacter {
 		} else {
 			SoundPlayer.playWAV(GPath.createSoundPath("BunnyWarrior_DEATH2.wav"));
 		}
+		
+		// Open the doors to the arena
+		GameScreen.getTile(4, 1).setTileType(new AltGround());
+		GameScreen.getTile(5, 1).setTileType(new AltGround());
+		
+		// Change music to Boss music
+		SoundPlayer.changeMidi(GPath.createSoundPath("d_e2m1.mid"), 30);
+		
+		// Log a final death message
+		LogScreen.log("The general and his tank lie defeated and broken...");
 	}
 	
 	// Override that resets a few extra parameters
@@ -233,7 +229,7 @@ public class SnakeCommander extends GCharacter {
 		int distY = plrY - this.yPos;
 		
 		switch(this.state) {
-			case SnakeCommander.STATE_IDLE:
+			case SnakeGeneral.STATE_IDLE:
 				boolean hasLOS = LineDrawer.hasSight(this.xPos, this.yPos, plrX, plrY);
 				if(hasLOS) {
 					Random r = new Random();
@@ -243,18 +239,18 @@ public class SnakeCommander extends GCharacter {
 					} else {
 						SoundPlayer.playWAV(GPath.createSoundPath("snake1_warn1.wav"));
 					}
-					this.state = SnakeCommander.STATE_ALERTED;
+					this.state = SnakeGeneral.STATE_ALERTED;
 				} else {
 					// Handle movement for Idling
 					IdleController.moveIdle(this);
 				}
 				break;
-			case SnakeCommander.STATE_ALERTED:
+			case SnakeGeneral.STATE_ALERTED:
 				// Rest for one turn, making an angry face
 				// then transition to the chase
-				this.state = SnakeCommander.STATE_PURSUE;
+				this.state = SnakeGeneral.STATE_PURSUE;
 				break;
-			case SnakeCommander.STATE_PURSUE:	
+			case SnakeGeneral.STATE_PURSUE:	
 				// Relative movement direction (Initialize at 0)
 				int dx = 0;
 				int dy = 0;
@@ -352,7 +348,7 @@ public class SnakeCommander extends GCharacter {
 					}
 				}
 				break;
-			case SnakeCommander.STATE_PREP_BITE:
+			case SnakeGeneral.STATE_PREP_BITE:
 				// Step in marked direction if possible
 				this.moveCharacter(this.xMarkDir, this.yMarkDir);
 				
@@ -369,13 +365,13 @@ public class SnakeCommander extends GCharacter {
 					this.playerInitiate();
 				}
 				
-				this.state = SnakeCommander.STATE_ATT_BITE;
+				this.state = SnakeGeneral.STATE_ATT_BITE;
 				break;
-			case SnakeCommander.STATE_ATT_BITE:
+			case SnakeGeneral.STATE_ATT_BITE:
 				// Cooldown period for one turn
-				this.state = SnakeCommander.STATE_PURSUE;
+				this.state = SnakeGeneral.STATE_PURSUE;
 				break;
-			case SnakeCommander.STATE_PREP_SWIPE:
+			case SnakeGeneral.STATE_PREP_SWIPE:
 				// Use direction from player to mark squares
 				SoundPlayer.playWAV(GPath.createSoundPath("swing_ATT.wav"));
 				if(Math.abs(this.xMarkDir) > Math.abs(this.yMarkDir)) {
@@ -404,16 +400,16 @@ public class SnakeCommander extends GCharacter {
 				
 				// Change state and increment attack counter
 				this.attCount += 1;
-				this.state = SnakeCommander.STATE_ATT_SWIPE;
+				this.state = SnakeGeneral.STATE_ATT_SWIPE;
 				break;
-			case SnakeCommander.STATE_ATT_SWIPE:
+			case SnakeGeneral.STATE_ATT_SWIPE:
 				// Attack a specified number of times (swipeMaxCount)
 				if(this.attCount >= this.swipeMaxCount) {
 					// Reset attack counter
 					this.attCount = 0;
 					
 					// Change state + Cooldown period
-					this.state = SnakeCommander.STATE_PURSUE;
+					this.state = SnakeGeneral.STATE_PURSUE;
 					break;
 				} else {
 					// Increment attack counter
@@ -447,7 +443,7 @@ public class SnakeCommander extends GCharacter {
 				}
 				
 				break;
-			case SnakeCommander.STATE_PREP_SLAM:
+			case SnakeGeneral.STATE_PREP_SLAM:
 				// Attack if next to player. Otherwise, continue rushing in the current direction
 				if((plrX == this.xPos + this.xMarkDir && plrY == this.yPos + this.yMarkDir)) {
 					this.playerInitiate();
@@ -459,26 +455,26 @@ public class SnakeCommander extends GCharacter {
 					EntityManager.getInstance().getEffectManager().addEffect(new DamageIndicator(this.xPos + this.xMarkDir, this.yPos + this.yMarkDir));
 					
 					// Change state to confirm that we hit
-					this.state = SnakeCommander.STATE_ATT_SLAM;
+					this.state = SnakeGeneral.STATE_ATT_SLAM;
 				} else {
 					// Start to charge in player's direction
 					
 					// Try to move in the player's direction
 					if(this.moveCharacter(this.xMarkDir, this.yMarkDir)) {
 						// If successful, change state
-						this.state = SnakeCommander.STATE_MID_SLAM;
+						this.state = SnakeGeneral.STATE_MID_SLAM;
 					} else {
 						// If not successful, end the charge already
 						
 						// Mark tile with damage indicator
 						EntityManager.getInstance().getEffectManager().addEffect(new DamageIndicator(this.xPos + this.xMarkDir, this.yPos + this.yMarkDir));
 						
-						this.state = SnakeCommander.STATE_ATT_SLAM;
+						this.state = SnakeGeneral.STATE_ATT_SLAM;
 					}
 				}
 				
 				break;
-			case SnakeCommander.STATE_MID_SLAM:
+			case SnakeGeneral.STATE_MID_SLAM:
 				// Try to turn to hit the player if they're next to us, but only do this once
 				
 				// Relative movement direction (Initialize at 0)
@@ -518,7 +514,7 @@ public class SnakeCommander extends GCharacter {
 					
 					// Reset attack counter and change state to confirm that we hit
 					this.attCount = 0;
-					this.state = SnakeCommander.STATE_ATT_SLAM;
+					this.state = SnakeGeneral.STATE_ATT_SLAM;
 				} else {
 					// Keep charging in player's direction
 					
@@ -533,16 +529,16 @@ public class SnakeCommander extends GCharacter {
 						
 						// Reset attack counter and switch states
 						this.attCount = 0;
-						this.state = SnakeCommander.STATE_ATT_SLAM;
+						this.state = SnakeGeneral.STATE_ATT_SLAM;
 					}
 				}
 
 				break;
-			case SnakeCommander.STATE_ATT_SLAM:
+			case SnakeGeneral.STATE_ATT_SLAM:
 				// Cooldown period for one turn
-				this.state = SnakeCommander.STATE_PURSUE;
+				this.state = SnakeGeneral.STATE_PURSUE;
 				break;
-			case SnakeCommander.STATE_PREP_FIRE:
+			case SnakeGeneral.STATE_PREP_FIRE:
 				// Mark tile(s) with damage indicators
 				EntityManager.getInstance().getEffectManager().addEffect(new FireEffect(this.xPos + this.xMarkDir, this.yPos + this.yMarkDir, 3));
 				
@@ -552,9 +548,9 @@ public class SnakeCommander extends GCharacter {
 				}
 				
 				// Change states
-				this.state = SnakeCommander.STATE_ATT_FIRE;
+				this.state = SnakeGeneral.STATE_ATT_FIRE;
 				break;
-			case SnakeCommander.STATE_ATT_FIRE:
+			case SnakeGeneral.STATE_ATT_FIRE:
 				// Fetch reference to EntityManager
 				EntityManager em = EntityManager.getInstance();
 				
@@ -594,7 +590,7 @@ public class SnakeCommander extends GCharacter {
 				} else {
 					// Reset attack counter and change states
 					this.attCount = 0;
-					this.state = SnakeCommander.STATE_PURSUE;
+					this.state = SnakeGeneral.STATE_PURSUE;
 					break;
 				}
 
@@ -614,22 +610,22 @@ public class SnakeCommander extends GCharacter {
 		// Decide whether to swipe, charge, or bite
 		int swipeBiteSlam = new Random().nextInt(10);
 		if(swipeBiteSlam <= 2) {
-			this.state = SnakeCommander.STATE_PREP_BITE;
+			this.state = SnakeGeneral.STATE_PREP_BITE;
 		} else if(swipeBiteSlam <= 6) {
-			this.state = SnakeCommander.STATE_PREP_SWIPE;
+			this.state = SnakeGeneral.STATE_PREP_SWIPE;
 		} else {
-			this.state = SnakeCommander.STATE_PREP_SLAM;
+			this.state = SnakeGeneral.STATE_PREP_SLAM;
 		}
 	}
 	
 	// Chooses the next ranged attack for the Snake
 	private void chooseRangedAttack() {
-		// Randomly decide a ranged attack
+		// Decide whether to use Flamethrower or Luger
 		int flameOrGun = new Random().nextInt(2);
 		if(flameOrGun == 0) {
-			this.state = SnakeCommander.STATE_PREP_FIRE;
+			this.state = SnakeGeneral.STATE_PREP_FIRE;
 		} else {
-			this.state = SnakeCommander.STATE_PREP_FIRE;
+			this.state = SnakeGeneral.STATE_PREP_FIRE;
 		}
 	}
 	
