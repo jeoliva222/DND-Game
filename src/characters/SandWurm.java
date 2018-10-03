@@ -196,6 +196,7 @@ public class SandWurm extends GCharacter {
 	public void returnToOrigin() {
 		super.returnToOrigin();
 		this.dmgCount = 0;
+		this.canFocus = true;
 	}
 	
 	@Override
@@ -274,6 +275,9 @@ public class SandWurm extends GCharacter {
 			case SandWurm.STATE_BURROW:
 				// Take one turn to burrow into the ground -------
 				
+				// Disable focusing in on Sandwurm while tunneling/warping
+				this.canFocus = false;
+				
 				// Based on damage taken, decide to warp away or not
 				r = new Random();
 				if((this.dmgCount != 0) && ((this.dmgCount) >= (r.nextInt(4)))) {
@@ -309,6 +313,9 @@ public class SandWurm extends GCharacter {
 					// Mark direction to attack next turn
 					this.markX = dx;
 					this.markY = dy;
+					
+					// Enable focusing in on Sandwurm
+					this.canFocus = true;
 					
 					// Change states
 					this.state = SandWurm.STATE_PREP;
@@ -353,6 +360,9 @@ public class SandWurm extends GCharacter {
 						this.markX = dx;
 						this.markY = dy;
 						
+						// Enable focusing in on Sandwurm
+						this.canFocus = true;
+						
 						// Change states
 						this.state = SandWurm.STATE_PREP;
 					}
@@ -374,6 +384,10 @@ public class SandWurm extends GCharacter {
 			case SandWurm.STATE_WARP:
 				// Reset attack count and go to prep for spit attack 
 				this.dmgCount = 0;
+				
+				// Enable focusing in on Sandwurm
+				this.canFocus = true;
+				
 				this.state = SandWurm.STATE_PREP_SPIT;
 				break;
 			case SandWurm.STATE_PREP_SPIT:
