@@ -1,7 +1,6 @@
 package weapons;
 
 import characters.GCharacter;
-import gui.LogScreen;
 import helpers.GColors;
 import managers.EntityManager;
 
@@ -38,14 +37,14 @@ public class Fists extends Weapon {
 					// If charged deal extra damage with standard attack
 					int dmg = this.calculateDamage(this.chargeMult, npc);
 					npc.damageCharacter(dmg);
-					LogScreen.log("Player punched and dealt " + Integer.toString(dmg)
-						+ " damage to " + npc.getName() + ".", GColors.ATTACK);
+					this.sendToLog("Player punched and dealt " + Integer.toString(dmg)
+						+ " damage to " + npc.getName() + ".", GColors.ATTACK, npc);
 				} else {
 					// If not charged deal normal damage and attack normally
 					int dmg = this.calculateDamage(npc);
 					npc.damageCharacter(dmg);
-					LogScreen.log("Player slapped and dealt " + Integer.toString(dmg)
-						+ " damage to " + npc.getName() + ".", GColors.ATTACK);
+					this.sendToLog("Player slapped and dealt " + Integer.toString(dmg)
+						+ " damage to " + npc.getName() + ".", GColors.ATTACK, npc);
 				}
 				// We hit something, so return true
 				this.playSwingSound();

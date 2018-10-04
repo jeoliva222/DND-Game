@@ -54,6 +54,9 @@ public abstract class GCharacter implements Serializable {
 	// Can the mouse focus on this enemy or not?
 	protected boolean canFocus = true;
 	
+	// Is the character simply an interactable object?
+	protected boolean isInteractable = false;
+	
 	// List of what types of tiles the character can move on
 	protected ArrayList<MovableType> moveTypes = new ArrayList<MovableType>();
 	
@@ -334,5 +337,9 @@ public abstract class GCharacter implements Serializable {
 	
 	public boolean getFocusable() {
 		return this.canFocus;
+	}
+	
+	public boolean getIfInteractable() {
+		return this.isInteractable;
 	}
 }

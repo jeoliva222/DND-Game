@@ -53,8 +53,8 @@ public class Shield extends Weapon {
 				// Hit immediately adjacent characters
 				int dmg = this.calculateDamage(attMult, npc);
 				npc.damageCharacter(dmg);
-				LogScreen.log("Player bashed and dealt " + Integer.toString(dmg)
-					+ " damage to " + npc.getName() + ".", GColors.ATTACK);
+				this.sendToLog("Player bashed and dealt " + Integer.toString(dmg)
+					+ " damage to " + npc.getName() + ".", GColors.ATTACK, npc);
 				
 				// Play swing sound and return true
 				this.playSwingSound();

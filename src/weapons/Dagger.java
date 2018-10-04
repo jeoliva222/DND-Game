@@ -3,7 +3,6 @@ package weapons;
 import characters.GCharacter;
 import characters.Player;
 import gui.GameScreen;
-import gui.LogScreen;
 import helpers.GColors;
 import managers.EntityManager;
 import tiles.TileType;
@@ -52,21 +51,21 @@ public class Dagger extends Weapon {
 						// If space to backstab, deal modified damage and steb behind target
 						int dmg = this.calculateDamage(this.chargeMult, npc);
 						npc.damageCharacter(dmg);
-						LogScreen.log("Player backstabbed "+ npc.getName() +" and dealt " + Integer.toString(dmg)
-						+ " damage.", GColors.ATTACK);
+						this.sendToLog("Player backstabbed "+ npc.getName() +" and dealt " + Integer.toString(dmg)
+						+ " damage.", GColors.ATTACK, npc);
 					} else {
 						// If no space to backstab, deal normal damage and attack normally
 						int dmg = this.calculateDamage(npc);
 						npc.damageCharacter(dmg);
-						LogScreen.log("Player cut "+ npc.getName() +" and dealt " + Integer.toString(dmg)
-						+ " damage.", GColors.ATTACK);
+						this.sendToLog("Player cut "+ npc.getName() +" and dealt " + Integer.toString(dmg)
+						+ " damage.", GColors.ATTACK, npc);
 					}
 				} else {
 					// If not charged deal normal damage and attack normally
 					int dmg = this.calculateDamage(npc);
 					npc.damageCharacter(dmg);
-					LogScreen.log("Player cut "+ npc.getName() +" and dealt " + Integer.toString(dmg)
-						+ " damage.", GColors.ATTACK);
+					this.sendToLog("Player cut "+ npc.getName() +" and dealt " + Integer.toString(dmg)
+						+ " damage.", GColors.ATTACK, npc);
 				}
 				// We hit something, so return true
 				this.playSwingSound();

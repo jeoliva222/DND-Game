@@ -3,7 +3,6 @@ package weapons;
 import characters.GCharacter;
 import effects.ChargeIndicator;
 import gui.GameScreen;
-import gui.LogScreen;
 import helpers.GColors;
 import managers.EntityManager;
 import tiles.MovableType;
@@ -55,8 +54,8 @@ public class Spear extends Weapon {
 					this.dischargeWeapon();
 					int dmg = this.calculateDamage(npc);
 					npc.damageCharacter(dmg);
-					LogScreen.log("Player lanced forward and dealt " + Integer.toString(dmg)
-						+ " damage to " + npc.getName() + ".", GColors.ATTACK);				
+					this.sendToLog("Player lanced forward and dealt " + Integer.toString(dmg)
+						+ " damage to " + npc.getName() + ".", GColors.ATTACK, npc);				
 					foundTarget = true;
 				// Then check for positions two tiles away to attack
 				} else if((em.getPlayer().getXPos() + (dx*2)) == npc.getXPos()
@@ -67,8 +66,8 @@ public class Spear extends Weapon {
 						this.dischargeWeapon();
 						int dmg = this.calculateDamage(this.chargeMult, npc);
 						npc.damageCharacter(dmg);
-						LogScreen.log("Player lanced forward and dealt " + Integer.toString(dmg)
-							+ " damage to " + npc.getName() + ".", GColors.ATTACK);				
+						this.sendToLog("Player lanced forward and dealt " + Integer.toString(dmg)
+							+ " damage to " + npc.getName() + ".", GColors.ATTACK, npc);				
 						foundTarget = true;
 					}
 				}
@@ -96,8 +95,8 @@ public class Spear extends Weapon {
 					// If not charged deal normal damage
 					int dmg = this.calculateDamage(npc);
 					npc.damageCharacter(dmg);
-					LogScreen.log("Player stabbed and dealt " + Integer.toString(dmg)
-						+ " damage to " + npc.getName() + ".", GColors.ATTACK);	
+					this.sendToLog("Player stabbed and dealt " + Integer.toString(dmg)
+						+ " damage to " + npc.getName() + ".", GColors.ATTACK, npc);	
 					this.playSwingSound();
 					return true;
 				}

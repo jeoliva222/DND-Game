@@ -4,7 +4,6 @@ import java.util.ArrayList;
 
 import characters.GCharacter;
 import effects.ChargeIndicator;
-import gui.LogScreen;
 import helpers.GColors;
 import managers.EntityManager;
 
@@ -107,8 +106,8 @@ public class Crossbow extends Weapon {
 				// Damage the closest NPC
 				int dmg = this.calculateDamage(this.chargeMult, closestNPC);
 				closestNPC.damageCharacter(dmg);
-				LogScreen.log("Player sniped " + closestNPC.getName() + " and dealt "
-				+ Integer.toString(dmg) + " damage.", GColors.ATTACK);
+				this.sendToLog("Player sniped " + closestNPC.getName() + " and dealt "
+				+ Integer.toString(dmg) + " damage.", GColors.ATTACK, closestNPC);
 				
 				// Add on-hit effect
 				em.getEffectManager()
@@ -126,8 +125,8 @@ public class Crossbow extends Weapon {
 					// If not charged deal normal damage and attack normally
 					int dmg = this.calculateDamage(npc);
 					npc.damageCharacter(dmg);
-					LogScreen.log("Player punched and dealt " + Integer.toString(dmg)
-						+ " damage to " + npc.getName() + ".", GColors.ATTACK);
+					this.sendToLog("Player punched and dealt " + Integer.toString(dmg)
+						+ " damage to " + npc.getName() + ".", GColors.ATTACK, npc);
 					this.playSwingSound();
 					return true;
 				}

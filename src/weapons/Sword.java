@@ -2,7 +2,6 @@ package weapons;
 
 import characters.GCharacter;
 import effects.ChargeIndicator;
-import gui.LogScreen;
 import helpers.GColors;
 import managers.EntityManager;
 
@@ -44,8 +43,8 @@ public class Sword extends Weapon {
 					em.getEffectManager().addEffect
 						(new ChargeIndicator((em.getPlayer().getXPos() + dx),
 							(em.getPlayer().getYPos() + dy)));
-					LogScreen.log("Player swiped and dealt " + Integer.toString(dmg)
-						+ " damage to " + npc.getName() + ".", GColors.ATTACK);
+					this.sendToLog("Player swiped and dealt " + Integer.toString(dmg)
+						+ " damage to " + npc.getName() + ".", GColors.ATTACK, npc);
 					
 					// Then check/attack for characters to relative left of attack
 					this.findSwipeTargets(dx, dy);
@@ -53,8 +52,8 @@ public class Sword extends Weapon {
 					// If not charged deal normal damage and attack normally
 					int dmg = this.calculateDamage(npc);
 					npc.damageCharacter(dmg);
-					LogScreen.log("Player swung and dealt " + Integer.toString(dmg)
-						+ " damage to " + npc.getName() + ".", GColors.ATTACK);
+					this.sendToLog("Player swung and dealt " + Integer.toString(dmg)
+						+ " damage to " + npc.getName() + ".", GColors.ATTACK, npc);
 				}
 				this.playSwingSound();
 				return true;
@@ -81,15 +80,15 @@ public class Sword extends Weapon {
 					// Upper target attack
 					int dmg = this.calculateDamage(this.chargeMult, npc);
 					npc.damageCharacter(dmg);
-					LogScreen.log("Player swiped and dealt " + Integer.toString(dmg)
-					+ " damage to " + npc.getName() + ".", GColors.ATTACK);
+					this.sendToLog("Player swiped and dealt " + Integer.toString(dmg)
+					+ " damage to " + npc.getName() + ".", GColors.ATTACK, npc);
 				} else if ((em.getPlayer().getXPos() + dx) == npc.getXPos()
 						&& (em.getPlayer().getYPos() - 1) == npc.getYPos()) {
 					// Lower target
 					int dmg = this.calculateDamage(this.chargeMult, npc);
 					npc.damageCharacter(dmg);
-					LogScreen.log("Player swiped and dealt " + Integer.toString(dmg)
-					+ " damage to " + npc.getName() + ".", GColors.ATTACK);
+					this.sendToLog("Player swiped and dealt " + Integer.toString(dmg)
+					+ " damage to " + npc.getName() + ".", GColors.ATTACK, npc);
 				}
 			}
 		} else {
@@ -104,15 +103,15 @@ public class Sword extends Weapon {
 					// Right target
 					int dmg = this.calculateDamage(this.chargeMult, npc);
 					npc.damageCharacter(dmg);
-					LogScreen.log("Player swiped and dealt " + Integer.toString(dmg)
-					+ " damage to " + npc.getName() + ".", GColors.ATTACK);
+					this.sendToLog("Player swiped and dealt " + Integer.toString(dmg)
+					+ " damage to " + npc.getName() + ".", GColors.ATTACK, npc);
 				} else if ((em.getPlayer().getXPos() - 1) == npc.getXPos()
 						&& (em.getPlayer().getYPos() + dy) == npc.getYPos()) {
 					// Left target
 					int dmg = this.calculateDamage(this.chargeMult, npc);
 					npc.damageCharacter(dmg);
-					LogScreen.log("Player swiped and dealt " + Integer.toString(dmg)
-					+ " damage to " + npc.getName() + ".", GColors.ATTACK);
+					this.sendToLog("Player swiped and dealt " + Integer.toString(dmg)
+					+ " damage to " + npc.getName() + ".", GColors.ATTACK, npc);
 				}
 			}
 		}

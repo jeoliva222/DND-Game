@@ -1,5 +1,6 @@
 package weapons;
 
+import java.awt.Color;
 import java.util.Random;
 
 import characters.GCharacter;
@@ -120,6 +121,12 @@ public abstract class Weapon extends GItem {
 		return true;
 	}
 	
+	// Sends the attack message to the LogScreen if the object is an enemy (Not an Interactable)
+	protected void sendToLog(String message, Color color, GCharacter npc) {
+		if(!npc.getIfInteractable())	LogScreen.log(message, color);
+	}
+	
+	// Plays a random swinging sound effect
 	public void playSwingSound() {
 		Random r = new Random();
 		int whichSound = r.nextInt(3);

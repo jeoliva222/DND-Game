@@ -19,6 +19,7 @@ import characters.GCharacter;
 import characters.SandBeep;
 import characters.SandWurm;
 import characters.SaveCrystal;
+import characters.Signpost;
 import characters.SnakeCommander;
 import characters.SnakeSoldier;
 import characters.bosses.SnakeNuke;
@@ -1160,6 +1161,7 @@ public class DesertLevels implements Serializable {
 			{3, 4, 0, 0, 0, 4, 3, 3, 3, 3}
 		}, new ExtraTile[] {
 		}, new ArrayList<GCharacter>() {{
+			add(new Signpost(2, 6, "test.png", "'The museum awaits...'"));
 		}}, new ArrayList<GPickup>() {{
 		}});
 		

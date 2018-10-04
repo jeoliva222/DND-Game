@@ -1,7 +1,6 @@
 package weapons;
 
 import characters.GCharacter;
-import gui.LogScreen;
 import helpers.GColors;
 import managers.EntityManager;
 import projectiles.Arrow;
@@ -52,8 +51,8 @@ public class Bow extends Weapon {
 					// If not charged deal normal damage and attack normally
 					int dmg = this.calculateDamage(npc);
 					npc.damageCharacter(dmg);
-					LogScreen.log("Player punched and dealt " + Integer.toString(dmg)
-						+ " damage to " + npc.getName() + ".", GColors.ATTACK);
+					this.sendToLog("Player punched and dealt " + Integer.toString(dmg)
+						+ " damage to " + npc.getName() + ".", GColors.ATTACK, npc);
 					this.playSwingSound();
 					return true;
 				}

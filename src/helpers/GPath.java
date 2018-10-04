@@ -120,6 +120,8 @@ public class GPath {
 	
 	public static String SAVE_CRYSTAL = "save_crystal" + File.separator;
 	
+	public static String SIGNPOST = "signpost" + File.separator;
+	
 	public static String SNAKE_COMMANDER = "snake_commander" + File.separator;
 	
 	public static String SNAKE_SOLDIER = "snake_soldier" + File.separator;

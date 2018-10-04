@@ -139,7 +139,9 @@ public abstract class GProjectile {
 					int damage = this.calculateDamage(npc);
 					
 					// Log result and deal damage
-					if(damage > 0) {
+					if(npc.getIfInteractable()) {
+						// Don't log anything if it's an interactable character
+					} else if(damage > 0) {
 						LogScreen.log(this.name+" impacted "+npc.getName()+" for "
 								+Integer.toString(damage)+" damage.", GColors.ATTACK);
 						npc.damageCharacter(damage);
@@ -201,7 +203,9 @@ public abstract class GProjectile {
 						int damage = this.calculateDamage(npc);
 						
 						// Log result and deal damage
-						if(damage > 0) {
+						if(npc.getIfInteractable()) {
+							// Don't log anything if it's an interactable character
+						} else if(damage > 0) {
 							LogScreen.log(this.name+" impacted "+npc.getName()+" for "
 									+Integer.toString(damage)+" damage.", GColors.ATTACK);
 							npc.damageCharacter(damage);

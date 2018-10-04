@@ -3,7 +3,6 @@ package weapons;
 import java.util.Random;
 
 import characters.GCharacter;
-import gui.LogScreen;
 import helpers.GColors;
 import managers.EntityManager;
 
@@ -41,14 +40,14 @@ public class Hammer extends Weapon {
 					// If charged deal extra damage with standard attack
 					int dmg = this.calculatePierceDamage(this.chargeMult, npc);
 					npc.damageCharacter(dmg);
-					LogScreen.log("Player smashed and dealt " + Integer.toString(dmg)
-						+ " damage to " + npc.getName() + ".", GColors.ATTACK);
+					this.sendToLog("Player smashed and dealt " + Integer.toString(dmg)
+						+ " damage to " + npc.getName() + ".", GColors.ATTACK, npc);
 				} else {
 					// If not charged deal normal damage and attack normally
 					int dmg = this.calculateDamage(npc);
 					npc.damageCharacter(dmg);
-					LogScreen.log("Player slammed and dealt " + Integer.toString(dmg)
-						+ " damage to " + npc.getName() + ".", GColors.ATTACK);
+					this.sendToLog("Player slammed and dealt " + Integer.toString(dmg)
+						+ " damage to " + npc.getName() + ".", GColors.ATTACK, npc);
 				}
 				// We hit something, so return true
 				this.playSwingSound();
