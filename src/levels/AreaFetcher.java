@@ -45,6 +45,9 @@ public class AreaFetcher {
 			case "desert":
 				fetchedArea = new DesertLevels().area_DESERT;
 				break;
+			case "museum":
+				fetchedArea = new MuseumLevels().area_MUSEUM;
+				break;
 			default:
 				System.out.println("Failed to fetch an area: " + areaName);
 				break;

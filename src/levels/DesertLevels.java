@@ -1147,7 +1147,7 @@ public class DesertLevels implements Serializable {
 		
 		//------------------- // ROW 6
 		
-		MapLevel d06 = new MapLevel(new int[][] {
+		MapLevel d06 = new MapLevel(new int[][] { // TODO  Entrance to secret area
 			{3, 1, 1, 1, 1, 1, 1, 1, 1, 1},
 			{3, 3, 1, 1, 1, 1, 1, 1, 1, 3},
 			{3, 1, 1, 1, 1, 3, 1, 1, 1, 1},
@@ -1157,7 +1157,7 @@ public class DesertLevels implements Serializable {
 			{3, 3, 1, 3, 1, 1, 1, 1, 1, 1},
 			{3, 3, 1, 1, 1, 1, 1, 3, 1, 1},
 			{3, 3, 0, 0, 0, 1, 3, 1, 1, 3},
-			{3, 4, 4, 4, 4, 4, 3, 3, 3, 3}
+			{3, 4, 0, 0, 0, 4, 3, 3, 3, 3}
 		}, new ExtraTile[] {
 		}, new ArrayList<GCharacter>() {{
 		}}, new ArrayList<GPickup>() {{

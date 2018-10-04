@@ -72,6 +72,8 @@ public class GPath {
 	
 	public static String JUNGLE = "jungle" + File.separator;
 	
+	public static String MUSEUM = "museum" + File.separator;
+	
 	public static String TEMPLE = "temple" + File.separator;
 	
 	//--------- CHARACTER NAMES

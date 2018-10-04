@@ -9,7 +9,8 @@ public class WorldMap {
 	// WORLD DEFINITION
 	
 	public static String[][] gameWorld = new String[][] {
-		{"dungeon", "desert"}
+		{"dungeon", "desert"},
+		{null     , "museum"}
 	};
 	
 	//************************************************
