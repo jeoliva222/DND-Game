@@ -299,7 +299,11 @@ public abstract class GProjectile {
 	
 	@Override
 	public int hashCode() {
-		return (this.name.hashCode() + this.owner.getName().hashCode());
+		if(owner == null) {
+			return (this.name.hashCode() + "Player".hashCode());
+		} else {
+			return (this.name.hashCode() + this.owner.getName().hashCode());
+		}
 	}
 	
 	//-----------------------------
