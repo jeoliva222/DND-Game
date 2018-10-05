@@ -172,10 +172,6 @@ public class Player implements Serializable {
 			return false;
 		}
 		
-		// Mark old position
-		this.lastX = this.xPos;
-		this.lastY = this.yPos;
-		
 		// If all checks pass, update the player position
 		this.xPos += dx;
 		this.yPos += dy;
@@ -252,10 +248,6 @@ public class Player implements Serializable {
 				}
 			}
 		}
-		
-		// Set old position
-		this.lastX = this.xPos;
-		this.lastY = this.yPos;
 		
 		// If all checks pass, update the player position
 		this.xPos = newX;
@@ -396,6 +388,12 @@ public class Player implements Serializable {
 	// Checks if player is Alive
 	public boolean isAlive() {
 		return (this.currentHP > 0);
+	}
+	
+	// Updates coordinates the player was on last turn
+	public void updateLastCoords() {
+		this.lastX = this.xPos;
+		this.lastY = this.yPos;
 	}
 	
 	// *******************

@@ -129,10 +129,6 @@ public abstract class GCharacter implements Serializable {
 		
 		// Otherwise, we can update the positions
 		
-		// Last position
-		this.lastX = this.xPos;
-		this.lastY = this.yPos;
-		
 		// New position
 		this.xPos += dx;
 		this.yPos += dy;
@@ -262,6 +258,12 @@ public abstract class GCharacter implements Serializable {
 		
 		// Fill back to full health
 		this.currentHP = this.maxHP;
+	}
+	
+	// Updates the coordinates that the character was on last turn
+	public void updateLastCoords() {
+		this.lastX = this.xPos;
+		this.lastY = this.yPos;
 	}
 	
 	// *******************

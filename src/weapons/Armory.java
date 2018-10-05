@@ -1,6 +1,8 @@
 package weapons;
 
 import helpers.GPath;
+import weapons.special.Injector;
+import weapons.special.KingStaff;
 
 // Class where all weapon definitions are stored
 public class Armory {
@@ -113,5 +115,14 @@ public class Armory {
 	public static final Hammer boneClub = new Hammer("Bone Club", 2, 3, 0.05, 1.75, 1.5, 
 			"WEAPON (Hammer): Club improvised from a sturdy bone. Charge attacks deal extra damage and ignore half of an enemy's armor!",
 			GPath.createImagePath(GPath.TILE, GPath.GENERIC, "testProj.png"));
+	
+	// Special Weapons ----------------------------
+	//
+	
+	// King's Staff
+	public static final KingStaff kingStaff = new KingStaff();
+	
+	// The Injector
+	public static final Injector injector = new Injector();
 
 }

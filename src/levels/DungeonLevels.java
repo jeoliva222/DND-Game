@@ -1226,6 +1226,7 @@ public class DungeonLevels implements Serializable {
 		}, new ArrayList<GCharacter>() {{
 			add(new SaveCrystal(1, 3));
 		}}, new ArrayList<GPickup>() {{
+			add(new GPickup(1, 5, Armory.kingStaff));
 			add(new GPickup(1, 6, new MediumHealthPotion()));
 			add(new GPickup(4, 2, new GKey(KeyDoor.RED)));
 			add(new GPickup(5, 2, new MediumMaxPotion()));

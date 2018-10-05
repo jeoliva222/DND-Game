@@ -1,27 +1,33 @@
-package weapons;
+package weapons.special;
 
 import characters.GCharacter;
 import effects.ChargeIndicator;
 import gui.GameScreen;
+import gui.LogScreen;
 import helpers.GColors;
+import helpers.GPath;
 import managers.EntityManager;
 import tiles.MovableType;
+import weapons.Weapon;
 
-// Spears are weapons with a special mid-ranged charge attack
-public class Spear extends Weapon {
-	
+// Class representing the special weapon: The Injector
+public class Injector extends Weapon {
+
 	// Serialization ID
-	private static final long serialVersionUID = -2142487932348659953L;
+	private static final long serialVersionUID = 347577165375189843L;
 
-	public Spear(String name, int minDmg, int maxDmg,
-			double critChance, double critMult, double chargeMult, String desc, String imagePath) {
-		super(name, desc, imagePath);
+	// Constructor
+	public Injector() {
+		super("The Injector",
+				"WEAPON (Special): An unholy tool used by The Collector. Charge attacks are weak, but heal the player per successful kill.",
+				GPath.createImagePath(GPath.TILE, GPath.GENERIC, "testProj.png"));
 		
-		this.minDmg = minDmg;
-		this.maxDmg = maxDmg;
-		this.critChance = critChance;
-		this.critMult = critMult;
-		this.chargeMult = chargeMult;
+		// Set damage attributes
+		this.minDmg = 2;
+		this.maxDmg = 4;
+		this.critChance = 0.05;
+		this.critMult = 1.5;
+		this.chargeMult = 0.5;
 	}
 	
 	@Override
@@ -30,11 +36,14 @@ public class Spear extends Weapon {
 		EntityManager em = EntityManager.getInstance();
 		
 		if(this.isCharged) {
-			// First, discharge the weapon
+			// First, discharge weapon
 			this.dischargeWeapon();
 			
 			// Checks if we hit at least one target
 			boolean foundTarget = false;
+			
+			// Number of targets killed (Used for lifesteal)
+			int targetsKilled = 0;
 			
 			// Checks if immediately adjacent space is a wall
 			boolean nextToWall;
@@ -53,10 +62,9 @@ public class Spear extends Weapon {
 				// First check for immediately adjacent positions to attack
 				if((em.getPlayer().getXPos() + dx) == npc.getXPos()
 						&& (em.getPlayer().getYPos() + dy) == npc.getYPos()) {
-					// Deal multiplier on regular damage
 					int dmg = this.calculateDamage(this.chargeMult, npc);
-					npc.damageCharacter(dmg);
-					this.sendToLog("Player lanced forward and dealt " + Integer.toString(dmg)
+					if(!npc.damageCharacter(dmg)) targetsKilled++;
+					this.sendToLog("Player siphoned and dealt " + Integer.toString(dmg)
 						+ " damage to " + npc.getName() + ".", GColors.ATTACK, npc);				
 					foundTarget = true;
 				// Then check for positions two tiles away to attack
@@ -64,10 +72,10 @@ public class Spear extends Weapon {
 						&& (em.getPlayer().getYPos() + (dy*2)) == npc.getYPos()) {
 					// Check that previous space isn't a wall
 					if(!nextToWall) {
-						// Deal multiplier on regular damage
+						// Deal multiplier on regular damage and discharge weapon
 						int dmg = this.calculateDamage(this.chargeMult, npc);
-						npc.damageCharacter(dmg);
-						this.sendToLog("Player lanced forward and dealt " + Integer.toString(dmg)
+						if(!npc.damageCharacter(dmg)) targetsKilled++;
+						this.sendToLog("Player siphoned and dealt " + Integer.toString(dmg)
 							+ " damage to " + npc.getName() + ".", GColors.ATTACK, npc);				
 						foundTarget = true;
 					}
@@ -86,7 +94,15 @@ public class Spear extends Weapon {
 								em.getPlayer().getYPos() + (dy*2)));
 				}
 				
-				// Play attack sound and return true to indicate successful hit
+				// Apply lifesteal from kills if we killed at least one target
+				if(targetsKilled > 0) {
+					// Heal player and log result
+					em.getPlayer().healPlayer(targetsKilled);
+					LogScreen.log("Player drank " + Integer.toString(targetsKilled)
+					+ " health from his enemies.", GColors.HEAL);
+				}
+				
+				// Play attack sound and return true to indicate we hit something
 				this.playSwingSound();
 				return true;
 			}
@@ -109,5 +125,5 @@ public class Spear extends Weapon {
 		// If nothing connects, return false
 		return false;
 	}
-
+	
 }

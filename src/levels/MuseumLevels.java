@@ -59,8 +59,8 @@ public class MuseumLevels implements Serializable {
 		MapLevel m10 = new MapLevel(new int[][] {
 			{3, 3, 3, 3, 3, 3, 3, 3, 3, 3},
 			{3, 1, 1, 1, 1, 1, 1, 1, 1, 3},
-			{3, 1, 1, 1, 1, 1, 1, 1, 1, 3},
-			{3, 1, 1, 1, 3, 3, 1, 1, 1, 3},
+			{3, 1, 1, 1, 1, 1, 1, 1, 1, 1},
+			{3, 1, 1, 1, 3, 3, 1, 1, 1, 1},
 			{3, 1, 1, 1, 3, 3, 1, 1, 1, 3},
 			{3, 1, 1, 1, 3, 3, 1, 1, 1, 3},
 			{3, 1, 1, 1, 1, 1, 1, 1, 1, 3},
@@ -70,26 +70,25 @@ public class MuseumLevels implements Serializable {
 		}, new ExtraTile[] {
 		}, new ArrayList<GCharacter>() {{
 		}}, new ArrayList<GPickup>() {{
-			add(new GPickup(5, 3, new SmallHealthPotion()));
+			//add(new GPickup(5, 3, new SmallHealthPotion()));
 		}});
 		
 		//-------------------
 		
 		MapLevel m20 = new MapLevel(new int[][] {
-			{3, 1, 3, 3, 3, 3, 3, 3, 3, 3},
-			{3, 1, 3, 1, 1, 1, 1, 1, 1, 3},
-			{3, 1, 3, 1, 1, 1, 3, 4, 4, 3},
-			{3, 1, 1, 1, 1, 1, 3, 1, 1, 3},
-			{3, 3, 3, 3, 3, 3, 3, 1, 1, 3},
-			{1, 1, 4, 1, 1, 1, 1, 1, 1, 3},
-			{1, 1, 4, 1, 2, 2, 2, 1, 1, 3},
-			{1, 1, 4, 1, 2, 1, 2, 1, 1, 3},
-			{1, 1, 4, 1, 2, 2, 2, 1, 1, 3},
-			{3, 3, 3, 3, 3, 3, 3, 3, 3, 3}
+			{3, 3, 3, 3, 3, 3, 3, 3, 3, 3},
+			{3, 3, 3, 3, 3, 3, 3, 3, 3, 3},
+			{1, 1, 1, 1, 1, 1, 1, 1, 1, 3},
+			{1, 1, 1, 1, 1, 1, 1, 1, 1, 3},
+			{3, 3, 3, 1, 1, 1, 1, 1, 1, 3},
+			{3, 3, 3, 1, 1, 1, 1, 1, 1, 3},
+			{3, 1, 1, 1, 1, 1, 1, 1, 1, 3},
+			{3, 1, 1, 1, 1, 1, 1, 1, 1, 3},
+			{3, 1, 1, 1, 1, 1, 1, 1, 1, 3},
+			{3, 1, 1, 3, 3, 3, 3, 3, 3, 3}
 		}, new ExtraTile[] {
 		}, new ArrayList<GCharacter>() {{
 		}}, new ArrayList<GPickup>() {{
-			add(new GPickup(5, 3, new SmallHealthPotion()));
 		}});
 		
 		//-------------------
@@ -131,33 +130,51 @@ public class MuseumLevels implements Serializable {
 			{3, 3, 1, 3, 3, 3, 3, 3, 3, 3},
 			{3, 3, 1, 3, 3, 3, 3, 3, 3, 3},
 			{3, 3, 1, 1, 1, 1, 1, 1, 1, 3},
-			{3, 3, 3, 3, 3, 3, 3, 3, 1, 3},
+			{3, 3, 1, 1, 1, 1, 1, 1, 1, 3},
 			{1, 1, 1, 1, 1, 1, 1, 1, 1, 3},
 			{3, 3, 3, 3, 3, 3, 3, 3, 3, 3},
 			{3, 3, 3, 3, 3, 3, 3, 3, 3, 3}
 		}, new ExtraTile[] {
+				new ExtraTile(2, 6, 
+						new Ground(GPath.createImagePath(GPath.TILE, GPath.MUSEUM, "spotlight.png"))),
+				new ExtraTile(3, 6, 
+						new Ground(GPath.createImagePath(GPath.TILE, GPath.MUSEUM, "spotlight.png"))),
+				new ExtraTile(4, 6, 
+						new Ground(GPath.createImagePath(GPath.TILE, GPath.MUSEUM, "spotlight.png"))),
+				new ExtraTile(5, 6, 
+						new Ground(GPath.createImagePath(GPath.TILE, GPath.MUSEUM, "spotlight.png"))),
+				new ExtraTile(6, 6, 
+						new Ground(GPath.createImagePath(GPath.TILE, GPath.MUSEUM, "spotlight.png"))),
+				new ExtraTile(7, 6, 
+						new Ground(GPath.createImagePath(GPath.TILE, GPath.MUSEUM, "spotlight.png")))
 		}, new ArrayList<GCharacter>() {{
+			add(new Signpost(2, 6, "statue1.png", "Evolution of Decay: Part 1"));
+			add(new Signpost(3, 6, "statue1.png", "Evolution of Decay: Part 2"));
+			add(new Signpost(4, 6, "statue1.png", "Evolution of Decay: Part 3"));
+			add(new Signpost(5, 6, "statue1.png", "Evolution of Decay: Part 4"));
+			add(new Signpost(6, 6, "statue1.png", "Evolution of Decay: Part 5"));
+			add(new Signpost(7, 6, "statue1.png", "Evolution of Decay: Part 6"));
 		}}, new ArrayList<GPickup>() {{
-			add(new GPickup(5, 3, new SmallHealthPotion()));
+			//add(new GPickup(5, 3, new SmallHealthPotion()));
 		}});
 		
 		//-------------------
 		
 		MapLevel m21 = new MapLevel(new int[][] {
-			{3, 1, 3, 3, 3, 3, 3, 3, 3, 3},
-			{3, 1, 3, 1, 1, 1, 1, 1, 1, 3},
-			{3, 1, 3, 1, 1, 1, 3, 4, 4, 3},
-			{3, 1, 1, 1, 1, 1, 3, 1, 1, 3},
-			{3, 3, 3, 3, 3, 3, 3, 1, 1, 3},
-			{1, 1, 4, 1, 1, 1, 1, 1, 1, 3},
-			{1, 1, 4, 1, 2, 2, 2, 1, 1, 3},
-			{1, 1, 4, 1, 2, 1, 2, 1, 1, 3},
-			{1, 1, 4, 1, 2, 2, 2, 1, 1, 3},
+			{3, 1, 1, 3, 3, 3, 3, 3, 3, 3},
+			{3, 1, 1, 3, 3, 3, 3, 3, 3, 3},
+			{3, 1, 1, 1, 1, 3, 1, 1, 1, 3},
+			{3, 1, 1, 1, 1, 3, 1, 1, 1, 3},
+			{3, 1, 1, 1, 1, 3, 3, 1, 3, 3},
+			{3, 1, 1, 1, 1, 1, 1, 1, 1, 3},
+			{3, 3, 1, 3, 3, 3, 1, 3, 3, 3},
+			{3, 1, 1, 1, 3, 1, 1, 1, 1, 3},
+			{3, 1, 1, 1, 3, 1, 1, 1, 1, 3},
 			{3, 3, 3, 3, 3, 3, 3, 3, 3, 3}
 		}, new ExtraTile[] {
 		}, new ArrayList<GCharacter>() {{
 		}}, new ArrayList<GPickup>() {{
-			add(new GPickup(5, 3, new SmallHealthPotion()));
+			//add(new GPickup(5, 3, new SmallHealthPotion()));
 		}});
 		
 		//-------------------

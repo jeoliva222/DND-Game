@@ -160,24 +160,34 @@ public class GameWindow extends JFrame implements KeyListener {
 		// Fetch reference to player
 		Player plr = EntityManager.getInstance().getPlayer();
 		
-		// Get player position before switch
-		int currentX = plr.getXPos();
-		int currentY = plr.getYPos();
+		// Update last position
+		plr.updateLastCoords();
 		
-		// Move player if possible
-		plr.movePlayer(dx, dy);
-		
-		// Make the changes to the board
-		this.shiftEntity(currentX, currentY);
+		// Only move player if we have a direction
+		if(!(dx == 0 && dy == 0)) {
+			// Get player position before switch
+			int currentX = plr.getXPos();
+			int currentY = plr.getYPos();
+			
+			// Move player if possible
+			plr.movePlayer(dx, dy);
+			
+			// Make the changes to the board
+			this.shiftEntity(currentX, currentY);
+		}
 		
 	}
 	
+	// Iterates through all 
 	public void moveCharacters() {
 		// Iterate through all characters
 		for(GCharacter gchar : EntityManager.getInstance().getNPCManager().getCharacters()) {
 			// Get character position before switch
 			int currentX = gchar.getXPos();
 			int currentY = gchar.getYPos();
+			
+			// Update last positions
+			gchar.updateLastCoords();
 			
 			// Move character if possible
 			gchar.takeTurn();
@@ -205,8 +215,8 @@ public class GameWindow extends JFrame implements KeyListener {
 	
 	// Takes turns for all entities on screen and moves player by specified amount
 	public void completeTurn(int playerDx, int playerDy) {
-		if(!(playerDx == 0 && playerDy == 0))
-			this.movePlayer(playerDx, playerDy);
+		// Move the player
+		this.movePlayer(playerDx, playerDy);
 		
 		// If we changed screen, enemies and projectiles don't
 		// act for this turn.

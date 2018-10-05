@@ -62,7 +62,7 @@ public abstract class GProjectile {
 	}
 	
 	// Updates the projectile's movement and checks for collisions
-	private boolean updateProjectile() {	
+	protected boolean updateProjectile() {	
 		// If this the player is dead, don't do anything
 		if(!EntityManager.getInstance().getPlayer().isAlive()) {
 			// Do nothing
