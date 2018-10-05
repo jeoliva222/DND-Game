@@ -10,6 +10,7 @@ import characters.Bitester;
 import characters.BreakableWall;
 import characters.BunnyWarrior;
 import characters.GCharacter;
+import characters.Signpost;
 import helpers.GPath;
 import items.GPickup;
 import items.SmallHealthPotion;
@@ -97,15 +98,26 @@ public class MuseumLevels implements Serializable {
 			{3, 3, 1, 1, 1, 3, 3, 3, 3, 3},
 			{3, 1, 1, 1, 1, 1, 1, 1, 1, 3},
 			{3, 1, 1, 1, 3, 3, 1, 1, 1, 3},
-			{3, 1, 3, 1, 3, 3, 1, 3, 1, 3},
 			{3, 1, 1, 1, 3, 3, 1, 1, 1, 3},
 			{3, 1, 1, 1, 3, 3, 1, 1, 1, 3},
-			{3, 1, 3, 1, 3, 3, 1, 3, 1, 3},
+			{3, 1, 1, 1, 3, 3, 1, 1, 1, 3},
+			{3, 1, 1, 1, 3, 3, 1, 1, 1, 3},
 			{3, 1, 1, 1, 3, 3, 1, 1, 1, 1},
 			{3, 1, 1, 1, 1, 1, 1, 1, 1, 3},
 			{3, 3, 3, 3, 3, 3, 3, 3, 3, 3}
 		}, new ExtraTile[] {
+				new ExtraTile(2, 3, 
+						new Ground(GPath.createImagePath(GPath.TILE, GPath.MUSEUM, "spotlight.png"))),
+				new ExtraTile(2, 6, 
+						new Ground(GPath.createImagePath(GPath.TILE, GPath.MUSEUM, "spotlight.png"))),
+				new ExtraTile(7, 3, 
+						new Ground(GPath.createImagePath(GPath.TILE, GPath.MUSEUM, "spotlight.png"))),
+				new ExtraTile(7, 6, 
+						new Ground(GPath.createImagePath(GPath.TILE, GPath.MUSEUM, "spotlight.png")))
 		}, new ArrayList<GCharacter>() {{
+			add(new Signpost(2, 3, "statue1.png", "Endless Grin"));
+			add(new Signpost(2, 6, "statue2.png", "Self Betrayal"));
+			add(new Signpost(7, 3, "statue3.png", "Bleeding Heart"));
 		}}, new ArrayList<GPickup>() {{
 			//add(new GPickup(5, 3, new SmallHealthPotion()));
 		}});

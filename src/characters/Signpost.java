@@ -37,6 +37,12 @@ public class Signpost extends GCharacter {
 		this.currentHP = MAX_HP;
 		this.armor = ARMOR_VAL;
 		
+		// Set damage attributes
+		this.minDmg = MIN_DMG;
+		this.maxDmg = MAX_DMG;
+		this.critChance = CRIT_CHANCE;
+		this.critMult = CRIT_MULT;
+		
 		// Can't focus on the signpost
 		this.canFocus = false;
 		
@@ -59,7 +65,7 @@ public class Signpost extends GCharacter {
 	@Override
 	public boolean damageCharacter(int damage) {
 		// Log the signpost's message to the Logscreen
-		LogScreen.log(this.message);
+		LogScreen.log("\"" + this.message + "\"");
 		return this.isAlive();
 	}
 	
