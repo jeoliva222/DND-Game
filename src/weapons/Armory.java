@@ -3,6 +3,7 @@ package weapons;
 import helpers.GPath;
 import weapons.special.Injector;
 import weapons.special.KingStaff;
+import weapons.special.VenomGun;
 
 // Class where all weapon definitions are stored
 public class Armory {
@@ -124,5 +125,8 @@ public class Armory {
 	
 	// The Injector
 	public static final Injector injector = new Injector();
+	
+	// Venom
+	public static final VenomGun venomGun = new VenomGun();
 
 }

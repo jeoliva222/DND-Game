@@ -18,7 +18,7 @@ public class KingStaff extends Weapon {
 	// Constructor
 	public KingStaff() {
 		super("King's Staff",
-				"WEAPON (Special): A kingly staff of the elements. Occasional omits firey blasts!",
+				"WEAPON (Special): A kingly staff of the elements. Occasionally omits firey blasts!",
 				GPath.createImagePath(GPath.TILE, GPath.GENERIC, "testProj.png"));
 		
 		// Set damage attributes
