@@ -12,8 +12,8 @@ public class Armory {
 	//
 	
 	// Bare fists
-	public static final Fists bareFists = new Fists("Bare Fists", 1, 1, 0.05, 2.0, 1.0,
-			"WEAPON (Fist): Slap em!",
+	public static final Fists bareFists = new Fists("Bare Fists", 1, 1, 0.00, 1.0, 2.0,
+			"WEAPON (Fist): Slap'em!",
 			GPath.createImagePath(GPath.PICKUP, GPath.WEAPON, "bareFists.png"));
 	
 	// Padded Fists (Caestus)

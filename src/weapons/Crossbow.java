@@ -4,8 +4,10 @@ import java.util.ArrayList;
 
 import characters.GCharacter;
 import effects.ChargeIndicator;
+import gui.GameScreen;
 import helpers.GColors;
 import managers.EntityManager;
+import tiles.MovableType;
 
 // Class that represents the 'Crossbow' weapons in-game
 public class Crossbow extends Weapon {
@@ -35,49 +37,33 @@ public class Crossbow extends Weapon {
 			
 			// Find all enemies that are on player's shot path
 			ArrayList<GCharacter> inlineEnemies = new ArrayList<GCharacter>();
-			if(Math.abs(dx) > Math.abs(dy)) {
-				// X-wise shot
-				if(dx > 0) {
-					// Right-wise shot
-					// Check for NPCs in the same line as your attack
-					for(GCharacter npc : em.getNPCManager().getCharacters()) {
-						if((em.getPlayer().getXPos()) < npc.getXPos()
-								&& (em.getPlayer().getYPos()) == npc.getYPos()) {
-							inlineEnemies.add(npc);
-						}
-					}
-				} else {
-					// Left-wise shot
-					// Check for NPCs in the same line as your attack
-					for(GCharacter npc : em.getNPCManager().getCharacters()) {
-						if((em.getPlayer().getXPos()) > npc.getXPos()
-								&& (em.getPlayer().getYPos()) == npc.getYPos()) {
-							inlineEnemies.add(npc);
-						}
+			// While we still have a open bullet path, check for NPCs to hit
+			int nextX = (em.getPlayer().getXPos() + dx);
+			int nextY = (em.getPlayer().getYPos() + dy);
+			boolean isEndHit = false;
+			while(!isEndHit) { // Begin While --------------------------------------
+				// First check for NPCs to add
+				for(GCharacter npc : em.getNPCManager().getCharacters()) {
+					if(nextX == npc.getXPos() && nextY == npc.getYPos()) {
+						inlineEnemies.add(npc);
 					}
 				}
-			} else {
-				// Y-wise shot
-				if(dy > 0) {
-					// Downward shot
-					// Check for NPCs in the same line as your attack
-					for(GCharacter npc : em.getNPCManager().getCharacters()) {
-						if((em.getPlayer().getXPos()) == npc.getXPos()
-								&& (em.getPlayer().getYPos()) < npc.getYPos()) {
-							inlineEnemies.add(npc);
-						}
-					}
-				} else {
-					// Upward shot
-					// Check for NPCs in the same line as your attack
-					for(GCharacter npc : em.getNPCManager().getCharacters()) {
-						if((em.getPlayer().getXPos()) == npc.getXPos()
-								&& (em.getPlayer().getYPos()) > npc.getYPos()) {
-							inlineEnemies.add(npc);
-						}
-					}
+				
+				// Then check for walls or OOB
+				try {
+					isEndHit = GameScreen
+							.getTile(nextX, nextY)
+							.getTileType()
+							.getMovableType() == MovableType.WALL;
+				} catch (ArrayIndexOutOfBoundsException e) {
+					isEndHit = true;
 				}
-			}
+				
+				// Then update the next coordinates to check
+				nextX += dx;
+				nextY += dy;
+				
+			} // END While Loop ---------------------------------------------
 			
 			// Then check for closest NPC in the line of enemies
 			if(inlineEnemies.isEmpty()) {

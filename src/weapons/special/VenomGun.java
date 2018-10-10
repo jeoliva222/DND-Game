@@ -15,17 +15,18 @@ public class VenomGun extends Weapon {
 	// Serialization ID
 	private static final long serialVersionUID = -4686925679964499893L;
 
-	// Number of bullets to fire
-	private int bulletsToShoot = 1;
-	
+
 	// Maximum bullets fired at once
-	private final int bulletsMax = 3;
+	private final int bulletsMax = 4;
 	private final int bulletsMin = 1;
+	
+	// Number of bullets to fire
+	private int bulletsToShoot = this.bulletsMin;
 	
 	// Constructor
 	public VenomGun() {
 		super("Venom",
-				"WEAPON (Special): Charge to toggle firing stance. Charge attacks to fire away. Consecutive hits = More bullets!",
+				"WEAPON (Special): Charge to toggle firing stance. Charge attack to unleash a hail of bullets. Consecutive hits = More bullets!",
 				GPath.createImagePath(GPath.TILE, GPath.GENERIC, "testProj.png"));
 		
 		// Set damage attributes
@@ -227,7 +228,7 @@ public class VenomGun extends Weapon {
 	@Override
 	public void dischargeWeapon() {
 		super.dischargeWeapon();
-		this.bulletsToShoot = 1;
+		this.bulletsToShoot = this.bulletsMin;
 	}
 	
 	// Sorts NPCs by distance closest to player
