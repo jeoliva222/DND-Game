@@ -72,9 +72,9 @@ public class Player implements Serializable {
 		this.lastY = this.yPos;
 		
 		/// ***TEMP*** Set the area coordinates
-		// Default is 0, 0
+		// Default is 0, 1
 		this.areaX = 0;
-		this.areaY = 0;
+		this.areaY = 1;
 		
 		/// ***TEMP*** Set the level coordinates
 		// Default is 3, 2
