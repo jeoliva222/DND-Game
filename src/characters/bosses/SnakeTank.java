@@ -80,7 +80,7 @@ public class SnakeTank extends GCharacter {
 	private final int nukeMissMax = 3;
 	
 	// Determines time spent on cannon phase before switching
-	private final int cannonMax = 10;
+	private final int cannonMax = 30;
 	
 	// Determines time spent on chaingun phase before switching
 	private final int chaingunMax = 2;
@@ -118,7 +118,7 @@ public class SnakeTank extends GCharacter {
 	}
 	
 	public String getName() {
-		return "Der Froschmörder";
+		return "Der Froschmï¿½rder";
 	}
 	
 	@Override
@@ -238,7 +238,7 @@ public class SnakeTank extends GCharacter {
 					GameScreen.getTile(5, 1).setTileType(new AltWall());
 					
 					// Change music to Boss music
-					SoundPlayer.changeMidi(GPath.createSoundPath("d_e3m8.mid"));
+					SoundPlayer.changeMidi(GPath.createSoundPath("d_e3m8.mid"), 70);
 					
 					// Turn off the arrow turrets on the same screen
 					for(GCharacter npc: EntityManager.getInstance().getNPCManager().getCharacters()) {
@@ -255,6 +255,7 @@ public class SnakeTank extends GCharacter {
 				break;
 			case SnakeTank.STATE_ALERTED: //--------------------------------------------
 				// Start to chase player
+				//this.currentHP = 0; // TESTER TODO - Remove this
 				this.state = SnakeTank.STATE_PURSUE;
 				break;
 			case SnakeTank.STATE_PURSUE: //---------------------------------------------
