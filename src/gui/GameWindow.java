@@ -1,10 +1,10 @@
 package gui;
 
 import java.awt.Dimension;
-import java.awt.event.FocusEvent;
-import java.awt.event.FocusListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
@@ -35,6 +35,9 @@ public class GameWindow extends JFrame implements KeyListener {
 	// Flag to save the game
 	public static boolean shouldSave = false;
 	
+	// Flag indicating whether game is in debug mode (VM ARG: -Ddebug="T")
+	public static boolean isDebug = false;
+	
 	// GameScreen for displaying the game
 	private static GameScreen screen;
 	
@@ -52,6 +55,9 @@ public class GameWindow extends JFrame implements KeyListener {
 	
 	// InfoScreen for displaying info about various items/enemies
 	private static InfoScreen infoHUD;
+	
+	// Adapter used to regain focus on the game when screen is clicked
+	private MouseAdapter focusAdapter;
 
 	// Constructor
 	public GameWindow() {
@@ -108,19 +114,12 @@ public class GameWindow extends JFrame implements KeyListener {
 		GameWindow.infoHUD.setBounds((StatusScreen.getStatusWidth() + GameScreen.getGWidth()), InventoryScreen.getInvHeight(), InfoScreen.getInfoWidth(), InfoScreen.getInfoHeight());
 		
 		// Set window size parameters
-		int xOffset = GameInitializer.xOffset;
-		int yOffset = GameInitializer.yOffset;
+		int xOffset = (int) (GameInitializer.xOffset * GameInitializer.scaleFactor);
+		int yOffset = (int) (GameInitializer.yOffset * GameInitializer.scaleFactor);
 		Dimension size = new Dimension((GameScreen.getGWidth() + StatusScreen.getStatusWidth() + InventoryScreen.getInvWidth() + xOffset),
 				(GameScreen.getGHeight() + LogScreen.getLHeight() + yOffset));
 		this.setPreferredSize(size);
 		this.setMinimumSize(size);
-		
-		// Set some extra parameters and then make visible
-		this.setTitle("DnD Game");
-		this.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
-		this.addKeyListener(this);
-		this.setVisible(true);
-		this.pack();
 		
 		// Set on-close listener
 	    this.addWindowListener(new WindowAdapter() {
@@ -132,27 +131,35 @@ public class GameWindow extends JFrame implements KeyListener {
 	        }
 	    });
 	    
-	    //TODO Temporary hack to avoid bug where hitting 'TAB' over the weapon panel loses focus
-	    this.addFocusListener(new FocusListener() {
+	    // TODO WIP: Click-listener to regain focus on window after hitting tab over InfoScreen / clicking out
+	    this.focusAdapter = new MouseAdapter() {
 	    	@Override
-	    	public void focusLost(FocusEvent fe) {
-	    		// TODO - Temporary hack to get around game losing focus
+	    	public void mouseClicked(MouseEvent me) {
 	    		GameWindow.this.requestFocus();
-	    		System.out.println("Focus on main window lost, then regained.");
+	    		System.out.println("Click regained focus.");
 	    	}
-
-			@Override
-			public void focusGained(FocusEvent arg0) {
-				//System.out.println("Focus on window regained");
-			}
-	    });
+	    };
+	    this.addMouseListener(this.focusAdapter);
+	    GameWindow.infoHUD.addMouseListener(this.focusAdapter);
+	    
+	    // Checks for debug mode
+	    if(System.getProperty("debug").equals("T")) {
+	    	this.isDebug = true;
+	    }
 		
 		// "Caches" sound playing code by playing a silent sound.
 	    // This allows the first sound to play without a noticeable delay
 		SoundPlayer.cacheSoundPlaying();
 		
 		// Start playing music
-		SoundPlayer.playMidi(EntityManager.getInstance().getActiveArea().getMusic(), 15);
+		SoundPlayer.playMidi(EntityManager.getInstance().getActiveArea().getMusic(), 20);
+		
+		// Set some extra parameters and then make visible
+		this.setTitle("Frog VS World");
+		this.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+		this.addKeyListener(this);
+		this.setVisible(true);
+		this.pack();
 	}
 	
 	// Moves the player x-wise/y-wise then updates the screen to show it
@@ -454,16 +461,6 @@ public class GameWindow extends JFrame implements KeyListener {
         	this.completeTurn(0, 0);
         	this.updateAll();
         }
-        else if(e.getKeyCode() == KeyEvent.VK_M) {
-        	///*** DEBUG: Damages player by 1
-        	EntityManager.getInstance().getPlayer().damagePlayer(1);
-        	this.updateAll();
-        }
-        else if(e.getKeyCode() == KeyEvent.VK_N) {
-        	///*** DEBUG: Heals player by 1
-        	EntityManager.getInstance().getPlayer().healPlayer(1, false);
-        	this.updateAll();
-        }
         else if(e.getKeyCode() == KeyEvent.VK_Z) {
         	// Shift inventory selector to the left without consuming turn
         	InventoryScreen.shiftSelected(-1);
@@ -492,15 +489,21 @@ public class GameWindow extends JFrame implements KeyListener {
         	// Load the player's save file
         	this.loadGame();
         }
-        else if(e.getKeyCode() == KeyEvent.VK_TAB) { //TODO
-        	/// TEST - Tab hitting
-        	System.out.println("Tab pressed");
-        } 
-//      else if(e.getKeyCode() == KeyEvent.VK_F5) {
-//    	/// TEST ***
-//    	this.saveGame();
-//    	this.updateAll();
-//    }
+        else if(GameWindow.isDebug && e.getKeyCode() == KeyEvent.VK_M) {
+        	// *** DEBUG: Damages player by 1
+        	EntityManager.getInstance().getPlayer().damagePlayer(1);
+        	this.updateAll();
+        }
+        else if(GameWindow.isDebug && e.getKeyCode() == KeyEvent.VK_N) {
+        	// *** DEBUG: Heals player by 1
+        	EntityManager.getInstance().getPlayer().healPlayer(1, false);
+        	this.updateAll();
+        }
+	    else if(GameWindow.isDebug && e.getKeyCode() == KeyEvent.VK_F5) {
+	    	// *** DEBUG: Saves the game
+	    	this.saveGame();
+	    	this.updateAll();
+	    }
 	}
 	
 	@Override

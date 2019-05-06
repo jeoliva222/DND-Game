@@ -20,7 +20,12 @@ public class GameInitializer {
 	public static double scaleFactor = 1.0;
 	
 	// Offsets to window size to account for the frame's natural border dimensions
-	public static int xOffset = 18;
-	public static int yOffset = 40;
+	// TODO - These might be unnecessary now
+	
+	// Old value = 18
+	public static int xOffset = 0;
+	
+	// Old value = 40
+	public static int yOffset = 0;
 	
 }

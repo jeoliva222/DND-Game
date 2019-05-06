@@ -227,7 +227,7 @@ public class KingsHead extends GCharacter {
 		GameScreen.getTile(4, 1).setTileType(new Ground());
 		GameScreen.getTile(5, 1).setTileType(new Ground());
 		
-		// Change music to Boss music
+		// Change music to regular music
 		SoundPlayer.changeMidi(GPath.createSoundPath("d_e2m6.mid"), 30);
 		
 		// Log a final death message
@@ -239,7 +239,6 @@ public class KingsHead extends GCharacter {
 	public boolean damageCharacter(int damage) {
 		if((this.currentHP - damage) <= 0 && (!this.startStorm)) {
 			this.currentHP = 1;
-			SoundPlayer.playWAV(GPath.createSoundPath("head_storm.wav"));
 			this.startStorm = true;
 			return true;
 		} else {
@@ -270,13 +269,8 @@ public class KingsHead extends GCharacter {
 		
 		switch(this.state) {
 			case KingsHead.STATE_ALERTED:
-				// If we need to start the storm, then warp to the top of the screen and start!
-				if(this.startStorm) {
-					this.xPos = 4;
-					this.yPos = 0;
-					SoundPlayer.playWAV(GPath.createSoundPath("warp.wav"));
-					this.attCount = 0;
-					this.state = KingsHead.STATE_STORM;
+				// Check for start of storm attack, and then prepare for it if needed
+				if(this.checkStorm()) {
 					return;
 				}
 				
@@ -285,13 +279,8 @@ public class KingsHead extends GCharacter {
 				this.state = KingsHead.STATE_PURSUE;
 				break;
 			case KingsHead.STATE_PURSUE:
-				// If we need to start the storm, then warp to the top of the screen and start!
-				if(this.startStorm) {
-					this.xPos = 4;
-					this.yPos = 0;
-					SoundPlayer.playWAV(GPath.createSoundPath("warp.wav"));
-					this.attCount = 0;
-					this.state = KingsHead.STATE_STORM;
+				// Check for start of storm attack, and then prepare for it if needed
+				if(this.checkStorm()) {
 					return;
 				}
 				
@@ -352,13 +341,8 @@ public class KingsHead extends GCharacter {
 				this.attCount += 1;
 				break;
 			case KingsHead.STATE_REST:
-				// If we need to start the storm, then warp to the top of the screen and start!
-				if(this.startStorm) {
-					this.xPos = 4;
-					this.yPos = 0;
-					SoundPlayer.playWAV(GPath.createSoundPath("warp.wav"));
-					this.attCount = 0;
-					this.state = KingsHead.STATE_STORM;
+				// Check for start of storm attack, and then prepare for it if needed
+				if(this.checkStorm()) {
 					return;
 				}
 				
@@ -591,6 +575,25 @@ public class KingsHead extends GCharacter {
 		// Warp to the new coordinates
 		this.xPos = bestCorner.width;
 		this.yPos = bestCorner.height;
+	}
+	
+	// Checks whether to start the final storm attack, and then prepares for it if needed
+	private boolean checkStorm() {
+		if(this.startStorm) {
+			// Change position
+			this.xPos = 4;
+			this.yPos = 0;
+			
+			// Play sound
+			SoundPlayer.playWAV(GPath.createSoundPath("head_storm.wav"));
+			
+			// Reset attack counter and switch state
+			this.attCount = 0;
+			this.state = KingsHead.STATE_STORM;
+			return true;
+		} else {
+			return false;
+		}
 	}
 
 	// Shortening of adding effect for convenience and easy code reading

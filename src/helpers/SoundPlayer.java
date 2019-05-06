@@ -15,6 +15,8 @@ import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
 import javax.sound.sampled.FloatControl;
+import javax.sound.sampled.LineEvent;
+import javax.sound.sampled.LineListener;
 
 // Class that handles the playing of WAV, MIDI, and MP3 audio files
 // for game sound effects and music
@@ -49,7 +51,7 @@ public class SoundPlayer {
 	// Play WAV audio file with given gain (increases or decreases volume)
 	public static void playWAV(String wavPath, float gain) {
 		if((gain > 6.0f) || (gain < -80.0f)) {
-			System.out.println("Gain can only be between -80f and 6.0f: Your Gain = "+Float.toString(gain));
+			System.out.println("Gain can only be between -80f and 6.0f: Your Gain = " + Float.toString(gain));
 			return;
 		}
 		
@@ -64,15 +66,19 @@ public class SoundPlayer {
 					gainControl.setValue(gain); // Reduce volume by set gain
 	        }
 	        
-	        // Add listener to close the clip when it is done playing
-//	        clip.addLineListener(new LineListener() {
-//	            public void update(LineEvent myLineEvent) {
-//	              if (myLineEvent.getType() == LineEvent.Type.STOP)
-//	                clip.close();
-//	            }
-//	          });
-	        
+	        // Start the clip first
 	        clip.start();
+	        
+	        // Add listener to close clip when it is done
+	        LineListener listener = new LineListener() {
+	            public void update(LineEvent event) {
+	                    if (event.getType() == LineEvent.Type.STOP) {
+	                    	clip.close();
+	                        return;
+	                    }
+	            }
+	        };
+	        clip.addLineListener(listener);
 	    } catch(Exception ex) {
 	        System.out.println("Error with playing sound: " + wavPath);
 	        ex.printStackTrace();
@@ -115,7 +121,8 @@ public class SoundPlayer {
 	        // Starts playback of the MIDI data in the currently loaded sequence.
 			SoundPlayer.midiSequence.start();
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
+			// Print error message
+			System.out.println("Issue playing Midi stream");
 			e.printStackTrace();
 		}
 	}
@@ -143,7 +150,8 @@ public class SoundPlayer {
 	        // Starts playback of the MIDI data in the currently loaded sequence.
 	        SoundPlayer.midiSequence.start();
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
+			// Print error message
+			System.out.println("Issue playing Midi stream");
 			e.printStackTrace();
 		}
 	}
@@ -172,7 +180,9 @@ public class SoundPlayer {
 			try {
 				SoundPlayer.musicStream.close();
 			} catch (IOException e) {
-				// Do nothing
+				// Print error message
+				System.out.println("Issue closing Midi stream");
+				e.printStackTrace();
 			}
 		}
 	}
