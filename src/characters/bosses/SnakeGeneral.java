@@ -1036,6 +1036,9 @@ public class SnakeGeneral extends GCharacter {
 				this.addEffect(new FireEffect(bomb.x - 1, bomb.y - 1));		// Top-left
 				this.addEffect(new FireEffect(bomb.x - 1, bomb.y + 1));		// Bottom-left
 				
+				// Play bomb detonation
+				SoundPlayer.playWAV(GPath.createSoundPath("fire_ATT.wav"));
+				
 				// Check if bomb hit the player
 				if((plrX == bomb.x && plrY == bomb.y) ||
 						((plrX == bomb.x + 1) && (plrY == bomb.y + 1 || plrY == bomb.y - 1)) ||

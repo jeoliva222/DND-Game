@@ -53,6 +53,9 @@ public class SnakeTank extends GCharacter {
 	
 	// Additional parameters
 	
+	// Flag indicating whether tank fired its cannon this turn
+	private boolean firedCannon = false;
+	
 	// If tank did a double shot, indicates that it should put a one
 	// turn delay before firing again
 	private boolean delayNextShot = false;
@@ -118,52 +121,56 @@ public class SnakeTank extends GCharacter {
 	}
 	
 	public String getName() {
-		return "Der Froschm�rder";
+		return "Der Froschmorder";
 	}
 	
 	@Override
 	public String getImage() {
 		
 		// TEMP TODO
-		return this.imageDir + this.stImage_base + "_full.png";
+		//return this.imageDir + this.stImage_base + "_full.png";
 		
-//		String imgPath = this.imageDir + this.stImage_base;
-//		String hpPath = "";
-//		String statePath = "";
-//		if(this.currentHP > 0) {
-//			hpPath = "_full";
-//		} else {
-//			hpPath = "_dead";
-//			return (imgPath + hpPath + ".png");
-//		}
+		String imgPath = this.imageDir + this.stImage_base;
+		String hpPath = "";
+		String statePath = "";
+		if(this.currentHP > 10) {
+			hpPath = "_full";
+		} else if(this.currentHP > 0) {
+			hpPath = "_fatal";
+		} else {
+			hpPath = "_dead";
+			return (imgPath + hpPath + ".png");
+		}
 		
-//		switch(this.state) {
-//			case SnakeTank.STATE_IDLE:
-//			case SnakeTank.STATE_PURSUE:
-//				// No extra path
-//				break;
-//			case SnakeTank.STATE_ALERTED:
-//				statePath = "_ALERT";
-//				break;
-//			case SnakeTank.STATE_PREP_CHAINGUN:
-//				statePath = "_PREP_SHOOT";
-//				break;
-//			case SnakeTank.STATE_ATT_CHAINGUN:
-//				statePath = "_ATT_SHOOT";
-//				break;
-//			case SnakeTank.STATE_PREP_NUKE:
-//				statePath = "_PREP_SHOOT";
-//				break;
-//			case SnakeTank.STATE_ATT_NUKE:
-//				statePath = "_ATT_SHOOT";
-//				break;
-//			default:
-//				System.out.println
-//					(this.getName() + " couldn't find a proper image: " + Integer.toString(this.state));
-//				return GPath.NULL;
-//		}
-//		
-//		return (imgPath + hpPath + statePath + ".png");
+		switch(this.state) {
+			case SnakeTank.STATE_IDLE:
+			case SnakeTank.STATE_PURSUE:
+				if(this.firedCannon) {
+					statePath = "_CANNON";
+				}
+				break;
+			case SnakeTank.STATE_ALERTED:
+				statePath = "_ALERT";
+				break;
+			case SnakeTank.STATE_PREP_CHAINGUN:
+				statePath = "_PREP_GUN";
+				break;
+			case SnakeTank.STATE_ATT_CHAINGUN:
+				statePath = "_ATT_GUN";
+				break;
+			case SnakeTank.STATE_PREP_NUKE:
+				//statePath = "_PREP_SHOOT";
+				break;
+			case SnakeTank.STATE_ATT_NUKE:
+				//statePath = "_ATT_SHOOT";
+				break;
+			default:
+				System.out.println
+					(this.getName() + " couldn't find a proper image: " + Integer.toString(this.state));
+				return GPath.NULL;
+		}
+		
+		return (imgPath + hpPath + statePath + ".png");
 	}
 	
 	// TODO
@@ -228,6 +235,9 @@ public class SnakeTank extends GCharacter {
 		// Get relative location to player
 		int distX = plrX - this.xPos;
 		int distY = plrY - this.yPos;
+		
+		// Set fired flag to false
+		this.firedCannon = false;
 		
 		switch(this.state) {
 			case SnakeTank.STATE_IDLE: //----------------------------------------------
@@ -310,6 +320,9 @@ public class SnakeTank extends GCharacter {
 						// Play sound
 						this.playCannonSound();
 						
+						// Flip fired flag
+						this.firedCannon = true;
+						
 						// Shoot a cannonball, and increment counter by 2
 						this.addProjectile(new SnakeCannonball(this.xPos - 1, this.yPos, -1, 0, this));
 						this.attCount += 2;
@@ -319,6 +332,9 @@ public class SnakeTank extends GCharacter {
 						
 						// Play sound
 						this.playCannonSound();
+						
+						// Flip fired flag
+						this.firedCannon = true;
 						
 						// Shoot one of the two straight ahead
 						this.addProjectile(new SnakeCannonball(this.xPos - 1, this.yPos, -1, 0, this));

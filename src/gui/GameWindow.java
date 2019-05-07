@@ -143,8 +143,9 @@ public class GameWindow extends JFrame implements KeyListener {
 	    GameWindow.infoHUD.addMouseListener(this.focusAdapter);
 	    
 	    // Checks for debug mode
-	    if(System.getProperty("debug").equals("T")) {
-	    	this.isDebug = true;
+	    String debug = System.getProperty("debug");
+	    if(debug != null && debug.equals("T")) {
+	    	GameWindow.isDebug = true;
 	    }
 		
 		// "Caches" sound playing code by playing a silent sound.

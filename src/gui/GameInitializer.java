@@ -23,9 +23,9 @@ public class GameInitializer {
 	// TODO - These might be unnecessary now
 	
 	// Old value = 18
-	public static int xOffset = 0;
+	public static int xOffset = 18;
 	
 	// Old value = 40
-	public static int yOffset = 0;
+	public static int yOffset = 40;
 	
 }
