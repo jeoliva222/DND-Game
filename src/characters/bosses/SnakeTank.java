@@ -368,7 +368,8 @@ public class SnakeTank extends GCharacter {
 					// Blindly pursue the target (No need for path-finding)
 					DumbFollow.blindPursue(distX, distY, this);
 				} else if(this.attCount == 2) {
-					// Don't move, and do nothing
+					// Play reving sound
+					SoundPlayer.playWAV(GPath.createSoundPath("Chaingun_Rev.wav"));
 				} else {
 					// Fire the guns, and then change state
 					for(int i = 7; i >= 4; i--) {
@@ -378,6 +379,9 @@ public class SnakeTank extends GCharacter {
 							this.hitShots = true;
 						}
 					}
+					
+					// Play firing sound
+					SoundPlayer.playWAV(GPath.createSoundPath("Chaingun_Fire.wav"));
 					
 					// Reset attack counter and change state
 					this.attCount = 0;
@@ -403,6 +407,9 @@ public class SnakeTank extends GCharacter {
 					this.state = SnakeTank.STATE_PURSUE;
 					break;
 				}
+				
+				// Play firing sound
+				SoundPlayer.playWAV(GPath.createSoundPath("Chaingun_Fire.wav"));
 				
 				// Continue firing the guns
 				for(int i = 7; i >= 4; i--) {

@@ -653,6 +653,9 @@ public class SnakeGeneral extends GCharacter {
 					// Change state for next turn
 					this.state = SnakeGeneral.STATE_ATT_CHAINGUN;
 				}
+				
+				// Play firing sound
+				SoundPlayer.playWAV(GPath.createSoundPath("Chaingun_Fire.wav"));
 
 				// Safety check to prevent infinite loop
 				if(this.xMarkDir == 0 && this.yMarkDir == 0) {
@@ -927,10 +930,14 @@ public class SnakeGeneral extends GCharacter {
 						// Fire left cannons for the turn
 						this.addProjectile(new SnakeCannonball(4, this.rowOrder[0], 1, 0, this));
 						this.addProjectile(new SnakeCannonball(4, this.rowOrder[1], 1, 0, this));
+						this.addEffect(new DamageIndicator(4, this.rowOrder[0]));
+						this.addEffect(new DamageIndicator(4, this.rowOrder[1]));
 					} else {
 						// Fire right cannons for the turn
 						this.addProjectile(new SnakeCannonball(8, this.rowOrder[2], -1, 0, this));
 						this.addProjectile(new SnakeCannonball(8, this.rowOrder[3], -1, 0, this));
+						this.addEffect(new DamageIndicator(8, this.rowOrder[2]));
+						this.addEffect(new DamageIndicator(8, this.rowOrder[3]));
 					}
 				} else {
 					// Reset attack/special count
@@ -1087,6 +1094,8 @@ public class SnakeGeneral extends GCharacter {
 		} else if(whichAttack <= 15) {
 			this.state = SnakeGeneral.STATE_PREP_COMBO;
 		} else if(whichAttack <= 30) {
+			// Play reving sound
+			SoundPlayer.playWAV(GPath.createSoundPath("Chaingun_Rev.wav"));
 			this.state = SnakeGeneral.STATE_PREP_CHAINGUN;
 		} else {
 			this.state = SnakeGeneral.STATE_SET_BOMB;
