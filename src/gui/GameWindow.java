@@ -29,6 +29,9 @@ public class GameWindow extends JFrame implements KeyListener {
 	// Indicates whether a key is being pressed or not
 	private static boolean isKeyDown = false;
 	
+	// Indicates whether a turn is currently in progress, preventing buffering inputs
+	private static boolean turnInProgress = false;
+	
 	// Flag indicating whether the screen was changed on the current turn
 	protected static boolean changedScreen = false;
 	
@@ -420,10 +423,11 @@ public class GameWindow extends JFrame implements KeyListener {
 	@Override
 	public void keyPressed(KeyEvent e) {
 		// Disable key repeat
-		if(GameWindow.isKeyDown) {
+		if(GameWindow.isKeyDown || GameWindow.turnInProgress) {
 			return;
 		} else {
 			GameWindow.isKeyDown = true;
+			GameWindow.turnInProgress = true;
 		}
 		
 		if(e.getKeyCode() == KeyEvent.VK_RIGHT ||
@@ -505,6 +509,9 @@ public class GameWindow extends JFrame implements KeyListener {
 	    	this.saveGame();
 	    	this.updateAll();
 	    }
+		
+		// Indicate turn is finished
+		GameWindow.turnInProgress = false;
 	}
 	
 	@Override

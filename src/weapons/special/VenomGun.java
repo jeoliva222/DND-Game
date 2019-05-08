@@ -6,6 +6,7 @@ import characters.GCharacter;
 import gui.GameScreen;
 import helpers.GColors;
 import helpers.GPath;
+import helpers.SoundPlayer;
 import managers.EntityManager;
 import tiles.MovableType;
 import weapons.Weapon;
@@ -105,6 +106,9 @@ public class VenomGun extends Weapon {
 				boolean isMultihit = false;
 				int currentTarget = 0;
 				String logString = "";
+				
+				// Play firing sound
+				SoundPlayer.playWAV(GPath.createSoundPath("Chaingun_Fire.wav"));
 				
 				// Damage the closest NPC for each bullet fired
 				for(int shotCount = 0; shotCount < this.bulletsToShoot; shotCount++) {
@@ -208,13 +212,14 @@ public class VenomGun extends Weapon {
 		if(this.isCharged) {
 			// Discharge weapon
 			this.dischargeWeapon();
-		} else {
-			// Charge the equipped weapon and log it
-			//LogScreen.log("Charged weapon...");
+		} else if(!EntityManager.getInstance().getPlayer().getSheathedWeapon().equals(this)) {
+			// Only charge the weapon if it's in our primary slot
+			
+			// Charge the equipped weapon
 			this.isCharged = true;
 			
-			// Do your offhand weapon's action
-			EntityManager.getInstance().getPlayer().getSheathedWeapon().doOffhand();
+			// Play reving sound
+			SoundPlayer.playWAV(GPath.createSoundPath("Chaingun_Rev.wav"));
 		}
 	}
 
