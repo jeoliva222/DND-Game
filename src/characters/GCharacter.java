@@ -138,56 +138,47 @@ public abstract class GCharacter implements Serializable {
 	
 	// Initiates an attack on the player with damage multiplier
 	public boolean attackPlayer(double dmgMult) {
-		Random r = new Random();
-		int dmg;
-		int newMin = (int) Math.floor(this.minDmg * dmgMult);
-		int newMax = (int) Math.floor(this.maxDmg * dmgMult);
-		
 		// Fetch reference to the player
 		Player plr = EntityManager.getInstance().getPlayer();
+		
+		Random r = new Random();
+		int dmg;
+		int targetArmor = plr.getArmor();
+		int newMin = (int) Math.floor(this.minDmg * dmgMult);
+		int newMax = (int) Math.floor((this.maxDmg - targetArmor) * dmgMult);
+		
+		// Maximum damage cannot drop below 0
+		if(newMax < 0) {
+			newMax = 0;
+		}
+		
+		// If maximum damage is above minimum damage, drop the minimum damage to match
+		if(newMin > newMax) {
+			newMin = newMax;
+		}
 		
 		// If the enemy gets lucky, they crit the player
 		// Otherwise, calculate damage normally
 		if(Math.random() < this.critChance) {
-			// Get damage value
+			// Get critical damage value
 			dmg = (int) Math.floor(newMax * this.critMult);
-
-			// Subtract armor of player
-			dmg -= plr.getArmor();
-			
-			// Limit minimum damage value at 0
-			if(dmg < 0) {
-				dmg = 0;
-			}
-			
-			// Log result
-			if(dmg == 0) {
-				LogScreen.log(this.getName() +
-						" tickled the player's defenses", GColors.BASIC);
-			} else {
-				LogScreen.log(this.getName() +
-						" crit the player for " + Integer.toString(dmg) + " damage.", GColors.DAMAGE);
-			}
 		} else {
-			// Get damage value
+			// Get normal damage value
 			dmg = r.nextInt((newMax - newMin) + 1) + newMin;
-			
-			// Subtract armor of player
-			dmg -= plr.getArmor();
-			
-			// Limit minimum damage value at 0
-			if(dmg < 0) {
-				dmg = 0;
-			}
-			
-			// Log result
-			if(dmg == 0) {
-				LogScreen.log(this.getName() +
-						" tickled the player's defenses", GColors.BASIC);
-			} else {
-				LogScreen.log(this.getName() + " did "
-					+ Integer.toString(dmg) + " damage to the player.", GColors.DAMAGE);
-			}
+		}
+		
+		// Limit minimum damage value at 0
+		if(dmg < 0) {
+			dmg = 0;
+		}
+		
+		// Log result
+		if(dmg == 0) {
+			LogScreen.log(this.getName() +
+					" tickled the player's defenses", GColors.BASIC);
+		} else {
+			LogScreen.log(this.getName() + " did "
+				+ Integer.toString(dmg) + " damage to the player.", GColors.DAMAGE);
 		}
 		
 		return plr.damagePlayer(dmg);

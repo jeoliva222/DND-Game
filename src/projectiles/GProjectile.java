@@ -227,8 +227,19 @@ public abstract class GProjectile {
 	public int calculateDamage(double dmgMult, GCharacter npc) {
 		Random r = new Random();
 		int dmg;
+		int targetArmor = npc.getArmor();
 		int newMin = (int) Math.floor(this.minDmg * dmgMult);
-		int newMax = (int) Math.floor(this.maxDmg * dmgMult);
+		int newMax = (int) Math.floor((this.maxDmg - targetArmor) * dmgMult);
+		
+		// Maximum damage cannot drop below 0
+		if(newMax < 0) {
+			newMax = 0;
+		}
+		
+		// If maximum damage is above minimum damage, drop the minimum damage to match
+		if(newMin > newMax) {
+			newMin = newMax;
+		}
 		
 		// If the player gets lucky, they crit the enemy
 		// Otherwise, calculate damage normally
@@ -237,9 +248,6 @@ public abstract class GProjectile {
 		} else {
 			dmg = r.nextInt((newMax - newMin) + 1) + newMin;
 		}
-		
-		// Subtract armor value of target from damage dealt
-		dmg -= npc.getArmor();
 		
 		// Limit minimum damage at 0
 		if(dmg < 0) {
@@ -259,8 +267,19 @@ public abstract class GProjectile {
 	public int calculateDamage(double dmgMult, Player plr) {
 		Random r = new Random();
 		int dmg;
+		int targetArmor = plr.getArmor();
 		int newMin = (int) Math.floor(this.minDmg * dmgMult);
-		int newMax = (int) Math.floor(this.maxDmg * dmgMult);
+		int newMax = (int) Math.floor((this.maxDmg - targetArmor) * dmgMult);
+		
+		// Maximum damage cannot drop below 0
+		if(newMax < 0) {
+			newMax = 0;
+		}
+		
+		// If maximum damage is above minimum damage, drop the minimum damage to match
+		if(newMin > newMax) {
+			newMin = newMax;
+		}
 		
 		// If the player gets lucky, they crit the enemy
 		// Otherwise, calculate damage normally
@@ -269,9 +288,6 @@ public abstract class GProjectile {
 		} else {
 			dmg = r.nextInt((newMax - newMin) + 1) + newMin;
 		}
-		
-		// Subtract armor value of target from damage dealt
-		dmg -= plr.getArmor();
 		
 		// Limit minimum damage at 0
 		if(dmg < 0) {

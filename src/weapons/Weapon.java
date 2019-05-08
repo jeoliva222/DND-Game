@@ -42,8 +42,19 @@ public abstract class Weapon extends GItem {
 	public int calculateDamage(double dmgMult, GCharacter npc) {
 		Random r = new Random();
 		int dmg;
+		int targetArmor = npc.getArmor();
 		int newMin = (int) Math.floor(this.minDmg * dmgMult);
-		int newMax = (int) Math.floor(this.maxDmg * dmgMult);
+		int newMax = (int) Math.floor((this.maxDmg - targetArmor) * dmgMult);
+		
+		// Maximum damage cannot drop below 0
+		if(newMax < 0) {
+			newMax = 0;
+		}
+		
+		// If maximum damage is above minimum damage, drop the minimum damage to match
+		if(newMin > newMax) {
+			newMin = newMax;
+		}
 		
 		// If the player gets lucky, they crit the enemy
 		// Otherwise, calculate damage normally
@@ -52,9 +63,6 @@ public abstract class Weapon extends GItem {
 		} else {
 			dmg = r.nextInt((newMax - newMin) + 1) + newMin;
 		}
-		
-		// Subtract armor value of target from damage
-		dmg -= npc.getArmor();
 		
 		// Limit minimum damage at 0
 		if(dmg < 0) {

@@ -65,8 +65,19 @@ public class Hammer extends Weapon {
 	public int calculatePierceDamage(double dmgMult, GCharacter npc) {
 		Random r = new Random();
 		int dmg;
+		int halfArmor = npc.getArmor() / 2;
 		int newMin = (int) Math.floor(this.minDmg * dmgMult);
-		int newMax = (int) Math.floor(this.maxDmg * dmgMult);
+		int newMax = (int) Math.floor((this.maxDmg - halfArmor) * dmgMult);
+		
+		// Maximum damage cannot drop below 0
+		if(newMax < 0) {
+			newMax = 0;
+		}
+		
+		// If maximum damage is above minimum damage, drop the minimum damage to match
+		if(newMin > newMax) {
+			newMin = newMax;
+		}
 		
 		// If the player gets lucky, they crit the enemy
 		// Otherwise, calculate damage normally
@@ -75,10 +86,6 @@ public class Hammer extends Weapon {
 		} else {
 			dmg = r.nextInt((newMax - newMin) + 1) + newMin;
 		}
-		
-		// Subtract half of armor value of target from damage (Rounded down)
-		int halfArmor = npc.getArmor() / 2;
-		dmg -= halfArmor;
 		
 		// Limit minimum damage at 0
 		if(dmg < 0) {
