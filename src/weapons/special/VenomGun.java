@@ -3,6 +3,8 @@ package weapons.special;
 import java.util.ArrayList;
 
 import characters.GCharacter;
+import effects.ChargeIndicator;
+import effects.DamageIndicator;
 import gui.GameScreen;
 import helpers.GColors;
 import helpers.GPath;
@@ -18,8 +20,8 @@ public class VenomGun extends Weapon {
 
 
 	// Maximum bullets fired at once
-	private final int bulletsMax = 4;
-	private final int bulletsMin = 1;
+	private final byte bulletsMax = 4;
+	private final byte bulletsMin = 1;
 	
 	// Number of bullets to fire
 	private int bulletsToShoot = this.bulletsMin;
@@ -45,21 +47,16 @@ public class VenomGun extends Weapon {
 		
 		// Check if weapon is charged or not
 		if(this.isCharged) { // CHARGED ------------------------------------------
-			// Grab potential targets that are in line with the character (X-wise or Y-wise)
-			ArrayList<GCharacter> potentialTargets = new ArrayList<GCharacter>();
-			for(GCharacter npc : em.getNPCManager().getCharacters()) {
-				if((em.getPlayer().getXPos()) == npc.getXPos()
-					|| (em.getPlayer().getYPos()) == npc.getYPos()) {
-					potentialTargets.add(npc);
-				}
-			}
-			
 			// Find all enemies that are on player's shot path
 			ArrayList<GCharacter> inlineEnemies = new ArrayList<GCharacter>();
 			
+			// Coordinates of wall / End-of-screen
+			byte wallX = -1;
+			byte wallY = -1;
+			
 			// While we still have a open bullet path, check for NPCs to hit
-			int nextX = (em.getPlayer().getXPos() + dx);
-			int nextY = (em.getPlayer().getYPos() + dy);
+			byte nextX = (byte) (em.getPlayer().getXPos() + dx);
+			byte nextY = (byte) (em.getPlayer().getYPos() + dy);
 			boolean isEndHit = false;
 			while(!isEndHit) { // Begin While --------------------------------------
 				// First check for NPCs to add
@@ -69,9 +66,6 @@ public class VenomGun extends Weapon {
 					}
 				}
 				
-				// Mark tile with damage effect TODO
-				//
-				
 				// Then check for walls or OOB
 				try {
 					isEndHit = GameScreen
@@ -80,6 +74,11 @@ public class VenomGun extends Weapon {
 							.getMovableType() == MovableType.WALL;
 				} catch (ArrayIndexOutOfBoundsException e) {
 					isEndHit = true;
+				}
+				
+				if(isEndHit) {
+					wallX = nextX;
+					wallY = nextY;
 				}
 				
 				// Then update the next coordinates to check
@@ -110,8 +109,17 @@ public class VenomGun extends Weapon {
 				// Play firing sound
 				SoundPlayer.playWAV(GPath.createSoundPath("Chaingun_Fire.wav"));
 				
+				// Coordinates for furtherest NPC we hit
+				byte farNPCX = -1;
+				byte farNPCY = -1;
+				
 				// Damage the closest NPC for each bullet fired
 				for(int shotCount = 0; shotCount < this.bulletsToShoot; shotCount++) {
+					
+					// Keep track of coordinates
+					farNPCX = (byte) inlineEnemies.get(currentTarget).getXPos();
+					farNPCY = (byte) inlineEnemies.get(currentTarget).getYPos();
+					
 					// Calculate the bullet damage, then damage the closest NPC in our line of fire
 					int dmg = this.calculateDamage(this.chargeMult, inlineEnemies.get(currentTarget));
 					boolean didDie = inlineEnemies.get(currentTarget).damageCharacter(dmg);
@@ -132,19 +140,19 @@ public class VenomGun extends Weapon {
 						this.sendToLog("Player fired upon " + inlineEnemies.get(currentTarget).getName() + " and dealt "
 									+ logString + " damage.", GColors.ATTACK, inlineEnemies.get(currentTarget));
 						
+						
+						// Start building new log message
+						logString = "";
+						
 						// Switch target, or stop firing if no more targets
 						currentTarget += 1;
 						if(currentTarget >= inlineEnemies.size()) {
 							// Increase bullets fired with next attack (Capped at bulletsMax)
 							if(this.bulletsToShoot < this.bulletsMax) this.bulletsToShoot += 1;
 							
-							// Return true to indicate we hit targets
-							return true;
+							// Break from the 'for' loop
+							break;
 						}
-						
-						
-						// Start building new log message
-						logString = "";
 						
 						// Reset multihit flag
 						isMultihit = false;
@@ -162,15 +170,29 @@ public class VenomGun extends Weapon {
 					}
 				}
 				
+				// Mark tiles with effects until our farthest target or first wall
+				byte safetyCounter = 0;
+				nextX = (byte) (em.getPlayer().getXPos() + dx);
+				nextY = (byte) (em.getPlayer().getYPos() + dy);
+				while(!(nextX == wallX && nextY == wallY) && !(nextX == farNPCX && nextY == farNPCY) && (safetyCounter < 10)) {
+					// Add bullet effect TODO
+					em.getEffectManager().addEffect(new DamageIndicator(nextX, nextY));
+					
+					// Increment tracker coordinates
+					nextX += dx;
+					nextY += dy;
+					safetyCounter += 1;
+				}
+				
+				// Mark last tile with special impact effect TODO
+				em.getEffectManager().addEffect(new ChargeIndicator(nextX, nextY));
+				
+				
 				// Send remaining log message detailing damage done to enemy (If not blank)
 				if(!logString.equals("")) {
 					this.sendToLog("Player fired upon " + inlineEnemies.get(currentTarget).getName() + " and dealt "
 					+ logString + " damage.", GColors.ATTACK, inlineEnemies.get(currentTarget));
 				}
-				
-//				// Add on-hit effect TODO REMOVE THIS
-//				em.getEffectManager()
-//					.addEffect(new ChargeIndicator(inlineEnemies.get(currentTarget).getXPos(), inlineEnemies.get(currentTarget).getYPos()));
 				
 				// Increase bullets fired with next attack (Capped at bulletsMax)
 				if(this.bulletsToShoot < this.bulletsMax) this.bulletsToShoot += 1;
