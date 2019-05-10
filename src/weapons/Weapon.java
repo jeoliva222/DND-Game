@@ -51,7 +51,7 @@ public abstract class Weapon extends GItem {
 			newMax = 0;
 		}
 		
-		// If maximum damage is above minimum damage, drop the minimum damage to match
+		// If new maximum damage is below minimum damage, drop the minimum damage to match
 		if(newMin > newMax) {
 			newMin = newMax;
 		}
