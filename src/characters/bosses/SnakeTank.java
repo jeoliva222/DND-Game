@@ -191,7 +191,8 @@ public class SnakeTank extends GCharacter {
 	
 	@Override
 	public void onDeath() {
-		SoundPlayer.playWAV(GPath.createSoundPath("Beanpole_DEATH.wav"));
+		// Play death sound
+		// TODO
 		
 		// Close the pits in the arena
 		for(int x = 6; x < 8; x++) {
@@ -456,30 +457,39 @@ public class SnakeTank extends GCharacter {
 					break;
 				}
 				
+				// Increment attack counter
 				this.attCount += 1;
 				break;
 			case SnakeTank.STATE_ATT_NUKE: //---------------------------------------------
 				// Swat Nuke to the side if it is coming at us and we've been hit once before
+				// Otherwise, just wait until the Nuke has exploded
 				
-				// Get reference to the Nuke
-				for(GCharacter npc: EntityManager.getInstance().getNPCManager().getCharacters()) {
-					if(npc != this && npc instanceof SnakeNuke) {
-						// Get Nuke Instance from NPC
-						SnakeNuke nuke = (SnakeNuke) npc;
-						
-						// Swat the Nuke if next to us and headed in our direction
-						if(this.willDeflect && nuke.getXPos() == (this.xPos - 1) && 
-								nuke.getYPos() == this.yPos && nuke.xSpeed == 1) {
-							if(this.yPos >= 4) {
-								nuke.setDirection(0, -1);
-							} else {
-								nuke.setDirection(0, 1);
+				// Only look for Nuke if we're going to try to deflect it
+				if(this.willDeflect) {
+					// Get reference to the Nuke
+					for(GCharacter npc: EntityManager.getInstance().getNPCManager().getCharacters()) {
+						if(npc != this && npc instanceof SnakeNuke) {
+							// Get Nuke Instance from NPC
+							SnakeNuke nuke = (SnakeNuke) npc;
+							
+							// Swat the Nuke if next to us and headed in our direction
+							if(nuke.getXPos() == (this.xPos - 1) && 
+									nuke.getYPos() == this.yPos && nuke.xSpeed == 1) {
+								if(this.yPos >= 4) {
+									nuke.setDirection(0, -1);
+								} else {
+									nuke.setDirection(0, 1);
+								}
 							}
+							
+							// Break from character iterating loop
+							break;
 						}
-					}
-				}
+					} // End of character iterating 'for' loop
+				} // End of 'willDeflect' segment
 				
 				// If our nuke is dead, then reset flags and switch back to pursue state
+				// This variable is set by SnakeNuke using the 'informNukeDead' function
 				if(this.nukeDead) {
 					this.nukeDead = false;
 					this.attCount = 0;
@@ -487,6 +497,7 @@ public class SnakeTank extends GCharacter {
 					break;
 				}
 				
+				// Increment attack counter
 				this.attCount += 1;
 				break;
 			default: //---------------------------------------------
@@ -521,6 +532,11 @@ public class SnakeTank extends GCharacter {
 				SoundPlayer.playWAV(GPath.createSoundPath("CannonFire1.wav"));
 				break;
 		}
+	}
+	
+	// Used by SnakeNuke to inform the Tank that it blew up
+	protected void informNukeDead() {
+		this.nukeDead = true;
 	}
 	
 	// Shortening of adding effect for convenience and easy code reading

@@ -211,6 +211,9 @@ public class SnakeNuke extends GCharacter {
 				if(!this.moveCharacter(this.xSpeed, this.ySpeed)) {
 					// Do explosion, then hide away until active again
 					
+					// Play explosion sound TODO
+					SoundPlayer.playWAV(GPath.createSoundPath("fire_ATT.wav"));
+					
 					// Explode based of current position and speed of Nuke
 					if(this.xPos <= 6) {
 						// Check for special cases, but otherwise explode left side
@@ -315,7 +318,7 @@ public class SnakeNuke extends GCharacter {
 		}
 		
 		// Let the tank know that the Nuke has exploded
-		tank.nukeDead = true;
+		tank.informNukeDead();
 		
 		if(xSpot == 0 && ySpot == 1) {
 			// Bottom area

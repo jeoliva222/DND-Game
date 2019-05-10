@@ -37,7 +37,7 @@ public class SnakeGeneral extends GCharacter {
 	
 	// Modifiers/Statistics
 
-	private int MAX_HP = 100;
+	private int MAX_HP = 120;
 	
 	private int ARMOR_VAL = 0;
 	
@@ -92,7 +92,7 @@ public class SnakeGeneral extends GCharacter {
 	
 	// Counter that determines whether General should do special attack
 	private int spcCount = 0;
-	private final int SPC_MAX = 40;
+	private final int SPC_MAX = 30;
 	
 	// Flag indicating whether General is in phase 2 of the fight
 	private boolean isPhase2 = false;
@@ -226,9 +226,20 @@ public class SnakeGeneral extends GCharacter {
 			statePath = "_ATT_FIRE_ALT";
 			break;
 		case SnakeGeneral.STATE_SPC_BLITZ:
-			return GPath.NULL;
+			if(this.attCount <= 7) {
+				return GPath.NULL;
+			} else if(this.attCount == 8) {
+				statePath = "_ATT_SWIPE";
+			} else {
+				// No extra path
+			}
+			break;
 		case SnakeGeneral.STATE_SPC_CANNON:
-			return GPath.NULL;
+			if(this.attCount <= 1) {
+				return GPath.NULL;
+			} else {
+				statePath = "_ATT_FIRE";
+			}
 		case SnakeGeneral.STATE_STUN:
 			statePath = "_PREP_SLAM";
 			break;
@@ -266,6 +277,9 @@ public class SnakeGeneral extends GCharacter {
 		} else {
 			SoundPlayer.playWAV(GPath.createSoundPath("BunnyWarrior_DEATH2.wav"));
 		}
+		
+		// Clear any remaining bombs
+		this.placedBombs.clear();
 		
 		// Open the doors to the arena
 		GameScreen.getTile(4, 1).setTileType(new AltGround());
@@ -306,6 +320,7 @@ public class SnakeGeneral extends GCharacter {
 		
 		// If below 80% health, go to phase 2
 		if((!this.isPhase2) && (this.currentHP < (this.maxHP*4/5))) {
+			SoundPlayer.playWAV(GPath.createSoundPath("snake1_warn1.wav"));
 			this.isPhase2 = true;
 		} else {
 			this.playHurt();
@@ -802,11 +817,8 @@ public class SnakeGeneral extends GCharacter {
 					
 					// Check if we've taken damage recently
 					if(this.recentDmg) {
-						// Play 'ouch' sound
-						// TODO
-						
-						// Change state to stunned
-						this.state = SnakeGeneral.STATE_STUN;
+						// Stun the general and break
+						this.stunGeneral();
 						break;
 					} else {
 						// Correct attacking direction
@@ -888,17 +900,55 @@ public class SnakeGeneral extends GCharacter {
 							this.playerInitiate();
 						}
 					}
+					
+					// Display the General attacking the current row
+					if(this.attCount == 7) {
+						// Warp real General to last attack location (Right side)
+						this.xPos = 9;
+						this.yPos = this.rowOrder[(this.attCount-4)];
+					} else {
+						// Display a fake General at the location
+						if(this.attCount % 2 == 0) {
+							// Left side
+							this.addEffect(new FakeSnakeEffect(3, this.rowOrder[(this.attCount-4)]));
+						} else {
+							// Right side
+							this.addEffect(new FakeSnakeEffect(9, this.rowOrder[(this.attCount-4)]));
+						}
+					}
+					
+				} else if(this.attCount <= 10) {
+					// Cooldown for three turns
+					
+					// If we're hit during cooldown, enter stun
+					if(this.recentDmg) {
+						// Reset attack/special count
+						this.attCount = 0;
+						this.spcCount = 0;
+						
+						// Stun the general and break
+						this.stunGeneral();
+						break;
+					}
+					
 				} else {
 					// Reset attack/special count
 					this.attCount = 0;
 					this.spcCount = 0;
 					
-					// Warp General back to arena: TODO - TEMP
-					this.warpGeneral(plrX, plrY);
-
-					// Change state to pursue
-					this.state = SnakeGeneral.STATE_PURSUE;
-					break;	
+					// If we're hit before warp, enter stun
+					if(this.recentDmg) {
+						// Stun the general and break
+						this.stunGeneral();
+						break;
+					} else {
+						// Warp General back to arena
+						this.warpGeneral(plrX, plrY);
+	
+						// Change state to pursue
+						this.state = SnakeGeneral.STATE_PURSUE;
+						break;	
+					}
 				}
 
 				// Increment attack counter
@@ -923,9 +973,64 @@ public class SnakeGeneral extends GCharacter {
 					this.addEffect(new WarningIndicator(4, this.rowOrder[1]));
 					this.addEffect(new WarningIndicator(8, this.rowOrder[2]));
 					this.addEffect(new WarningIndicator(8, this.rowOrder[3]));
+					
+					// Show General warping in
+					this.addEffect(new WarpFizzleEffect(3, this.rowOrder[0]));
+					this.addEffect(new WarpFizzleEffect(3, this.rowOrder[1]));
+					this.addEffect(new WarpFizzleEffect(9, this.rowOrder[2]));
+					this.addEffect(new WarpFizzleEffect(9, this.rowOrder[3]));
 				} else if(this.attCount <= 8) {
+					
+					// Warp in on the first turn of attack
+					if(this.attCount == 1) {
+						int whichPos = new Random().nextInt(4);
+						if(whichPos <= 1) {
+							// Left positions
+							this.xPos = 3;
+							this.yPos = this.rowOrder[whichPos];
+						} else {
+							// Right positions
+							this.xPos = 9;
+							this.yPos = this.rowOrder[whichPos];
+						}
+					}
+					
+					// If we're hit during cannon firing, enter stun
+					if(this.recentDmg) {
+						// Reset attack/special count
+						this.attCount = 0;
+						this.spcCount = 0;
+						
+						// Stun the general and break
+						this.stunGeneral();
+						break;
+					}
+					
+					// Mark other firing spots with Fake Generals
+					// First row (Left)
+					if(!((this.xPos == 3) && (this.yPos == this.rowOrder[0]))) {
+						this.addEffect(new FakeSnakeEffect(3, this.rowOrder[0]));
+					}
+					
+					// Second row (Left)
+					if(!((this.xPos == 3) && (this.yPos == this.rowOrder[1]))) {
+						this.addEffect(new FakeSnakeEffect(3, this.rowOrder[1]));
+					}
+					
+					// Third row (Right)
+					if(!((this.xPos == 9) && (this.yPos == this.rowOrder[2]))) {
+						this.addEffect(new FakeSnakeEffect(9, this.rowOrder[2]));
+					}
+					
+					// Fourth row (Right)
+					if(!((this.xPos == 9) && (this.yPos == this.rowOrder[3]))) {
+						this.addEffect(new FakeSnakeEffect(9, this.rowOrder[3]));
+					}
+					
 					// Play cannon sound
 					this.playCannonSound();
+					
+					// Alternate cannon-firing side
 					if(this.attCount % 2 == 1) {
 						// Fire left cannons for the turn
 						this.addProjectile(new SnakeCannonball(4, this.rowOrder[0], 1, 0, this));
@@ -939,17 +1044,39 @@ public class SnakeGeneral extends GCharacter {
 						this.addEffect(new DamageIndicator(8, this.rowOrder[2]));
 						this.addEffect(new DamageIndicator(8, this.rowOrder[3]));
 					}
-				} else {
-					// Reset attack/special count
-					this.attCount = 0;
-					this.spcCount = 0;
+				} else if(this.attCount <= 11) { 
+					// Cooldown for three turns
 					
-					// Warp General back to arena: TODO - TEMP
+					// If we're hit during cooldown, enter stun
+					if(this.recentDmg) {
+						// Reset attack/special count
+						this.attCount = 0;
+						this.spcCount = 0;
+						
+						// Stun the general and break
+						this.stunGeneral();
+						break;
+					}
+				} else {
+
+				// Reset attack/special count
+				this.attCount = 0;
+				this.spcCount = 0;
+				
+				// If we're hit before warp, enter stun
+				if(this.recentDmg) {
+					// Stun the general and break
+					this.stunGeneral();
+					break;
+				} else {
+					// Warp General back to arena
 					this.warpGeneral(plrX, plrY);
 
 					// Change state to pursue
 					this.state = SnakeGeneral.STATE_PURSUE;
 					break;	
+				}
+					
 				}
 
 				// Increment attack counter
@@ -1019,6 +1146,15 @@ public class SnakeGeneral extends GCharacter {
 		// Warp to the new coordinates
 		this.xPos = bestCorner.width;
 		this.yPos = bestCorner.height;
+	}
+	
+	// Plays special sound and transitions General into Stun state
+	private void stunGeneral() {
+		// Play 'ouch' sound - TODO Temp
+		SoundPlayer.playWAV(GPath.createSoundPath("beep_ALERT.wav"));
+		
+		// Change state to stunned
+		this.state = SnakeGeneral.STATE_STUN;
 	}
 	
 	// Manage the bombs we have on screen (if there are any)
