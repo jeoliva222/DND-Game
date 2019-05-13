@@ -52,6 +52,9 @@ public class GameTile extends JPanel {
 	// Type of tile
 	private TileType tType;
 	
+	// Flag indicating whether tile is currently visible or not
+	private boolean isVisible = false;
+	
 	// Scale factor of game images
 	private double scaleFactor;
 	
@@ -81,12 +84,15 @@ public class GameTile extends JPanel {
 		this.addMouseListener(new MouseAdapter() {
 		     @Override
 		     public void mouseEntered(MouseEvent mouseEvent) {
-		    	 // Try to focus on NPC
-		    	 if(GameTile.this.findNPC()) {
-		    		 return;
-		    	 } else {
-		    		 // If we couldn't find an NPC, try to find item
-		    		 GameTile.this.findItem();
+		    	 // Only try to focus if tile is currently visible
+		    	 if(GameTile.this.isVisible) {
+		    		// Try to focus on NPC
+			    	 if(GameTile.this.findNPC()) {
+			    		 return;
+			    	 } else {
+			    		 // If we couldn't find an NPC, try to find item
+			    		 GameTile.this.findItem();
+			    	 }
 		    	 }
 		     }
 		});
@@ -132,8 +138,11 @@ public class GameTile extends JPanel {
 	        for(Image fxImg: this.fxImages.values()) {
 	        	g.drawImage(fxImg, 0, 0, null); 
 	        }
+	        
+	        this.isVisible = true;
         } else {
         	// Display nothing (AKA: Darkness)
+        	this.isVisible = false;
         }
     }
 	

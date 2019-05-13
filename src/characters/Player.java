@@ -29,11 +29,11 @@ public class Player implements Serializable {
 	private static final long serialVersionUID = -1569715616453904946L;
 	
 	// Player image paths
-	private String playerImage_FULL = GPath.createImagePath(GPath.ALLY, GPath.PLAYER, "frog_full.png");
-	private String playerImage_BRUISED = GPath.createImagePath(GPath.ALLY, GPath.PLAYER, "frog_bruised.png");
-	private String playerImage_INJURED = GPath.createImagePath(GPath.ALLY, GPath.PLAYER, "frog_injured.png");
-	private String playerImage_FATAL = GPath.createImagePath(GPath.ALLY, GPath.PLAYER, "frog_fatal2.png");
-	private String playerImage_DEAD = GPath.createImagePath(GPath.ALLY, GPath.PLAYER, "frog_dead2.png");
+	private final String playerImage_FULL = GPath.createImagePath(GPath.ALLY, GPath.PLAYER, "frog_full.png");
+	private final String playerImage_BRUISED = GPath.createImagePath(GPath.ALLY, GPath.PLAYER, "frog_bruised.png");
+	private final String playerImage_INJURED = GPath.createImagePath(GPath.ALLY, GPath.PLAYER, "frog_injured.png");
+	private final String playerImage_FATAL = GPath.createImagePath(GPath.ALLY, GPath.PLAYER, "frog_fatal2.png");
+	private final String playerImage_DEAD = GPath.createImagePath(GPath.ALLY, GPath.PLAYER, "frog_dead2.png");
 	
 	// X and Y positions on the current screen
 	private int xPos, yPos;
@@ -53,6 +53,7 @@ public class Player implements Serializable {
 	// Amount of armor that negates damage
 	private int armor;
 	
+	// Number of tiles away player can see in dark areas
 	private int vision;
 	
 	// List of tile categories you can move on
