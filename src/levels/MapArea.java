@@ -21,6 +21,9 @@ public class MapArea implements Serializable {
 	// Path to the song that plays in the area
 	protected String musicPath;
 	
+	// Flag determining whether area will be dark or not
+	protected boolean isDark = false;
+	
 	// Constructor
 	protected MapArea(MapLevel[][] levels, String name, String theme, String musicPath) {
 		this.levels = levels;
@@ -35,6 +38,24 @@ public class MapArea implements Serializable {
 		this.name = name;
 		this.theme = theme;
 		this.musicPath = musicPath;
+	}
+	
+	// Constructor (With Dark parameter)
+	protected MapArea(MapLevel[][] levels, String name, String theme, String musicPath, boolean isDark) {
+		this.levels = levels;
+		this.name = name;
+		this.theme = theme;
+		this.musicPath = musicPath;
+		this.isDark = isDark;
+	}
+	
+	// Alternate Constructor with different parameter order (With Dark parameter)
+	protected MapArea(String name, String theme, String musicPath, boolean isDark, MapLevel[][] levels) {
+		this.levels = levels;
+		this.name = name;
+		this.theme = theme;
+		this.musicPath = musicPath;
+		this.isDark = isDark;
 	}
 	
 	//--------------------
@@ -66,6 +87,10 @@ public class MapArea implements Serializable {
 	
 	public int getHeight() {
 		return this.levels.length;
+	}
+	
+	public boolean showDark() {
+		return this.isDark;
 	}
 
 }

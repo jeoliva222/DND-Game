@@ -510,6 +510,11 @@ public class GameWindow extends JFrame implements KeyListener {
 	    	this.updateAll();
 	    }
 		
+		// If we're in a dark area, refresh all tiles every move
+		if(EntityManager.getInstance().getActiveArea().showDark()) {
+			GameWindow.screen.refreshTiles();
+		}
+		
 		// Indicate turn is finished
 		GameWindow.turnInProgress = false;
 	}

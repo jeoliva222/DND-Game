@@ -53,13 +53,17 @@ public class Player implements Serializable {
 	// Amount of armor that negates damage
 	private int armor;
 	
+	private int vision;
+	
 	// List of tile categories you can move on
 	private ArrayList<MovableType> moveTypes = new ArrayList<MovableType>();
 	
 	// Equipped Weapon (Active)
+	// Default is Armory.bareFists
 	private Weapon equippedWeapon = Armory.bareFists;
 	
 	// Sheathed Weapon (Inactive)
+	// Default is Armory.bareFists
 	private Weapon sheathedWeapon = Armory.bareFists;
 	
 	// Constructor
@@ -89,6 +93,10 @@ public class Player implements Serializable {
 		// Set armor value
 		// Default is 0
 		this.armor = 0;
+		
+		// Set vision value
+		// Default is 2
+		this.vision = 2;
 		
 		// Dictate what player can move on
 		this.populateMoveTypes();
@@ -536,6 +544,14 @@ public class Player implements Serializable {
 	
 	public void addArmor(int armorValue) {
 		this.armor += armorValue;
+	}
+	
+	public int getVision() {
+		return this.vision;
+	}
+	
+	public void addVision(int dv) {
+		this.vision += dv;
 	}
 	
 }

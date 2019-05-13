@@ -11,6 +11,7 @@ import characters.BreakableWall;
 import characters.BunnyWarrior;
 import characters.GCharacter;
 import characters.Signpost;
+import characters.TormentedSoul;
 import helpers.GPath;
 import items.GPickup;
 import items.SmallHealthPotion;
@@ -23,6 +24,7 @@ import tiles.Wall;
 import weapons.Armory;
 
 // Class representing level(s)/area definition for Skin Museum area
+// ** DARK AREA **
 public class MuseumLevels implements Serializable {
 	
 	// Serialization ID
@@ -117,6 +119,7 @@ public class MuseumLevels implements Serializable {
 			add(new Signpost(2, 3, "statue1.png", "Endless Grin"));
 			add(new Signpost(2, 6, "statue2.png", "Self Betrayal"));
 			add(new Signpost(7, 3, "statue3.png", "Bleeding Heart"));
+			add(new TormentedSoul(7, 6));
 		}}, new ArrayList<GPickup>() {{
 			//add(new GPickup(5, 3, new SmallHealthPotion()));
 		}});
@@ -183,7 +186,7 @@ public class MuseumLevels implements Serializable {
 		//************************************************
 		// CONSTRUCTOR: AREA DEFINITION
 		
-		area_MUSEUM = new MapArea("Skin Museum", GPath.MUSEUM, GPath.createSoundPath("d2_m30.mid"),
+		area_MUSEUM = new MapArea("Skin Museum", GPath.MUSEUM, GPath.createSoundPath("d2_m30.mid"), true,
 				new MapLevel[][] {
 			// Level grid definition
 			{m00, m10, m20},

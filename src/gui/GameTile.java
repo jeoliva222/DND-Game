@@ -1,6 +1,7 @@
 package gui;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.event.MouseAdapter;
@@ -13,6 +14,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JPanel;
 
 import characters.GCharacter;
+import characters.Player;
 import effects.GEffect;
 import helpers.GPath;
 import helpers.ImageHandler;
@@ -72,6 +74,9 @@ public class GameTile extends JPanel {
 		String mgpath = GPath.NULL;
 		String fgpath = GPath.NULL;
 		
+		// Set background color of black
+		this.setBackground(Color.BLACK);
+		
 		// Mouse Listener for finding NPCs/items
 		this.addMouseListener(new MouseAdapter() {
 		     @Override
@@ -97,20 +102,39 @@ public class GameTile extends JPanel {
 	@Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
-        g.drawImage(this.bgImage, 0, 0, null);
-        if(this.setCorpse)
-        	g.drawImage(this.corpseImage, 0, 0, null);
-        if(this.setPickup)
-        	g.drawImage(this.pickupImage, 0, 0, null);
-        if(this.setEntity)
-        	g.drawImage(this.entityImage, 0, 0, null);
-        for(Image projImg: this.projImages.values()) {
-        	g.drawImage(projImg, 0, 0, null); 
+        EntityManager em = EntityManager.getInstance();
+        Player player = em.getPlayer();
+        byte distance = 0;
+        
+        if(em.getActiveArea().showDark()) {
+    		// Get player's location
+    		int plrX = player.getXPos();
+    		int plrY = player.getYPos();
+    		
+    		// Get relative location to player
+    		byte distX = (byte) (plrX - this.gridX);
+    		byte distY = (byte) (plrY - this.gridY);
+    		
+    		distance = (byte) (Math.abs(distX) + Math.abs(distY));
         }
-        for(Image fxImg: this.fxImages.values()) {
-        	g.drawImage(fxImg, 0, 0, null); 
+        
+        if(distance <= player.getVision()) {
+	        g.drawImage(this.bgImage, 0, 0, null);
+	        if(this.setCorpse)
+	        	g.drawImage(this.corpseImage, 0, 0, null);
+	        if(this.setPickup)
+	        	g.drawImage(this.pickupImage, 0, 0, null);
+	        if(this.setEntity)
+	        	g.drawImage(this.entityImage, 0, 0, null);
+	        for(Image projImg: this.projImages.values()) {
+	        	g.drawImage(projImg, 0, 0, null); 
+	        }
+	        for(Image fxImg: this.fxImages.values()) {
+	        	g.drawImage(fxImg, 0, 0, null); 
+	        }
+        } else {
+        	// Display nothing (AKA: Darkness)
         }
-        	
     }
 	
 	// Sets the tile (ground) image
