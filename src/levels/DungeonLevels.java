@@ -18,6 +18,7 @@ import characters.EliteBitester;
 import characters.EliteBunnyWarrior;
 import characters.EliteWatchman;
 import characters.GCharacter;
+import characters.Hoptooth;
 import characters.SaveCrystal;
 import characters.Watchman;
 import characters.bosses.KingBonBon;
@@ -1276,6 +1277,8 @@ public class DungeonLevels implements Serializable {
 						}})),
 		}, new ArrayList<GCharacter>() {{
 			add(new SaveCrystal(5, 1));
+			add(new Hoptooth(1, 6, PatrolPattern.STATIONARY));
+			add(new Hoptooth(1, 7, PatrolPattern.STATIONARY));
 		}}, new ArrayList<GPickup>() {{
 		}});
 		
