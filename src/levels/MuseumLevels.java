@@ -118,8 +118,8 @@ public class MuseumLevels implements Serializable {
 		}, new ArrayList<GCharacter>() {{
 			add(new Signpost(2, 3, "statue1.png", "Endless Grin"));
 			add(new Signpost(2, 6, "statue2.png", "Self Betrayal"));
-			add(new Signpost(7, 3, "statue3.png", "Bleeding Heart"));
-			add(new TormentedSoul(7, 6));
+			add(new Signpost(7, 3, "statue4.png", "Mister Spider"));
+			add(new TormentedSoul(7, 6, "soul1"));
 		}}, new ArrayList<GPickup>() {{
 			//add(new GPickup(5, 3, new SmallHealthPotion()));
 		}});

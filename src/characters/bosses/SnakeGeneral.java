@@ -240,6 +240,7 @@ public class SnakeGeneral extends GCharacter {
 			} else {
 				statePath = "_ATT_FIRE";
 			}
+			break;
 		case SnakeGeneral.STATE_STUN:
 			statePath = "_PREP_SLAM";
 			break;

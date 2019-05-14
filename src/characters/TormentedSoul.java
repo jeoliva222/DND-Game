@@ -36,20 +36,21 @@ public class TormentedSoul extends GCharacter {
 	// Additional parameters
 	
 	// Indicate whether soul should try to move
-	protected boolean shouldMove = false;
+	private boolean shouldMove = false;
 
+	// Flag indicating which step soul is on
+	private boolean whichStep = false;
 	
 	//----------------------------
 	
 	// File paths to images TODO
-	private String imageDir = GPath.createImagePath(GPath.ENEMY, GPath.BEANPOLE);
-	private String bpImage_base = "beanpole";
+	private String imageDir = GPath.createImagePath(GPath.ENEMY, GPath.TORMENTED_SOUL);
+	private String tsImage_base = "";
 	
-	private String bpImage_DEAD = GPath.createImagePath(GPath.ENEMY, GPath.BEANPOLE, "beanpole_dead.png");
-	private String bpImage_DEAD_CRIT = GPath.createImagePath(GPath.ENEMY, GPath.BEANPOLE, "beanpole_dead_CRIT.png");
+	private String tsImage_DEAD = GPath.createImagePath(GPath.ENEMY, GPath.TORMENTED_SOUL, (this.tsImage_base + "_dead.png"));
 
 
-	public TormentedSoul(int startX, int startY) {
+	public TormentedSoul(int startX, int startY, String imageBase) {
 		super(startX, startY);
 		
 		this.maxHP = MAX_HP;
@@ -64,26 +65,7 @@ public class TormentedSoul extends GCharacter {
 		this.state = TormentedSoul.STATE_IDLE;
 		this.patrolPattern = PatrolPattern.STATIONARY;
 		
-		// Can't focus on this at first
-		this.canFocus = false;
-		
-		this.imagePath = this.getImage();
-	}
-	
-	public TormentedSoul(int startX, int startY, PatrolPattern patpat) {
-		super(startX, startY);
-		
-		this.maxHP = MAX_HP;
-		this.currentHP = this.maxHP;
-		
-		this.minDmg = MIN_DMG;
-		this.maxDmg = MAX_DMG;
-		
-		this.critChance = CRIT_CHANCE;
-		this.critMult = CRIT_MULT;
-		
-		this.state = TormentedSoul.STATE_IDLE;
-		this.patrolPattern = patpat;
+		this.tsImage_base = imageBase;
 		
 		// Can't focus on this at first
 		this.canFocus = false;
@@ -97,14 +79,14 @@ public class TormentedSoul extends GCharacter {
 	
 	@Override
 	public String getImage() {
-		String imgPath = this.imageDir + this.bpImage_base;
+		String imgPath = this.imageDir + this.tsImage_base;
 		String hpPath = "";
 		String statePath = "";
 		
 		if(this.currentHP > (this.maxHP / 2)) {
 			hpPath = "_full";
 		} else if(this.currentHP > 0) {
-			hpPath = "_fatal";
+			hpPath = "_full";
 		} else {
 			hpPath = "_dead";
 			return (imgPath + hpPath + ".png");
@@ -112,16 +94,25 @@ public class TormentedSoul extends GCharacter {
 		
 		switch(this.state) {
 		case TormentedSoul.STATE_IDLE:
+			// No extra path
+			break;
 		case TormentedSoul.STATE_FREAK_OUT:
+			if(whichStep) {
+				statePath = "_STEP1";
+			} else {
+				statePath = "_STEP2";
+			}
+			break;
 		case TormentedSoul.STATE_ALERTED:
-			return GPath.createImagePath(GPath.ENEMY, GPath.SIGNPOST, "statue3.png"); // TODO
+			statePath = "_ALERT";
+			break;
 		default:
 			System.out.println
 				(this.getName() + " couldn't find a proper image: " + Integer.toString(this.state));
 			return GPath.NULL;
 		}
 		
-		//return (imgPath + hpPath + statePath + ".png");
+		return (imgPath + hpPath + statePath + ".png");
 	}
 	
 	public String getCorpseImage() {
@@ -140,7 +131,12 @@ public class TormentedSoul extends GCharacter {
 	
 	@Override
 	public void onDeath() {
-		SoundPlayer.playWAV(GPath.createSoundPath("Beanpole_DEATH.wav"));
+		int whichSound = new Random().nextInt(2);
+		if(whichSound == 0) {
+			SoundPlayer.playWAV(GPath.createSoundPath("Soul_Death1.wav"));
+		} else {
+			SoundPlayer.playWAV(GPath.createSoundPath("Soul_Death2.wav"));
+		}
 	}
 
 	@Override
@@ -165,7 +161,7 @@ public class TormentedSoul extends GCharacter {
 		switch(this.state) {
 			case TormentedSoul.STATE_IDLE:
 				if(this.currentHP != MAX_HP) {
-					SoundPlayer.playWAV(GPath.createSoundPath("Beanpole_ALERT.wav"));
+					SoundPlayer.playWAV(GPath.createSoundPath("Soul_Cry1.wav"));
 					this.canFocus = true;
 					this.state = TormentedSoul.STATE_ALERTED;
 				} else {
@@ -210,12 +206,19 @@ public class TormentedSoul extends GCharacter {
 						}
 					}
 					
+					// Toggle step animation
+					this.whichStep = !this.whichStep;
+					
 					// Don't move next turn
 					this.shouldMove = false;
 				} else {
 					// After resting one turn, we can move next turn
 					this.shouldMove = true;
 				}
+				
+				// Try to play a sound
+				this.playSound();
+				
 				break;
 			default:
 				System.out.println(this.getName() +
@@ -223,6 +226,21 @@ public class TormentedSoul extends GCharacter {
 				return;
 		}
 			
+	}
+	
+	private void playSound() {
+		// Initialize randomizer
+		Random r = new Random();
+		
+		// Only play sounds 1/4 of the time
+		int shouldPlay = r.nextInt(4);
+		if(shouldPlay != 0) {
+			return;
+		}
+		
+		// Play one of the four crying sounds
+		int whichSound = r.nextInt(4) + 2;
+		SoundPlayer.playWAV(GPath.createSoundPath("Soul_Cry" + whichSound + ".wav"));
 	}
 	
 }

@@ -128,6 +128,8 @@ public class GPath {
 	
 	public static String SNAKETANK = "snaketank" + File.separator;
 	
+	public static String TORMENTED_SOUL = "tormented_soul" + File.separator;
+	
 	public static String WATCHMAN = "watchman" + File.separator;
 	
 	public static String ELITE_WATCHMAN = "elite_watchman" + File.separator;
