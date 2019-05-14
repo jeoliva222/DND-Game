@@ -319,8 +319,8 @@ public class SnakeGeneral extends GCharacter {
 		this.dmgCount += 1;
 		this.recentDmg = true;
 		
-		// If below 80% health, go to phase 2
-		if((!this.isPhase2) && (this.currentHP < (this.maxHP*4/5))) {
+		// If below (5/6) health, go to phase 2
+		if((!this.isPhase2) && (this.currentHP <= (this.maxHP*5/6))) {
 			SoundPlayer.playWAV(GPath.createSoundPath("snake1_warn1.wav"));
 			this.isPhase2 = true;
 		} else {

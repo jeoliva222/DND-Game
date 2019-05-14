@@ -24,7 +24,7 @@ public class KingStaff extends Weapon {
 		// Set damage attributes
 		this.minDmg = 1;
 		this.maxDmg = 3;
-		this.critChance = 0.15;
+		this.critChance = 0.2;
 		this.critMult = 1.7;
 		this.chargeMult = 1.0;
 	}

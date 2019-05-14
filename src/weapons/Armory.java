@@ -1,5 +1,9 @@
 package weapons;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.text.DecimalFormat;
+
 import helpers.GPath;
 import weapons.special.Injector;
 import weapons.special.KingStaff;
@@ -25,6 +29,11 @@ public class Armory {
 	public static final Fists cactusClaws = new Fists("Cactus Claws", 2, 2, 0.00, 1.0, 2.5, 
 			"WEAPON (Fist): Claws studded with cactus thorns. Gets consistent results.",
 			GPath.createImagePath(GPath.PICKUP, GPath.WEAPON, "cactusClaws.png"));
+	
+	// Brick Pads
+	public static final Fists brickPads = new Fists("Brick Pads", 2, 3, 0.00, 1.0, 2.5, 
+			"WEAPON (Fist): Sturdy bricks with hand wraps. Packs a punch.",
+			GPath.createImagePath(GPath.PICKUP, GPath.WEAPON, "caestus.png"));
 
 	// Sword Weapons ----------------------------
 	//
@@ -43,6 +52,11 @@ public class Armory {
 	public static final Sword rustedSabre = new Sword("Rusted Sabre", 1, 4, 0.1, 1.8, 1.0, 
 			"WEAPON (Sword): A partially rusted antique. The blade is quite sharp in a few places.",
 			GPath.createImagePath(GPath.PICKUP, GPath.WEAPON, "rustedSabre.png"));
+	
+	// Steel Sword
+	public static final Sword steelSword = new Sword("Steel Sword", 1, 5, 0.1, 1.8, 1.0, 
+			"WEAPON (Sword): A well-sharpened sturdy sword.",
+			GPath.createImagePath(GPath.PICKUP, GPath.WEAPON, "ironSword.png"));
 	
 	// Special 'D20' Sword
 	public static final Sword luckSword = new Sword("D20 Sword", 1, 20, 0.01, 5.0, 1.0, 
@@ -67,6 +81,11 @@ public class Armory {
 			"WEAPON (Spear): It feels wrong to use this.",
 			GPath.createImagePath(GPath.PICKUP, GPath.WEAPON, "ceremonialSpear.png"));
 	
+	// Fishing Hook Spear
+	public static final Spear fishingHook = new Spear("Fishing Hook", 2, 4, 0.15, 1.5, 1.0, 
+			"WEAPON (Spear): A brutal looking hook mounted at the end of a long pole.",
+			GPath.createImagePath(GPath.PICKUP, GPath.WEAPON, "ironSpear.png"));
+	
 	// Ministerial Staff Spear
 	public static final Spear ministerSpear = new Spear("Ministerial Staff", 3, 6, 0.15, 1.5, 1.2, 
 			"WEAPON (Spear): An odd eye watches at you from the top of this staff.",
@@ -84,6 +103,11 @@ public class Armory {
 	public static final Dagger spineShiv = new Dagger("Spine Shiv", 1, 3, 0.2, 2.0, 1.0, 
 			"WEAPON (Dagger): Knife formed from a sharpened bone. Charge attack to shadowstep your opponents!",
 			GPath.createImagePath(GPath.PICKUP, GPath.WEAPON, "spineShiv.png"));
+	
+	// Box Cutter
+	public static final Dagger boxCutter = new Dagger("Box Cutter", 2, 3, 0.2, 2.5, 1.0, 
+			"WEAPON (Dagger): A weaponized office tool. It's surprisingly sharp.",
+			GPath.createImagePath(GPath.PICKUP, GPath.WEAPON, "glassShard.png"));
 	
 	// Crossbow Weapons ----------------------------
 	//
@@ -109,6 +133,11 @@ public class Armory {
 			"WEAPON (Shield): [3 Block] Block some incoming damage when charging. This works even when offhanded!",
 			GPath.createImagePath(GPath.PICKUP, GPath.WEAPON, "woodenTarge.png"));
 	
+	// Buckler
+	public static final Shield buckler = new Shield("Buckler", 1, 3, 4, 0.15, 1.5, 1.0, 
+			"WEAPON (Shield): [4 Block] Block some incoming damage when charging. This works even when offhanded!",
+			GPath.createImagePath(GPath.PICKUP, GPath.WEAPON, "woodenTarge.png"));
+	
 	// Hammer Weapons ----------------------------
 	//
 	
@@ -128,5 +157,94 @@ public class Armory {
 	
 	// Venom
 	public static final VenomGun venomGun = new VenomGun();
+	
+	
+	// Weapon testing code -------------------------
+	//
+	public static void main(String[] args) {
+		// Armor value for testing
+		int armor = 0;
+		
+		// Fists
+		dmgNums(Armory.bareFists, armor);
+		dmgNums(Armory.caestus, armor);
+		dmgNums(Armory.cactusClaws, armor);
+		dmgNums(Armory.brickPads, armor);
+		System.out.println("---------------");
+		// Swords
+		dmgNums(Armory.brokenSword, armor);
+		dmgNums(Armory.ironSword, armor);
+		dmgNums(Armory.rustedSabre, armor);
+		dmgNums(Armory.steelSword, armor);
+		System.out.println("---------------");
+		// Spears
+		dmgNums(Armory.longStick, armor);
+		dmgNums(Armory.ironSpear, armor);
+		dmgNums(Armory.ceremonialSpear, armor);
+		dmgNums(Armory.fishingHook, armor);
+		System.out.println("---------------");
+		// Daggers
+		dmgNums(Armory.glassShard, armor);
+		dmgNums(Armory.spineShiv, armor);
+		dmgNums(Armory.boxCutter, armor);
+		System.out.println("---------------");
+		// Maces
+		dmgNums(Armory.boneClub, armor);
+		System.out.println("---------------");
+		// Shields
+		dmgNums(Armory.woodenTarge, armor);
+		dmgNums(Armory.buckler, armor);
+		System.out.println("---------------");
+		// Special
+		dmgNums(Armory.kingStaff, armor);
+		dmgNums(Armory.injector, armor);
+		dmgNums(Armory.venomGun, armor);
+	}
+	
+	private static void dmgNums(Weapon wep, int armor) {
+		double max = wep.maxDmg - armor;
+		double min = wep.minDmg;
+		
+		if(max < 0) {
+			max = 0;
+		}
+		
+		if(min > max) {
+			min = max;
+		}
+		
+		double nrmChance = 1.0 - wep.critChance;
+		int critDmg = (int) (max * wep.critMult);
+		
+		double totalAvg = 0.0;
+		
+		totalAvg += nrmChance * ((min + max) / 2);
+		totalAvg += wep.critChance * critDmg;
+		
+		totalAvg = round(totalAvg, 2);
+		
+		String spacer = "";
+		
+		for(int i = 0; i < (18 - wep.name.length()); i++) {
+			spacer += " ";
+		}
+		
+		DecimalFormat df = new DecimalFormat("#.00");
+		String formatDouble = df.format(totalAvg);
+		if(formatDouble.startsWith(".")) {
+			formatDouble = "0" + formatDouble;
+		}
+		
+		System.out.println(wep.name + spacer + ": Average Damage = " +
+				formatDouble + " | Crit Damage = " + critDmg);
+	}
+	
+	public static double round(double value, int places) {
+	    if (places < 0) throw new IllegalArgumentException();
+
+	    BigDecimal bd = new BigDecimal(value);
+	    bd = bd.setScale(places, RoundingMode.HALF_UP);
+	    return bd.doubleValue();
+	}
 
 }

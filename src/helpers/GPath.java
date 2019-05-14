@@ -124,6 +124,8 @@ public class GPath {
 	
 	public static String SNAKE_COMMANDER = "snake_commander" + File.separator;
 	
+	public static String SNAKE_GENERAL = "snake_general" + File.separator;
+	
 	public static String SNAKE_SOLDIER = "snake_soldier" + File.separator;
 	
 	public static String SNAKETANK = "snaketank" + File.separator;
