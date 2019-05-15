@@ -2,24 +2,26 @@ package projectiles;
 
 import characters.GCharacter;
 import helpers.GPath;
+import weapons.special.KingStaff;
 
 // Projectile fired from KingStaff special weapon
 public class KingStaffFlame extends GProjectile {
 
 	private static String imagePath = GPath.createImagePath(GPath.ENEMY, GPath.KINGBONBON, "fire_effect.png");
 	
+	// Number of turns the flame lasts
 	private int turnCount = 2;
 	
 	public KingStaffFlame(int xPos, int yPos, int dx, int dy, GCharacter owner) {
 		super("Staff Flame", xPos, yPos, dx, dy, owner);
 		
 		// Damage values
-		this.minDmg = 1;
-		this.maxDmg = 3;
+		this.minDmg = KingStaff.STAFF_MIN_DMG;
+		this.maxDmg = KingStaff.STAFF_MAX_DMG;
 		
 		// Critical Values
-		this.critChance = 0.15;
-		this.critMult = 1.7;
+		this.critChance = KingStaff.STAFF_CRIT_CHANCE;
+		this.critMult = KingStaff.STAFF_CRIT_MULT;
 		
 		// Piercing values
 		this.entityPiercing = true;
@@ -35,10 +37,13 @@ public class KingStaffFlame extends GProjectile {
 	protected boolean updateProjectile() {
 		boolean result = super.updateProjectile();
 		
+		// Decrease turn counter
 		this.turnCount += -1;
 		if(turnCount <= 0) {
+			// Remove projectile when turn counter is depleted
 			return true;
 		} else {
+			// Otherwise, use regular results
 			return result;
 		}
 	}

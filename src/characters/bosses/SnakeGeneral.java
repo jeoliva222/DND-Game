@@ -157,7 +157,7 @@ public class SnakeGeneral extends GCharacter {
 		String hpPath = "";
 		String statePath = "";
 		
-		if(this.currentHP > (this.maxHP / 2)) {
+		if(this.currentHP > (this.maxHP / 4)) {
 			hpPath = "_full";
 		} else if(this.currentHP > 0) {
 			hpPath = "_fatal";

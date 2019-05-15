@@ -28,6 +28,9 @@ public class GameTile extends JPanel {
 
 	private static final long serialVersionUID = 1L;
 	
+	// Image for faded darkness
+	private static Image fadedImg = null;
+	
 	// X and Y position of GameTile on the GameScreen grid
 	private int gridX, gridY;
 	
@@ -124,7 +127,8 @@ public class GameTile extends JPanel {
     		distance = (byte) (Math.abs(distX) + Math.abs(distY));
         }
         
-        if(distance <= player.getVision()) {
+        if(distance <= (player.getVision() + 1)) {
+        	// Visible square
 	        g.drawImage(this.bgImage, 0, 0, null);
 	        if(this.setCorpse)
 	        	g.drawImage(this.corpseImage, 0, 0, null);
@@ -138,6 +142,11 @@ public class GameTile extends JPanel {
 	        for(Image fxImg: this.fxImages.values()) {
 	        	g.drawImage(fxImg, 0, 0, null); 
 	        }
+	        
+        	// Paint partial darkness square if at the edge of our vision
+        	if(distance == (player.getVision() + 1)) {
+        		g.drawImage(this.getFadedDarkImage(), 0, 0, null);
+        	}
 	        
 	        this.isVisible = true;
         } else {
@@ -221,6 +230,15 @@ public class GameTile extends JPanel {
 		this.entityImage = this.loadImage(filepath);
 		this.entityImage = ImageHandler.scaleImage(this.entityImage, 80, 80, this.scaleFactor, this.scaleFactor);
 		this.repaint();
+	}
+	
+	// Gets the faded image used for partial vision
+	private Image getFadedDarkImage() {
+		if(GameTile.fadedImg == null) {
+			GameTile.fadedImg = this.loadImage(GPath.createImagePath(GPath.TILE, GPath.GENERIC, "testProj.png")); // TODO
+			GameTile.fadedImg = ImageHandler.scaleImage(GameTile.fadedImg, 80, 80, this.scaleFactor, this.scaleFactor);
+		}
+		return GameTile.fadedImg;
 	}
 	
 	// Focuses on an NPC if it exists, returning true if we do

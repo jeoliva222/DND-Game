@@ -14,6 +14,13 @@ public class KingStaff extends Weapon {
 	
 	// Serialization ID
 	private static final long serialVersionUID = 5367784600352180602L;
+	
+	public static final int STAFF_MIN_DMG = 1;
+	public static final int STAFF_MAX_DMG = 3;
+	public static final double STAFF_CRIT_CHANCE = 0.2;
+	public static final double STAFF_CRIT_MULT = 1.7;
+	
+	private final double FIRE_CHANCE = 0.35;
 
 	// Constructor
 	public KingStaff() {
@@ -22,10 +29,10 @@ public class KingStaff extends Weapon {
 				GPath.createImagePath(GPath.TILE, GPath.GENERIC, "testProj.png"));
 		
 		// Set damage attributes
-		this.minDmg = 1;
-		this.maxDmg = 3;
-		this.critChance = 0.2;
-		this.critMult = 1.7;
+		this.minDmg = STAFF_MIN_DMG;
+		this.maxDmg = STAFF_MAX_DMG;
+		this.critChance = STAFF_CRIT_CHANCE;
+		this.critMult = STAFF_CRIT_MULT;
 		this.chargeMult = 1.0;
 	}
 	
@@ -43,7 +50,7 @@ public class KingStaff extends Weapon {
 					this.dischargeWeapon();
 					
 					// Determine randomly whether to spawn flames
-					if(Math.random() < this.critChance) { // FLAME ---------------
+					if(Math.random() < this.FIRE_CHANCE) { // FLAME ---------------
 						// Fire a flame in the direction the player attacked
 						em.getProjectileManager()
 							.addProjectile(new KingStaffFlame((em.getPlayer().getXPos() + dx),
@@ -90,7 +97,7 @@ public class KingStaff extends Weapon {
 				} else { // NOT CHARGED ------------------------------------------
 					
 					// Determine randomly whether to spawn flame
-					if(Math.random() < this.critChance) { // FLAME ---------------
+					if(Math.random() < this.FIRE_CHANCE) { // FLAME ---------------
 						// Fire a flame in the direction the player attacked
 						em.getProjectileManager()
 							.addProjectile(new KingStaffFlame((em.getPlayer().getXPos() + dx),
