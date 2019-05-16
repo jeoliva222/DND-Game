@@ -257,6 +257,25 @@ public abstract class GCharacter implements Serializable {
 		this.lastY = this.yPos;
 	}
 	
+	// Outputs a formatted string of the character's statistics (to be used by InfoScreen GUI)
+	public String getStatDescString() {
+		String output = "DMG: ";
+		output += (this.minDmg + " - " + this.maxDmg + "\n");
+		output += ("CRITS: " + this.toPercent(this.critChance) + " / " + this.critMult + "x");
+		return output;
+	}
+	
+	private String toPercent(double num) {
+		// Convert double to int percent
+		int percent = (int) (num * 100);
+		
+		// Convert to string
+		String output = Integer.toString(percent) + "%";
+		
+		// Return output
+		return output;
+	}
+	
 	// *******************
 	// Getters and Setters
 	

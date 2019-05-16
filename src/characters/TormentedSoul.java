@@ -17,11 +17,11 @@ public class TormentedSoul extends GCharacter {
 
 	private int MAX_HP = 16;
 	
-	private int MIN_DMG = 1;
-	private int MAX_DMG = 1;
+	private int MIN_DMG = 0;
+	private int MAX_DMG = 0;
 	
-	private double CRIT_CHANCE = 0.1;
-	private double CRIT_MULT = 1.5;
+	private double CRIT_CHANCE = 0.0;
+	private double CRIT_MULT = 1.0;
 	
 	//----------------------------
 	

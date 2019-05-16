@@ -119,9 +119,10 @@ public class InfoScreen extends JPanel {
 		InfoScreen.descBox.setWrapStyleWord(true);
 		InfoScreen.descBox.setEditable(false);
 		InfoScreen.descBox.setOpaque(true);
-		InfoScreen.descBox.setVisible(false);
+		InfoScreen.descBox.setFocusable(false);
+		InfoScreen.descBox.setVisible(true);
+		InfoScreen.shrinkDescBox();
 		this.add(InfoScreen.descBox);
-		InfoScreen.descBox.setBounds(infoWidth *4/54, infoHeight *16/27, descWidth, descHeight);
 		
 		// Set up name panel
 		InfoScreen.nameInfo.setText("-");
@@ -186,16 +187,29 @@ public class InfoScreen extends JPanel {
 	
 	// Updates the values in the description panel
 	public static void updateDescValues() {
-		// If we don't have an item to focus in on, then return
+		// If we have no focused Item, check for focused NPC
 		if(focusedItem == null) {
-			return;
+			// If no focused NPC either, return
+			if(focusedNPC == null) {
+				return;
+			} else {
+				// Populate Description Box with NPC description
+				
+				// Set new text
+				InfoScreen.descBox.setText(focusedNPC.getStatDescString());
+				
+				// Repaint the panel
+				InfoScreen.descBox.repaint();
+			}
+		} else {
+			// Populate Description Box with Item description
+			
+			// Set new text
+			InfoScreen.descBox.setText(focusedItem.getDesc());
+			
+			// Repaint the panel
+			InfoScreen.descBox.repaint();
 		}
-		
-		// Set new text
-		InfoScreen.descBox.setText(focusedItem.getDesc());
-		
-		// Repaint the panel
-		InfoScreen.descBox.repaint();
 	}
 	
 	// Updates the values in the health panel
@@ -307,7 +321,6 @@ public class InfoScreen extends JPanel {
 		}
 		
 		// Reinitialize visible components
-		InfoScreen.descBox.setVisible(false);
 		InfoScreen.healthPanel.setVisible(true);
 		InfoScreen.armorPanel.setVisible(true);
 		
@@ -315,6 +328,8 @@ public class InfoScreen extends JPanel {
 		InfoScreen.healthInfo.setText("HP: - / -");
 		InfoScreen.armorInfo.setText("DEF: -");
 		InfoScreen.nameInfo.setText("-");
+		InfoScreen.descBox.setText("");
+		InfoScreen.shrinkDescBox();
 		
 		// Reset color values
 		InfoScreen.healthPanel.setBackground(Color.WHITE);
@@ -352,6 +367,14 @@ public class InfoScreen extends JPanel {
 		InfoScreen.updateEntityImage();
 	}
 	
+	private static void shrinkDescBox() {
+		InfoScreen.descBox.setBounds(infoWidth *4/54, infoHeight *23/27, descWidth, (descHeight / 3));
+	}
+	
+	private static void growDescBox() {
+		InfoScreen.descBox.setBounds(infoWidth *4/54, infoHeight *16/27, descWidth, descHeight);
+	}
+	
 	// *******************
 	// Getters and Setters
 	
@@ -367,7 +390,7 @@ public class InfoScreen extends JPanel {
 		InfoScreen.focusedItem = null;
 		
 		// Make health panel visible and hide description box
-		InfoScreen.descBox.setVisible(false);
+		InfoScreen.shrinkDescBox();
 		InfoScreen.healthPanel.setVisible(true);
 		InfoScreen.armorPanel.setVisible(true);
 		
@@ -387,7 +410,7 @@ public class InfoScreen extends JPanel {
 		InfoScreen.focusedNPC = null;
 		
 		// Make description box visible and hide health panel
-		InfoScreen.descBox.setVisible(true);
+		InfoScreen.growDescBox();
 		InfoScreen.healthPanel.setVisible(false);
 		InfoScreen.armorPanel.setVisible(false);
 		

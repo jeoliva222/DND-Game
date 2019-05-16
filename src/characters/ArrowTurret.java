@@ -15,11 +15,11 @@ public class ArrowTurret extends GCharacter {
 
 	private int MAX_HP = 100;
 	
-	private int MIN_DMG = 0;
-	private int MAX_DMG = 0;
+	private int MIN_DMG = 3;
+	private int MAX_DMG = 3;
 	
-	private double CRIT_CHANCE = 0.0;
-	private double CRIT_MULT = 1.0;
+	private double CRIT_CHANCE = 0.05;
+	private double CRIT_MULT = 1.7;
 	
 	//----------------------------
 	
