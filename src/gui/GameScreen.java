@@ -136,9 +136,6 @@ public class GameScreen extends JPanel {
 				// Indicate to the main window that the screen was changed
 				GameWindow.changedScreen = true;
 				
-				// Try to garbage collect when switching screens
-				System.gc();
-				
 				// Return true to indicate the player can update their position
 				return true;
 			}

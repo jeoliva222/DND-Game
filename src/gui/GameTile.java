@@ -28,8 +28,11 @@ public class GameTile extends JPanel {
 
 	private static final long serialVersionUID = 1L;
 	
-	// Image for faded darkness
-	private static Image fadedImg = null;
+	// Image for darkness
+	private static Image darkImg = null;
+	
+	// Image for faded darkness (slightly less dark)
+	private static Image fadeImg = null;
 	
 	// X and Y position of GameTile on the GameScreen grid
 	private int gridX, gridY;
@@ -145,7 +148,9 @@ public class GameTile extends JPanel {
 	        
         	// Paint partial darkness square if at the edge of our vision
         	if(distance == (player.getVision() + 1)) {
-        		g.drawImage(this.getFadedDarkImage(), 0, 0, null);
+        		g.drawImage(this.getDarkImage(), 0, 0, null);
+        	} else if(distance == player.getVision()) {
+        		g.drawImage(this.getFadingDarkImage(), 0, 0, null);
         	}
 	        
 	        this.isVisible = true;
@@ -210,8 +215,6 @@ public class GameTile extends JPanel {
 			return;
 		}
 		
-//		this.projImage = this.loadImage(filepath);
-//		this.projImage = ImageHandler.scaleImage(this.projImage, 80, 80, this.scaleFactor, this.scaleFactor);
 		Image newProj = this.loadImage(filepath);
 		newProj = ImageHandler.scaleImage(newProj, 80, 80, this.scaleFactor, this.scaleFactor);
 		this.projImages.put(proj, newProj);
@@ -232,13 +235,22 @@ public class GameTile extends JPanel {
 		this.repaint();
 	}
 	
-	// Gets the faded image used for partial vision
-	private Image getFadedDarkImage() {
-		if(GameTile.fadedImg == null) {
-			GameTile.fadedImg = this.loadImage(GPath.createImagePath(GPath.TILE, GPath.GENERIC, "testProj.png")); // TODO
-			GameTile.fadedImg = ImageHandler.scaleImage(GameTile.fadedImg, 80, 80, this.scaleFactor, this.scaleFactor);
+	// Gets the dark image used for partial vision
+	private Image getDarkImage() {
+		if(GameTile.darkImg == null) {
+			GameTile.darkImg = this.loadImage(GPath.createImagePath(GPath.TILE, GPath.GENERIC, "area_dark.png"));
+			GameTile.darkImg = ImageHandler.scaleImage(GameTile.darkImg, 80, 80, this.scaleFactor, this.scaleFactor);
 		}
-		return GameTile.fadedImg;
+		return GameTile.darkImg;
+	}
+	
+	// Gets the fading image (slightly less dark) used for partial vision
+	private Image getFadingDarkImage() {
+		if(GameTile.fadeImg == null) {
+			GameTile.fadeImg = this.loadImage(GPath.createImagePath(GPath.TILE, GPath.GENERIC, "area_fade.png"));
+			GameTile.fadeImg = ImageHandler.scaleImage(GameTile.fadeImg, 80, 80, this.scaleFactor, this.scaleFactor);
+		}
+		return GameTile.fadeImg;
 	}
 	
 	// Focuses on an NPC if it exists, returning true if we do

@@ -30,7 +30,7 @@ public class VenomGun extends Weapon {
 	public VenomGun() {
 		super("Venom",
 				"WEAPON (Special): Charge to toggle firing stance. Charge attack to unleash a hail of bullets. Consecutive hits = More bullets!",
-				GPath.createImagePath(GPath.TILE, GPath.GENERIC, "testProj.png"));
+				GPath.createImagePath(GPath.PICKUP, GPath.WEAPON, "venomGun.png"));
 		
 		// Set damage attributes
 		this.minDmg = 1;

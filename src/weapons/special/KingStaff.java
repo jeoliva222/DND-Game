@@ -26,7 +26,7 @@ public class KingStaff extends Weapon {
 	public KingStaff() {
 		super("King's Staff",
 				"WEAPON (Special): A kingly staff of the elements. Occasionally omits firey blasts!",
-				GPath.createImagePath(GPath.TILE, GPath.GENERIC, "testProj.png"));
+				GPath.createImagePath(GPath.PICKUP, GPath.WEAPON, "kingStaff.png"));
 		
 		// Set damage attributes
 		this.minDmg = STAFF_MIN_DMG;

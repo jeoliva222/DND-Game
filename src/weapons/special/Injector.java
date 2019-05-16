@@ -20,7 +20,7 @@ public class Injector extends Weapon {
 	public Injector() {
 		super("The Injector",
 				"WEAPON (Special): An unholy tool used by The Collector. Charge attacks are weak, but heal the player per successful kill.",
-				GPath.createImagePath(GPath.TILE, GPath.GENERIC, "testProj.png"));
+				GPath.createImagePath(GPath.PICKUP, GPath.WEAPON, "injector.png"));
 		
 		// Set damage attributes
 		this.minDmg = 2;
