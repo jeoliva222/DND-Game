@@ -1,6 +1,7 @@
 package characters;
 
 import java.awt.Dimension;
+import java.util.Random;
 
 import ai.DumbFollow;
 import ai.IdleController;
@@ -8,11 +9,14 @@ import ai.LineDrawer;
 import ai.PathFinder;
 import ai.PatrolPattern;
 import effects.DamageIndicator;
+import gui.LogScreen;
+import helpers.GColors;
 import helpers.GPath;
 import helpers.SoundPlayer;
 import managers.EntityManager;
 import tiles.MovableType;
 
+// Class representing 'Hoptooth' enemy in-game
 public class Hoptooth extends GCharacter {
 
 	// Serialization ID
@@ -20,15 +24,15 @@ public class Hoptooth extends GCharacter {
 	
 	// Modifiers/Statistics
 
-	private int MAX_HP = 30;
+	private int MAX_HP = 20;
 	
-	private int MIN_DMG = 6;
-	private int MAX_DMG = 10;
+	private int MIN_DMG = 4;
+	private int MAX_DMG = 6;
 	
 	private double CRIT_CHANCE = 0.1;
-	private double CRIT_MULT = 1.3;
+	private double CRIT_MULT = 1.5;
 	
-	private int ARMOR_VAL = 1;
+	private int ARMOR_VAL = 0;
 	
 	//----------------------------
 	
@@ -37,8 +41,10 @@ public class Hoptooth extends GCharacter {
 	private static final int STATE_IDLE = 0;
 	private static final int STATE_ALERTED = 1;
 	private static final int STATE_PURSUE = 2;
-	private static final int STATE_PREP = 3;
-	private static final int STATE_ATT = 4;
+	private static final int STATE_PREP_SWING = 3;
+	private static final int STATE_ATT_SWING = 4;
+	private static final int STATE_PREP_CHOMP = 5;
+	private static final int STATE_ATT_CHOMP = 6;
 	
 	//----------------------------
 	
@@ -47,6 +53,12 @@ public class Hoptooth extends GCharacter {
 	// Indicate which direction the NPC is launching its attack
 	protected int markX = 0;
 	protected int markY = 0;
+	
+	// Attack counter
+	private int attCount = 0;
+	
+	// Number of turns needed to perform chomp attack
+	private final int windupMax = 2;
 	
 	//----------------------------
 	
@@ -188,6 +200,10 @@ public class Hoptooth extends GCharacter {
 		int distX = plrX - this.xPos;
 		int distY = plrY - this.yPos;
 		
+		// Relative movement direction (Initialize at 0)
+		int dx = 0;
+		int dy = 0;
+		
 		switch(this.state) {
 			case Hoptooth.STATE_IDLE:
 				boolean hasLOS = LineDrawer.hasSight(this.xPos, this.yPos, plrX, plrY);
@@ -205,10 +221,6 @@ public class Hoptooth extends GCharacter {
 				this.state = Hoptooth.STATE_PURSUE;
 				break;
 			case Hoptooth.STATE_PURSUE:	
-				// Relative movement direction (Initialize at 0)
-				int dx = 0;
-				int dy = 0;
-				
 				// Calculate relative movement directions
 				if(distX > 0) {
 					dx = 1;
@@ -229,8 +241,8 @@ public class Hoptooth extends GCharacter {
 					this.markX = dx;
 					this.markY = dy;
 					
-					// Change states
-					this.state = Hoptooth.STATE_PREP;
+					// Choose a new melee attack and change states
+					this.chooseMeleeAttack();
 				} else {
 					// Path-find to the player if we can
 					Dimension nextStep = PathFinder.findPath(this.xPos, this.yPos, plrX, plrY, this);
@@ -242,18 +254,99 @@ public class Hoptooth extends GCharacter {
 						int changeY = nextStep.height - this.yPos;
 						this.moveCharacter(changeX, changeY);
 					}
+					
+					// Recalculate relative location to player
+					distX = plrX - this.xPos;
+					distY = plrY - this.yPos;
+					
+					// Relative movement direction (Initialize at 0)
+					dx = 0;
+					dy = 0;
+					
+					// Recalculate relative movement directions
+					// X-movement
+					if(distX > 0) {
+						dx = 1;
+					} else if (distX < 0) {
+						dx = -1;
+					}
+					// Y-movement
+					if(distY > 0) {
+						dy = 1;
+					} else if (distY < 0) {
+						dy = -1;
+					}
+					
+					// Decide if Hoptooth should attempt a running chomp prep
+					// Punishes running away and eager approaches
+					// Attempt only 1/2 of the time
+					int shouldAttack = new Random().nextInt(2);
+					if((shouldAttack == 0) && (((Math.abs(distX) <= 1) && (Math.abs(distY) == 0)) ||
+							((Math.abs(distX) == 0) && (Math.abs(distY) <= 1)))) {
+						// Next, make sure there aren't any walls in the way
+						boolean hasAttLOS = LineDrawer.hasSight(this.xPos, this.yPos, plrX, plrY);
+						if(hasAttLOS) {
+							this.markX = dx;
+							this.markY = dy;
+							this.state = Hoptooth.STATE_PREP_CHOMP;
+						}
+					}
 				}
 				break;
-			case Hoptooth.STATE_PREP:
+			case Hoptooth.STATE_PREP_SWING:
 				// Mark tile with damage indicator
 				EntityManager.getInstance().getEffectManager().addEffect(new DamageIndicator(this.xPos + this.markX, this.yPos + this.markY));
 				
 				// Attack in marked direction
 				if((this.xPos + this.markX) == plrX && (this.yPos + this.markY) == plrY)
 					this.playerInitiate();
-				this.state = Hoptooth.STATE_ATT;
+				this.state = Hoptooth.STATE_ATT_SWING;
 				break;
-			case Hoptooth.STATE_ATT:
+			case Hoptooth.STATE_ATT_SWING:
+				// Calculate relative movement directions
+				if(distX > 0) {
+					dx = 1;
+				} else if (distX < 0) {
+					dx = -1;
+				}
+				
+				if(distY > 0) {
+					dy = 1;
+				} else if (distY < 0) {
+					dy = -1;
+				}
+				
+				// If immediately next to play after attack, cue up another attack
+				if(((Math.abs(distX) == 1) && (Math.abs(distY) == 0)) ||
+						((Math.abs(distX) == 0) && (Math.abs(distY) == 1))) {
+					// Mark direction to attack next turn
+					this.markX = dx;
+					this.markY = dy;
+					
+					// Change state to attack again
+					this.state = Hoptooth.STATE_PREP_SWING;
+				} else {
+					// Otherwise, go back to pursuing the player
+					this.state = Hoptooth.STATE_PURSUE;
+				}
+				break;
+			case Hoptooth.STATE_PREP_CHOMP:
+				// Increment attack counter
+				this.attCount += 1;
+				
+				// Only perform attack if we've done our full wind-up
+				if(this.attCount >= this.windupMax) {
+					// Mark tile with damage indicator
+					EntityManager.getInstance().getEffectManager().addEffect(new DamageIndicator(this.xPos + this.markX, this.yPos + this.markY));
+					
+					// Attack in marked direction
+					if((this.xPos + this.markX) == plrX && (this.yPos + this.markY) == plrY)
+						this.chompPlayer();
+					this.attCount = 0;
+					this.state = Hoptooth.STATE_ATT_CHOMP;
+				}
+				break;
+			case Hoptooth.STATE_ATT_CHOMP:
 				// Cooldown period for one turn
 				this.state = Hoptooth.STATE_PURSUE;
 				break;
@@ -263,6 +356,23 @@ public class Hoptooth extends GCharacter {
 				return;
 		}
 			
+	}
+	
+	// Choose a random melee attack
+	private void chooseMeleeAttack() {
+		int whichAttack = new Random().nextInt(3);
+		if(whichAttack == 0) {
+			this.state = Hoptooth.STATE_PREP_CHOMP;
+		} else {
+			this.state = Hoptooth.STATE_PREP_SWING;
+		}
+	}
+	
+	// Execute the player with a fatal chomp
+	private void chompPlayer() {
+		SoundPlayer.playWAV(GPath.createSoundPath("Beanpole_DEATH_CRIT.wav"));
+		LogScreen.log(this.getName() + " tore into the player's brain.", GColors.DAMAGE);
+		EntityManager.getInstance().getPlayer().damagePlayer(1000);
 	}
 	
 }

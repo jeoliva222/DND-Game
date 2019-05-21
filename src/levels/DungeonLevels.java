@@ -1235,12 +1235,12 @@ public class DungeonLevels implements Serializable {
 		
 		//-------------------
 		
-		MapLevel secretTunnel = new MapLevel(new int[][] { // TODO Add Key-door
+		MapLevel secretTunnel = new MapLevel(new int[][] {
 			{3, 3, 3, 3, 3, 3, 3, 3, 1, 3},
 			{3, 3, 3, 3, 3, 3, 3, 3, 1, 3},
 			{3, 3, 3, 3, 3, 3, 3, 3, 0, 3},
 			{3, 3, 3, 3, 3, 3, 3, 3, 0, 3},
-			{3, 3, 3, 3, 3, 3, 3, 3, 4, 3},
+			{3, 3, 3, 3, 3, 3, 3, 3, 1, 3},
 			{3, 3, 3, 3, 3, 3, 3, 3, 0, 3},
 			{3, 3, 3, 3, 3, 3, 3, 3, 1, 3},
 			{3, 3, 3, 3, 3, 3, 3, 3, 1, 3},
@@ -1248,6 +1248,7 @@ public class DungeonLevels implements Serializable {
 			{3, 3, 3, 3, 3, 3, 3, 3, 0, 3}
 		}, new ExtraTile[] {
 		}, new ArrayList<GCharacter>() {{
+			add(new BreakableWall(8, 4));
 		}}, new ArrayList<GPickup>() {{
 		}});
 		
