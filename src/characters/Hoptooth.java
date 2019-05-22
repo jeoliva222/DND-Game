@@ -9,6 +9,7 @@ import ai.LineDrawer;
 import ai.PathFinder;
 import ai.PatrolPattern;
 import effects.DamageIndicator;
+import effects.WarningIndicator;
 import gui.LogScreen;
 import helpers.GColors;
 import helpers.GPath;
@@ -120,35 +121,44 @@ public class Hoptooth extends GCharacter {
 		String hpPath = "";
 		String statePath = "";
 
-		// TODO
-		hpPath = "_full";
-	
-//		if(this.currentHP > (this.maxHP / 2)) {
-//			hpPath = "_full";
-//		} else if(this.currentHP > 0) {
-//			hpPath = "_fatal";
-//		} else {
-//			hpPath = "_dead";
-//			return (imgPath + hpPath + ".png");
-//		}
-//		
-//		switch(this.state) {
-//		case Hoptooth.STATE_IDLE:
-//		case Hoptooth.STATE_PURSUE:
-//			// No extra path
-//			break;
-//		case Hoptooth.STATE_ALERTED:
-//		case Hoptooth.STATE_PREP:
-//			statePath = "_PREP";
-//			break;
-//		case Hoptooth.STATE_ATT:
-//			statePath = "_ATT";
-//			break;
-//		default:
-//			System.out.println
-//				(this.getName() + " couldn't find a proper image: " + Integer.toString(this.state));
-//			return GPath.NULL;
-//		}
+		if(this.currentHP > (this.maxHP / 2)) {
+			hpPath = "_full";
+		} else if(this.currentHP > 0) {
+			hpPath = "_full";
+		} else {
+			hpPath = "_dead";
+			return (imgPath + hpPath + ".png");
+		}
+		
+		switch(this.state) {
+		case Hoptooth.STATE_IDLE:
+			statePath = "_IDLE";
+			break;
+		case Hoptooth.STATE_PURSUE:
+			// No extra path
+			break;
+		case Hoptooth.STATE_ALERTED:
+		case Hoptooth.STATE_PREP_CHOMP:
+			if(this.attCount == 0) {
+				statePath = "_PREP_CHOMP";
+			} else {
+				statePath = "_PREP_CHOMP2";
+			}
+			break;
+		case Hoptooth.STATE_ATT_CHOMP:
+			statePath = "_ATT_CHOMP";
+			break;
+		case Hoptooth.STATE_PREP_SWING:
+			statePath = "_PREP_SWING";
+			break;
+		case Hoptooth.STATE_ATT_SWING:
+			statePath = "_ATT_SWING";
+			break;
+		default:
+			System.out.println
+				(this.getName() + " couldn't find a proper image: " + Integer.toString(this.state));
+			return GPath.NULL;
+		}
 	
 		return (imgPath + hpPath + statePath + ".png");
 	}
@@ -174,11 +184,7 @@ public class Hoptooth extends GCharacter {
 	
 	@Override
 	public void onDeath() {
-		if(this.currentHP < -(this.maxHP / 2)) {
-			SoundPlayer.playWAV(GPath.createSoundPath("Beanpole_DEATH_CRIT.wav"));
-		} else {
-			SoundPlayer.playWAV(GPath.createSoundPath("Beanpole_DEATH.wav"));
-		}
+		SoundPlayer.playWAV(GPath.createSoundPath("Hoptooth_Death.wav"), -5f);
 	}
 
 	@Override
@@ -208,7 +214,7 @@ public class Hoptooth extends GCharacter {
 			case Hoptooth.STATE_IDLE:
 				boolean hasLOS = LineDrawer.hasSight(this.xPos, this.yPos, plrX, plrY);
 				if(hasLOS) {
-					SoundPlayer.playWAV(GPath.createSoundPath("Soul_Cry1.wav"));
+					SoundPlayer.playWAV(GPath.createSoundPath("Hoptooth_Alert.wav"), -10f);
 					this.state = Hoptooth.STATE_ALERTED;
 				} else {
 					// Handle movement for Idling
@@ -288,6 +294,8 @@ public class Hoptooth extends GCharacter {
 						if(hasAttLOS) {
 							this.markX = dx;
 							this.markY = dy;
+							
+							SoundPlayer.playWAV(GPath.createSoundPath("Hoptooth_Breath1.wav"), -10f);
 							this.state = Hoptooth.STATE_PREP_CHOMP;
 						}
 					}
@@ -335,9 +343,18 @@ public class Hoptooth extends GCharacter {
 				this.attCount += 1;
 				
 				// Only perform attack if we've done our full wind-up
-				if(this.attCount >= this.windupMax) {
+				if(this.attCount == (this.windupMax - 1)) {
+					// Mark tile with damage indicator
+					EntityManager.getInstance().getEffectManager().addEffect(new WarningIndicator(this.xPos + this.markX, this.yPos + this.markY));
+					
+					// Play warning sound
+					SoundPlayer.playWAV(GPath.createSoundPath("Hoptooth_Breath2.wav"), -5f);
+				} else if(this.attCount >= this.windupMax) {
 					// Mark tile with damage indicator
 					EntityManager.getInstance().getEffectManager().addEffect(new DamageIndicator(this.xPos + this.markX, this.yPos + this.markY));
+					
+					// Play chomp sound
+					SoundPlayer.playWAV(GPath.createSoundPath("Hoptooth_Chomp.wav"), -2f);
 					
 					// Attack in marked direction
 					if((this.xPos + this.markX) == plrX && (this.yPos + this.markY) == plrY)
@@ -362,6 +379,7 @@ public class Hoptooth extends GCharacter {
 	private void chooseMeleeAttack() {
 		int whichAttack = new Random().nextInt(3);
 		if(whichAttack == 0) {
+			SoundPlayer.playWAV(GPath.createSoundPath("Hoptooth_Breath1.wav"), -10f);
 			this.state = Hoptooth.STATE_PREP_CHOMP;
 		} else {
 			this.state = Hoptooth.STATE_PREP_SWING;
@@ -371,8 +389,8 @@ public class Hoptooth extends GCharacter {
 	// Execute the player with a fatal chomp
 	private void chompPlayer() {
 		SoundPlayer.playWAV(GPath.createSoundPath("Beanpole_DEATH_CRIT.wav"));
-		LogScreen.log(this.getName() + " tore into the player's brain.", GColors.DAMAGE);
-		EntityManager.getInstance().getPlayer().damagePlayer(1000);
+		LogScreen.log(this.getName() + " bit the player's head off.", GColors.DAMAGE);
+		EntityManager.getInstance().getPlayer().damagePlayer(300);
 	}
 	
 }

@@ -26,6 +26,7 @@ import helpers.GPath;
 import items.GKey;
 import items.GPickup;
 import items.LargeHealthPotion;
+import items.LargeMaxPotion;
 import items.MediumHealthPotion;
 import items.MediumMaxPotion;
 import items.SmallHealthPotion;
@@ -1256,10 +1257,10 @@ public class DungeonLevels implements Serializable {
 		
 		MapLevel secretRoom = new MapLevel(new int[][] {
 			{3, 3, 3, 3, 3, 3, 3, 3, 1, 3},
-			{3, 3, 3, 3, 3, 1, 1, 3, 0, 3},
-			{3, 3, 3, 3, 3, 1, 1, 1, 1, 3},
-			{3, 3, 3, 3, 3, 3, 3, 3, 0, 3},
-			{3, 3, 3, 3, 3, 3, 3, 3, 1, 3},
+			{3, 1, 0, 0, 3, 1, 1, 3, 0, 3},
+			{3, 3, 0, 3, 3, 1, 1, 1, 1, 3},
+			{3, 3, 0, 3, 3, 3, 3, 3, 0, 3},
+			{3, 3, 1, 3, 3, 3, 3, 3, 1, 3},
 			{3, 0, 1, 1, 1, 0, 4, 0, 0, 3},
 			{3, 0, 1, 0, 1, 0, 4, 0, 3, 3},
 			{3, 1, 0, 1, 1, 1, 4, 1, 3, 3},
@@ -1276,11 +1277,17 @@ public class DungeonLevels implements Serializable {
 							add(new ExtraTile(8, 4, new AltWall()));
 							add(new ExtraTile(8, 5, new AltWall()));
 						}})),
+				new ExtraTile(1, 1, 
+						new GroundButton(TriggerType.WALL_GROUND, true, new ArrayList<Dimension>() {{
+							add(new Dimension(8, 4));
+							add(new Dimension(8, 5));
+						}})),
 		}, new ArrayList<GCharacter>() {{
 			add(new SaveCrystal(5, 1));
 			add(new Hoptooth(1, 6, PatrolPattern.STATIONARY));
 			add(new Hoptooth(1, 7, PatrolPattern.STATIONARY));
 		}}, new ArrayList<GPickup>() {{
+			add(new GPickup(3, 1, new LargeMaxPotion()));
 		}});
 		
 		

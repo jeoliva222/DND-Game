@@ -34,6 +34,7 @@ public class Player implements Serializable {
 	private final String playerImage_INJURED = GPath.createImagePath(GPath.ALLY, GPath.PLAYER, "frog_injured.png");
 	private final String playerImage_FATAL = GPath.createImagePath(GPath.ALLY, GPath.PLAYER, "frog_fatal2.png");
 	private final String playerImage_DEAD = GPath.createImagePath(GPath.ALLY, GPath.PLAYER, "frog_dead2.png");
+	private final String playerImage_DEAD_CRIT = GPath.createImagePath(GPath.ALLY, GPath.PLAYER, "frog_dead2_crit.png");
 	
 	// X and Y positions on the current screen
 	private int xPos, yPos;
@@ -316,7 +317,12 @@ public class Player implements Serializable {
 			SoundPlayer.playWAV(GPath.createSoundPath("Player_HURT.wav"), -15);
 			return true;
 		} else {
-			SoundPlayer.playWAV(GPath.createSoundPath("Player_DEATH.wav"), -5);
+			if(this.currentHP < -100) {
+				// Play no death sound
+			} else {
+				// Play a death sound
+				SoundPlayer.playWAV(GPath.createSoundPath("Player_DEATH.wav"), -5);
+			}
 			LogScreen.log("Player has died! Game over.", GColors.DAMAGE);
 			return false;
 		}
@@ -420,7 +426,11 @@ public class Player implements Serializable {
 			return this.playerImage_INJURED;
 		} else if(hp > 0) {
 			return this.playerImage_FATAL;
+		} else if(hp < -100) {
+			// Crit death
+			return this.playerImage_DEAD_CRIT;
 		} else {
+			// Normal death
 			return this.playerImage_DEAD;
 		}
 	}
