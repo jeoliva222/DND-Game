@@ -10,8 +10,10 @@ import characters.Bitester;
 import characters.BreakableWall;
 import characters.BunnyWarrior;
 import characters.GCharacter;
+import characters.Hoptooth;
 import characters.Signpost;
 import characters.TormentedSoul;
+import characters.special.MuseumMoveStatue;
 import helpers.GPath;
 import items.GPickup;
 import items.SmallHealthPotion;
@@ -71,6 +73,7 @@ public class MuseumLevels implements Serializable {
 			{3, 1, 1, 1, 3, 3, 3, 3, 3, 3}
 		}, new ExtraTile[] {
 		}, new ArrayList<GCharacter>() {{
+			add(new Hoptooth(7, 2));
 		}}, new ArrayList<GPickup>() {{
 			//add(new GPickup(5, 3, new SmallHealthPotion()));
 		}});
@@ -128,10 +131,10 @@ public class MuseumLevels implements Serializable {
 		
 		MapLevel m11 = new MapLevel(new int[][] {
 			{3, 1, 1, 1, 3, 3, 3, 3, 3, 3},
-			{3, 3, 1, 3, 3, 3, 3, 3, 3, 3},
-			{3, 3, 1, 3, 3, 3, 3, 3, 3, 3},
-			{3, 3, 1, 3, 3, 3, 3, 3, 3, 3},
-			{3, 3, 1, 3, 3, 3, 3, 3, 3, 3},
+			{3, 3, 1, 1, 3, 3, 3, 3, 3, 3},
+			{3, 3, 1, 1, 3, 3, 3, 3, 3, 3},
+			{3, 3, 1, 1, 3, 3, 3, 3, 3, 3},
+			{3, 3, 1, 1, 3, 3, 3, 3, 3, 3},
 			{3, 3, 1, 1, 1, 1, 1, 1, 1, 3},
 			{3, 3, 1, 1, 1, 1, 1, 1, 1, 3},
 			{1, 1, 1, 1, 1, 1, 1, 1, 1, 3},
@@ -151,7 +154,7 @@ public class MuseumLevels implements Serializable {
 				new ExtraTile(7, 6, 
 						new Ground(GPath.createImagePath(GPath.TILE, GPath.MUSEUM, "spotlight.png")))
 		}, new ArrayList<GCharacter>() {{
-			add(new Signpost(2, 6, "statue1.png", "Evolution of Decay: Part 1"));
+			add(new MuseumMoveStatue(2, 6, "statue1.png", "Evolution of Decay: Part 1", 8, 6, 2, 4));
 			add(new Signpost(3, 6, "statue1.png", "Evolution of Decay: Part 2"));
 			add(new Signpost(4, 6, "statue1.png", "Evolution of Decay: Part 3"));
 			add(new Signpost(5, 6, "statue1.png", "Evolution of Decay: Part 4"));

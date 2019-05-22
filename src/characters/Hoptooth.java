@@ -214,7 +214,7 @@ public class Hoptooth extends GCharacter {
 			case Hoptooth.STATE_IDLE:
 				boolean hasLOS = LineDrawer.hasSight(this.xPos, this.yPos, plrX, plrY);
 				if(hasLOS) {
-					SoundPlayer.playWAV(GPath.createSoundPath("Hoptooth_Alert.wav"), -10f);
+					SoundPlayer.playWAV(GPath.createSoundPath("Hoptooth_Alert.wav"), -5f);
 					this.state = Hoptooth.STATE_ALERTED;
 				} else {
 					// Handle movement for Idling
@@ -284,7 +284,6 @@ public class Hoptooth extends GCharacter {
 					}
 					
 					// Decide if Hoptooth should attempt a running chomp prep
-					// Punishes running away and eager approaches
 					// Attempt only 1/2 of the time
 					int shouldAttack = new Random().nextInt(2);
 					if((shouldAttack == 0) && (((Math.abs(distX) <= 1) && (Math.abs(distY) == 0)) ||
@@ -324,7 +323,7 @@ public class Hoptooth extends GCharacter {
 					dy = -1;
 				}
 				
-				// If immediately next to play after attack, cue up another attack
+				// If immediately next to player after attack, cue up another attack
 				if(((Math.abs(distX) == 1) && (Math.abs(distY) == 0)) ||
 						((Math.abs(distX) == 0) && (Math.abs(distY) == 1))) {
 					// Mark direction to attack next turn
@@ -357,8 +356,11 @@ public class Hoptooth extends GCharacter {
 					SoundPlayer.playWAV(GPath.createSoundPath("Hoptooth_Chomp.wav"), -2f);
 					
 					// Attack in marked direction
-					if((this.xPos + this.markX) == plrX && (this.yPos + this.markY) == plrY)
+					if((this.xPos + this.markX) == plrX && (this.yPos + this.markY) == plrY) {
 						this.chompPlayer();
+					}
+
+					// Reset attack counter and switch states
 					this.attCount = 0;
 					this.state = Hoptooth.STATE_ATT_CHOMP;
 				}
