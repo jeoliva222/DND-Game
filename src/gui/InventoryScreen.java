@@ -2,6 +2,8 @@ package gui;
 
 import java.awt.Color;
 import java.awt.Dimension;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.JPanel;
 
@@ -77,6 +79,21 @@ public class InventoryScreen extends JPanel {
 	
 	// Add item to inventory screen
 	public static boolean addItem(GItem item) {
+		
+		// Check for open stacks of same item
+		for(int y = 0; y < invRows; y++) {
+			for(int x = 0; x < invCols; x++) {
+				InventoryTile tile = InventoryScreen.invTiles[y][x];
+				if (tile.getItem() != null && tile.getItem().getName().equals(item.getName())) {
+					if (InventoryScreen.invTiles[y][x].getStackSize() < item.maxStack) {
+						InventoryScreen.invTiles[y][x].incrementStack();
+						InventoryScreen.invTiles[y][x].repaint();
+						return true;
+					}
+				}
+			}
+		}
+		
 		// If we're out of space in our inventory, don't add
 		if(currentItems >= maxItems) {
 			LogScreen.log("Inventory is too full!", GColors.ITEM);
@@ -197,17 +214,23 @@ public class InventoryScreen extends JPanel {
 		LogScreen.log("Player discarded "
 				+InventoryScreen.invTiles[currentY][currentX].getItem().getName()+".", GColors.ITEM);
 		
-		// Clear the item
-		InventoryScreen.invTiles[currentY][currentX].clearItem();
-		
-		// Reorganize the inventory
-		InventoryScreen.organizeInventoryScreen();
-		
-		// Defocus InfoScreen
-		InfoScreen.defocusIfItem();
-		
-		// Decrement current items counter
-		InventoryScreen.currentItems += -1;
+		if(InventoryScreen.invTiles[currentY][currentX].getStackSize() > 1) {
+			// If multiple stacks of the item, only discard one
+			InventoryScreen.invTiles[currentY][currentX].decrementStack();
+			InventoryScreen.invTiles[currentY][currentX].repaint();
+		} else {
+			// If only one stack left, clear the item
+			InventoryScreen.invTiles[currentY][currentX].clearItem();
+			
+			// Reorganize the inventory
+			InventoryScreen.organizeInventoryScreen();
+			
+			// Defocus InfoScreen
+			InfoScreen.defocusIfItem();
+			
+			// Decrement current items counter
+			InventoryScreen.currentItems += -1;
+		}
 		
 		return true;
 	}
@@ -253,19 +276,33 @@ public class InventoryScreen extends JPanel {
 	
 	// Fetch inventory items in the form of an array
 	public static GItem[] getItemArray() {
-		GItem[] output = new GItem[(InventoryScreen.invCols * InventoryScreen.invRows)];
+		List<GItem> itemList = new ArrayList<GItem>();
 		
 		int count = 0;
 		for(int row = 0; row < invRows; row++) {
 			for(int col = 0; col < invCols; col++) {
 				if(count >= InventoryScreen.currentItems) {
-					return output;
+					return InventoryScreen.itemListToArray(itemList);
 				}
-				GItem item = InventoryScreen.invTiles[row][col].getItem();
-				//System.out.println("Count: "+Integer.toString(count)+" / Name: "+item.getName());
-				output[count] = item;
+				
+				// Add item to output for each stack we have
+				for(int i = 0; i < InventoryScreen.invTiles[row][col].getStackSize(); i++) {
+					GItem item = InventoryScreen.invTiles[row][col].getItem();
+					itemList.add(item);
+				}
+
+				// Increment count
 				count += 1;
 			}
+		}
+		
+		return InventoryScreen.itemListToArray(itemList);
+	}
+	
+	public static GItem[] itemListToArray(List<GItem> list) {
+		GItem[] output = new GItem[list.size()];
+		for(int i = 0; i < list.size(); i++) {
+			output[i] = list.get(i);
 		}
 		
 		return output;
@@ -280,23 +317,13 @@ public class InventoryScreen extends JPanel {
 			}
 		}
 		
-		// Fill inventory with loaded items
-		int count = 0;
-		for(int row = 0; row < invRows; row++) {
-			for(int col = 0; col < invCols; col++) {
-				// If next item is null, don't continue
-				if(newInv[count] == null) {
-					InventoryScreen.currentItems = (byte) count;
-					return;
-				}
-				
-				// Set new item
-				InventoryScreen.invTiles[row][col].setItem(newInv[count]);
-				count += 1;
-			}
-		}
+		// Reset item count
+		InventoryScreen.currentItems = 0;
 		
-		InventoryScreen.currentItems = (byte) count;
+		// For each item, add it to the inventory
+		for(GItem item : newInv) {
+			InventoryScreen.addItem(item);
+		}
 	}
 	
 	public static int getXIndex() {

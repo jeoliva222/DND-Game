@@ -16,14 +16,18 @@ public abstract class GItem implements Serializable {
 	// Image Path of the item
 	public String imagePath;
 	
+	// Maximum amount of the item that can be stacked
+	public int maxStack;
+	
 	// Marks whether the item is discardable or not
 	public boolean isDiscardable;
 	
 	// Constructor
-	public GItem(String name, String description, String imagePath) {
+	public GItem(String name, String description, String imagePath, int maxStack) {
 		this.name = name;
 		this.description = description;
 		this.imagePath = imagePath;
+		this.maxStack = maxStack;
 		this.isDiscardable = true;
 	}
 	

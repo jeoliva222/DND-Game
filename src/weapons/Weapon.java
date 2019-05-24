@@ -32,7 +32,7 @@ public abstract class Weapon extends GItem {
 	
 	// Constructor
 	public Weapon(String name, String desc, String imagePath) {
-		super(name, desc, imagePath);
+		super(name, desc, imagePath, 1);
 	}
 	
 	// Functionality dictating how weapons try to attack enemies

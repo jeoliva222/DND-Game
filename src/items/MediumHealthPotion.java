@@ -17,7 +17,7 @@ public class MediumHealthPotion extends GItem {
 	public MediumHealthPotion() {
 		super("Medium Health Potion",
 				"Drink to heal up to half your maximum health.",
-				MediumHealthPotion.imagePath);
+				MediumHealthPotion.imagePath, 4);
 	}
 
 	@Override

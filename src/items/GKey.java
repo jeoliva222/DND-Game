@@ -21,7 +21,7 @@ public class GKey extends GItem {
 	
 	// Constructor
 	public GKey(int keycode) {
-		super("", "", GPath.NULL);
+		super("", "", GPath.NULL, 1);
 		this.keycode = keycode;
 		
 		// We don't want keys to be discarded

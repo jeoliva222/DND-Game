@@ -18,7 +18,7 @@ public class SmallMaxPotion extends GItem {
 	public SmallMaxPotion() {
 		super("Small Maxing Potion",
 				"Drink to increase your maximum health by a bit.",
-				SmallMaxPotion.imagePath);
+				SmallMaxPotion.imagePath, 4);
 	}
 
 	@Override

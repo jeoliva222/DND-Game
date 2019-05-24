@@ -35,6 +35,10 @@ public class InventoryTile extends JPanel {
 	private int xBuffer = 10;
 	private int yBuffer = 10;
 	
+	// Coordinates that stack size text is placed
+	private int stackTextX = 15;
+	private int stackTextY = 40;
+	
 	// Tile width and height
 	private int tileWidth = 100;
 	private int tileHeight = 100;
@@ -45,6 +49,9 @@ public class InventoryTile extends JPanel {
 	// Inventory Item on the tile
 	private GItem item = null;
 	
+	// Number of stacks of the item held
+	private int stackSize = 0;
+	
 	// Constructor
 	protected InventoryTile(int xIndex, int yIndex, int xBuf, int yBuf) {
 		super();
@@ -53,9 +60,11 @@ public class InventoryTile extends JPanel {
 		this.xIndex = xIndex;
 		this.yIndex = yIndex;
 		
-		// Adjust buffer size
+		// Adjust buffer sizes
 		this.xBuffer = (int) (xBuf * GameInitializer.scaleFactor);
 		this.yBuffer = (int) (yBuf * GameInitializer.scaleFactor);
+		this.stackTextX = (int) (this.stackTextX * GameInitializer.scaleFactor);
+		this.stackTextY = (int) (this.stackTextY * GameInitializer.scaleFactor);
 		
 		// Scale the width and height
 		this.tileWidth = (int) (this.tileWidth * GameInitializer.scaleFactor);
@@ -75,7 +84,6 @@ public class InventoryTile extends JPanel {
 		     }
 		});
 		
-		/// TEMP
 		this.setBackground(Color.LIGHT_GRAY);
 	}
 	
@@ -89,15 +97,20 @@ public class InventoryTile extends JPanel {
 		// Check if the item uses correctly
 		if(this.item.use()) {
 			if(!(item instanceof Weapon)) {
-				// If we're not a weapon, remove item from inventory
-				// and organize rest of items
-				this.clearItem();
-				InventoryScreen.organizeInventoryScreen();
-				InventoryScreen.incrementItemCount(-1);
+				// If we're not a weapon, remove one count of the
+				// item from the inventory
+				if(this.stackSize > 1) {
+					this.decrementStack();
+				} else {
+					this.clearItem();
+					InventoryScreen.organizeInventoryScreen();
+					InventoryScreen.incrementItemCount(-1);
+				}
 			}
 			// Defocus item from InfoScreen
 			InfoScreen.defocusIfItem();
 			
+			this.repaint();
 			return true;
 		} else {
 			// If item didn't use properly or was null, return false
@@ -113,7 +126,6 @@ public class InventoryTile extends JPanel {
 			URL url = file.toURI().toURL();
 			this.itemImage = new ImageIcon(url).getImage();
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			System.out.println(filepath + " not found.");
 			e.printStackTrace();
 		}
@@ -128,7 +140,6 @@ public class InventoryTile extends JPanel {
 			URL url = file.toURI().toURL();
 			this.borderImage = new ImageIcon(url).getImage();
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			System.out.println(filepath + " not found.");
 			e.printStackTrace();
 		}
@@ -139,8 +150,13 @@ public class InventoryTile extends JPanel {
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
+        System.out.println("X-set: " + (this.xBuffer*3) + " / Y-set: " + (this.yBuffer*3));
         g.drawImage(itemImage, this.xBuffer, this.yBuffer, this);
         g.drawImage(borderImage, this.xBuffer, this.yBuffer, this);
+        if(this.stackSize > 1) {
+        	g.setColor(Color.BLACK);
+        	g.drawString(Integer.toString(this.stackSize), this.stackTextX, this.stackTextY);
+        }
     }
 
 	
@@ -169,18 +185,35 @@ public class InventoryTile extends JPanel {
 	// with the correct new image
 	public void setItem(GItem item) {
 		this.item = item;
+		this.stackSize = 1;
 		this.setItemPath(item.imagePath);
 	}
 	
 	// Clears the item from the tile
 	public void clearItem() {
 		this.item = null;
+		this.stackSize = 0;
 		this.setItemPath(GPath.NULL);
+	}
+	
+	// Increases stack size by 1
+	public void incrementStack() {
+		this.stackSize += 1;
+	}
+	
+	// Decreases stack size by 1
+	public void decrementStack() {
+		this.stackSize -= 1;
 	}
 	
 	// Gets the item on the tile
 	public GItem getItem() {
 		return this.item;
+	}
+	
+	// Gets the current stack size of the tile
+	public int getStackSize() {
+		return this.stackSize;
 	}
 	
 }
