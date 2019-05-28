@@ -35,7 +35,6 @@ public class SnakeNuke extends GCharacter {
 	
 	private static final int STATE_HIDDEN = 0;
 	private static final int STATE_FLIGHT = 1;
-	//private static final int STATE_BOOM = 2; TODO - Maybe not needed
 	
 	//----------------------------
 	

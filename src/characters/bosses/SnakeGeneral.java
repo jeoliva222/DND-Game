@@ -94,6 +94,11 @@ public class SnakeGeneral extends GCharacter {
 	private int spcCount = 0;
 	private final int SPC_MAX = 30;
 	
+	// Flags telling the snake whether we did certain special attacks
+	private boolean didSpc0 = false;
+	private boolean didSpc1 = false;
+	private boolean didSpc2 = false;
+	
 	// Flag indicating whether General is in phase 2 of the fight
 	private boolean isPhase2 = false;
 	
@@ -114,7 +119,7 @@ public class SnakeGeneral extends GCharacter {
 			new Dimension(8, 5)
 	};
 	
-	// Order of rows to attack in Blitz special attack
+	// Order of rows to attack in Blitz/Cannon special attacks
 	private int[] rowOrder = new int[] {2, 3, 4, 5};
 	
 	//----------------------------
@@ -316,7 +321,7 @@ public class SnakeGeneral extends GCharacter {
 		InfoScreen.setNPCFocus(this);
 		
 		// Increment damage counter and set that we've recently been damaged
-		this.dmgCount += 1;
+		this.dmgCount += damage;
 		this.recentDmg = true;
 		
 		// If below (5/6) health, go to phase 2
@@ -1213,10 +1218,10 @@ public class SnakeGeneral extends GCharacter {
 
 	// Chooses the next close-quarters melee attack for the General
 	private void chooseCQMeleeAttack() {
-		int whichAttack = new Random().nextInt(18);
+		int whichAttack = new Random().nextInt(30);
 		if(whichAttack <= this.dmgCount) {
 			this.state = SnakeGeneral.STATE_PREP_RETREAT;
-		} else if(whichAttack <= 12) {
+		} else if(whichAttack <= 18) {
 			this.state = SnakeGeneral.STATE_PREP_COMBO;
 		} else {
 			this.state = SnakeGeneral.STATE_SET_BOMB;
@@ -1230,7 +1235,7 @@ public class SnakeGeneral extends GCharacter {
 			this.state = SnakeGeneral.STATE_PREP_RETREAT;
 		} else if(whichAttack <= 15) {
 			this.state = SnakeGeneral.STATE_PREP_COMBO;
-		} else if(whichAttack <= 30) {
+		} else if(whichAttack <= 35) {
 			// Play reving sound
 			SoundPlayer.playWAV(GPath.createSoundPath("Chaingun_Rev.wav"));
 			this.state = SnakeGeneral.STATE_PREP_CHAINGUN;
@@ -1241,14 +1246,46 @@ public class SnakeGeneral extends GCharacter {
 	
 	// Chooses the next special attack for the General
 	private void chooseSpecialAttack() {
-		int whichAttack = new Random().nextInt(3);
-		if(whichAttack == 0) {
-			this.state = SnakeGeneral.STATE_SPC_ASSASSINATE;
-		} else if(whichAttack == 1) {
-			this.state = SnakeGeneral.STATE_SPC_BLITZ;
-		} else {
-			this.state = SnakeGeneral.STATE_SPC_CANNON;
+		// Check and reset special attack flags if all are hit
+		this.checkSpcAttacks();
+		
+		// Create and populate temp attack list
+		ArrayList<Integer> attacks = new ArrayList<Integer>();
+		
+		if(!this.didSpc0) {
+			attacks.add(SnakeGeneral.STATE_SPC_ASSASSINATE);
 		}
+		
+		if(!this.didSpc1) {
+			attacks.add(SnakeGeneral.STATE_SPC_BLITZ);
+		}
+		
+		if(!this.didSpc2) {
+			attacks.add(SnakeGeneral.STATE_SPC_CANNON);
+		}
+		
+		// Select the attack
+		int whichAttack = new Random().nextInt(attacks.size());
+		this.state = attacks.get(whichAttack);
+		
+		switch(this.state) {
+			case SnakeGeneral.STATE_SPC_ASSASSINATE:
+				this.didSpc0 = true;
+				break;
+			case SnakeGeneral.STATE_SPC_BLITZ:
+				this.didSpc1 = true;
+				break;
+			case SnakeGeneral.STATE_SPC_CANNON:
+				this.didSpc2 = true;
+				break;
+			default:
+				System.out.println("Special attack not recognized: " + this.state);
+				break;
+		}
+		
+		// Clear temp attack list
+		attacks.clear();
+		attacks = null;
 	}
 	
 	// Plays a hurt sound when the General takes damage TODO
@@ -1288,6 +1325,24 @@ public class SnakeGeneral extends GCharacter {
 				SoundPlayer.playWAV(GPath.createSoundPath("CannonFire1.wav"));
 				break;
 		}
+	}
+	
+	// Checks to see if each special attack has been used once.
+	// If so, reset the flags and allow them to all be used again.
+	private void checkSpcAttacks() {
+		if(this.didAllSpcAttacks()) {
+			this.resetSpcAttacks();
+		}
+	}
+	
+	private boolean didAllSpcAttacks() {
+		return (this.didSpc0 && this.didSpc1 && this.didSpc2);
+	}
+	
+	private void resetSpcAttacks() {
+		this.didSpc0 = false;
+		this.didSpc1 = false;
+		this.didSpc2 = false;
 	}
 	
 	// Shortening of adding effect for convenience and easy code reading

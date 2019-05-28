@@ -150,7 +150,6 @@ public class InventoryTile extends JPanel {
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
-        System.out.println("X-set: " + (this.xBuffer*3) + " / Y-set: " + (this.yBuffer*3));
         g.drawImage(itemImage, this.xBuffer, this.yBuffer, this);
         g.drawImage(borderImage, this.xBuffer, this.yBuffer, this);
         if(this.stackSize > 1) {

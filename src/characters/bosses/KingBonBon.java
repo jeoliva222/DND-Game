@@ -1,6 +1,7 @@
 package characters.bosses;
 
 import java.awt.Dimension;
+import java.util.ArrayList;
 import java.util.Random;
 
 import ai.DumbFollow;
@@ -77,6 +78,11 @@ public class KingBonBon extends GCharacter {
 	
 	// Turns since last special attack
 	private int spcCount = 0;
+	
+	// Flags telling the snake whether we did certain special attacks
+	private boolean didSpc0 = false;
+	private boolean didSpc1 = false;
+	private boolean didSpc2 = false;
 	
 	// Boolean indicating whether we were damaged last turn
 	private boolean recentDmg = false;
@@ -374,14 +380,7 @@ public class KingBonBon extends GCharacter {
 						this.spcCount = 0;
 						
 						// Decide on which special attack to use
-						int whichSpecial = r.nextInt(3);
-						if(whichSpecial == 0) {
-							this.state = KingBonBon.STATE_PREP_FIRE;
-						} else if(whichSpecial == 1) {
-							this.state = KingBonBon.STATE_PREP_THUNDER;
-						} else {
-							this.state = KingBonBon.STATE_PREP_FLOOD;
-						}
+						this.chooseSpecialAttack();
 						return;
 					}
 				}
@@ -846,6 +845,68 @@ public class KingBonBon extends GCharacter {
 				SoundPlayer.playWAV(GPath.createSoundPath("king_hurt2.wav"));
 			}
 		}
+	}
+	
+	// Chooses the next special attack for the King
+	private void chooseSpecialAttack() {
+		// Check and reset special attack flags if all are hit
+		this.checkSpcAttacks();
+		
+		// Create and populate temp attack list
+		ArrayList<Integer> attacks = new ArrayList<Integer>();
+		
+		if(!this.didSpc0) {
+			attacks.add(KingBonBon.STATE_PREP_FIRE);
+		}
+		
+		if(!this.didSpc1) {
+			attacks.add(KingBonBon.STATE_PREP_THUNDER);
+		}
+		
+		if(!this.didSpc2) {
+			attacks.add(KingBonBon.STATE_PREP_FLOOD);
+		}
+		
+		// Select the attack
+		int whichAttack = new Random().nextInt(attacks.size());
+		this.state = attacks.get(whichAttack);
+		
+		switch(this.state) {
+			case KingBonBon.STATE_PREP_FIRE:
+				this.didSpc0 = true;
+				break;
+			case KingBonBon.STATE_PREP_THUNDER:
+				this.didSpc1 = true;
+				break;
+			case KingBonBon.STATE_PREP_FLOOD:
+				this.didSpc2 = true;
+				break;
+			default:
+				System.out.println("Special attack not recognized: " + this.state);
+				break;
+		}
+		
+		// Clear temp attack list
+		attacks.clear();
+		attacks = null;
+	}
+	
+	// Checks to see if each special attack has been used once.
+	// If so, reset the flags and allow them to all be used again.
+	private void checkSpcAttacks() {
+		if(this.didAllSpcAttacks()) {
+			this.resetSpcAttacks();
+		}
+	}
+	
+	private boolean didAllSpcAttacks() {
+		return (this.didSpc0 && this.didSpc1 && this.didSpc2);
+	}
+	
+	private void resetSpcAttacks() {
+		this.didSpc0 = false;
+		this.didSpc1 = false;
+		this.didSpc2 = false;
 	}
 
 }
