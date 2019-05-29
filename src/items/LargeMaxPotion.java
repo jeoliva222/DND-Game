@@ -23,7 +23,7 @@ public class LargeMaxPotion extends GItem {
 	@Override
 	public boolean use() {
 		// Increase the player's max health
-		EntityManager.getInstance().getPlayer().increaseMaxHP(6);
+		EntityManager.getInstance().getPlayer().increaseMaxHP(3);
 		
 		// Log results
 		LogScreen.log("Player drank and felt a lot tougher!", GColors.HEAL);

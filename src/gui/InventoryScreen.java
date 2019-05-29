@@ -84,7 +84,7 @@ public class InventoryScreen extends JPanel {
 		for(int y = 0; y < invRows; y++) {
 			for(int x = 0; x < invCols; x++) {
 				InventoryTile tile = InventoryScreen.invTiles[y][x];
-				if (tile.getItem() != null && tile.getItem().getName().equals(item.getName())) {
+				if(tile.getItem() != null && tile.getItem().getName().equals(item.getName())) {
 					if (InventoryScreen.invTiles[y][x].getStackSize() < item.maxStack) {
 						InventoryScreen.invTiles[y][x].incrementStack();
 						InventoryScreen.invTiles[y][x].repaint();
@@ -198,29 +198,35 @@ public class InventoryScreen extends JPanel {
 	
 	// Discards/Trashes the currently selected item
 	public static boolean discardSelected() {
+		InventoryTile tile = InventoryScreen.invTiles[currentY][currentX];
+		
 		// If the player isn't alive or item is null, return false
 		if(!EntityManager.getInstance().getPlayer().isAlive() ||
-				(InventoryScreen.invTiles[currentY][currentX].getItem() == null)) {
+				(tile.getItem() == null)) {
 			return false;
 		}
 		
 		// If item is not discardable, return false
-		if(!InventoryScreen.invTiles[currentY][currentX].getItem().isDiscardable) {
+		if(!tile.getItem().isDiscardable) {
 			LogScreen.log("You can't discard this item!", GColors.ITEM);
 			return false;
 		}
 		
 		// Log what we're discarding
 		LogScreen.log("Player discarded "
-				+InventoryScreen.invTiles[currentY][currentX].getItem().getName()+".", GColors.ITEM);
+				+tile.getItem().getName()+".", GColors.ITEM);
 		
-		if(InventoryScreen.invTiles[currentY][currentX].getStackSize() > 1) {
-			// If multiple stacks of the item, only discard one
-			InventoryScreen.invTiles[currentY][currentX].decrementStack();
-			InventoryScreen.invTiles[currentY][currentX].repaint();
+		// Discard the item
+		if(tile.getStackSize() >= tile.getItem().maxStack) {
+			// If we have a full stack of the item, look for the smallest stack to discard from
+			InventoryScreen.removeFromSmallestStack(tile.getItem());
+		} else if(tile.getStackSize() > 1) {
+			// If multiple stacks of the item (but not a max stack), only discard one
+			tile.decrementStack();
+			tile.repaint();
 		} else {
 			// If only one stack left, clear the item
-			InventoryScreen.invTiles[currentY][currentX].clearItem();
+			tile.clearItem();
 			
 			// Reorganize the inventory
 			InventoryScreen.organizeInventoryScreen();
@@ -235,7 +241,7 @@ public class InventoryScreen extends JPanel {
 		return true;
 	}
 	
-	// Reorganizes the items in the inventory
+	// Reorganizes the items in the inventory around current selection
 	public static void organizeInventoryScreen() {
 		// Iterate through remaining items, shifting each one slot back
 		int startX = (InventoryScreen.currentX + 1);
@@ -261,6 +267,70 @@ public class InventoryScreen extends JPanel {
 			}
 			startX = 0;
 		}
+	}
+	
+	// Reorganizes the items in the inventory around a particular index
+	public static void organizeInventoryScreen(int xIndex, int yIndex) {
+		// Iterate through remaining items, shifting each one slot back
+		int startX = (xIndex + 1);
+		Dimension oldIndex = new Dimension(xIndex, yIndex);
+		for(int y = yIndex; y < invRows; y++) {
+			for(int x = startX; x < invCols; x++) {
+				// Get the item
+				GItem itemToShift = InventoryScreen.invTiles[y][x].getItem();
+				
+				// If the item is null, we've finished organizing
+				if(itemToShift == null) {
+					return;
+				}
+				
+				// Shift item to last index
+				InventoryScreen.invTiles[oldIndex.height][oldIndex.width].setItem(itemToShift);
+				
+				// Clear item from this index
+				InventoryScreen.invTiles[y][x].clearItem();
+				
+				// Update index
+				oldIndex = new Dimension(x, y);
+			}
+			startX = 0;
+		}
+	}
+	
+	// If we have a full stack of the item, look for the smallest stack to discard from
+	// Check for open stacks of same item
+	public static boolean removeFromSmallestStack(GItem item) {
+		for(int y = (invRows - 1); y >= 0; y--) {
+			for(int x = (invCols - 1); x >= 0; x--) {
+				InventoryTile stackTile = InventoryScreen.invTiles[y][x];
+				if(stackTile.getItem() != null && stackTile.getItem().getName().equals(item.getName())) {
+					// Discard from this stack instead
+					if(stackTile.getStackSize() > 1) {
+						// If multiple stacks of the item (but not a max stack), only discard one
+						stackTile.decrementStack();
+						stackTile.repaint();
+					} else {
+						// If only one stack left, clear the item
+						stackTile.clearItem();
+
+						// Reorganize the inventory
+						InventoryScreen.organizeInventoryScreen(x, y);
+						
+						// Defocus InfoScreen
+						InfoScreen.defocusIfItem();
+						
+						// Decrement current items counter
+						InventoryScreen.currentItems += -1;
+					}
+					
+					// We removed an item, so return true
+					return true;
+				}
+			}
+		}
+		
+		// No items removed, so return false
+		return false;
 	}
 	
 	// *******************

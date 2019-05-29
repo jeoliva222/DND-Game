@@ -11,6 +11,7 @@ import characters.BreakableWall;
 import characters.BunnyWarrior;
 import characters.GCharacter;
 import characters.Hoptooth;
+import characters.SaveCrystal;
 import characters.Signpost;
 import characters.TormentedSoul;
 import characters.special.MuseumMoveStatue;
@@ -54,8 +55,10 @@ public class MuseumLevels implements Serializable {
 			{3, 3, 1, 1, 1, 3, 3, 3, 3, 3}
 		}, new ExtraTile[] {
 		}, new ArrayList<GCharacter>() {{
+			add(new SaveCrystal(6, 6));
 		}}, new ArrayList<GPickup>() {{
-			//add(new GPickup(5, 3, new SmallHealthPotion()));
+			add(new GPickup(8, 6, new SmallHealthPotion()));
+			add(new GPickup(8, 8, new SmallHealthPotion()));
 		}});
 		
 		//-------------------
@@ -84,15 +87,27 @@ public class MuseumLevels implements Serializable {
 			{3, 3, 3, 3, 3, 3, 3, 3, 3, 3},
 			{3, 3, 3, 3, 3, 3, 3, 3, 3, 3},
 			{1, 1, 1, 1, 1, 1, 1, 1, 1, 3},
-			{1, 1, 1, 1, 1, 1, 1, 1, 1, 3},
+			{1, 1, 1, 1, 3, 1, 1, 3, 1, 3},
 			{3, 3, 3, 1, 1, 1, 1, 1, 1, 3},
 			{3, 3, 3, 1, 1, 1, 1, 1, 1, 3},
 			{3, 1, 1, 1, 1, 1, 1, 1, 1, 3},
-			{3, 1, 1, 1, 1, 1, 1, 1, 1, 3},
+			{3, 1, 1, 1, 3, 1, 1, 3, 1, 3},
 			{3, 1, 1, 1, 1, 1, 1, 1, 1, 3},
 			{3, 1, 1, 3, 3, 3, 3, 3, 3, 3}
 		}, new ExtraTile[] {
+				new ExtraTile(4, 3, 
+						new Ground(GPath.createImagePath(GPath.TILE, GPath.MUSEUM, "spotlight.png"))),
+				new ExtraTile(7, 3, 
+						new Ground(GPath.createImagePath(GPath.TILE, GPath.MUSEUM, "spotlight.png"))),
+				new ExtraTile(4, 7, 
+						new Ground(GPath.createImagePath(GPath.TILE, GPath.MUSEUM, "spotlight.png"))),
+				new ExtraTile(7, 7, 
+						new Ground(GPath.createImagePath(GPath.TILE, GPath.MUSEUM, "spotlight.png"))),
 		}, new ArrayList<GCharacter>() {{
+			add(new TormentedSoul(4, 3, "soul1"));
+			add(new TormentedSoul(7, 3, "soul1"));
+			add(new TormentedSoul(4, 7, "soul1"));
+			add(new TormentedSoul(7, 7, "soul1"));
 		}}, new ArrayList<GPickup>() {{
 		}});
 		
@@ -175,12 +190,15 @@ public class MuseumLevels implements Serializable {
 			{3, 1, 1, 1, 1, 1, 1, 1, 1, 3},
 			{3, 3, 1, 3, 3, 3, 1, 3, 3, 3},
 			{3, 1, 1, 1, 3, 1, 1, 1, 1, 3},
-			{3, 1, 1, 1, 3, 1, 1, 1, 1, 3},
+			{3, 1, 1, 1, 1, 1, 1, 1, 1, 3},
 			{3, 3, 3, 3, 3, 3, 3, 3, 3, 3}
 		}, new ExtraTile[] {
 		}, new ArrayList<GCharacter>() {{
+			add(new Hoptooth(8, 2, PatrolPattern.STATIONARY));
+			add(new Hoptooth(8, 7, PatrolPattern.STATIONARY));
+			add(new MuseumMoveStatue(2, 6, "statue2.png", "Respite", 4, 8, 4, 2));
 		}}, new ArrayList<GPickup>() {{
-			//add(new GPickup(5, 3, new SmallHealthPotion()));
+			add(new GPickup(1, 7, Armory.injector));
 		}});
 		
 		//-------------------

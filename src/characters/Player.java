@@ -88,8 +88,8 @@ public class Player implements Serializable {
 		this.levelY = 2;
 		
 		// Set health values
-		// Default is 16
-		this.maxHP = 16;
+		// Default is 20
+		this.maxHP = 20;
 		this.currentHP = this.maxHP;
 		
 		// Set armor value

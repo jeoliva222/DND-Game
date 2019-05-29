@@ -99,9 +99,14 @@ public class InventoryTile extends JPanel {
 			if(!(item instanceof Weapon)) {
 				// If we're not a weapon, remove one count of the
 				// item from the inventory
-				if(this.stackSize > 1) {
+				if(this.stackSize >= this.item.maxStack) {
+					// If a full stack, search for a smaller stack to remove from
+					InventoryScreen.removeFromSmallestStack(this.item);
+				} else if(this.stackSize > 1) {
+					// If not a full stack (but still more than 1), decrease stack count by 1
 					this.decrementStack();
 				} else {
+					// Otherwise, clear the item
 					this.clearItem();
 					InventoryScreen.organizeInventoryScreen();
 					InventoryScreen.incrementItemCount(-1);
