@@ -2,6 +2,7 @@ package gui;
 
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.event.MouseAdapter;
@@ -43,6 +44,10 @@ public class InventoryTile extends JPanel {
 	private int tileWidth = 100;
 	private int tileHeight = 100;
 	
+	// Font size and Font for stack size number
+	private int stackFontSize = 28;
+	private Font stackFont;
+	
 	// New scale factor
 	private double upScaleFactor = ((double) tileWidth) / GameInitializer.tileArtSize;
 	
@@ -69,6 +74,10 @@ public class InventoryTile extends JPanel {
 		// Scale the width and height
 		this.tileWidth = (int) (this.tileWidth * GameInitializer.scaleFactor);
 		this.tileHeight = (int) (this.tileHeight * GameInitializer.scaleFactor);
+		
+		// Scale the stack font
+		this.stackFontSize = (int) (this.stackFontSize * GameInitializer.scaleFactor);
+		this.stackFont = new Font(Font.SERIF, Font.BOLD, this.stackFontSize);
 		
 		this.upScaleFactor = this.upScaleFactor * GameInitializer.scaleFactor;
 		
@@ -159,6 +168,7 @@ public class InventoryTile extends JPanel {
         g.drawImage(borderImage, this.xBuffer, this.yBuffer, this);
         if(this.stackSize > 1) {
         	g.setColor(Color.BLACK);
+        	g.setFont(this.stackFont);
         	g.drawString(Integer.toString(this.stackSize), this.stackTextX, this.stackTextY);
         }
     }
