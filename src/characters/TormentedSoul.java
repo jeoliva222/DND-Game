@@ -116,7 +116,7 @@ public class TormentedSoul extends GCharacter {
 	}
 	
 	public String getCorpseImage() {
-		return GPath.NULL;
+		return (this.imageDir + this.tsImage_base + "_dead.png");
 	}
 	
 	public void populateMoveTypes() {
@@ -153,10 +153,6 @@ public class TormentedSoul extends GCharacter {
 		// Get player's location
 		int plrX = player.getXPos();
 		int plrY = player.getYPos();
-		
-		// Get relative location to player
-		int distX = plrX - this.xPos;
-		int distY = plrY - this.yPos;
 		
 		switch(this.state) {
 			case TormentedSoul.STATE_IDLE:
