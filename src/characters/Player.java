@@ -187,31 +187,7 @@ public class Player implements Serializable {
 		this.yPos += dy;
 		
 		// Grab any items at the new position
-		boolean breakFlag = false;
-		for(GPickup pu: EntityManager.getInstance().getPickupManager().getPickups()) {
-			if(pu.getXPos() == this.xPos && pu.getYPos() == this.yPos) {
-				// Add item to inventory if we have inventory space
-				if(InventoryScreen.addItem(pu.item)) {
-				
-					// Set focus on new item
-					InfoScreen.setItemFocus(pu.item);
-					
-					// Log what player grabbed
-					LogScreen.log("Player looted "+pu.item.getName()+".", GColors.ITEM);
-					
-					// Play a sound
-					SoundPlayer.playWAV(GPath.createSoundPath("Item_GET.wav"));
-					
-					// Remove item from manager
-					EntityManager.getInstance().getPickupManager().removePickup(pu);
-				}
-				
-				// Set break flag to break from 'for' loop
-				breakFlag = true;
-			}
-			// Break if we collected an item already
-			if(breakFlag) break;
-		}
+		this.grabItems();
 		
 		// Trigger the TileType's onStep method
 		tt.onStep();
@@ -264,31 +240,7 @@ public class Player implements Serializable {
 		this.yPos = newY;
 		
 		// Grab any items at the new position
-		boolean breakFlag = false;
-		for(GPickup pu: EntityManager.getInstance().getPickupManager().getPickups()) {
-			if(pu.getXPos() == this.xPos && pu.getYPos() == this.yPos) {
-				// Add item to inventory if we have inventory space
-				if(InventoryScreen.addItem(pu.item)) {
-				
-					// Set focus on new item
-					InfoScreen.setItemFocus(pu.item);
-					
-					// Log what player grabbed
-					LogScreen.log("Player looted "+pu.item.getName()+".", GColors.ITEM);
-					
-					// Play a sound
-					SoundPlayer.playWAV(GPath.createSoundPath("Item_GET.wav"));
-					
-					// Remove item from manager
-					EntityManager.getInstance().getPickupManager().removePickup(pu);
-				}
-				
-				// Set break flag to break from 'for' loop
-				breakFlag = true;
-			}
-			// Break if we collected an item already
-			if(breakFlag) break;
-		}
+		this.grabItems();
 		
 		// Trigger the TileType's onStep method
 		tt.onStep();
@@ -300,6 +252,43 @@ public class Player implements Serializable {
 	// Overload with default value of 'false' to isTeleport parameter
 	public boolean leapPlayer(int newX, int newY) {
 		return this.leapPlayer(newX, newY, false);
+	}
+	
+	// Attempt to grab any items at the player's position
+	public void grabItems() {
+		// Grab any items at the new position
+		ArrayList<GPickup> grabbedItems = new ArrayList<GPickup>();
+		for(GPickup pu: EntityManager.getInstance().getPickupManager().getPickups()) {
+			if(pu.getXPos() == this.xPos && pu.getYPos() == this.yPos) {
+				// Add item to inventory if we have inventory space
+				if(InventoryScreen.addItem(pu.item)) {
+				
+					// Set focus on new item
+					InfoScreen.setItemFocus(pu.item);
+					
+					// Log what player grabbed
+					LogScreen.log("Player looted "+pu.item.getName()+".", GColors.ITEM);
+					
+					// Mark item as grabbed
+					grabbedItems.add(pu);
+				}
+			}
+		}
+		
+		// Remove grabbed items from level
+		for(GPickup rpu: grabbedItems) {
+			// Remove item from manager
+			EntityManager.getInstance().getPickupManager().removePickup(rpu);
+		}
+		
+		// If we grabbed at least one item, play item-get sound
+		if(grabbedItems.size() > 0) {
+			// Play a sound
+			SoundPlayer.playWAV(GPath.createSoundPath("Item_GET.wav"));
+		}
+		
+		// Dereference tracker list
+		grabbedItems = null;
 	}
 	
 	// Subtracts health from player and kills them if they reach 0 health

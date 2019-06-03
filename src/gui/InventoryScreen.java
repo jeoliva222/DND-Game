@@ -10,6 +10,7 @@ import javax.swing.JPanel;
 import helpers.GColors;
 import helpers.GPath;
 import items.GItem;
+import items.GPickup;
 import managers.EntityManager;
 
 public class InventoryScreen extends JPanel {
@@ -206,15 +207,15 @@ public class InventoryScreen extends JPanel {
 			return false;
 		}
 		
-		// If item is not discardable, return false
-		if(!tile.getItem().isDiscardable) {
-			LogScreen.log("You can't discard this item!", GColors.ITEM);
-			return false;
-		}
-		
 		// Log what we're discarding
 		LogScreen.log("Player discarded "
 				+tile.getItem().getName()+".", GColors.ITEM);
+		
+		// Place item on the ground
+		EntityManager.getInstance().getPickupManager().addPickup(new GPickup(
+				EntityManager.getInstance().getPlayer().getXPos(),
+				EntityManager.getInstance().getPlayer().getYPos(),
+				tile.getItem()));
 		
 		// Discard the item
 		if(tile.getStackSize() >= tile.getItem().maxStack) {

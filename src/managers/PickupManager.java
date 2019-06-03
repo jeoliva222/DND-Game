@@ -36,6 +36,16 @@ public class PickupManager {
 	public boolean removePickup(GPickup pu) {
 		if(this.pickups.contains(pu)) {
 			this.pickups.remove(pu);
+			
+			// Search for remaining pickups left on this tile
+			for(GPickup item: this.pickups) {
+				if(item.getXPos() == pu.getXPos() && item.getYPos() == pu.getYPos()) {
+					GameScreen.getTile(pu.getXPos(), pu.getYPos()).setPickupImage(item.getImage());
+					return true;
+				}
+			}
+			
+			// If no pickups remaining on tile, clear the tile of pickup images
 			GameScreen.getTile(pu.xPos, pu.yPos).clearPickup();
 			return true;
 		} else {
