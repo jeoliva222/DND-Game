@@ -417,7 +417,7 @@ public class SandWurm extends GCharacter {
 				.addProjectile(new SandwurmSpit((this.xPos + dx),
 										(this.yPos + dy),
 										dx,
-										dy, this));
+										dy, this.getClass()));
 				
 				// Change state to spit attack
 				this.state = SandWurm.STATE_ATT_SPIT;

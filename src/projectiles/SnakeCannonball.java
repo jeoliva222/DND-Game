@@ -1,6 +1,5 @@
 package projectiles;
 
-import characters.GCharacter;
 import helpers.GPath;
 
 // Class representing projectile fired from SnakeTank Desert boss
@@ -8,7 +7,7 @@ public class SnakeCannonball extends GProjectile {
 
 	private static String baseImagePath = GPath.createImagePath(GPath.ENEMY, GPath.SNAKETANK, "cannonball");
 
-	public SnakeCannonball(int xPos, int yPos, int dx, int dy, GCharacter owner) {
+	public SnakeCannonball(int xPos, int yPos, int dx, int dy, Class<?> owner) {
 		super("Cannonball", xPos, yPos, dx, dy, owner);
 		
 		// Damage values

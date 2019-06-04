@@ -29,7 +29,7 @@ public abstract class GProjectile {
 	protected String name;
 	
 	// Character who fired the projectile
-	protected GCharacter owner;
+	protected Class<?> owner;
 	
 	// Marks whether the projectile will pierce through walls and enemies
 	protected boolean entityPiercing, wallPiercing;
@@ -45,7 +45,7 @@ public abstract class GProjectile {
 	abstract public String getImage();
 	
 	// Constructor
-	public GProjectile(String name, int xPos, int yPos, int dx, int dy, GCharacter owner) {
+	public GProjectile(String name, int xPos, int yPos, int dx, int dy, Class<?> owner) {
 		this.name = name;
 		this.xPos = xPos;
 		this.yPos = yPos;
@@ -134,7 +134,7 @@ public abstract class GProjectile {
 			if(this.xPos == npc.getXPos() && this.yPos == npc.getYPos()) {
 				// If not the owner's enemy-type of the projectile, damage the character
 				if(this.owner == null ||
-						npc.getClass() != this.owner.getClass()) {
+						npc.getClass() != this.owner) {
 					// Calculate damage value
 					int damage = this.calculateDamage(npc);
 					
@@ -198,7 +198,7 @@ public abstract class GProjectile {
 						(this.yPos + this.dy) == npc.getLastY()) {
 					// If not the owner's enemy-type of the projectile, affect the character
 					if(this.owner == null ||
-							npc.getClass() != this.owner.getClass()) {
+							npc.getClass() != this.owner) {
 						// Calculate damage value
 						int damage = this.calculateDamage(npc);
 						
@@ -315,11 +315,15 @@ public abstract class GProjectile {
 	
 	@Override
 	public int hashCode() {
+		int hash = 0;
+		hash += this.name.hashCode();
 		if(owner == null) {
-			return (this.name.hashCode() + "Player".hashCode());
+			hash += ("Player".hashCode());
 		} else {
-			return (this.name.hashCode() + this.owner.getName().hashCode());
+			hash += (this.owner.getName().hashCode());
 		}
+		
+		return hash;
 	}
 	
 	//-----------------------------
@@ -333,7 +337,7 @@ public abstract class GProjectile {
 		return this.yPos;
 	}
 	
-	public GCharacter getOwner() {
+	public Class<?> getOwner() {
 		return this.owner;
 	}
 	

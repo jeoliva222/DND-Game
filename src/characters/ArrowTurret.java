@@ -155,7 +155,7 @@ public class ArrowTurret extends GCharacter {
 						.addProjectile(new Arrow((this.xPos + this.shootX),
 												(this.yPos + this.shootY),
 												this.shootX,
-												this.shootY, this));
+												this.shootY, this.getClass()));
 				}
 				
 				// Increment our cooldown counter

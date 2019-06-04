@@ -496,7 +496,7 @@ public class KingsHead extends GCharacter {
 		SoundPlayer.playWAV(GPath.createSoundPath("fire_ATT.wav"));
 		for(Dimension d: this.fireCoords) {
 			int direction = 1 + (-2 * (d.height%2));
-			this.addProjectile(new KingFireball(d.width, d.height, direction, 0, this));
+			this.addProjectile(new KingFireball(d.width, d.height, direction, 0, this.getClass()));
 		}
 	}
 	

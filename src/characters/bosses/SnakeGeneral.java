@@ -1039,14 +1039,14 @@ public class SnakeGeneral extends GCharacter {
 					// Alternate cannon-firing side
 					if(this.attCount % 2 == 1) {
 						// Fire left cannons for the turn
-						this.addProjectile(new SnakeCannonball(4, this.rowOrder[0], 1, 0, this));
-						this.addProjectile(new SnakeCannonball(4, this.rowOrder[1], 1, 0, this));
+						this.addProjectile(new SnakeCannonball(4, this.rowOrder[0], 1, 0, this.getClass()));
+						this.addProjectile(new SnakeCannonball(4, this.rowOrder[1], 1, 0, this.getClass()));
 						this.addEffect(new DamageIndicator(4, this.rowOrder[0]));
 						this.addEffect(new DamageIndicator(4, this.rowOrder[1]));
 					} else {
 						// Fire right cannons for the turn
-						this.addProjectile(new SnakeCannonball(8, this.rowOrder[2], -1, 0, this));
-						this.addProjectile(new SnakeCannonball(8, this.rowOrder[3], -1, 0, this));
+						this.addProjectile(new SnakeCannonball(8, this.rowOrder[2], -1, 0, this.getClass()));
+						this.addProjectile(new SnakeCannonball(8, this.rowOrder[3], -1, 0, this.getClass()));
 						this.addEffect(new DamageIndicator(8, this.rowOrder[2]));
 						this.addEffect(new DamageIndicator(8, this.rowOrder[3]));
 					}

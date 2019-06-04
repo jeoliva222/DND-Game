@@ -325,7 +325,7 @@ public class SnakeTank extends GCharacter {
 						this.firedCannon = true;
 						
 						// Shoot a cannonball, and increment counter by 2
-						this.addProjectile(new SnakeCannonball(this.xPos - 1, this.yPos, -1, 0, this));
+						this.addProjectile(new SnakeCannonball(this.xPos - 1, this.yPos, -1, 0, this.getClass()));
 						this.attCount += 2;
 					} else {
 						// Shoot 2 cannonballs (Randomly on higher or lower lane)
@@ -338,19 +338,19 @@ public class SnakeTank extends GCharacter {
 						this.firedCannon = true;
 						
 						// Shoot one of the two straight ahead
-						this.addProjectile(new SnakeCannonball(this.xPos - 1, this.yPos, -1, 0, this));
+						this.addProjectile(new SnakeCannonball(this.xPos - 1, this.yPos, -1, 0, this.getClass()));
 						
 						// Shoot the other on either the higher or lower lane
 						// Checks to make sure it doesn't shoot it into a wall
 						// If no walls to hit, decided randomly
 						if(this.yPos == 5) {
-							this.addProjectile(new SnakeCannonball(this.xPos - 1, this.yPos - 1, -1, 0, this));
+							this.addProjectile(new SnakeCannonball(this.xPos - 1, this.yPos - 1, -1, 0, this.getClass()));
 						} else if(this.yPos == 2) {
-							this.addProjectile(new SnakeCannonball(this.xPos - 1, this.yPos + 1, -1, 0, this));
+							this.addProjectile(new SnakeCannonball(this.xPos - 1, this.yPos + 1, -1, 0, this.getClass()));
 						} else if(r.nextInt(1) == 0) {
-							this.addProjectile(new SnakeCannonball(this.xPos - 1, this.yPos - 1, -1, 0, this));
+							this.addProjectile(new SnakeCannonball(this.xPos - 1, this.yPos - 1, -1, 0, this.getClass()));
 						} else {
-							this.addProjectile(new SnakeCannonball(this.xPos - 1, this.yPos + 1, -1, 0, this));
+							this.addProjectile(new SnakeCannonball(this.xPos - 1, this.yPos + 1, -1, 0, this.getClass()));
 						}
 						
 						// Delay our next shot to avoid unfair scenarios
@@ -437,12 +437,12 @@ public class SnakeTank extends GCharacter {
 					// Reset attack counter
 					this.attCount = 0;
 					
-					//If we've charged long enough, then fire the Nuke
+					// If we've charged long enough, then fire the Nuke
 					for(GCharacter npc: EntityManager.getInstance().getNPCManager().getCharacters()) {
 						if(npc != this && npc instanceof SnakeNuke) {
-							// Set was fired to true, and break from 'for' loop
+							// Inform nuke that it was fired, and then break from 'for' loop
 							SnakeNuke nuke = (SnakeNuke) npc;
-							nuke.wasFired = true;
+							nuke.fireNuke();
 							break;
 						}
 					}

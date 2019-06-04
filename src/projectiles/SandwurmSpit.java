@@ -1,6 +1,5 @@
 package projectiles;
 
-import characters.GCharacter;
 import helpers.GPath;
 
 // Class representing spit projectile fired by SandWurm enemies in the Desert area
@@ -8,7 +7,7 @@ public class SandwurmSpit extends GProjectile {
 
 	private String basePath = GPath.createImagePath(GPath.ENEMY, GPath.SANDWURM);
 
-	public SandwurmSpit(int xPos, int yPos, int dx, int dy, GCharacter owner) {
+	public SandwurmSpit(int xPos, int yPos, int dx, int dy, Class<?> owner) {
 		super("Bile Spit", xPos, yPos, dx, dy, owner);
 		
 		// Damage values

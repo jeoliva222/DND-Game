@@ -1,6 +1,5 @@
 package projectiles;
 
-import characters.GCharacter;
 import helpers.GPath;
 
 // Class representing the projectile fired from the Cactian enemy in the Poacher's Desert area
@@ -8,7 +7,7 @@ public class CactianNeedle extends GProjectile {
 
 	private String basePath = GPath.createImagePath(GPath.ENEMY, GPath.CACTIAN);
 
-	public CactianNeedle(int xPos, int yPos, int dx, int dy, GCharacter owner) {
+	public CactianNeedle(int xPos, int yPos, int dx, int dy, Class<?> owner) {
 		super("Cactus Needles", xPos, yPos, dx, dy, owner);
 		
 		// Damage values

@@ -1,13 +1,12 @@
 package projectiles;
 
-import characters.GCharacter;
 import helpers.GPath;
 
 public class MusicNote extends GProjectile {
 
 	private static String imagePath = GPath.createImagePath(GPath.ENEMY, GPath.WATCHMAN, "music_proj.png");
 	
-	public MusicNote(int xPos, int yPos, int dx, int dy, GCharacter owner) {
+	public MusicNote(int xPos, int yPos, int dx, int dy, Class<?> owner) {
 		super("Music Note", xPos, yPos, dx, dy, owner);
 		
 		// Damage values

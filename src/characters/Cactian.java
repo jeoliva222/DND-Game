@@ -308,7 +308,7 @@ public class Cactian extends GCharacter {
 				.addProjectile(new CactianNeedle((this.xPos + this.markX),
 										(this.yPos + this.markY),
 										this.markX,
-										this.markY, this));
+										this.markY, this.getClass()));
 
 				// Changes states
 				this.state = Cactian.STATE_ATT;

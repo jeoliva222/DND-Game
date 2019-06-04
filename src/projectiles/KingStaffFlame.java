@@ -1,6 +1,5 @@
 package projectiles;
 
-import characters.GCharacter;
 import helpers.GPath;
 import weapons.special.KingStaff;
 
@@ -12,7 +11,7 @@ public class KingStaffFlame extends GProjectile {
 	// Number of turns the flame lasts
 	private int turnCount = 2;
 	
-	public KingStaffFlame(int xPos, int yPos, int dx, int dy, GCharacter owner) {
+	public KingStaffFlame(int xPos, int yPos, int dx, int dy, Class<?> owner) {
 		super("Staff Flame", xPos, yPos, dx, dy, owner);
 		
 		// Damage values

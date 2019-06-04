@@ -1,6 +1,5 @@
 package projectiles;
 
-import characters.GCharacter;
 import helpers.GPath;
 
 
@@ -8,7 +7,7 @@ public class Arrow extends GProjectile {
 	
 	private String basePath = GPath.createImagePath(GPath.ENEMY, GPath.ARROW_TURRET);
 
-	public Arrow(int xPos, int yPos, int dx, int dy, GCharacter owner) {
+	public Arrow(int xPos, int yPos, int dx, int dy, Class<?> owner) {
 		super("Arrow", xPos, yPos, dx, dy, owner);
 		
 		// Damage values

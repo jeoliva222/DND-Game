@@ -1,6 +1,7 @@
 package weapons.special;
 
 import characters.GCharacter;
+import characters.Player;
 import effects.ChargeIndicator;
 import helpers.GColors;
 import helpers.GPath;
@@ -63,14 +64,14 @@ public class KingStaff extends Weapon {
 							.addProjectile(new KingStaffFlame((em.getPlayer().getXPos() + dx - Math.abs(dy)),
 													(em.getPlayer().getYPos() + dy - Math.abs(dx)),
 													dx,
-													dy, null));
+													dy, Player.class));
 						
 						// Fire a flame to the relative right of the player's attack
 						em.getProjectileManager()
 							.addProjectile(new KingStaffFlame((em.getPlayer().getXPos() + dx + Math.abs(dy)),
 													(em.getPlayer().getYPos() + dy + Math.abs(dx)),
 													dx,
-													dy, null));
+													dy, Player.class));
 						
 						// Play fire sound
 						SoundPlayer.playWAV(GPath.createSoundPath("fire_ATT.wav"));

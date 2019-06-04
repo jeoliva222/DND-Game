@@ -108,22 +108,22 @@ public class EliteArrowTurret extends ArrowTurret {
 							.addProjectile(new Arrow((this.xPos + 1),
 												(this.yPos),
 												1,
-												0, this));
+												0, this.getClass()));
 						EntityManager.getInstance().getProjectileManager()
 							.addProjectile(new Arrow((this.xPos - 1),
 											(this.yPos),
 											-1,
-											0, this));
+											0, this.getClass()));
 						EntityManager.getInstance().getProjectileManager()
 							.addProjectile(new Arrow((this.xPos),
 											(this.yPos + 1),
 											0,
-											1, this));
+											1, this.getClass()));
 						EntityManager.getInstance().getProjectileManager()
 							.addProjectile(new Arrow((this.xPos),
 											(this.yPos - 1),
 											0,
-											-1, this));
+											-1, this.getClass()));
 						
 						// Don't do alternate fire next time we shoot
 						this.doAltFire = false;
@@ -133,7 +133,7 @@ public class EliteArrowTurret extends ArrowTurret {
 							.addProjectile(new Arrow((this.xPos + this.shootX),
 													(this.yPos + this.shootY),
 													this.shootX,
-													this.shootY, this));
+													this.shootY, this.getClass()));
 						
 						// Do alternate fire next time we shoot
 						this.doAltFire = true;

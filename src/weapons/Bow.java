@@ -1,6 +1,7 @@
 package weapons;
 
 import characters.GCharacter;
+import characters.Player;
 import helpers.GColors;
 import managers.EntityManager;
 import projectiles.Arrow;
@@ -39,7 +40,7 @@ public class Bow extends Weapon {
 				.addProjectile(new Arrow((em.getPlayer().getXPos() + dx),
 										(em.getPlayer().getYPos() + dy),
 										dx,
-										dy, null));
+										dy, Player.class));
 			
 			// We fired an arrow, so return true
 			return true;

@@ -202,12 +202,12 @@ public class EliteWatchman extends Watchman {
 					.addProjectile(new MusicNote((this.xPos + this.xMarkDir),
 											(this.yPos + this.yMarkDir),
 											this.xMarkDir,
-											this.yMarkDir, this));
+											this.yMarkDir, this.getClass()));
 				EntityManager.getInstance().getProjectileManager()
 				.addProjectile(new MusicNote((this.xPos + (this.xMarkDir*2)),
 										(this.yPos + (this.yMarkDir*2)),
 										this.xMarkDir,
-										this.yMarkDir, this));
+										this.yMarkDir, this.getClass()));
 				
 				
 				// Play attack sound and change state

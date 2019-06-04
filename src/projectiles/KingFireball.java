@@ -1,13 +1,12 @@
 package projectiles;
 
-import characters.GCharacter;
 import helpers.GPath;
 
 public class KingFireball extends GProjectile {
 	
 	private static String baseImagePath = GPath.createImagePath(GPath.ENEMY, GPath.KINGBONBON, "fireball");
 
-	public KingFireball(int xPos, int yPos, int dx, int dy, GCharacter owner) {
+	public KingFireball(int xPos, int yPos, int dx, int dy, Class<?> owner) {
 		super("King's Fire", xPos, yPos, dx, dy, owner);
 		
 		// Damage values

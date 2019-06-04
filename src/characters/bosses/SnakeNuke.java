@@ -409,6 +409,11 @@ public class SnakeNuke extends GCharacter {
 		}
 	}
 	
+	// Function used by SnakeTank to inform the SnakeNuke that it was fired
+	protected void fireNuke() {
+		this.wasFired = true;
+	}
+	
 	// Shortening of adding effect for convenience and easy code reading
 	private void addEffect(GEffect fx) {
 		EntityManager.getInstance().getEffectManager().addEffect(fx);
