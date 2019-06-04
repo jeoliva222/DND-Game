@@ -104,8 +104,7 @@ public class Player implements Serializable {
 		this.populateMoveTypes();
 	}
 	
-	///*** TEMPORARY IMPLEMENTATIONS USED
-	// TODO
+	// Moves the player in a particular direction
 	public boolean movePlayer(int dx, int dy) {
 		
 		// Check if player is alive first
@@ -113,9 +112,6 @@ public class Player implements Serializable {
 			// If player is dead, don't do anything
 			return false;
 		}
-		
-		///*** (TEMP) Marks the start of every turn in the log
-		System.out.println("------------");
 		
 		// Next check to see if your weapon will hit anything
 		if(this.equippedWeapon.tryAttack(dx, dy)) {
@@ -321,17 +317,14 @@ public class Player implements Serializable {
 	// Up and over max if over-heal
 	public void healPlayer(int heal, boolean isOverHeal) {
 		this.currentHP = this.currentHP + heal;
-		if((!isOverHeal) && (this.currentHP > this.maxHP)) {
+		if((this.currentHP > this.maxHP) && (!isOverHeal)) {
 			this.currentHP = this.maxHP;
 		}
 	}
 	
 	// Overload that assumes heal isn't an over-heal
 	public void healPlayer(int heal) {
-		this.currentHP = this.currentHP + heal;
-		if(this.currentHP > this.maxHP) {
-			this.currentHP = this.maxHP;
-		}
+		this.healPlayer(heal, false);
 	}
 	
 	// Heals the player to full health

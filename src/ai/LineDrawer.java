@@ -14,6 +14,12 @@ public class LineDrawer {
 	
 	// Checks if a position has sight towards another position
 	public static boolean hasSight(int originX, int originY, int destX, int destY) {
+		ArrayList<GameTile> tiles = LineDrawer.fetchSightPath(originX, originY, destX, destY);
+		return LineDrawer.isLOS(tiles, originX, originY, destX, destY);
+	}
+	
+	// Fetches the LOS path between two points
+	public static ArrayList <GameTile> fetchSightPath(int originX, int originY, int destX, int destY) {
 		// Initialize variables for general direction of line being drawn
 		int xDir = 0;
 		int yDir = 0;
@@ -40,9 +46,7 @@ public class LineDrawer {
 		// If straight line to target, use simpler algorithm
 		// Otherwise, calculate slope
 		if((dx == 0) || (dy == 0)) {
-			ArrayList <GameTile> tiles =
-					LineDrawer.drawStraightLine(originX, originY, destX, destY, xDir, yDir);
-			return LineDrawer.isLOS(tiles, originX, originY, destX, destY);
+			return LineDrawer.drawStraightLine(originX, originY, destX, destY, xDir, yDir);
 		} else {
 			slope = (double) dy / dx;
 		}
@@ -50,14 +54,10 @@ public class LineDrawer {
 		// Set dominant direction
 		if(Math.abs(slope) > 1.0) {
 			// Dominant direction is Y
-			ArrayList <GameTile> tiles =
-					LineDrawer.drawYLine(originX, originY, destX, destY, xDir, yDir, slope);
-			return LineDrawer.isLOS(tiles, originX, originY, destX, destY);
+			return LineDrawer.drawYLine(originX, originY, destX, destY, xDir, yDir, slope);
 		} else {
 			// Dominant direction is X
-			ArrayList <GameTile> tiles =
-					LineDrawer.drawXLine(originX, originY, destX, destY, xDir, yDir, slope);
-			return LineDrawer.isLOS(tiles, originX, originY, destX, destY);
+			return LineDrawer.drawXLine(originX, originY, destX, destY, xDir, yDir, slope);
 		}
 	}
 	

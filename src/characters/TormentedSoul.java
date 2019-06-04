@@ -15,7 +15,7 @@ public class TormentedSoul extends GCharacter {
 	
 	// Modifiers/Statistics
 
-	private int MAX_HP = 16;
+	private int MAX_HP = 20;
 	
 	private int MIN_DMG = 0;
 	private int MAX_DMG = 0;
@@ -41,13 +41,16 @@ public class TormentedSoul extends GCharacter {
 	// Flag indicating which step soul is on
 	private boolean whichStep = false;
 	
+	// Cooldown counter to ensure soul doesn't spam sounds
+	private int soundCooldown = 0;
+	
 	//----------------------------
 	
-	// File paths to images TODO
+	// File paths to images
 	private String imageDir = GPath.createImagePath(GPath.ENEMY, GPath.TORMENTED_SOUL);
 	private String tsImage_base = "";
-	
-	private String tsImage_DEAD = GPath.createImagePath(GPath.ENEMY, GPath.TORMENTED_SOUL, (this.tsImage_base + "_dead.png"));
+
+	private String tsImage_DEAD = "";
 
 
 	public TormentedSoul(int startX, int startY, String imageBase) {
@@ -66,6 +69,7 @@ public class TormentedSoul extends GCharacter {
 		this.patrolPattern = PatrolPattern.STATIONARY;
 		
 		this.tsImage_base = imageBase;
+		this.tsImage_DEAD = (this.imageDir + this.tsImage_base + "_dead.png");
 		
 		// Can't focus on this at first
 		this.canFocus = false;
@@ -116,7 +120,7 @@ public class TormentedSoul extends GCharacter {
 	}
 	
 	public String getCorpseImage() {
-		return (this.imageDir + this.tsImage_base + "_dead.png");
+		return this.tsImage_DEAD;
 	}
 	
 	public void populateMoveTypes() {
@@ -131,12 +135,7 @@ public class TormentedSoul extends GCharacter {
 	
 	@Override
 	public void onDeath() {
-		int whichSound = new Random().nextInt(2);
-		if(whichSound == 0) {
-			SoundPlayer.playWAV(GPath.createSoundPath("Soul_Death1.wav"));
-		} else {
-			SoundPlayer.playWAV(GPath.createSoundPath("Soul_Death2.wav"));
-		}
+		SoundPlayer.playWAV(GPath.createSoundPath("Soul_Death1.wav"));
 	}
 
 	@Override
@@ -149,10 +148,6 @@ public class TormentedSoul extends GCharacter {
 			// Do nothing
 			return;
 		}
-		
-		// Get player's location
-		int plrX = player.getXPos();
-		int plrY = player.getYPos();
 		
 		switch(this.state) {
 			case TormentedSoul.STATE_IDLE:
@@ -228,11 +223,20 @@ public class TormentedSoul extends GCharacter {
 		// Initialize randomizer
 		Random r = new Random();
 		
-		// Only play sounds 1/4 of the time
-		int shouldPlay = r.nextInt(4);
+		// If we're on cooldown, decrement cooldown counter and don't play sound
+		if(this.soundCooldown > 0) {
+			this.soundCooldown += -1;
+			return;
+		}
+		
+		// Only play sounds 1/3 of the time if not on cooldown
+		int shouldPlay = r.nextInt(3);
 		if(shouldPlay != 0) {
 			return;
 		}
+		
+		// Set cooldown for three turns if we're playing a sound
+		this.soundCooldown = 3;
 		
 		// Play one of the four crying sounds
 		int whichSound = r.nextInt(4) + 2;

@@ -28,7 +28,9 @@ import helpers.GPath;
 import items.GKey;
 import items.GPickup;
 import items.LargeHealthPotion;
+import items.LargeMaxPotion;
 import items.MediumHealthPotion;
+import items.MediumMaxPotion;
 import items.SmallHealthPotion;
 import items.SmallMaxPotion;
 import tiles.AltGround;
@@ -75,6 +77,15 @@ public class DesertLevels implements Serializable {
 		}, new ArrayList<GCharacter>() {{
 			add(new Bitester(7, 4, PatrolPattern.SURFACE_CW));
 		}}, new ArrayList<GPickup>() {{
+//			add(new GPickup(4, 1, new SmallHealthPotion()));
+//			add(new GPickup(5, 1, new SmallMaxPotion()));
+//			add(new GPickup(6, 1, new MediumHealthPotion()));
+//			add(new GPickup(4, 2, new MediumMaxPotion()));
+//			add(new GPickup(5, 2, new LargeHealthPotion()));
+//			add(new GPickup(6, 2, new LargeMaxPotion()));
+//			add(new GPickup(4, 3, new GKey(KeyDoor.BLUE)));
+//			add(new GPickup(4, 4, new GKey(KeyDoor.YELLOW)));
+//			add(new GPickup(4, 5, new GKey(KeyDoor.RED)));
 		}});
 		
 		//-------------------
@@ -1161,7 +1172,7 @@ public class DesertLevels implements Serializable {
 			{3, 4, 0, 0, 0, 4, 3, 3, 3, 3}
 		}, new ExtraTile[] {
 		}, new ArrayList<GCharacter>() {{
-			add(new Signpost(2, 6, "test.png", "'The museum awaits...'"));
+			add(new Signpost(2, 6, "test.png", "The museum awaits..."));
 		}}, new ArrayList<GPickup>() {{
 		}});
 		

@@ -1,9 +1,7 @@
 package characters;
 
-import gui.InfoScreen;
 import gui.LogScreen;
 import helpers.GPath;
-import managers.EntityManager;
 
 public class Signpost extends GCharacter {
 	

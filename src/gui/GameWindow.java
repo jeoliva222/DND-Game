@@ -8,6 +8,9 @@ import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import javax.swing.JFrame;
 
@@ -226,6 +229,8 @@ public class GameWindow extends JFrame implements KeyListener {
 	
 	// Takes turns for all entities on screen and moves player by specified amount
 	public void completeTurn(int playerDx, int playerDy) {
+		DateFormat dateFormat = new SimpleDateFormat("HH:mm:ss.SSS");
+		System.out.println(dateFormat.format(new Date()) + " " + "Moving Player");
 		// Move the player
 		this.movePlayer(playerDx, playerDy);
 		
@@ -235,6 +240,7 @@ public class GameWindow extends JFrame implements KeyListener {
 			GameWindow.changedScreen = false;
 			return;
 		} else {
+			System.out.println(dateFormat.format(new Date()) + " " + "Moving Characters/Projectiles");
     		this.moveCharacters();
     		this.moveProjectiles();
 		}
@@ -329,15 +335,20 @@ public class GameWindow extends JFrame implements KeyListener {
 	
 	// Updates everything in the window
 	public void updateAll() {
+		DateFormat dateFormat = new SimpleDateFormat("HH:mm:ss.SSS");
+		System.out.println(dateFormat.format(new Date()) + " " + "Managing entities");
 		EntityManager.getInstance().manageAll();
 		if(GameWindow.shouldSave) {
 			this.saveGame();
 			GameWindow.shouldSave = false;
 		}
+		System.out.println(dateFormat.format(new Date()) + " " + "Rendering changes");
 		this.updatePlayer();
 		this.updateCharacters();
 		this.updateProjectiles();
 		this.updateGUI();
+		System.out.println(dateFormat.format(new Date()) + " " + "Turn finished!");
+		System.out.println("------------");
 	}
 	
 	// Updates all of the GUI on the screen
