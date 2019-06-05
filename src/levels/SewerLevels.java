@@ -797,7 +797,7 @@ public class SewerLevels implements Serializable {
 		//************************************************
 		// CONSTRUCTOR: AREA DEFINITION
 		
-		area_SEWER = new MapArea("Abandoned Tunnels", GPath.TEMPLE, GPath.createSoundPath("d_e2m6.mid"),
+		area_SEWER = new MapArea("Abandoned Tunnels", GPath.TEMPLE, GPath.createSoundPath("d_e2m6.mid"), 30,
 				new MapLevel[][] {
 			// Level grid definition
 			{s00, s10, s20, s30, s40, s50},

@@ -292,7 +292,8 @@ public class SnakeGeneral extends GCharacter {
 		GameScreen.getTile(5, 1).setTileType(new AltGround());
 		
 		// Change music to regular music
-		SoundPlayer.changeMidi(GPath.createSoundPath("d_e2m1.mid"), 30);
+		SoundPlayer.playMidi(EntityManager.getInstance().getActiveArea().getMusic(),
+				EntityManager.getInstance().getActiveArea().getMusicVolume());
 		
 		// Log a final death message
 		LogScreen.log("The general and his tank lie defeated and broken...");

@@ -241,7 +241,7 @@ public class GameScreen extends JPanel {
 					System.gc();
 					
 					// Change music
-					SoundPlayer.changeMidi(em.getActiveArea().getMusic(), 30);
+					SoundPlayer.changeMidi(em.getActiveArea().getMusic(), em.getActiveArea().getMusicVolume());
 					
 					// Indicate to the main window that the screen was changed
 					GameWindow.changedScreen = true;

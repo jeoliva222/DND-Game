@@ -87,6 +87,14 @@ public class SoundPlayer {
 	
 	/// Midi play with set volume for each channel
 	public static void playMidi(String midiPath, int volume) {
+		
+		// If the requested volume is full, don't modify the volume of the tracks
+		if(volume >= 100) {
+			System.out.println("Reverting to standard playing volumes");
+			SoundPlayer.playMidi(midiPath);
+			return;
+		}
+		
 		try {
 			// Set Synthesizer and set loop parameter if not already done
 			if(SoundPlayer.midiSequence == null) {

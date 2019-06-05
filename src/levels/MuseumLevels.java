@@ -207,7 +207,7 @@ public class MuseumLevels implements Serializable {
 		//************************************************
 		// CONSTRUCTOR: AREA DEFINITION
 		
-		area_MUSEUM = new MapArea("Skin Museum", GPath.MUSEUM, GPath.createSoundPath("d2_m30.mid"), true,
+		area_MUSEUM = new MapArea("Skin Museum", GPath.MUSEUM, GPath.createSoundPath("d2_m30.mid"), 100, true,
 				new MapLevel[][] {
 			// Level grid definition
 			{m00, m10, m20},

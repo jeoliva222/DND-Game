@@ -1323,7 +1323,7 @@ public class DesertLevels implements Serializable {
 		//************************************************
 		// AREA DEFINITION
 		
-		area_DESERT = new MapArea("Poacher's Desert", GPath.DESERT, GPath.createSoundPath("d_e2m1.mid"),
+		area_DESERT = new MapArea("Poacher's Desert", GPath.DESERT, GPath.createSoundPath("d_e2m1.mid"), 35,
 				new MapLevel[][] {
 			// Level grid definition
 			{d00, d10, d20, d30, d40, d50, d60},

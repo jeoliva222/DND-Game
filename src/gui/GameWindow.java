@@ -159,7 +159,8 @@ public class GameWindow extends JFrame implements KeyListener {
 		SoundPlayer.cacheSoundPlaying();
 		
 		// Start playing music
-		SoundPlayer.playMidi(EntityManager.getInstance().getActiveArea().getMusic(), 20);
+		SoundPlayer.playMidi(EntityManager.getInstance().getActiveArea().getMusic(),
+				EntityManager.getInstance().getActiveArea().getMusicVolume());
 		
 		// Set some extra parameters and then make visible
 		this.setTitle("Frog VS World");
