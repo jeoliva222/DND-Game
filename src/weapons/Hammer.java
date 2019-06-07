@@ -67,7 +67,7 @@ public class Hammer extends Weapon {
 		int dmg;
 		int halfArmor = npc.getArmor() / 2;
 		int newMin = (int) Math.floor(this.minDmg * dmgMult);
-		int newMax = (int) Math.floor((this.maxDmg - halfArmor) * dmgMult);
+		int newMax = (int) Math.floor((this.maxDmg * dmgMult) - halfArmor);
 		
 		// Maximum damage cannot drop below 0
 		if(newMax < 0) {

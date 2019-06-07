@@ -145,7 +145,7 @@ public abstract class GCharacter implements Serializable {
 		int dmg;
 		int targetArmor = plr.getArmor();
 		int newMin = (int) Math.floor(this.minDmg * dmgMult);
-		int newMax = (int) Math.floor((this.maxDmg - targetArmor) * dmgMult);
+		int newMax = (int) Math.floor((this.maxDmg * dmgMult) - targetArmor);
 		
 		// Maximum damage cannot drop below 0
 		if(newMax < 0) {
