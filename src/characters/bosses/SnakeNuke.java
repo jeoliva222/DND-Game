@@ -51,11 +51,14 @@ public class SnakeNuke extends GCharacter {
 	// Flag determining if Nuke was fired from SnakeTank
 	protected boolean wasFired = false;
 	
+	// Flag determining whether or not light at end of bomb is glowing (Visual)
+	private boolean isGlowing = false;
+	
 	//----------------------------
 	
 	// File paths to images
 	private String imageDir = GPath.createImagePath(GPath.ENEMY, GPath.SNAKETANK);
-	private String nkImage_base = "nuke";
+	private String nkImage_base = "bomb";
 	
 	// Constructor
 	public SnakeNuke(int startX, int startY) {
@@ -86,52 +89,50 @@ public class SnakeNuke extends GCharacter {
 	
 	@Override
 	public String getImage() {
+		String imgPath = this.imageDir + this.nkImage_base;
+		String lightPath = "";
+		String dirPath;
 		
-		// TEMP TODO
-		//return this.imageDir + this.nkImage_base + "_full.png";
-		if(this.state == SnakeNuke.STATE_FLIGHT) {
-			return GPath.createImagePath(GPath.TILE, GPath.GENERIC, "testProj.png");
-		} else {
-			return GPath.NULL;
+		switch(this.state) {
+			case SnakeNuke.STATE_HIDDEN:
+				return GPath.NULL;
+			case SnakeNuke.STATE_FLIGHT:
+				
+				// Glowing light
+				if(this.isGlowing) {
+					lightPath = "_A";
+				} else {
+					lightPath = "_B";
+				}
+				
+				// Get absolute value of speeds
+				int absDX = Math.abs(this.xSpeed);
+				int absDY = Math.abs(this.ySpeed);
+				
+				// Check which of the two relative directional speeds is greater
+				if(absDX >= absDY) {
+					// Check if arrow is flying left or right
+					if(this.xSpeed >= 0) {
+						dirPath = "_RIGHT";
+					} else {
+						dirPath = "_LEFT";
+					}
+				} else {
+					// Check if arrow is flying up or down
+					if(this.ySpeed >= 0) {
+						dirPath = "_DOWN";
+					} else {
+						dirPath = "_UP";
+					}
+				}
+				break;
+			default:
+				System.out.println
+					(this.getName() + " couldn't find a proper image: " + Integer.toString(this.state));
+				return GPath.NULL;
 		}
 		
-//		String imgPath = this.imageDir + this.stImage_base;
-//		String hpPath = "";
-//		String statePath = "";
-//		if(this.currentHP > 0) {
-//			hpPath = "_full";
-//		} else {
-//			hpPath = "_dead";
-//			return (imgPath + hpPath + ".png");
-//		}
-		
-//		switch(this.state) {
-//			case SnakeTank.STATE_IDLE:
-//			case SnakeTank.STATE_PURSUE:
-//				// No extra path
-//				break;
-//			case SnakeTank.STATE_ALERTED:
-//				statePath = "_ALERT";
-//				break;
-//			case SnakeTank.STATE_PREP_CHAINGUN:
-//				statePath = "_PREP_SHOOT";
-//				break;
-//			case SnakeTank.STATE_ATT_CHAINGUN:
-//				statePath = "_ATT_SHOOT";
-//				break;
-//			case SnakeTank.STATE_PREP_NUKE:
-//				statePath = "_PREP_SHOOT";
-//				break;
-//			case SnakeTank.STATE_ATT_NUKE:
-//				statePath = "_ATT_SHOOT";
-//				break;
-//			default:
-//				System.out.println
-//					(this.getName() + " couldn't find a proper image: " + Integer.toString(this.state));
-//				return GPath.NULL;
-//		}
-//		
-//		return (imgPath + hpPath + statePath + ".png");
+		return (imgPath + lightPath + dirPath + ".png");
 	}
 	
 	public String getCorpseImage() {
@@ -247,6 +248,8 @@ public class SnakeNuke extends GCharacter {
 					this.state = SnakeNuke.STATE_HIDDEN;
 				}
 				
+				// Toggle the glow of the light
+				this.isGlowing = !this.isGlowing;
 				break;
 			default:
 				System.out.println(this.getName() +
