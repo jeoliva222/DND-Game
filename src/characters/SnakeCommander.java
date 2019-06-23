@@ -196,14 +196,7 @@ public class SnakeCommander extends GCharacter {
 	
 	@Override
 	public void onDeath() {
-		// Randomly play one of two sounds
-		Random r = new Random();
-		int whichSound = r.nextInt(2);
-		if(whichSound == 0) {
-			SoundPlayer.playWAV(GPath.createSoundPath("BunnyWarrior_DEATH.wav"));
-		} else {
-			SoundPlayer.playWAV(GPath.createSoundPath("BunnyWarrior_DEATH2.wav"));
-		}
+		SoundPlayer.playWAV(GPath.createSoundPath("Snake_Death.wav"));
 	}
 	
 	// Override that resets a few extra parameters
@@ -361,7 +354,7 @@ public class SnakeCommander extends GCharacter {
 				EntityManager.getInstance().getEffectManager().addEffect(new DamageIndicator(this.xPos + (this.xMarkDir*2), this.yPos + (this.yMarkDir*2)));
 				
 				// Play sound
-				SoundPlayer.playWAV(GPath.createSoundPath("whip_ATT.wav"));
+				SoundPlayer.playWAV(GPath.createSoundPath("Snake_Bite.wav"));
 				
 				// Attack if two tiles away from player (In a straight line)
 				if((plrX == this.xPos + this.xMarkDir && plrY == this.yPos + this.yMarkDir) ||

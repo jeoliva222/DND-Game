@@ -275,14 +275,8 @@ public class SnakeGeneral extends GCharacter {
 	
 	@Override
 	public void onDeath() {
-		// Randomly play one of two sounds
-		Random r = new Random();
-		int whichSound = r.nextInt(2);
-		if(whichSound == 0) {
-			SoundPlayer.playWAV(GPath.createSoundPath("BunnyWarrior_DEATH.wav"));
-		} else {
-			SoundPlayer.playWAV(GPath.createSoundPath("BunnyWarrior_DEATH2.wav"));
-		}
+		// Play death sound
+		SoundPlayer.playWAV(GPath.createSoundPath("Snake_Death.wav"));
 		
 		// Clear any remaining bombs
 		this.placedBombs.clear();
@@ -482,7 +476,7 @@ public class SnakeGeneral extends GCharacter {
 				}
 				
 				// Use direction from player to mark squares
-				SoundPlayer.playWAV(GPath.createSoundPath("swing_ATT.wav"));
+				SoundPlayer.playWAV(GPath.createSoundPath("Snake_Bite.wav"));
 				this.addEffect(new DamageIndicator(this.xPos + this.xMarkDir, this.yPos + this.yMarkDir));
 				this.addEffect(new DamageIndicator(this.xPos + (this.xMarkDir*2), this.yPos + (this.yMarkDir*2)));
 				
