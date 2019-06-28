@@ -11,6 +11,7 @@ import characters.Bitester;
 import characters.BreakableWall;
 import characters.BunnyWarrior;
 import characters.Cactian;
+import characters.ChagrinShadow;
 import characters.EliteArrowTurret;
 import characters.EliteBeanpole;
 import characters.EliteBitester;
@@ -475,26 +476,20 @@ public class SewerLevels implements Serializable {
 		//------------------- // ROW 3
 		
 		MapLevel s03 = new MapLevel(new int[][] {
-			{3, 3, 3, 3, 3, 3, 3, 3, 3, 3},
+			{3, 3, 1, 1, 3, 3, 1, 1, 3, 3},
 			{3, 1, 1, 1, 1, 1, 1, 1, 1, 3},
-			{3, 1, 1, 1, 1, 1, 1, 1, 1, 3},
-			{3, 1, 1, 1, 1, 1, 1, 1, 1, 3},
-			{3, 1, 1, 1, 1, 1, 1, 1, 1, 3},
-			{3, 1, 1, 1, 1, 1, 1, 1, 1, 3},
-			{3, 1, 1, 1, 1, 1, 1, 1, 1, 3},
-			{3, 1, 1, 1, 1, 1, 1, 1, 1, 3},
-			{3, 1, 1, 1, 1, 1, 1, 1, 1, 3},
-			{3, 3, 3, 3, 3, 3, 3, 3, 3, 3}
+			{4, 2, 2, 1, 1, 1, 1, 2, 2, 2},
+			{3, 1, 2, 1, 1, 1, 1, 2, 1, 3},
+			{3, 1, 2, 1, 3, 3, 1, 2, 1, 3},
+			{3, 1, 2, 1, 1, 1, 1, 2, 1, 3},
+			{3, 2, 2, 2, 2, 2, 2, 2, 2, 3},
+			{3, 2, 2, 2, 2, 0, 2, 2, 2, 3},
+			{3, 0, 2, 0, 2, 2, 2, 2, 3, 3},
+			{3, 3, 3, 3, 3, 3, 0, 3, 0, 3}
 		}, new ExtraTile[] {
-				new ExtraTile(1, 8, 
-						new GroundButton(TriggerType.ENEMY_AND_TILE, false, GButton.VEILED, new ArrayList<GCharacter>() {{
-						}}, new ArrayList<ExtraTile>() {{
-							add(new ExtraTile(1, 0, new Ground()));
-						}})),
 		}, new ArrayList<GCharacter>() {{
-			add(new SandBeep(2, 1));
-			add(new SandBeep(3, 8));
-			add(new SandBeep(2, 7));
+			add(new ChagrinShadow(0, 0, 8, 7));
+			add(new BreakableWall(9, 2));
 		}}, new ArrayList<GPickup>() {{
 		}});
 		
@@ -502,21 +497,17 @@ public class SewerLevels implements Serializable {
 		
 		MapLevel s13 = new MapLevel(new int[][] {
 			{3, 3, 3, 3, 3, 3, 3, 3, 3, 3},
-			{3, 1, 1, 1, 1, 1, 1, 1, 1, 3},
-			{3, 1, 1, 1, 1, 1, 1, 1, 1, 3},
-			{3, 1, 1, 1, 1, 1, 1, 1, 1, 3},
-			{3, 1, 1, 1, 1, 1, 1, 1, 1, 3},
-			{3, 1, 1, 1, 1, 1, 1, 1, 1, 3},
-			{3, 1, 1, 1, 1, 1, 1, 1, 1, 3},
-			{3, 1, 1, 1, 1, 1, 1, 1, 1, 3},
-			{3, 1, 1, 1, 1, 1, 1, 1, 1, 3},
+			{3, 3, 2, 3, 1, 1, 1, 1, 1, 1},
+			{2, 2, 2, 3, 1, 1, 1, 1, 1, 1},
+			{3, 2, 2, 3, 1, 1, 1, 1, 1, 3},
+			{3, 2, 2, 3, 1, 1, 1, 1, 1, 3},
+			{3, 2, 3, 3, 1, 1, 1, 1, 1, 3},
+			{3, 2, 3, 3, 1, 1, 1, 1, 1, 3},
+			{3, 3, 3, 1, 1, 1, 1, 1, 1, 3},
+			{3, 3, 3, 1, 1, 1, 1, 1, 1, 3},
 			{3, 3, 3, 3, 3, 3, 3, 3, 3, 3}
 		}, new ExtraTile[] {
 		}, new ArrayList<GCharacter>() {{
-			add(new Cactian(4, 5));
-			add(new Cactian(7, 7));
-			add(new Cactian(6, 1));
-			add(new SandBeep(6, 4));
 		}}, new ArrayList<GPickup>() {{
 		}});
 		
@@ -524,8 +515,8 @@ public class SewerLevels implements Serializable {
 		
 		MapLevel s23 = new MapLevel(new int[][] {
 			{3, 3, 3, 3, 3, 3, 3, 3, 3, 3},
-			{3, 1, 1, 1, 1, 1, 1, 1, 1, 3},
-			{3, 1, 1, 1, 1, 1, 1, 1, 1, 3},
+			{1, 1, 1, 1, 1, 1, 1, 1, 1, 3},
+			{1, 1, 1, 1, 1, 1, 1, 1, 1, 3},
 			{3, 1, 1, 1, 1, 1, 1, 1, 1, 3},
 			{3, 1, 1, 1, 1, 1, 1, 1, 1, 3},
 			{3, 1, 1, 1, 1, 1, 1, 1, 1, 3},
@@ -535,12 +526,7 @@ public class SewerLevels implements Serializable {
 			{3, 3, 3, 1, 1, 1, 3, 3, 3, 3}
 		}, new ExtraTile[] {
 		}, new ArrayList<GCharacter>() {{
-			add(new Cactian(4, 5));
-			add(new Cactian(1, 8));
-			add(new EliteBunnyWarrior(6, 3, PatrolPattern.WANDER));
-			add(new BunnyWarrior(7, 3, PatrolPattern.WANDER));
 		}}, new ArrayList<GPickup>() {{
-			add(new GPickup(7, 3, new SmallHealthPotion()));
 		}});
 		
 		//-------------------
@@ -613,46 +599,39 @@ public class SewerLevels implements Serializable {
 		//------------------- // ROW 4
 		
 		MapLevel s04 = new MapLevel(new int[][] {
-			{3, 3, 3, 3, 3, 3, 3, 3, 3, 3},
-			{3, 1, 1, 1, 1, 1, 1, 1, 1, 3},
-			{3, 1, 1, 1, 1, 1, 1, 1, 1, 3},
-			{3, 1, 1, 1, 1, 1, 1, 1, 1, 3},
-			{3, 1, 1, 1, 1, 1, 1, 1, 1, 3},
-			{3, 1, 1, 1, 1, 1, 1, 1, 1, 3},
-			{3, 1, 1, 1, 1, 1, 1, 1, 1, 3},
-			{3, 1, 1, 1, 1, 1, 1, 1, 1, 3},
-			{3, 1, 1, 1, 1, 1, 1, 1, 1, 3},
+			{3, 3, 3, 3, 3, 3, 0, 4, 0, 3},
+			{3, 2, 2, 2, 4, 1, 2, 2, 2, 3},
+			{3, 2, 3, 2, 2, 2, 2, 2, 1, 3},
+			{3, 2, 2, 2, 2, 2, 2, 2, 2, 3},
+			{3, 2, 1, 2, 2, 1, 2, 2, 2, 3},
+			{3, 2, 2, 2, 3, 3, 2, 1, 4, 3},
+			{3, 2, 2, 2, 2, 2, 3, 3, 1, 3},
+			{3, 2, 1, 2, 2, 2, 2, 2, 1, 1},
+			{3, 2, 2, 2, 1, 2, 2, 1, 1, 1},
 			{3, 3, 3, 3, 3, 3, 3, 3, 3, 3}
 		}, new ExtraTile[] {
 		}, new ArrayList<GCharacter>() {{
-			add(new SnakeSoldier(1, 7, PatrolPattern.STATIONARY));
-			add(new SnakeSoldier(1, 1, PatrolPattern.STATIONARY));
-			add(new SandBeep(2, 8));
-			add(new Cactian(5, 2));
-			add(new Cactian(2, 3));
+			add(new ChagrinShadow(0, 0, 1, 1));
+			add(new BreakableWall(2, 5));
 		}}, new ArrayList<GPickup>() {{
-			add(new GPickup(1, 8, new GKey(KeyDoor.SNAKEBASE)));
+			add(new GPickup(8, 2, new SmallMaxPotion()));
 		}});
 		
 		//-------------------
 		
 		MapLevel s14 = new MapLevel(new int[][] {
 			{3, 3, 3, 3, 3, 3, 3, 3, 3, 3},
-			{3, 1, 1, 1, 1, 1, 1, 1, 1, 3},
-			{3, 1, 1, 1, 1, 1, 1, 1, 1, 3},
-			{3, 1, 1, 1, 1, 1, 1, 1, 1, 3},
-			{3, 1, 1, 1, 1, 1, 1, 1, 1, 1},
-			{3, 1, 1, 1, 1, 1, 1, 1, 1, 1},
-			{3, 1, 1, 1, 1, 1, 1, 1, 1, 1},
-			{3, 1, 1, 1, 1, 1, 1, 1, 1, 3},
-			{3, 1, 1, 1, 1, 1, 1, 1, 1, 3},
+			{3, 1, 1, 1, 1, 1, 2, 2, 2, 3},
+			{3, 1, 2, 2, 2, 1, 2, 2, 2, 3},
+			{3, 1, 2, 2, 2, 1, 1, 2, 2, 3},
+			{3, 1, 2, 4, 2, 1, 1, 1, 1, 1},
+			{3, 1, 2, 2, 2, 1, 2, 1, 1, 1},
+			{3, 1, 2, 2, 2, 1, 2, 1, 1, 1},
+			{1, 1, 2, 4, 2, 2, 2, 2, 2, 3},
+			{1, 1, 2, 2, 2, 2, 2, 2, 2, 3},
 			{3, 3, 3, 3, 3, 3, 3, 3, 3, 3}
 		}, new ExtraTile[] {
 		}, new ArrayList<GCharacter>() {{
-			add(new EliteBunnyWarrior(6, 5, PatrolPattern.SURFACE_CW));
-			add(new EliteBeanpole(5, 2));
-			add(new EliteBeanpole(3, 6));
-			add(new Cactian(5, 5));
 		}}, new ArrayList<GPickup>() {{
 		}});
 		
@@ -671,8 +650,7 @@ public class SewerLevels implements Serializable {
 			{3, 3, 3, 3, 0, 0, 3, 3, 3, 3}
 		}, new ExtraTile[] {
 		}, new ArrayList<GCharacter>() {{
-			add(new SnakeCommander(8, 8, PatrolPattern.SURFACE_CW));
-			add(new SnakeCommander(8, 7, PatrolPattern.SURFACE_CW));
+			add(new Beanpole(4, 2, PatrolPattern.SURFACE_CW));
 		}}, new ArrayList<GPickup>() {{
 			add(new GPickup(8, 8, new MediumHealthPotion()));
 		}});
@@ -681,92 +659,36 @@ public class SewerLevels implements Serializable {
 		
 		MapLevel s34 = new MapLevel(new int[][] {
 			{3, 3, 3, 3, 3, 3, 3, 3, 3, 3},
-			{3, 1, 1, 1, 1, 1, 1, 1, 1, 3},
-			{3, 1, 1, 1, 1, 1, 1, 1, 1, 3},
-			{3, 1, 1, 1, 1, 1, 1, 1, 1, 3},
-			{3, 1, 1, 1, 1, 1, 1, 1, 1, 3},
-			{3, 1, 1, 1, 1, 1, 1, 1, 1, 3},
-			{1, 1, 1, 1, 1, 1, 1, 1, 1, 3},
-			{1, 1, 1, 1, 1, 1, 1, 1, 1, 3},
-			{3, 1, 1, 1, 1, 1, 1, 1, 1, 3},
+			{3, 1, 1, 1, 1, 1, 1, 1, 1, 1},
+			{3, 1, 1, 1, 1, 1, 1, 3, 3, 3},
+			{3, 1, 3, 3, 3, 3, 1, 3, 1, 1},
+			{3, 1, 3, 1, 1, 1, 1, 3, 1, 1},
+			{3, 1, 3, 1, 1, 3, 1, 1, 1, 3},
+			{1, 1, 1, 1, 1, 3, 1, 1, 1, 3},
+			{1, 1, 3, 3, 3, 3, 1, 3, 3, 3},
+			{3, 1, 1, 1, 1, 1, 1, 1, 1, 1},
 			{3, 3, 3, 3, 3, 3, 3, 3, 3, 3}
 		}, new ExtraTile[] {
-				new ExtraTile(4, 5, new KeyDoor(KeyDoor.SNAKEBASE)),
-				new ExtraTile(1, 8, 
-						new GroundButton(TriggerType.ENEMY_AND_TILE, false, GButton.VISIBLE, new ArrayList<GCharacter>() {{
-						}}, new ArrayList<ExtraTile>() {{
-							add(new ExtraTile(3, 7, new AltGround()));
-						}})),
-				new ExtraTile(8, 8, 
-						new GroundButton(TriggerType.ENEMY_AND_TILE, false, GButton.VISIBLE, new ArrayList<GCharacter>() {{
-						}}, new ArrayList<ExtraTile>() {{
-							add(new ExtraTile(6, 7, new AltGround()));
-						}}))
 		}, new ArrayList<GCharacter>() {{
-			add(new SaveCrystal(5, 6));
 		}}, new ArrayList<GPickup>() {{
-			add(new GPickup(2, 8, new GKey(KeyDoor.COMMANDER)));
-			add(new GPickup(7, 8, new GKey(KeyDoor.COMMANDER)));
 		}});
 		
 		//-------------------
 		
 		MapLevel s44 = new MapLevel(new int[][] {
 			{3, 3, 3, 3, 3, 3, 3, 3, 3, 3},
+			{1, 1, 1, 1, 3, 1, 1, 3, 1, 3},
+			{3, 3, 1, 1, 3, 1, 1, 3, 1, 3},
+			{1, 1, 1, 1, 3, 1, 3, 3, 1, 3},
+			{1, 1, 1, 1, 1, 1, 1, 1, 1, 3},
 			{3, 1, 1, 1, 1, 1, 1, 1, 1, 3},
 			{3, 1, 1, 1, 1, 1, 1, 1, 1, 3},
 			{3, 1, 1, 1, 1, 1, 1, 1, 1, 3},
-			{3, 1, 1, 1, 1, 1, 1, 1, 1, 3},
-			{3, 1, 1, 1, 1, 1, 1, 1, 1, 3},
-			{3, 1, 1, 1, 1, 1, 1, 1, 1, 3},
-			{3, 1, 1, 1, 1, 1, 1, 1, 1, 3},
-			{3, 1, 1, 1, 1, 1, 1, 1, 1, 3},
+			{1, 1, 1, 1, 1, 1, 1, 1, 1, 3},
 			{3, 3, 3, 3, 3, 3, 3, 3, 3, 3}
 		}, new ExtraTile[] {
-				new ExtraTile(2, 7, 
-						new GroundButton(TriggerType.ENEMY_AND_TILE, false, GButton.VEILED, new ArrayList<GCharacter>() {{
-						}}, new ArrayList<ExtraTile>() {{
-							add(new ExtraTile(6, 6, new AltGround()));
-							add(new ExtraTile(6, 7, new AltGround()));
-							add(new ExtraTile(6, 8, new AltGround()));
-							add(new ExtraTile(4, 5, new AltWall()));
-							add(new ExtraTile(5, 5, new AltWall()));
-							add(new ExtraTile(3, 8, new AltGround()));
-							add(new ExtraTile(4, 6, new AltGround()));
-						}})),
-				new ExtraTile(3, 8, 
-						new GroundButton(TriggerType.ENEMY_AND_TILE, false, GButton.VEILED, new ArrayList<GCharacter>() {{
-						}}, new ArrayList<ExtraTile>() {{
-							add(new ExtraTile(6, 6, new AltGround()));
-							add(new ExtraTile(6, 7, new AltGround()));
-							add(new ExtraTile(6, 8, new AltGround()));
-							add(new ExtraTile(4, 5, new AltWall()));
-							add(new ExtraTile(5, 5, new AltWall()));
-							add(new ExtraTile(2, 7, new AltGround()));
-							add(new ExtraTile(4, 6, new AltGround()));
-						}})),
-				new ExtraTile(4, 6, 
-						new GroundButton(TriggerType.ENEMY_AND_TILE, false, GButton.VEILED, new ArrayList<GCharacter>() {{
-						}}, new ArrayList<ExtraTile>() {{
-							add(new ExtraTile(6, 6, new AltGround()));
-							add(new ExtraTile(6, 7, new AltGround()));
-							add(new ExtraTile(6, 8, new AltGround()));
-							add(new ExtraTile(4, 5, new AltWall()));
-							add(new ExtraTile(5, 5, new AltWall()));
-							add(new ExtraTile(3, 8, new AltGround()));
-							add(new ExtraTile(2, 7, new AltGround()));
-						}})),
-				new ExtraTile(7, 7, 
-						new GroundButton(TriggerType.ENEMY_AND_TILE, true, GButton.VISIBLE, new ArrayList<GCharacter>() {{
-						}}, new ArrayList<ExtraTile>() {{
-							add(new ExtraTile(4, 5, new AltGround()));
-							add(new ExtraTile(5, 5, new AltGround()));
-						}})),
 		}, new ArrayList<GCharacter>() {{
-			add(new SnakeSoldier(7, 7, PatrolPattern.STATIONARY));
-			add(new SnakeSoldier(7, 8, PatrolPattern.STATIONARY));
 		}}, new ArrayList<GPickup>() {{
-			add(new GPickup(7, 8, new SmallHealthPotion()));
 		}});
 		
 		//-------------------

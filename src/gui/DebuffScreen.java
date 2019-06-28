@@ -24,7 +24,7 @@ public class DebuffScreen extends JPanel {
 		this.setPreferredSize(size);
 		
 		/// TEMP
-		this.setBackground(Color.BLUE);
+		this.setBackground(new Color(128, 128, 255));
 	}
 	
 	// *******************

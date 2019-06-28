@@ -5,10 +5,6 @@ import java.io.Serializable;
 import java.util.ArrayList;
 
 import ai.PatrolPattern;
-import characters.Beanpole;
-import characters.Bitester;
-import characters.BreakableWall;
-import characters.BunnyWarrior;
 import characters.GCharacter;
 import characters.Hoptooth;
 import characters.SaveCrystal;
@@ -18,12 +14,12 @@ import characters.special.MuseumMoveStatue;
 import helpers.GPath;
 import items.GPickup;
 import items.SmallHealthPotion;
+import items.SmallMaxPotion;
 import tiles.ExtraTile;
 import tiles.GButton;
 import tiles.Ground;
 import tiles.GroundButton;
 import tiles.TriggerType;
-import tiles.Wall;
 import weapons.Armory;
 
 // Class representing level(s)/area definition for Skin Museum area
@@ -49,11 +45,16 @@ public class MuseumLevels implements Serializable {
 			{3, 3, 1, 1, 1, 1, 1, 1, 3, 3},
 			{3, 3, 1, 1, 1, 1, 1, 1, 3, 3},
 			{3, 3, 1, 1, 1, 3, 3, 1, 3, 3},
-			{3, 3, 1, 3, 1, 3, 1, 1, 1, 3},
+			{3, 3, 3, 3, 3, 3, 1, 1, 1, 3},
 			{3, 3, 1, 3, 1, 3, 1, 1, 1, 3},
 			{3, 3, 1, 1, 1, 3, 1, 1, 1, 3},
 			{3, 3, 1, 1, 1, 3, 3, 3, 3, 3}
 		}, new ExtraTile[] {
+				new ExtraTile(6, 8, 
+						new GroundButton(TriggerType.WALL_GROUND, true, new ArrayList<Dimension>() {{
+							add(new Dimension(2, 6));
+							add(new Dimension(4, 6));
+						}}))
 		}, new ArrayList<GCharacter>() {{
 			add(new SaveCrystal(6, 6));
 		}}, new ArrayList<GPickup>() {{
@@ -190,14 +191,20 @@ public class MuseumLevels implements Serializable {
 			{3, 1, 1, 1, 1, 1, 1, 1, 1, 3},
 			{3, 3, 1, 3, 3, 3, 1, 3, 3, 3},
 			{3, 1, 1, 1, 3, 1, 1, 1, 1, 3},
-			{3, 1, 1, 1, 1, 1, 1, 1, 1, 3},
+			{3, 1, 1, 1, 3, 1, 1, 1, 1, 3},
 			{3, 3, 3, 3, 3, 3, 3, 3, 3, 3}
 		}, new ExtraTile[] {
+				new ExtraTile(6, 2, 
+						new GroundButton(TriggerType.WALL_GROUND, false, GButton.VEILED, new ArrayList<Dimension>() {{
+							add(new Dimension(4, 8));
+						}}))
 		}, new ArrayList<GCharacter>() {{
 			add(new Hoptooth(8, 2, PatrolPattern.STATIONARY));
 			add(new Hoptooth(8, 7, PatrolPattern.STATIONARY));
 			add(new MuseumMoveStatue(2, 6, "statue2.png", "Respite", 4, 8, 4, 2));
 		}}, new ArrayList<GPickup>() {{
+			add(new GPickup(6, 3, new SmallMaxPotion()));
+			add(new GPickup(8, 8, new SmallMaxPotion()));
 			add(new GPickup(1, 7, Armory.injector));
 		}});
 		

@@ -1294,7 +1294,7 @@ public class DungeonLevels implements Serializable {
 		//************************************************
 		// CONSTRUCTOR: AREA DEFINITION
 		
-		area_DUNGEON = new MapArea("Castle Dungeon", GPath.DUNGEON, GPath.createSoundPath("d_e2m6.mid"), 50,
+		area_DUNGEON = new MapArea("Castle Dungeon", GPath.DUNGEON, GPath.createSoundPath("d_e2m6.mid"), 40,
 				new MapLevel[][] {
 			// Level grid definition
 			{topCorner	 , 	turretWave,    topCross, 	topFlooded, 	topCorner2, 	treasureRoom},

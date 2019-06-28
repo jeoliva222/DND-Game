@@ -162,7 +162,7 @@ public class SnakeTank extends GCharacter {
 				//statePath = "_PREP_SHOOT";
 				break;
 			case SnakeTank.STATE_ATT_NUKE:
-				//statePath = "_ATT_SHOOT";
+				statePath = "_CANNON";
 				break;
 			default:
 				System.out.println
@@ -436,6 +436,9 @@ public class SnakeTank extends GCharacter {
 				if(this.attCount >= this.nukeMax) {
 					// Reset attack counter
 					this.attCount = 0;
+					
+					// Play sound TODO
+					this.playCannonSound();
 					
 					// If we've charged long enough, then fire the Nuke
 					for(GCharacter npc: EntityManager.getInstance().getNPCManager().getCharacters()) {
