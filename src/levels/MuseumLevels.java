@@ -13,6 +13,7 @@ import characters.TormentedSoul;
 import characters.special.MuseumMoveStatue;
 import helpers.GPath;
 import items.GPickup;
+import items.LargeHealthPotion;
 import items.SmallHealthPotion;
 import items.SmallMaxPotion;
 import tiles.ExtraTile;
@@ -87,29 +88,30 @@ public class MuseumLevels implements Serializable {
 		MapLevel m20 = new MapLevel(new int[][] {
 			{3, 3, 3, 3, 3, 3, 3, 3, 3, 3},
 			{3, 3, 3, 3, 3, 3, 3, 3, 3, 3},
+			{1, 1, 1, 1, 1, 1, 1, 1, 3, 3},
 			{1, 1, 1, 1, 1, 1, 1, 1, 1, 3},
-			{1, 1, 1, 1, 3, 1, 1, 3, 1, 3},
 			{3, 3, 3, 1, 1, 1, 1, 1, 1, 3},
-			{3, 3, 3, 1, 1, 1, 1, 1, 1, 3},
+			{3, 3, 3, 1, 1, 1, 1, 1, 0, 3},
+			{3, 3, 1, 1, 1, 1, 1, 1, 1, 3},
 			{3, 1, 1, 1, 1, 1, 1, 1, 1, 3},
-			{3, 1, 1, 1, 3, 1, 1, 3, 1, 3},
-			{3, 1, 1, 1, 1, 1, 1, 1, 1, 3},
+			{3, 1, 1, 1, 1, 1, 1, 1, 3, 3},
 			{3, 1, 1, 3, 3, 3, 3, 3, 3, 3}
 		}, new ExtraTile[] {
-				new ExtraTile(4, 3, 
-						new Ground(GPath.createImagePath(GPath.TILE, GPath.MUSEUM, "spotlight.png"))),
-				new ExtraTile(7, 3, 
-						new Ground(GPath.createImagePath(GPath.TILE, GPath.MUSEUM, "spotlight.png"))),
-				new ExtraTile(4, 7, 
-						new Ground(GPath.createImagePath(GPath.TILE, GPath.MUSEUM, "spotlight.png"))),
-				new ExtraTile(7, 7, 
-						new Ground(GPath.createImagePath(GPath.TILE, GPath.MUSEUM, "spotlight.png"))),
+				new ExtraTile(8, 5, 
+						new Ground(GPath.createImagePath(GPath.TILE, GPath.MUSEUM, "spotlight.png")))
 		}, new ArrayList<GCharacter>() {{
-			add(new TormentedSoul(4, 3, "soul1"));
-			add(new TormentedSoul(7, 3, "soul1"));
-			add(new TormentedSoul(4, 7, "soul1"));
-			add(new TormentedSoul(7, 7, "soul1"));
+			add(new MuseumMoveStatue(9, 0, "statue2.png", "...", 8, 5, 5, 3));
+			add(new MuseumMoveStatue(9, 0, "statue1.png", "...", 8, 5, 4, 4));
+			add(new MuseumMoveStatue(9, 0, "statue1.png", "...", 8, 5, 4, 5));
+			add(new MuseumMoveStatue(9, 0, "statue3.png", "...", 8, 5, 4, 6));
+			add(new MuseumMoveStatue(9, 0, "statue4.png", "...", 8, 5, 5, 7));
+			add(new MuseumMoveStatue(9, 0, "statue1.png", "...", 8, 5, 4, 3));
+			add(new MuseumMoveStatue(9, 0, "statue3.png", "...", 8, 5, 3, 4));
+			add(new MuseumMoveStatue(9, 0, "statue2.png", "...", 8, 5, 3, 5));
+			add(new MuseumMoveStatue(9, 0, "statue4.png", "...", 8, 5, 3, 6));
+			add(new MuseumMoveStatue(9, 0, "statue1.png", "...", 8, 5, 4, 7));
 		}}, new ArrayList<GPickup>() {{
+			add(new GPickup(8, 5, new LargeHealthPotion()));
 		}});
 		
 		//-------------------
