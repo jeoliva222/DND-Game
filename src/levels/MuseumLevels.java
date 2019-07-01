@@ -80,7 +80,6 @@ public class MuseumLevels implements Serializable {
 		}, new ArrayList<GCharacter>() {{
 			add(new Hoptooth(7, 2));
 		}}, new ArrayList<GPickup>() {{
-			//add(new GPickup(5, 3, new SmallHealthPotion()));
 		}});
 		
 		//-------------------
@@ -142,7 +141,6 @@ public class MuseumLevels implements Serializable {
 			add(new Signpost(7, 3, "statue4.png", "Mister Spider"));
 			add(new TormentedSoul(7, 6, "soul1"));
 		}}, new ArrayList<GPickup>() {{
-			//add(new GPickup(5, 3, new SmallHealthPotion()));
 		}});
 		
 		//-------------------
@@ -179,7 +177,6 @@ public class MuseumLevels implements Serializable {
 			add(new Signpost(6, 6, "statue1.png", "Evolution of Decay: Part 5"));
 			add(new Signpost(7, 6, "statue1.png", "Evolution of Decay: Part 6"));
 		}}, new ArrayList<GPickup>() {{
-			//add(new GPickup(5, 3, new SmallHealthPotion()));
 		}});
 		
 		//-------------------

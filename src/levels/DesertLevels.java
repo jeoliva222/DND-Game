@@ -24,15 +24,15 @@ import characters.SnakeCommander;
 import characters.SnakeSoldier;
 import characters.bosses.SnakeNuke;
 import characters.bosses.SnakeTank;
+import characters.special.SilkFish;
+import characters.special.SkinAltar;
 import helpers.GPath;
 import items.GKey;
 import items.GPickup;
-import items.LargeHealthPotion;
-import items.LargeMaxPotion;
 import items.MediumHealthPotion;
-import items.MediumMaxPotion;
 import items.SmallHealthPotion;
 import items.SmallMaxPotion;
+import items.special.SilkFishSkin;
 import tiles.AltGround;
 import tiles.AltWall;
 import tiles.ExtraTile;
@@ -353,7 +353,7 @@ public class DesertLevels implements Serializable {
 		
 		//-------------------
 		
-		MapLevel d61 = new MapLevel(new int[][] { // TODO Marker
+		MapLevel d61 = new MapLevel(new int[][] {
 			{1, 1, 1, 1, 1, 1, 1, 1, 1, 3},
 			{4, 4, 4, 4, 1, 1, 4, 4, 4, 4},
 			{0, 0, 0, 4, 1, 1, 4, 0, 0, 4},
@@ -538,7 +538,7 @@ public class DesertLevels implements Serializable {
 		
 		//-------------------
 		
-		MapLevel d62 = new MapLevel(new int[][] { // TODO Marker
+		MapLevel d62 = new MapLevel(new int[][] {
 			{1, 1, 1, 4, 0, 0, 4, 4, 4, 4},
 			{4, 4, 4, 4, 0, 0, 4, 4, 4, 4},
 			{4, 4, 4, 4, 0, 0, 5, 5, 0, 4},
@@ -733,6 +733,7 @@ public class DesertLevels implements Serializable {
 			add(new SandBeep(4, 7));
 		}}, new ArrayList<GPickup>() {{
 			add(new GPickup(8, 4, new SmallHealthPotion()));
+			add(new GPickup(8, 7, new SmallHealthPotion()));
 		}});
 		
 		//------------------- // ROW 4
@@ -938,6 +939,7 @@ public class DesertLevels implements Serializable {
 			add(new Cactian(2, 7));
 			add(new Cactian(5, 6));
 		}}, new ArrayList<GPickup>() {{
+			add(new GPickup(8, 2, new SmallMaxPotion()));
 		}});
 		
 		//------------------- // ROW 5
@@ -1159,21 +1161,23 @@ public class DesertLevels implements Serializable {
 		
 		//------------------- // ROW 6
 		
-		MapLevel d06 = new MapLevel(new int[][] { // TODO  Entrance to secret area
+		MapLevel d06 = new MapLevel(new int[][] {
 			{3, 1, 1, 1, 1, 1, 1, 1, 1, 1},
 			{3, 3, 1, 1, 1, 1, 1, 1, 1, 3},
 			{3, 1, 1, 1, 1, 3, 1, 1, 1, 1},
 			{3, 3, 3, 1, 3, 1, 1, 1, 1, 3},
-			{3, 3, 0, 1, 1, 1, 0, 1, 1, 1},
+			{3, 3, 0, 1, 1, 1, 1, 1, 1, 1},
 			{3, 1, 3, 1, 1, 1, 1, 1, 1, 1},
 			{3, 3, 1, 3, 1, 1, 1, 1, 1, 1},
 			{3, 3, 1, 1, 1, 1, 1, 3, 1, 1},
 			{3, 3, 0, 0, 0, 1, 3, 1, 1, 3},
-			{3, 4, 0, 0, 0, 4, 3, 3, 3, 3}
+			{3, 4, 4, 4, 4, 4, 3, 3, 3, 3}
 		}, new ExtraTile[] {
 		}, new ArrayList<GCharacter>() {{
-			add(new Signpost(2, 6, "test.png", "The museum awaits..."));
+			add(new SkinAltar(2, 4));
+			add(new Signpost(2, 6, "test.png", "A silken skin offering opens these doors."));
 		}}, new ArrayList<GPickup>() {{
+			add(new GPickup(5, 6, new SilkFishSkin()));
 		}});
 		
 		//-------------------
@@ -1265,9 +1269,9 @@ public class DesertLevels implements Serializable {
 			{3, 3, 3, 3, 3, 3, 3, 3, 3, 3}
 		}, new ExtraTile[] {
 		}, new ArrayList<GCharacter>() {{
+			add(new SilkFish(5, 7));
 		}}, new ArrayList<GPickup>() {{
 			add(new GPickup(1, 6, Armory.spineShiv));
-			add(new GPickup(8, 7, new LargeHealthPotion()));
 		}});
 		
 		//-------------------
@@ -1289,8 +1293,9 @@ public class DesertLevels implements Serializable {
 			add(new SnakeCommander(2, 4, PatrolPattern.SURFACE_CW));
 			add(new EliteBitester(5, 3, PatrolPattern.SURFACE_CCW));
 			add(new EliteBitester(8, 7));
+			add(new SaveCrystal(3, 8));
 		}}, new ArrayList<GPickup>() {{
-			add(new GPickup(3, 8, Armory.ceremonialSpear));
+			add(new GPickup(1, 8, Armory.ceremonialSpear));
 			add(new GPickup(2, 7, new MediumHealthPotion()));
 			add(new GPickup(2, 8, new SmallMaxPotion()));
 		}});

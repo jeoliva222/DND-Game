@@ -14,6 +14,7 @@ import characters.Cactian;
 import characters.ChagrinShadow;
 import characters.EliteArrowTurret;
 import characters.EliteBeanpole;
+import characters.EliteBeep;
 import characters.EliteBitester;
 import characters.EliteBunnyWarrior;
 import characters.GCharacter;
@@ -641,8 +642,8 @@ public class SewerLevels implements Serializable {
 			{3, 3, 3, 1, 1, 1, 3, 3, 3, 3},
 			{3, 1, 1, 1, 1, 1, 1, 1, 1, 3},
 			{3, 1, 1, 1, 1, 1, 1, 1, 1, 3},
-			{3, 1, 1, 1, 1, 1, 1, 1, 1, 3},
-			{1, 1, 1, 1, 1, 1, 1, 1, 1, 3},
+			{3, 1, 1, 1, 3, 3, 1, 1, 1, 3},
+			{1, 1, 1, 3, 1, 1, 3, 1, 1, 3},
 			{1, 1, 1, 1, 1, 1, 1, 1, 1, 3},
 			{1, 1, 1, 0, 0, 0, 0, 1, 1, 1},
 			{3, 1, 1, 0, 0, 0, 0, 1, 1, 1},
@@ -650,7 +651,11 @@ public class SewerLevels implements Serializable {
 			{3, 3, 3, 3, 0, 0, 3, 3, 3, 3}
 		}, new ExtraTile[] {
 		}, new ArrayList<GCharacter>() {{
-			add(new Beanpole(4, 2, PatrolPattern.SURFACE_CW));
+			add(new EliteBeep(4, 3));
+			add(new EliteBeep(5, 2));
+			add(new EliteBeep(3, 6));
+			add(new EliteBeep(8, 5));
+			add(new EliteBeep(5, 6));
 		}}, new ArrayList<GPickup>() {{
 			add(new GPickup(8, 8, new MediumHealthPotion()));
 		}});

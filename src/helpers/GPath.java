@@ -136,4 +136,8 @@ public class GPath {
 	
 	public static String ELITE_WATCHMAN = "elite_watchman" + File.separator;
 	
+	//--------- TESTING
+	
+	public static String PLACEHOLDER = GPath.IMAGE + GPath.TILE + GPath.GENERIC + "testProj.png";
+	
 }
