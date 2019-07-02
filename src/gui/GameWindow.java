@@ -38,11 +38,17 @@ public class GameWindow extends JFrame implements KeyListener {
 	// Flag indicating whether the screen was changed on the current turn
 	protected static boolean changedScreen = false;
 	
+	// Flag indicating whether the map is currently up on the screen
+	protected static boolean mapDisplayed = false;
+	
 	// Flag to save the game
 	public static boolean shouldSave = false;
 	
 	// Flag indicating whether game is in debug mode (VM ARG: -Ddebug="T")
 	public static boolean isDebug = false;
+	
+	// MapScreen for displaying map of the current area
+	private static MapScreen map;
 	
 	// GameScreen for displaying the game
 	private static GameScreen screen;
@@ -69,6 +75,9 @@ public class GameWindow extends JFrame implements KeyListener {
 	public GameWindow() {
 		super();
 		
+		// Initialize MapScreen within window
+		GameWindow.map = new MapScreen();
+		
 		// Initialize GameScreen within window
 		GameWindow.screen = new GameScreen();
 		
@@ -94,6 +103,10 @@ public class GameWindow extends JFrame implements KeyListener {
 		this.setLayout(null);
 		
 		// Add screens to game --------------
+		
+		// Map screen 
+		this.add(GameWindow.map);
+		GameWindow.map.setBounds(StatusScreen.getStatusWidth(), 0, MapScreen.getMWidth(), MapScreen.getMHeight());
 		
 		// Main screen 
 		this.add(GameWindow.screen);
@@ -434,6 +447,16 @@ public class GameWindow extends JFrame implements KeyListener {
 	
 	@Override
 	public void keyPressed(KeyEvent e) {
+		// Map mode
+		if(GameWindow.mapDisplayed) {
+			GameWindow.mapDisplayed = false;
+			GameWindow.map.hideMap();
+			return;
+		}
+		
+		
+		//---------------
+		
 		// Disable key repeat
 		if(GameWindow.isKeyDown || GameWindow.turnInProgress) {
 			return;
@@ -502,16 +525,23 @@ public class GameWindow extends JFrame implements KeyListener {
         	// Swaps active weapon with offhand weapon without consuming turn
         	EntityManager.getInstance().getPlayer().swapEquippedWeapon();
         }
+        else if(e.getKeyCode() == KeyEvent.VK_M) {
+        	// Display the map of the area
+        	GameWindow.mapDisplayed = true;
+        	GameWindow.map.displayMap();
+        	LogScreen.log("Green = You / Blue = Explored");
+        	this.updateAll();
+        }
         else if(e.getKeyCode() == KeyEvent.VK_F9) {
         	// Load the player's save file
         	this.loadGame();
         }
-        else if(GameWindow.isDebug && e.getKeyCode() == KeyEvent.VK_M) {
+        else if(GameWindow.isDebug && e.getKeyCode() == KeyEvent.VK_9) {
         	// *** DEBUG: Damages player by 1
         	EntityManager.getInstance().getPlayer().damagePlayer(1);
         	this.updateAll();
         }
-        else if(GameWindow.isDebug && e.getKeyCode() == KeyEvent.VK_N) {
+        else if(GameWindow.isDebug && e.getKeyCode() == KeyEvent.VK_0) {
         	// *** DEBUG: Heals player by 1
         	EntityManager.getInstance().getPlayer().healPlayer(1, false);
         	this.updateAll();

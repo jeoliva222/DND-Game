@@ -3,6 +3,7 @@ package weapons;
 import java.util.Random;
 
 import characters.GCharacter;
+import effects.ChargeIndicator;
 import helpers.GColors;
 import managers.EntityManager;
 
@@ -28,25 +29,29 @@ public class Hammer extends Weapon {
 	public boolean tryAttack(int dx, int dy) {
 		// Retrieve instance of EntityManager
 		EntityManager em = EntityManager.getInstance();
+		int plrX = em.getPlayer().getXPos();
+		int plrY = em.getPlayer().getYPos();
 		
 		for(GCharacter npc : em.getNPCManager().getCharacters()) {
 			// If we're attacking at an NPC's position, complete attack
-			if((em.getPlayer().getXPos() + dx) == npc.getXPos()
-					&& (em.getPlayer().getYPos() + dy) == npc.getYPos()) {
+			if((plrX + dx) == npc.getXPos() && (plrY + dy) == npc.getYPos()) {
 				if(this.isCharged) {
 					// First, discharge weapon
 					this.dischargeWeapon();
 					
-					// If charged deal extra damage with standard attack
-					int dmg = this.calculatePierceDamage(this.chargeMult, npc);
-					npc.damageCharacter(dmg);
-					this.sendToLog("Player smashed and dealt " + Integer.toString(dmg)
-						+ " damage to " + npc.getName() + ".", GColors.ATTACK, npc);
+					// If charged, hit all adjacent targets with piercing damage
+					this.hitAdjacents(plrX, plrY);
+					
+					// Mark the tiles
+					em.getEffectManager().addEffect(new ChargeIndicator(plrX + 1, plrY));
+					em.getEffectManager().addEffect(new ChargeIndicator(plrX - 1, plrY));
+					em.getEffectManager().addEffect(new ChargeIndicator(plrX, plrY + 1));
+					em.getEffectManager().addEffect(new ChargeIndicator(plrX, plrY - 1));
 				} else {
 					// If not charged deal normal damage and attack normally
 					int dmg = this.calculateDamage(npc);
 					npc.damageCharacter(dmg);
-					this.sendToLog("Player slammed and dealt " + Integer.toString(dmg)
+					this.sendToLog("Player smashed and dealt " + Integer.toString(dmg)
 						+ " damage to " + npc.getName() + ".", GColors.ATTACK, npc);
 				}
 				// We hit something, so return true
@@ -62,7 +67,7 @@ public class Hammer extends Weapon {
 	
 	// Calculate damage for the weapon with damage multiplier
 	// Ignore half of the enemy's armor, rounded down
-	public int calculatePierceDamage(double dmgMult, GCharacter npc) {
+	private int calculatePierceDamage(double dmgMult, GCharacter npc) {
 		Random r = new Random();
 		int dmg;
 		int halfArmor = npc.getArmor() / 2;
@@ -94,6 +99,25 @@ public class Hammer extends Weapon {
 		
 		// Return damage value
 		return dmg;
+	}
+	
+	private void hitAdjacents(int plrX, int plrY) {
+		// Retrieve instance of EntityManager
+		EntityManager em = EntityManager.getInstance();
+		
+		for (GCharacter npc : em.getNPCManager().getCharacters()) {
+			// Get relative location to player
+			int distX = plrX - npc.getXPos();
+			int distY = plrY - npc.getYPos();
+			
+			if(((Math.abs(distX) == 1) && (Math.abs(distY) == 0)) ||
+					((Math.abs(distX) == 0) && (Math.abs(distY) == 1))) {
+				int dmg = this.calculatePierceDamage(this.chargeMult, npc);
+				npc.damageCharacter(dmg);
+				this.sendToLog("Player slammed and dealt " + Integer.toString(dmg)
+					+ " damage to " + npc.getName() + ".", GColors.ATTACK, npc);
+			}
+		}
 	}
 	
 }

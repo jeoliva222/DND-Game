@@ -34,6 +34,9 @@ public class MapLevel implements Serializable {
 	// List of items on the screen
 	protected ArrayList<GPickup> pickups;
 	
+	// Flag indicating whether the level was seen yet by the player
+	protected boolean wasExplored = false;
+	
 	// Constructor
 	protected MapLevel(int[][] map, ExtraTile[] extras, ArrayList<GCharacter> npcs, ArrayList<GPickup> pickups) {
 		// Initialize TileType grid
@@ -121,6 +124,14 @@ public class MapLevel implements Serializable {
 	
 	public void setPickups(ArrayList<GPickup> pickups) {
 		this.pickups = pickups;
+	}
+	
+	public boolean wasExplored() {
+		return this.wasExplored;
+	}
+	
+	public void markExplored() {
+		this.wasExplored = true;
 	}
 	
 }

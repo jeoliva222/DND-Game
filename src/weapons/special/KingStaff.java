@@ -57,7 +57,7 @@ public class KingStaff extends Weapon {
 							.addProjectile(new KingStaffFlame((em.getPlayer().getXPos() + dx),
 													(em.getPlayer().getYPos() + dy),
 													dx,
-													dy, null));
+													dy, Player.class));
 						
 						// Fire a flame to the relative left of the player's attack
 						em.getProjectileManager()
@@ -83,7 +83,7 @@ public class KingStaff extends Weapon {
 							+ " damage to " + npc.getName() + ".", GColors.ATTACK, npc);
 						
 						// Mark location with effect
-						em.getEffectManager().addEffect(new ChargeIndicator(em.getPlayer().getXPos() + dx, em.getPlayer().getYPos() +dy));
+						em.getEffectManager().addEffect(new ChargeIndicator(em.getPlayer().getXPos() + dx, em.getPlayer().getYPos() + dy));
 						
 						// Then, deal damage to adjacent foes
 						this.findSwipeTargets(dx, dy);

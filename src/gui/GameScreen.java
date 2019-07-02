@@ -283,6 +283,9 @@ public class GameScreen extends JPanel {
 		for(GPickup pu: level.getPickups()) {
 			em.getPickupManager().addPickup(pu);
 		}
+		
+		// Mark the level as explored
+		level.markExplored();
 	}
 	
 	// Saves the entities of the current level we are on

@@ -125,15 +125,12 @@ public class SnakeTank extends GCharacter {
 	}
 	
 	@Override
-	public String getImage() {
-		
-		// TEMP TODO
-		//return this.imageDir + this.stImage_base + "_full.png";
-		
+	public String getImage() {	
 		String imgPath = this.imageDir + this.stImage_base;
 		String hpPath = "";
 		String statePath = "";
-		if(this.currentHP > 10) {
+		
+		if(this.currentHP > (this.maxHP / 2)) {
 			hpPath = "_full";
 		} else if(this.currentHP > 0) {
 			hpPath = "_fatal";

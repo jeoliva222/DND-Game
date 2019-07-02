@@ -24,8 +24,6 @@ import characters.SaveCrystal;
 import characters.Signpost;
 import characters.SnakeCommander;
 import characters.SnakeSoldier;
-import characters.bosses.SnakeNuke;
-import characters.bosses.SnakeTank;
 import helpers.GPath;
 import items.GKey;
 import items.GPickup;
@@ -651,9 +649,9 @@ public class SewerLevels implements Serializable {
 			{3, 3, 3, 3, 0, 0, 3, 3, 3, 3}
 		}, new ExtraTile[] {
 		}, new ArrayList<GCharacter>() {{
-			add(new EliteBeep(4, 3));
-			add(new EliteBeep(5, 2));
-			add(new EliteBeep(3, 6));
+			add(new EliteBeep(3, 3));
+			add(new EliteBeep(4, 2));
+			add(new EliteBeep(2, 6));
 			add(new EliteBeep(8, 5));
 			add(new EliteBeep(5, 6));
 		}}, new ArrayList<GPickup>() {{

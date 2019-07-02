@@ -142,8 +142,8 @@ public class Armory {
 	//
 	
 	// Bone Club
-	public static final Hammer boneClub = new Hammer("Bone Club", 2, 3, 0.05, 1.75, 1.5, 
-			"WEAPON (Hammer): Club improvised from a sturdy bone. Charge attacks deal extra damage and ignore half of an enemy's armor!",
+	public static final Hammer boneClub = new Hammer("Bone Club", 2, 3, 0.05, 1.75, 1.0, 
+			"WEAPON (Hammer): A makeshift club. Charge attacks hit all adjacents and partially ignore armor!",
 			GPath.createImagePath(GPath.TILE, GPath.GENERIC, "testProj.png"));
 	
 	// Special Weapons ----------------------------

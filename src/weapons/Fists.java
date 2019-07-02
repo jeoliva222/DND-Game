@@ -1,6 +1,7 @@
 package weapons;
 
 import characters.GCharacter;
+import effects.ChargeIndicator;
 import helpers.GColors;
 import managers.EntityManager;
 
@@ -37,6 +38,10 @@ public class Fists extends Weapon {
 					// If charged deal extra damage with standard attack
 					int dmg = this.calculateDamage(this.chargeMult, npc);
 					npc.damageCharacter(dmg);
+					
+					// Add effect on attacked tile and relay log message
+					em.getEffectManager().addEffect(new ChargeIndicator(em.getPlayer().getXPos() + dx,
+							em.getPlayer().getYPos() + dy));
 					this.sendToLog("Player punched and dealt " + Integer.toString(dmg)
 						+ " damage to " + npc.getName() + ".", GColors.ATTACK, npc);
 				} else {

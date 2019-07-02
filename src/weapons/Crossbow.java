@@ -1,11 +1,11 @@
 package weapons;
 
-import java.util.ArrayList;
-
 import characters.GCharacter;
 import effects.ChargeIndicator;
 import gui.GameScreen;
 import helpers.GColors;
+import helpers.GPath;
+import helpers.SoundPlayer;
 import managers.EntityManager;
 import tiles.MovableType;
 
@@ -35,27 +35,44 @@ public class Crossbow extends Weapon {
 			// Discharge weapon
 			this.dischargeWeapon();
 			
-			// Find all enemies that are on player's shot path
-			ArrayList<GCharacter> inlineEnemies = new ArrayList<GCharacter>();
 			// While we still have a open bullet path, check for NPCs to hit
 			int nextX = (em.getPlayer().getXPos() + dx);
 			int nextY = (em.getPlayer().getYPos() + dy);
 			boolean isEndHit = false;
+			boolean isNPCHit = false;
 			while(!isEndHit) { // Begin While --------------------------------------
-				// First check for NPCs to add
+				// First check for NPCs to hit
 				for(GCharacter npc : em.getNPCManager().getCharacters()) {
 					if(nextX == npc.getXPos() && nextY == npc.getYPos()) {
-						inlineEnemies.add(npc);
+						// Damage the NPC
+						int dmg = this.calculateDamage(this.chargeMult, npc);
+						npc.damageCharacter(dmg);
+						this.sendToLog("Player sniped " + npc.getName() + " and dealt "
+						+ Integer.toString(dmg) + " damage.", GColors.ATTACK, npc);
+						
+						// Play arrow firing sound
+						SoundPlayer.playWAV(GPath.createSoundPath("arrow_SHOT.wav"));
+						
+						// Add on-hit effect
+						em.getEffectManager()
+							.addEffect(new ChargeIndicator(npc.getXPos(), npc.getYPos()));
+						
+						// We hit an NPC
+						isEndHit = true;
+						isNPCHit = true;
+						break;
 					}
 				}
 				
 				// Then check for walls or OOB
 				try {
-					isEndHit = GameScreen
-							.getTile(nextX, nextY)
-							.getTileType()
-							.getMovableType() == MovableType.WALL;
+					if (GameScreen.getTile(nextX, nextY)
+							.getTileType().getMovableType() == MovableType.WALL) {
+						// We hit a wall
+						isEndHit = true;
+					}
 				} catch (ArrayIndexOutOfBoundsException e) {
+					// We went out-of-bounds
 					isEndHit = true;
 				}
 				
@@ -65,43 +82,8 @@ public class Crossbow extends Weapon {
 				
 			} // END While Loop ---------------------------------------------
 			
-			// Then check for closest NPC in the line of enemies
-			if(inlineEnemies.isEmpty()) {
-				// If no shot hit, return false
-				return false;
-			} else {
-				// Initialize 'closest' trackers
-				GCharacter closestNPC = null;
-				int closestDist = 1000;
-				
-				// Find the closest NPC in our line of fire
-				for(GCharacter npc: inlineEnemies) {
-					int dist = 0;
-					
-					// Total the NPC's distance from the player
-					dist += Math.abs(em.getPlayer().getXPos() - npc.getXPos());
-					dist += Math.abs(em.getPlayer().getYPos() - npc.getYPos());
-					
-					// If it's smaller than our current closest NPC, record this
-					if(dist < closestDist) {
-						closestNPC = npc;
-						closestDist = dist;
-					}
-				}
-				
-				// Damage the closest NPC
-				int dmg = this.calculateDamage(this.chargeMult, closestNPC);
-				closestNPC.damageCharacter(dmg);
-				this.sendToLog("Player sniped " + closestNPC.getName() + " and dealt "
-				+ Integer.toString(dmg) + " damage.", GColors.ATTACK, closestNPC);
-				
-				// Add on-hit effect
-				em.getEffectManager()
-					.addEffect(new ChargeIndicator(closestNPC.getXPos(), closestNPC.getYPos()));
-				
-				// Return true to indicate we hit a target
-				return true;
-			}
+			// Return whether or not we hit an NPC
+			return isNPCHit;
 			
 		} else {
 			// If not charged, check for immediately adjacent NPCs to punch
