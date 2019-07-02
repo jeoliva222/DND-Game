@@ -433,7 +433,7 @@ public class GameWindow extends JFrame implements KeyListener {
 		GameWindow.getScreen().loadLevel(em.getActiveArea().getLevel(levelX, levelY));
 		
 		// Change music
-		SoundPlayer.changeMidi(em.getActiveArea().getMusic(), 15);
+		SoundPlayer.changeMidi(em.getActiveArea().getMusic(), em.getActiveArea().getMusicVolume());
 		
 		// Log that we loaded the screen
 		LogScreen.log("Loaded game...");
@@ -530,7 +530,7 @@ public class GameWindow extends JFrame implements KeyListener {
         	GameWindow.mapDisplayed = true;
         	GameWindow.map.displayMap();
         	LogScreen.log("Green = You / Blue = Explored");
-        	this.updateAll();
+        	this.updateGUI();
         }
         else if(e.getKeyCode() == KeyEvent.VK_F9) {
         	// Load the player's save file

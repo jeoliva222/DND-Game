@@ -41,6 +41,7 @@ public class MapScreen extends JPanel {
 		Dimension size = new Dimension(MapScreen.mWidth, MapScreen.mHeight);
 		this.setPreferredSize(size);
 		
+		// Set layout
 		this.setLayout(new BorderLayout());
 		
 		// Set various attributes of MapScreen
@@ -77,6 +78,7 @@ public class MapScreen extends JPanel {
 				p.setOpaque(true);
 				p.setBorder(BorderFactory.createLineBorder(Color.BLACK, 1, false));
 				
+				// Set panel color based on area exploration and player position
 				if(player.getLevelX() == x && player.getLevelY() == y) {
 					line += "P - ";
 					p.setBackground(Color.GREEN.brighter());
@@ -93,7 +95,7 @@ public class MapScreen extends JPanel {
 					}
 				}
 				
-				// Add the new panel
+				// Add the new panel to the map grid
 				grid.add(p);
 			}
 			System.out.println(line.substring(0, (line.length() - 3)));
@@ -101,7 +103,7 @@ public class MapScreen extends JPanel {
 		
 		System.out.println("------------");
 		
-		// Add the grid to the panel
+		// Add the map grid to the screen
 		this.add(grid, BorderLayout.CENTER);
 		
 		// Make screen visible

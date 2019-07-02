@@ -32,7 +32,6 @@ import items.GPickup;
 import items.MediumHealthPotion;
 import items.SmallHealthPotion;
 import items.SmallMaxPotion;
-import items.special.SilkFishSkin;
 import tiles.AltGround;
 import tiles.AltWall;
 import tiles.ExtraTile;
@@ -1071,7 +1070,7 @@ public class DesertLevels implements Serializable {
 		
 		//-------------------
 		
-		MapLevel d45 = new MapLevel(new int[][] { // TODO
+		MapLevel d45 = new MapLevel(new int[][] {
 			{4, 0, 0, 4, 4, 4, 4, 4, 4, 1},
 			{4, 0, 4, 0, 4, 0, 0, 0, 4, 1},
 			{4, 0, 0, 0, 0, 0, 0, 0, 4, 1},
@@ -1177,7 +1176,7 @@ public class DesertLevels implements Serializable {
 			add(new SkinAltar(2, 4));
 			add(new Signpost(2, 6, "test.png", "A silken skin offering opens these doors."));
 		}}, new ArrayList<GPickup>() {{
-			add(new GPickup(5, 6, new SilkFishSkin()));
+			//add(new GPickup(5, 6, new SilkFishSkin()));
 		}});
 		
 		//-------------------

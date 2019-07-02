@@ -13,11 +13,13 @@ Z and X = Swap inventory slots
 
 Enter = Use currently highlighted inventory item
 
-Backspace = Permanently discard currently highlighted inventory item
+Backspace = Drop currently highlighted inventory item
 
 Shift = Swap between primary/secondary weapon
 
 Control Key = Pass Turn (Without charging weapon)
+
+M = Display the area map
 
 F9 = Load the game! [IMPORTANT]
 
@@ -25,13 +27,17 @@ F9 = Load the game! [IMPORTANT]
 
 Tips:
 
-Everything is turn-based. All actions consume a turn except discarding and navigating the inventory.
+Everything is turn-based. Moving, attacking, or using an item will cost you a turn and allow the enemies to move!
 
 Charged attacks will not occur unless you attack the immediate next turn after charging.
 
-Use the mouse to highlight enemies or objects before engaging
+Use the mouse to highlight enemies or objects before engaging.
 
-Hit Save Crystals to save your game's progress and heal a bit
+Hit Save Crystals to save your game's progress and heal a bit.
+
+If you die or quit the game, you can continue your progress from a save point by loading with 'F9'.
+
+If you are lost, pull up the area map with 'M' to see your location.
 
 -----------------------------------
 

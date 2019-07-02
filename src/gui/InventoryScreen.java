@@ -12,6 +12,7 @@ import helpers.GPath;
 import items.GItem;
 import items.GPickup;
 import managers.EntityManager;
+import weapons.Armory;
 
 public class InventoryScreen extends JPanel {
 
@@ -211,11 +212,13 @@ public class InventoryScreen extends JPanel {
 		LogScreen.log("Player discarded "
 				+tile.getItem().getName()+".", GColors.ITEM);
 		
-		// Place item on the ground
-		EntityManager.getInstance().getPickupManager().addPickup(new GPickup(
-				EntityManager.getInstance().getPlayer().getXPos(),
-				EntityManager.getInstance().getPlayer().getYPos(),
-				tile.getItem()));
+		// Place item on the ground (If not our bare fists)
+		if(!tile.getItem().equals(Armory.bareFists)) {
+			EntityManager.getInstance().getPickupManager().addPickup(new GPickup(
+					EntityManager.getInstance().getPlayer().getXPos(),
+					EntityManager.getInstance().getPlayer().getYPos(),
+					tile.getItem()));
+		}
 		
 		// Discard the item
 		if(tile.getStackSize() >= tile.getItem().maxStack) {
