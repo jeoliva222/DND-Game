@@ -228,7 +228,7 @@ public class KingsHead extends GCharacter {
 		GameScreen.getTile(5, 1).setTileType(new Ground());
 		
 		// Change music to regular music
-		SoundPlayer.playMidi(EntityManager.getInstance().getActiveArea().getMusic(),
+		SoundPlayer.changeMidi(EntityManager.getInstance().getActiveArea().getMusic(),
 				EntityManager.getInstance().getActiveArea().getMusicVolume());
 		
 		// Log a final death message
