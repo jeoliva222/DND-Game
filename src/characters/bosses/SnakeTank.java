@@ -121,7 +121,7 @@ public class SnakeTank extends GCharacter {
 	}
 	
 	public String getName() {
-		return "Der Froschmorder";
+		return "Der Froschm\u00F6rder";
 	}
 	
 	@Override
