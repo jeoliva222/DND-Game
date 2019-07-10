@@ -1,12 +1,18 @@
 package characters;
 
 import java.awt.Dimension;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.WindowEvent;
+
+import javax.swing.Timer;
 
 import ai.DumbFollow;
 import ai.IdleController;
 import ai.LineDrawer;
 import ai.PathFinder;
 import ai.PatrolPattern;
+import gui.GameWindow;
 import helpers.GPath;
 import helpers.SoundPlayer;
 import managers.EntityManager;
@@ -141,7 +147,17 @@ public class WatcherEye extends GCharacter {
 	@Override
 	public void playerInitiate() {
 		// TODO - Crash the game
-		SoundPlayer.playWAV(GPath.createSoundPath("Eye_Laugh.wav"));
+		SoundPlayer.playWAV(GPath.createSoundPath("Eye_Gotcha.wav"));
+		
+		// Create timer for small period that closes pop-up on finish
+		int delay = 400; // Milliseconds
+		ActionListener taskPerformer = new ActionListener() {
+		      public void actionPerformed(ActionEvent evt) {
+		          GameWindow.getInstance().dispose();
+		          GameWindow.getInstance().dispatchEvent(new WindowEvent(GameWindow.getInstance(), WindowEvent.WINDOW_CLOSING));
+		      }
+		};
+		new Timer(delay, taskPerformer).start();
 	}
 	
 	@Override

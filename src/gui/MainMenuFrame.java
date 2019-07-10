@@ -84,7 +84,7 @@ public class MainMenuFrame extends JFrame implements KeyListener {
 	private void createNewGame() {
 		// Create Game Window with new game session
 		@SuppressWarnings("unused")
-		GameWindow window = new GameWindow();
+		GameWindow window = GameWindow.getInstance();
 	}
 	
 	private boolean loadGame() {
@@ -94,7 +94,7 @@ public class MainMenuFrame extends JFrame implements KeyListener {
 		}
 		
 		// Create Game Window and then immediately load the save file
-		GameWindow window = new GameWindow();
+		GameWindow window = GameWindow.getInstance();
 		window.loadGame();
 		return true;
 	}

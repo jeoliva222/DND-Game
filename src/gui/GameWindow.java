@@ -29,6 +29,9 @@ public class GameWindow extends JFrame implements KeyListener {
 	// Prevents warnings
 	private static final long serialVersionUID = 1L;
 	
+	// Singleton instance of window
+	private static GameWindow instance = null;
+	
 	// Indicates whether a key is being pressed or not
 	private static boolean isKeyDown = false;
 	
@@ -72,7 +75,7 @@ public class GameWindow extends JFrame implements KeyListener {
 	private MouseAdapter focusAdapter;
 
 	// Constructor
-	public GameWindow() {
+	private GameWindow() {
 		super();
 		
 		// Initialize MapScreen within window
@@ -575,6 +578,14 @@ public class GameWindow extends JFrame implements KeyListener {
 	
 	// ****************
 	// Getters and setters
+	
+	public static GameWindow getInstance() {
+		if(instance == null) {
+			instance = new GameWindow();
+		}
+		
+		return instance;
+	}
 	
 	public static GameScreen getScreen() {
 		return GameWindow.screen;
