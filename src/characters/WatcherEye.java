@@ -12,9 +12,11 @@ import ai.IdleController;
 import ai.LineDrawer;
 import ai.PathFinder;
 import ai.PatrolPattern;
+import effects.EyeEffect;
 import gui.GameWindow;
 import helpers.GPath;
 import helpers.SoundPlayer;
+import managers.EffectManager;
 import managers.EntityManager;
 import tiles.MovableType;
 
@@ -147,6 +149,16 @@ public class WatcherEye extends GCharacter {
 	@Override
 	public void playerInitiate() {
 		// TODO - Crash the game
+		
+		// Fill the screen with eyes
+		EffectManager em = EntityManager.getInstance().getEffectManager();
+		for(int y = 0; y < 10; y++) {
+			for(int x = 0; x < 10; x++) {
+				em.addEffect(new EyeEffect(x, y, 5));
+			}
+		}
+		
+		// Play the classic "Gotcha" sound
 		SoundPlayer.playWAV(GPath.createSoundPath("Eye_Gotcha.wav"));
 		
 		// Create timer for small period that closes pop-up on finish
