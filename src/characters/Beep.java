@@ -158,8 +158,7 @@ public class Beep extends GCharacter {
 	
 	// Override that resets a few extra parameters
 	@Override
-	public void returnToOrigin() {
-		super.returnToOrigin();
+	public void resetParams() {
 		this.cooldownCount = 0;
 	}
 

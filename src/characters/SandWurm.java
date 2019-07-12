@@ -193,8 +193,7 @@ public class SandWurm extends GCharacter {
 	
 	// Override that resets a few extra parameters
 	@Override
-	public void returnToOrigin() {
-		super.returnToOrigin();
+	public void resetParams() {
 		this.dmgCount = 0;
 		this.canFocus = true;
 	}

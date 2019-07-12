@@ -312,8 +312,9 @@ public class GameScreen extends JPanel {
 		// Save the NPCs
 		ArrayList<GCharacter> newNPCList = new ArrayList<GCharacter>();
 		for(GCharacter npc: em.getNPCManager().getCharacters()) {
-			if(resetNPCs)
+			if(resetNPCs) {
 				npc.returnToOrigin();
+			}
 			newNPCList.add(npc);
 		}
 		currentLevel.setNPCs(newNPCList);

@@ -213,6 +213,11 @@ public abstract class GCharacter implements Serializable {
 		}
 	}
 	
+	// Fully heal the character
+	public void fullyHeal() {
+		this.currentHP = this.maxHP;
+	}
+	
 	// Adds a MovableType
 	public void addMoveType(MovableType mt) {
 		this.moveTypes.add(mt);
@@ -248,7 +253,14 @@ public abstract class GCharacter implements Serializable {
 		this.yPos = this.yOrigin;
 		
 		// Fill back to full health
-		this.currentHP = this.maxHP;
+		this.fullyHeal();
+		
+		// Reset other parameters
+		this.resetParams();
+	}
+	
+	public void resetParams() {
+		// Nothing by default
 	}
 	
 	// Updates the coordinates that the character was on last turn

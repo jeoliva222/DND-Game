@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import characters.Corpse;
 import characters.GCharacter;
 import gui.GameScreen;
+import helpers.GPath;
 
 public class CorpseManager {
 	
@@ -21,13 +22,28 @@ public class CorpseManager {
 	}
 	
 	// Adds a corpse to the list
-	public void addCorpse(Corpse c) {
-		// Adds corpse to manager
-		this.corpses.add(c);
+	public void addCorpse(Corpse newCorpse) {
+		
+		// Search for a existing corpse at the same location
+		Corpse overridenCorpse = null;
+		for(Corpse corpse : this.corpses) {
+			if(newCorpse.getXPos() == corpse.getXPos() && newCorpse.getYPos() == corpse.getYPos()) {
+				overridenCorpse = corpse;
+				break;
+			}
+		}
+		
+		// If there's another corpse at this location, write over it
+		if(overridenCorpse != null) {
+			this.corpses.remove(overridenCorpse);
+		}
+		
+		// Add new corpse to manager
+		this.corpses.add(newCorpse);
 		
 		try {
 			// Repaints tile with corpse's image
-			GCharacter deadNPC = c.getNPC();
+			GCharacter deadNPC = newCorpse.getNPC();
 			String corpseImg = deadNPC.getCorpseImage();
 			GameScreen.getTile(deadNPC.getXPos(), deadNPC.getYPos()).setCorpseImage(corpseImg);
 		} catch (ArrayIndexOutOfBoundsException e) {
@@ -41,6 +57,7 @@ public class CorpseManager {
 	public boolean removeCorpse(Corpse c) {
 		if(this.corpses.contains(c)) {
 			this.corpses.remove(c);
+			GameScreen.getTile(c.getXPos(), c.getYPos()).setCorpseImage(GPath.NULL);
 			return true;
 		} else {
 			return false;

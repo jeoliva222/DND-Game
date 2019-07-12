@@ -114,8 +114,7 @@ public class ChagrinShadow extends GCharacter {
 	
 	// Override that resets a few extra parameters
 	@Override
-	public void returnToOrigin() {
-		super.returnToOrigin();
+	public void resetParams() {
 		this.chaseCount = 0;
 	}
 	

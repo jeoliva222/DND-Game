@@ -115,8 +115,7 @@ public class EliteBunnyWarrior extends BunnyWarrior {
 	
 	// Override that resets a few extra parameters
 	@Override
-	public void returnToOrigin() {
-		super.returnToOrigin();
+	public void resetParams() {
 		this.comboCount = 0;
 	}
 
