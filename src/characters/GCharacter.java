@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Random;
 
 import ai.PatrolPattern;
+import characters.allies.Player;
 import gui.GameScreen;
 import gui.InfoScreen;
 import gui.LogScreen;

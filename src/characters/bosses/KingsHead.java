@@ -4,7 +4,7 @@ import java.awt.Dimension;
 
 import ai.PatrolPattern;
 import characters.GCharacter;
-import characters.Player;
+import characters.allies.Player;
 import effects.DamageIndicator;
 import effects.FloodEffect;
 import effects.GEffect;

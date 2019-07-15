@@ -6,7 +6,7 @@ import ai.IdleController;
 import ai.IslandChecker;
 import ai.PatrolPattern;
 import characters.GCharacter;
-import characters.Player;
+import characters.allies.Player;
 import gui.GameScreen;
 import helpers.GPath;
 import helpers.SoundPlayer;

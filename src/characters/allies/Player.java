@@ -1,9 +1,10 @@
-package characters;
+package characters.allies;
 
 import java.awt.Dimension;
 import java.io.Serializable;
 import java.util.ArrayList;
 
+import characters.GCharacter;
 import gui.GameInitializer;
 import gui.GameScreen;
 import gui.GameWindow;
@@ -72,20 +73,20 @@ public class Player implements Serializable {
 	public Player() {
 		// Set player tile position
 		// Default is 6, 2
-		this.xPos = 6;
-		this.yPos = 2;
+		this.xPos = 1;
+		this.yPos = 8;
 		this.lastX = this.xPos;
 		this.lastY = this.yPos;
 		
 		/// ***TEMP*** Set the area coordinates
 		// Default is 0, 1
 		this.areaX = 0;
-		this.areaY = 1;
+		this.areaY = 0;
 		
 		/// ***TEMP*** Set the level coordinates
 		// Default is 3, 2
 		this.levelX = 3;
-		this.levelY = 2;
+		this.levelY = 4;
 		
 		// Set health values
 		// Default is 20
@@ -221,7 +222,7 @@ public class Player implements Serializable {
 		
 		// Finally check for collision
 		for(GCharacter npc : EntityManager.getInstance().getNPCManager().getCharacters()) {
-			if((newX) == npc.xPos && (newY) == npc.yPos) {
+			if((newX) == npc.getXPos() && (newY) == npc.getYPos()) {
 				if(isTeleport) {
 					npc.damageCharacter(1000);
 					LogScreen.log("Player telefragged " + npc.getName() + ".", GColors.ATTACK);

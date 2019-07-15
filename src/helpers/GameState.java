@@ -7,7 +7,7 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 
-import characters.Player;
+import characters.allies.Player;
 import gui.InventoryScreen;
 import items.GItem;
 import levels.MapArea;

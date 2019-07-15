@@ -14,7 +14,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JPanel;
 
 import characters.GCharacter;
-import characters.Player;
+import characters.allies.Player;
 import effects.GEffect;
 import helpers.GPath;
 import helpers.ImageHandler;

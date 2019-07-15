@@ -8,6 +8,7 @@ import ai.IdleController;
 import ai.LineDrawer;
 import ai.PathFinder;
 import ai.PatrolPattern;
+import characters.allies.Player;
 import effects.MusicEffect;
 import gui.GameScreen;
 import gui.GameTile;

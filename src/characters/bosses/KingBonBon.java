@@ -9,7 +9,7 @@ import ai.IdleController;
 import ai.PathFinder;
 import ai.PatrolPattern;
 import characters.GCharacter;
-import characters.Player;
+import characters.allies.Player;
 import effects.DamageIndicator;
 import effects.FireEffect;
 import effects.FloodEffect;

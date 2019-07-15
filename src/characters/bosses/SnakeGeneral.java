@@ -9,7 +9,7 @@ import ai.IdleController;
 import ai.LineDrawer;
 import ai.PatrolPattern;
 import characters.GCharacter;
-import characters.Player;
+import characters.allies.Player;
 import effects.BombEffect;
 import effects.DamageIndicator;
 import effects.FakeSnakeEffect;

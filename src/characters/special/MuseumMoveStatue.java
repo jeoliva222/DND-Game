@@ -1,7 +1,7 @@
 package characters.special;
 
-import characters.Player;
 import characters.Signpost;
+import characters.allies.Player;
 import managers.EntityManager;
 
 // Special entity used in the Museum area that moves when

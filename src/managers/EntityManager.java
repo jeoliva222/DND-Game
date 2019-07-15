@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 import characters.Corpse;
 import characters.GCharacter;
-import characters.Player;
+import characters.allies.Player;
 import effects.GEffect;
 import gui.GameScreen;
 import gui.GameTile;

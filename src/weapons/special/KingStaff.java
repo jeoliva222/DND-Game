@@ -1,7 +1,7 @@
 package weapons.special;
 
 import characters.GCharacter;
-import characters.Player;
+import characters.allies.Player;
 import effects.ChargeIndicator;
 import helpers.GColors;
 import helpers.GPath;

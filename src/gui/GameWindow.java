@@ -15,7 +15,7 @@ import java.util.Date;
 import javax.swing.JFrame;
 
 import characters.GCharacter;
-import characters.Player;
+import characters.allies.Player;
 import helpers.GPath;
 import helpers.GameState;
 import helpers.SoundPlayer;

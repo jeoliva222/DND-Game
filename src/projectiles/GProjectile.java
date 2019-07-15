@@ -3,7 +3,7 @@ package projectiles;
 import java.util.Random;
 
 import characters.GCharacter;
-import characters.Player;
+import characters.allies.Player;
 import gui.GameScreen;
 import gui.GameTile;
 import gui.LogScreen;

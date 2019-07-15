@@ -3,6 +3,7 @@ package characters;
 import ai.IdleController;
 import ai.IslandChecker;
 import ai.PatrolPattern;
+import characters.allies.Player;
 import gui.GameScreen;
 import gui.LogScreen;
 import helpers.GColors;

@@ -1,7 +1,7 @@
 package weapons;
 
 import characters.GCharacter;
-import characters.Player;
+import characters.allies.Player;
 import gui.LogScreen;
 import helpers.GColors;
 import managers.EntityManager;

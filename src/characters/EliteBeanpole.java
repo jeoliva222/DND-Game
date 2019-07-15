@@ -7,6 +7,7 @@ import ai.IdleController;
 import ai.LineDrawer;
 import ai.PathFinder;
 import ai.PatrolPattern;
+import characters.allies.Player;
 import effects.DamageIndicator;
 import helpers.GPath;
 import helpers.SoundPlayer;

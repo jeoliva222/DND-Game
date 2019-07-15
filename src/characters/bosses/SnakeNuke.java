@@ -3,7 +3,7 @@ package characters.bosses;
 
 import ai.PatrolPattern;
 import characters.GCharacter;
-import characters.Player;
+import characters.allies.Player;
 import effects.FireEffect;
 import effects.GEffect;
 import gui.InfoScreen;

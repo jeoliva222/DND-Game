@@ -8,7 +8,7 @@ import java.awt.GridLayout;
 import javax.swing.BorderFactory;
 import javax.swing.JPanel;
 
-import characters.Player;
+import characters.allies.Player;
 import levels.MapArea;
 import managers.EntityManager;
 
