@@ -73,20 +73,20 @@ public class Player implements Serializable {
 	public Player() {
 		// Set player tile position
 		// Default is 6, 2
-		this.xPos = 1;
-		this.yPos = 8;
+		this.xPos = 6;
+		this.yPos = 2;
 		this.lastX = this.xPos;
 		this.lastY = this.yPos;
 		
 		/// ***TEMP*** Set the area coordinates
 		// Default is 0, 1
 		this.areaX = 0;
-		this.areaY = 0;
+		this.areaY = 1;
 		
 		/// ***TEMP*** Set the level coordinates
 		// Default is 3, 2
 		this.levelX = 3;
-		this.levelY = 4;
+		this.levelY = 2;
 		
 		// Set health values
 		// Default is 20
