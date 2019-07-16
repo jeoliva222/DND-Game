@@ -19,7 +19,7 @@ public class LineDrawer {
 	}
 	
 	// Fetches the LOS path between two points
-	public static ArrayList <GameTile> fetchSightPath(int originX, int originY, int destX, int destY) {
+	public static ArrayList<GameTile> fetchSightPath(int originX, int originY, int destX, int destY) {
 		// Initialize variables for general direction of line being drawn
 		int xDir = 0;
 		int yDir = 0;

@@ -149,7 +149,7 @@ public class WatcherEye extends GCharacter {
 
 	@Override
 	public void playerInitiate() {
-		// TODO - Crash the game
+		// Crash the game - TODO
 		
 		// Fill the screen with eyes
 		EffectManager em = EntityManager.getInstance().getEffectManager();
@@ -221,7 +221,6 @@ public class WatcherEye extends GCharacter {
 				// If we arrived at last spotted position and still can't see the player,
 				// then enter search mode
 				if(!hasLOS && this.xPos == this.markX && this.yPos == this.markY) {
-					SoundPlayer.playWAV(GPath.createSoundPath("Eye_Breath.wav"));
 					this.state = WatcherEye.STATE_SEARCH;
 					break;
 				}
@@ -268,10 +267,26 @@ public class WatcherEye extends GCharacter {
 						this.moveCharacter(changeX, changeY);
 					}
 				}
+				
+				// Recalculate LOS after move
+				hasLOS = LineDrawer.hasSight(this.xPos, this.yPos, plrX, plrY);
+				if(hasLOS) {
+					// Mark the last position we saw the player
+					this.markX = plrX;
+					this.markY = plrY;
+				}
+				
 				break;
 			case WatcherEye.STATE_SEARCH:
-				// Cooldown period for one turn
-				this.state = WatcherEye.STATE_IDLE;
+				if(hasLOS) {
+					// Alert to the player
+					SoundPlayer.playWAV(GPath.createSoundPath("Eye_Scream.wav"));
+					this.state = WatcherEye.STATE_ALERTED;
+				} else  {	
+					// Return to idling
+					SoundPlayer.playWAV(GPath.createSoundPath("Eye_Breath.wav"));
+					this.state = WatcherEye.STATE_IDLE;
+				}
 				break;
 			default:
 				System.out.println(this.getName() +

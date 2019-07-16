@@ -431,9 +431,7 @@ public class GameWindow extends JFrame implements KeyListener {
 		EntityManager.getInstance().setActiveArea(em.getPlayer().fetchArea());
 		
 		// Load the level our player is at
-		int levelX = em.getPlayer().getLevelX();
-		int levelY = em.getPlayer().getLevelY();
-		GameWindow.getScreen().loadLevel(em.getActiveArea().getLevel(levelX, levelY));
+		GameWindow.getScreen().loadLevel(em.getCurrentLevel());
 		
 		// Change music
 		SoundPlayer.changeMidi(em.getActiveArea().getMusic(), em.getActiveArea().getMusicVolume());
@@ -555,8 +553,8 @@ public class GameWindow extends JFrame implements KeyListener {
 	    	this.updateAll();
 	    }
 		
-		// If we're in a dark area, refresh all tiles every move
-		if(EntityManager.getInstance().getActiveArea().showDark()) {
+		// If we're in a dark area or level, refresh all tiles every move
+		if(EntityManager.getInstance().isDark()) {
 			GameWindow.screen.refreshTiles();
 		}
 		

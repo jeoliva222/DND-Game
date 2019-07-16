@@ -10,6 +10,7 @@ import gui.GameScreen;
 import gui.GameTile;
 import items.GPickup;
 import levels.MapArea;
+import levels.MapLevel;
 import projectiles.GProjectile;
 
 public class EntityManager {
@@ -38,7 +39,6 @@ public class EntityManager {
 	// Active area that is loaded in
 	private MapArea activeArea;
 	
-	///TODO Temporary code
 	// Blank Constructor for the EntityManager
 	private EntityManager() {
 		this.player = new Player();
@@ -163,6 +163,11 @@ public class EntityManager {
 		this.projectileCleaner();
 	}
 	
+	// Returns whether the current level or area is dark
+	public boolean isDark() {
+		return (this.activeArea.showDark() ||
+				this.getCurrentLevel().showDark());
+	}
 	
 	//-----------------------
 	// Getters and Setters
@@ -194,6 +199,10 @@ public class EntityManager {
 	
 	public PickupManager getPickupManager() {
 		return this.pickupManager;
+	}
+	
+	public MapLevel getCurrentLevel() {
+		return this.activeArea.getLevel(this.player.getLevelX(), this.player.getLevelY());
 	}
 	
 	public MapArea getActiveArea() {

@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import characters.Corpse;
 import characters.GCharacter;
 import gui.GameInitializer;
+import gui.GameWindow;
 import items.GPickup;
 import tiles.AltGround;
 import tiles.AltWall;
@@ -34,11 +35,14 @@ public class MapLevel implements Serializable {
 	// List of items on the screen
 	protected ArrayList<GPickup> pickups;
 	
+	// Flag indicating existence of darkness
+	protected boolean isDark = false;
+	
 	// Flag indicating whether the level was seen yet by the player
 	protected boolean wasExplored = false;
 	
-	// Constructor
-	protected MapLevel(int[][] map, ExtraTile[] extras, ArrayList<GCharacter> npcs, ArrayList<GPickup> pickups) {
+	// Constructors
+	protected MapLevel(int[][] map, ExtraTile[] extras, ArrayList<GCharacter> npcs, ArrayList<GPickup> pickups, boolean isDark) {
 		// Initialize TileType grid
 		this.tiles = new TileType[GameInitializer.yDimen][GameInitializer.xDimen];
 		
@@ -85,6 +89,13 @@ public class MapLevel implements Serializable {
 		
 		// Add in items
 		this.pickups = pickups;
+		
+		// Indicate darkness state
+		this.isDark = isDark;
+	}
+	
+	protected MapLevel(int[][] map, ExtraTile[] extras, ArrayList<GCharacter> npcs, ArrayList<GPickup> pickups) {
+		this(map, extras, npcs, pickups, false);
 	}
 	
 	//--------------------
@@ -124,6 +135,19 @@ public class MapLevel implements Serializable {
 	
 	public void setPickups(ArrayList<GPickup> pickups) {
 		this.pickups = pickups;
+	}
+	
+	public boolean showDark() {
+		return this.isDark;
+	}
+	
+	public void toggleDark() {
+		this.isDark = !this.isDark;
+		
+		// If going from dark to light, refresh one more time to get rid of dark
+		if (!this.isDark) {
+			GameWindow.getScreen().refreshTiles();
+		}
 	}
 	
 	public boolean wasExplored() {

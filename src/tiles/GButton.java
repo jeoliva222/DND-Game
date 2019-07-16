@@ -86,6 +86,12 @@ public abstract class GButton extends TileType {
 		this.soundPath = soundPath;
 	}
 	
+	// Do extra (special) things for the particular button press
+	// Should be overridden if needed
+	public void doExtra() {
+		// Nothing by default
+	}
+	
 	@Override
 	// Gets image for the tile
 	abstract public String selectImage();
@@ -153,7 +159,6 @@ public abstract class GButton extends TileType {
 			case SPAWN_ENEMY:
 				// For every NPC in the list, spawn it
 				for(GCharacter npc: this.npcList) {
-					///**** TEMPORARY IMPLEMENTATION
 					EntityManager.getInstance().getNPCManager().addCharacter(npc);
 				}
 				break;
@@ -182,6 +187,9 @@ public abstract class GButton extends TileType {
 				System.out.println("Behavior not created yet.");
 				break;
 		}
+		
+		// Do extra behavior
+		this.doExtra();
 		
 		// Log a relevant message and play a sound
 		switch(this.visibility) {

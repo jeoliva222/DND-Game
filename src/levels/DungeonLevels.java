@@ -31,6 +31,7 @@ import items.MediumHealthPotion;
 import items.MediumMaxPotion;
 import items.SmallHealthPotion;
 import items.SmallMaxPotion;
+import managers.EntityManager;
 import tiles.AltWall;
 import tiles.ExtraTile;
 import tiles.GButton;
@@ -237,7 +238,7 @@ public class DungeonLevels implements Serializable {
 			add(new GPickup(7, 1, new SmallMaxPotion()));
 			add(new GPickup(7, 5, Armory.caestus));
 			add(new GPickup(1, 2, Armory.glassShard));
-		}});
+		}}, true);
 		
 		//-------------------
 		
@@ -264,22 +265,24 @@ public class DungeonLevels implements Serializable {
 						}})),
 				new ExtraTile(1, 8, 
 						new WaterButton(TriggerType.SPAWN_ENEMY, GButton.VEILED, new ArrayList<GCharacter>() {{
-							add(new EliteBitester(6, 4));
-							add(new EliteBitester(8, 3));
-							add(new EliteBitester(6, 1));
-							add(new EliteBitester(8, 1));
-							add(new EliteBitester(1, 4));
-						}})),
+							add(new Bitester(8, 3));
+							add(new Bitester(6, 1));
+							add(new Bitester(8, 1));
+							add(new Bitester(1, 4));
+						}}) {
+						@Override
+						public void doExtra() {
+							// Make the screen dark
+							EntityManager.getInstance().getCurrentLevel().toggleDark();
+						}
+				}),
 		}, new ArrayList<GCharacter>() {{
 			add(new Beep(1, 3));
 			add(new Beep(2, 2));
-			add(new Beep(2, 3));
-			add(new Beep(8, 2));
 			add(new Beep(7, 2));
-			add(new Beep(6, 2));
 			add(new Beep(4, 8));
 		}}, new ArrayList<GPickup>() {{
-			add(new GPickup(1, 8, new SmallMaxPotion()));
+			add(new GPickup(1, 8, new MediumMaxPotion()));
 		}});
 		
 		//-------------------

@@ -118,7 +118,7 @@ public class GameTile extends JPanel {
         Player player = em.getPlayer();
         byte distance = 0;
         
-        if(em.getActiveArea().showDark()) {
+        if(em.isDark()) {
     		// Get player's location
     		int plrX = player.getXPos();
     		int plrY = player.getYPos();
