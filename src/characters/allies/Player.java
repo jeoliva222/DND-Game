@@ -121,8 +121,7 @@ public class Player implements Serializable {
 		}
 		
 		// Discharge weapons if player isn't attacking this turn
-		this.equippedWeapon.dischargeWeapon();
-		this.sheathedWeapon.dischargeWeapon();
+		this.dischargeWeapons();
 		
 		// Then check for barriers, out-of-bounds, and immovable spaces
 		TileType tt = null;
@@ -203,8 +202,7 @@ public class Player implements Serializable {
 		}
 		
 		// Discharge weapons if player isn't attacking this turn
-		this.equippedWeapon.dischargeWeapon();
-		this.sheathedWeapon.dischargeWeapon();
+		this.dischargeWeapons();
 		
 		// Check for barriers, out-of-bounds, and immovable spaces
 		TileType tt;

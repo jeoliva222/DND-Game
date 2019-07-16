@@ -53,6 +53,7 @@ public class MapLevel implements Serializable {
 		// 3 = Wall
 		// 4 = Alternate Wall
 		// 5 = Pit
+		// Anything else is a Wall
 		for(int y = 0; y < GameInitializer.yDimen; y++) {
 			for(int x = 0; x < GameInitializer.xDimen; x++) {
 				TileType tt;
