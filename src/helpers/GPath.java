@@ -136,6 +136,10 @@ public class GPath {
 	
 	public static String ELITE_WATCHMAN = "elite_watchman" + File.separator;
 	
+	//--------- SPECIAL
+	
+	public static String EYE_PATH = "save/corruption.mad";
+	
 	//--------- TESTING
 	
 	public static String PLACEHOLDER = GPath.IMAGE + GPath.TILE + GPath.GENERIC + "testProj.png";

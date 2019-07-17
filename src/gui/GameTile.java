@@ -34,6 +34,14 @@ public class GameTile extends JPanel {
 	// Image for faded darkness (slightly less dark)
 	private static Image fadeImg = null;
 	
+	// Image for eye corruption effect
+	private static Image eyeImg = null;
+	
+	private static Boolean useEye = null;
+	
+	// Chance for an eye image to show up replacing a character image
+	private static final double EYE_CHANCE = 0.001;
+	
 	// X and Y position of GameTile on the GameScreen grid
 	private int gridX, gridY;
 	
@@ -162,7 +170,7 @@ public class GameTile extends JPanel {
 	
 	// Sets the tile (ground) image
 	public void setBG(String filepath) {
-		this.bgImage = this.loadImage(filepath);
+		this.bgImage = this.loadImage(filepath, true);
 		this.bgImage = ImageHandler.scaleImage(this.bgImage, 80, 80, this.scaleFactor, this.scaleFactor);
 		this.repaint();
 	}
@@ -176,7 +184,7 @@ public class GameTile extends JPanel {
 			this.setCorpse = false;
 		}
 		
-		this.corpseImage = this.loadImage(filepath);
+		this.corpseImage = this.loadImage(filepath, true);
 		this.corpseImage = ImageHandler.scaleImage(this.corpseImage, 80, 80, this.scaleFactor, this.scaleFactor);
 		this.repaint();
 	}
@@ -190,7 +198,7 @@ public class GameTile extends JPanel {
 			this.setPickup = false;
 		}
 		
-		this.pickupImage = this.loadImage(filepath);
+		this.pickupImage = this.loadImage(filepath, true);
 		this.pickupImage = ImageHandler.scaleImage(this.pickupImage, 80, 80, this.scaleFactor, this.scaleFactor);
 		this.repaint();
 	}
@@ -202,7 +210,7 @@ public class GameTile extends JPanel {
 			return;
 		}
 		
-		Image newEffect = this.loadImage(filepath);
+		Image newEffect = this.loadImage(filepath, true);
 		newEffect = ImageHandler.scaleImage(newEffect, 80, 80, this.scaleFactor, this.scaleFactor);
 		this.fxImages.put(fx, newEffect);
 		this.repaint();
@@ -215,7 +223,7 @@ public class GameTile extends JPanel {
 			return;
 		}
 		
-		Image newProj = this.loadImage(filepath);
+		Image newProj = this.loadImage(filepath, true);
 		newProj = ImageHandler.scaleImage(newProj, 80, 80, this.scaleFactor, this.scaleFactor);
 		this.projImages.put(proj, newProj);
 		this.repaint();
@@ -238,7 +246,7 @@ public class GameTile extends JPanel {
 	// Gets the dark image used for partial vision
 	private Image getDarkImage() {
 		if(GameTile.darkImg == null) {
-			GameTile.darkImg = this.loadImage(GPath.createImagePath(GPath.TILE, GPath.GENERIC, "area_dark.png"));
+			GameTile.darkImg = this.loadImage(GPath.createImagePath(GPath.TILE, GPath.GENERIC, "area_dark.png"), true);
 			GameTile.darkImg = ImageHandler.scaleImage(GameTile.darkImg, 80, 80, this.scaleFactor, this.scaleFactor);
 		}
 		return GameTile.darkImg;
@@ -247,10 +255,18 @@ public class GameTile extends JPanel {
 	// Gets the fading image (slightly less dark) used for partial vision
 	private Image getFadingDarkImage() {
 		if(GameTile.fadeImg == null) {
-			GameTile.fadeImg = this.loadImage(GPath.createImagePath(GPath.TILE, GPath.GENERIC, "area_fade.png"));
+			GameTile.fadeImg = this.loadImage(GPath.createImagePath(GPath.TILE, GPath.GENERIC, "area_fade.png"), true);
 			GameTile.fadeImg = ImageHandler.scaleImage(GameTile.fadeImg, 80, 80, this.scaleFactor, this.scaleFactor);
 		}
 		return GameTile.fadeImg;
+	}
+	
+	// Gets the fading image (slightly less dark) used for partial vision
+	private Image getEyeImage() {
+		if(GameTile.eyeImg == null) {
+			GameTile.eyeImg = this.loadImage(GPath.createImagePath(GPath.ENEMY, GPath.GAZER, "Gazer_IDLE.png"), true);
+		}
+		return GameTile.eyeImg;
 	}
 	
 	// Focuses on an NPC if it exists, returning true if we do
@@ -276,7 +292,19 @@ public class GameTile extends JPanel {
 	}
 	
 	// Loads in an image from a file path
-	private Image loadImage(String filepath) {
+	private Image loadImage(String filepath, boolean skipEye) {
+		
+		// One time load of whether game is "corrupted"
+		if (useEye == null) {
+			File madFile = new File(GPath.EYE_PATH);
+			useEye = madFile.exists();
+		}
+		
+		// If game is "corrupted", give a small chance to replace the image with an eye
+		if (useEye && !skipEye && (Math.random() < EYE_CHANCE)) {
+			return this.getEyeImage();
+		}
+		
 		// Initialize output
 		Image output = null;
 		
@@ -301,6 +329,11 @@ public class GameTile extends JPanel {
 		
 		// Return output image
 		return output;
+	}
+	
+	// Loads in an image from a file path
+	private Image loadImage(String filepath) {
+		return this.loadImage(filepath, false);
 	}
 	
 	public void clearEffect(GEffect fx) {

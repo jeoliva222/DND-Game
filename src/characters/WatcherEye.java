@@ -4,6 +4,14 @@ import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
+import java.io.File;
+import java.io.IOException;
+import java.nio.charset.Charset;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.Arrays;
+import java.util.List;
 
 import javax.swing.Timer;
 
@@ -150,6 +158,22 @@ public class WatcherEye extends GCharacter {
 	@Override
 	public void playerInitiate() {
 		// Crash the game - TODO
+		
+		// Creates a special file
+		String filePath = GPath.EYE_PATH;
+		File madFile = new File(filePath);
+		if (!madFile.exists()) {
+			try {
+				List<String> lines = Arrays.asList("HAHAHAHAHAHAHAHAHA",
+						"HAHAHAHAHAHAHAHAHAHAHAHAHAHAHAHAHAHA",
+						"HAHAHAHAHAHAHAHAHAHAHAHAHAHAHAHAHAHAHAHAHAHAHAHAHAHAHAHAHAHAHAHAHAHAHAHA");
+				Path file = Paths.get(filePath);
+				Files.write(file, lines, Charset.forName("UTF-8"));
+			} catch (IOException e) {
+				System.out.println("File didn't generate properly");
+				e.printStackTrace();
+			}
+		}
 		
 		// Fill the screen with eyes
 		EffectManager em = EntityManager.getInstance().getEffectManager();
