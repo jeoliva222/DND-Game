@@ -159,7 +159,13 @@ public class SnakeTank extends GCharacter {
 				//statePath = "_PREP_SHOOT";
 				break;
 			case SnakeTank.STATE_ATT_NUKE:
-				statePath = "_CANNON";
+				if(this.attCount == 0) {
+					statePath = "_CANNON";
+				} else if (this.willDeflect) {
+					// TODO
+				}
+				
+				// Otherwise nothing
 				break;
 			default:
 				System.out.println

@@ -4,8 +4,8 @@ import helpers.GPath;
 
 public class BombEffect extends GEffect {
 
-	private static String onImage = GPath.createImagePath(GPath.TILE, GPath.GENERIC, "testProj.png");
-	private static String offImage = GPath.createImagePath(GPath.TILE, GPath.GENERIC, "testProj.png");
+	private static String onImage = GPath.createImagePath(GPath.ENEMY, GPath.SNAKE_GENERAL, "Mine_ATTACK.png");
+	private static String offImage = GPath.createImagePath(GPath.ENEMY, GPath.SNAKE_GENERAL, "Mine_IDLE.png");
 	
 	public BombEffect(int xPos, int yPos) {
 		super(xPos, yPos, onImage);
