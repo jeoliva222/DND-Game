@@ -261,7 +261,7 @@ public class GameTile extends JPanel {
 		return GameTile.fadeImg;
 	}
 	
-	// Gets the fading image (slightly less dark) used for partial vision
+	// Gets the eye image (used for corruption effects on characters)
 	private Image getEyeImage() {
 		if(GameTile.eyeImg == null) {
 			GameTile.eyeImg = this.loadImage(GPath.createImagePath(GPath.ENEMY, GPath.GAZER, "Gazer_IDLE.png"), true);
