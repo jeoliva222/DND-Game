@@ -73,6 +73,9 @@ public class SnakeTank extends GCharacter {
 	// Flag indicating whether we've been damaged by the Nuke and will try to deflect it next time
 	private boolean willDeflect = false;
 	
+	// Flag indicating whether we've just deflected the Nuke (Used for rendering)
+	private boolean deflected = false;
+	
 	// Attack counter for deciding behavior
 	private int attCount = 0;
 	
@@ -150,7 +153,11 @@ public class SnakeTank extends GCharacter {
 				statePath = "_ALERT";
 				break;
 			case SnakeTank.STATE_PREP_CHAINGUN:
-				statePath = "_PREP_GUN";
+				if(this.attCount < 3) {
+					statePath = "_PREP_GUN";
+				} else {
+					statePath = "_PREP_GUN2";
+				}
 				break;
 			case SnakeTank.STATE_ATT_CHAINGUN:
 				statePath = "_ATT_GUN";
@@ -162,7 +169,11 @@ public class SnakeTank extends GCharacter {
 				if(this.attCount == 0) {
 					statePath = "_CANNON";
 				} else if (this.willDeflect) {
-					// TODO
+					if(this.deflected) {
+						statePath = "_ATT_DEFLECT";
+					} else {
+						statePath = "_PREP_DEFLECT";
+					}
 				}
 				
 				// Otherwise nothing
@@ -472,6 +483,10 @@ public class SnakeTank extends GCharacter {
 				
 				// Only look for Nuke if we're going to try to deflect it
 				if(this.willDeflect) {
+					
+					// Reset deflected flag
+					this.deflected = false;
+					
 					// Get reference to the Nuke
 					for(GCharacter npc: EntityManager.getInstance().getNPCManager().getCharacters()) {
 						if(npc != this && npc instanceof SnakeNuke) {
@@ -481,6 +496,14 @@ public class SnakeTank extends GCharacter {
 							// Swat the Nuke if next to us and headed in our direction
 							if(nuke.getXPos() == (this.xPos - 1) && 
 									nuke.getYPos() == this.yPos && nuke.xSpeed == 1) {
+								
+								// Mark deflection
+								this.deflected = true;
+								
+								// Play hit sound
+								SoundPlayer.playWAV(GPath.createSoundPath("player_SWING.wav"), 5);
+								
+								// Set new Nuke direction
 								if(this.yPos >= 4) {
 									nuke.setDirection(0, -1);
 								} else {
