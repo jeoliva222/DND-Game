@@ -163,7 +163,9 @@ public class SnakeTank extends GCharacter {
 				statePath = "_ATT_GUN";
 				break;
 			case SnakeTank.STATE_PREP_NUKE:
-				// Nothing
+				if (this.attCount == 2) {
+					statePath = "_ALERT";
+				}
 				break;
 			case SnakeTank.STATE_ATT_NUKE:
 				if(this.attCount == 0) {
@@ -437,6 +439,12 @@ public class SnakeTank extends GCharacter {
 				this.attCount += 1;
 				break;
 			case SnakeTank.STATE_PREP_NUKE: //---------------------------------------------
+				
+				// If first turn, issue a warning - TODO
+				if(this.attCount == 1) {
+					SoundPlayer.playWAV(GPath.createSoundPath("snake1_warn1.wav"));
+				}
+				
 				// Move to middle of arena if on edges
 				if(this.yPos == 2) {
 					this.moveCharacter(0, 1);

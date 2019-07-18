@@ -11,6 +11,7 @@ import ai.PatrolPattern;
 import characters.GCharacter;
 import characters.allies.Player;
 import effects.BombEffect;
+import effects.BulletEffect;
 import effects.DamageIndicator;
 import effects.FakeSnakeEffect;
 import effects.FireEffect;
@@ -682,9 +683,6 @@ public class SnakeGeneral extends GCharacter {
 				int nextY = (this.getYPos() + this.yMarkDir);
 				boolean isEndHit = false;
 				while(!isEndHit) { // BEGIN While ------------------------
-
-					// Mark the tile
-					this.addEffect(new DamageIndicator(nextX, nextY));
 					
 					// Check if we hit player
 					if(nextX == plrX && nextY == plrY) {
@@ -700,6 +698,11 @@ public class SnakeGeneral extends GCharacter {
 								.getMovableType() == MovableType.WALL;
 					} catch (ArrayIndexOutOfBoundsException e) {
 						isEndHit = true;
+					}
+					
+					// Mark the tile (if we didn't hit something)
+					if (!isEndHit) {
+						this.addEffect(new BulletEffect(nextX, nextY, this.xMarkDir, this.yMarkDir));
 					}
 					
 					// Then update the next coordinates to check
