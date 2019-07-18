@@ -3,8 +3,8 @@ package weapons.special;
 import java.util.ArrayList;
 
 import characters.GCharacter;
+import effects.BulletEffect;
 import effects.ChargeIndicator;
-import effects.DamageIndicator;
 import gui.GameScreen;
 import helpers.GColors;
 import helpers.GPath;
@@ -176,7 +176,7 @@ public class VenomGun extends Weapon {
 				nextY = (byte) (em.getPlayer().getYPos() + dy);
 				while(!(nextX == wallX && nextY == wallY) && !(nextX == farNPCX && nextY == farNPCY) && (safetyCounter < 10)) {
 					// Add bullet effect TODO
-					em.getEffectManager().addEffect(new DamageIndicator(nextX, nextY));
+					em.getEffectManager().addEffect(new BulletEffect(nextX, nextY, dx, dy));
 					
 					// Increment tracker coordinates
 					nextX += dx;
@@ -184,7 +184,7 @@ public class VenomGun extends Weapon {
 					safetyCounter += 1;
 				}
 				
-				// Mark last tile with special impact effect TODO
+				// Mark last tile with special impact effect
 				em.getEffectManager().addEffect(new ChargeIndicator(nextX, nextY));
 				
 				

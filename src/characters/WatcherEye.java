@@ -175,6 +175,9 @@ public class WatcherEye extends GCharacter {
 			}
 		}
 		
+		// Stop Music
+		SoundPlayer.stopMidi();
+		
 		// Fill the screen with eyes
 		EffectManager em = EntityManager.getInstance().getEffectManager();
 		for(int y = 0; y < 10; y++) {

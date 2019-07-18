@@ -7,7 +7,7 @@ import ai.PatrolPattern;
 import characters.ArrowTurret;
 import characters.GCharacter;
 import characters.allies.Player;
-import effects.DamageIndicator;
+import effects.BulletEffect;
 import effects.GEffect;
 import gui.GameScreen;
 import helpers.GPath;
@@ -386,7 +386,7 @@ public class SnakeTank extends GCharacter {
 				} else {
 					// Fire the guns, and then change state
 					for(int i = 7; i >= 4; i--) {
-						this.addEffect(new DamageIndicator(i, this.yPos));
+						this.addEffect(new BulletEffect(i, this.yPos, -1, 0));
 						if(plrX == i && plrY == this.yPos) {
 							this.playerInitiate();
 							this.hitShots = true;
@@ -426,7 +426,7 @@ public class SnakeTank extends GCharacter {
 				
 				// Continue firing the guns
 				for(int i = 7; i >= 4; i--) {
-					this.addEffect(new DamageIndicator(i, this.yPos));
+					this.addEffect(new BulletEffect(i, this.yPos, -1, 0));
 					if(plrX == i && plrY == this.yPos) {
 						this.playerInitiate();
 						this.hitShots = true;
