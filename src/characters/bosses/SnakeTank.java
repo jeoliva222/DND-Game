@@ -86,7 +86,7 @@ public class SnakeTank extends GCharacter {
 	private final int nukeMissMax = 3;
 	
 	// Determines time spent on cannon phase before switching
-	private final int cannonMax = 30;
+	private final int cannonMax = 24;
 	
 	// Determines time spent on chaingun phase before switching
 	private final int chaingunMax = 2;
@@ -163,7 +163,7 @@ public class SnakeTank extends GCharacter {
 				statePath = "_ATT_GUN";
 				break;
 			case SnakeTank.STATE_PREP_NUKE:
-				//statePath = "_PREP_SHOOT";
+				// Nothing
 				break;
 			case SnakeTank.STATE_ATT_NUKE:
 				if(this.attCount == 0) {
@@ -187,10 +187,8 @@ public class SnakeTank extends GCharacter {
 		return (imgPath + hpPath + statePath + ".png");
 	}
 	
-	// TODO
 	public String getCorpseImage() {
-		//return this.stImage_DEAD; 
-		return GPath.NULL;
+		return this.stImage_DEAD;
 	}
 	
 	public void populateMoveTypes() {
