@@ -12,6 +12,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Random;
 
 import javax.swing.Timer;
 
@@ -63,6 +64,8 @@ public class WatcherEye extends GCharacter {
 	// Indicate the coordinates which eye last spotted the player
 	protected int markX = 0;
 	protected int markY = 0;
+	
+	protected double ILLUSION_CHANCE = 0.02;
 	
 	//----------------------------
 	
@@ -207,8 +210,9 @@ public class WatcherEye extends GCharacter {
 
 	@Override
 	public void takeTurn() {
-		// Get reference to the player
-		Player player = EntityManager.getInstance().getPlayer();
+		// Get reference to the EntityManager / Player
+		EntityManager em = EntityManager.getInstance();
+		Player player = em.getPlayer();
 		
 		// If this is dead or the player is dead, don't do anything
 		if(!this.isAlive() || !player.isAlive()) {
@@ -226,6 +230,21 @@ public class WatcherEye extends GCharacter {
 			// Mark the last position we saw the player
 			this.markX = plrX;
 			this.markY = plrY;
+		}
+		
+		// Creates an illusion sometimes if it is dark
+		// Illusion chance increases exponentially when the player is more hurt
+		int playerHP = player.getCurrentHP();
+		if (playerHP <= 1) {
+			if(em.isDark()) {
+				// If dark and player at 1 HP, generate a ring of illusions
+				this.createMadness();
+			}
+		} else {
+			double chanceMult =  ((double) player.getMaxHP() / playerHP);
+			if(Math.random() < (this.ILLUSION_CHANCE * chanceMult) && em.isDark()) {
+				this.createIllusion();
+			}
 		}
 		
 		switch(this.state) {
@@ -322,4 +341,90 @@ public class WatcherEye extends GCharacter {
 		}
 			
 	}
+	
+	// Creates a single illusion right on the edge of the player's vision
+	private void createIllusion() {
+		EntityManager em = EntityManager.getInstance();
+		Player player = em.getPlayer();
+		Random r = new Random();
+		
+		// Randomly determine the indexed spot of the location
+		int edgeRange = (player.getVision() + 1);
+		int numSpots = edgeRange * 4;
+		int spot = r.nextInt(numSpots);
+		
+		// Determine the 'clock' quadrant and quadrant index
+		int quad = (spot / edgeRange);
+		int quadIndex = spot % edgeRange;
+		
+		// Determine the angular directions based on the indexed position
+		Dimension primeDir = null;
+		Dimension sideDir = null;
+		if(quad == 0) {
+			primeDir = new Dimension(0, -1);
+			sideDir = new Dimension(1, 0);
+		} else if(quad == 1) {
+			primeDir = new Dimension(1, 0);
+			sideDir = new Dimension(0, 1);
+		} else if(quad == 2) {
+			primeDir = new Dimension(0, 1);
+			sideDir = new Dimension(-1, 0);
+		} else {
+			primeDir = new Dimension(-1, 0);
+			sideDir = new Dimension(0, -1);
+		}
+		
+		// Determine the spot of the illusion
+		int spotX = player.getXPos();
+		int spotY = player.getYPos();
+		spotX += (primeDir.width * (edgeRange - quadIndex)) + (sideDir.width * quadIndex);
+		spotY += (primeDir.height * (edgeRange - quadIndex)) + (sideDir.height * quadIndex);
+		
+		// Add illusion effect
+		em.getEffectManager().addEffect(new EyeEffect(spotX, spotY));
+	}
+	
+	// Creates a ring of illusions right on the edge of the player's vision
+	private void createMadness() {
+		EntityManager em = EntityManager.getInstance();
+		Player player = em.getPlayer();
+		
+		// Determine edge range
+		int edgeRange = (player.getVision() + 1);
+		int numSpots = edgeRange * 4;
+		
+		// Surround the player with illusions
+		for (int spot = 0; spot < numSpots; spot++) {
+			// Determine the 'clock' quadrant and quadrant index
+			int quad = (spot / edgeRange);
+			int quadIndex = spot % edgeRange;
+			
+			// Determine the angular directions based on the indexed position
+			Dimension primeDir = null;
+			Dimension sideDir = null;
+			if(quad == 0) {
+				primeDir = new Dimension(0, -1);
+				sideDir = new Dimension(1, 0);
+			} else if(quad == 1) {
+				primeDir = new Dimension(1, 0);
+				sideDir = new Dimension(0, 1);
+			} else if(quad == 2) {
+				primeDir = new Dimension(0, 1);
+				sideDir = new Dimension(-1, 0);
+			} else {
+				primeDir = new Dimension(-1, 0);
+				sideDir = new Dimension(0, -1);
+			}
+			
+			// Determine the spot of the illusion
+			int spotX = player.getXPos();
+			int spotY = player.getYPos();
+			spotX += (primeDir.width * (edgeRange - quadIndex)) + (sideDir.width * quadIndex);
+			spotY += (primeDir.height * (edgeRange - quadIndex)) + (sideDir.height * quadIndex);
+			
+			// Add illusion effect
+			em.getEffectManager().addEffect(new EyeEffect(spotX, spotY));
+		}
+	}
+	
 }
