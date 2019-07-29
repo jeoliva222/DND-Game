@@ -5,6 +5,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 
 import characters.GCharacter;
+import debuffs.Debuff;
 import gui.GameInitializer;
 import gui.GameScreen;
 import gui.GameWindow;
@@ -60,6 +61,9 @@ public class Player implements Serializable {
 	
 	// List of tile categories you can move on
 	private ArrayList<MovableType> moveTypes = new ArrayList<MovableType>();
+	
+	// List of current debuffs
+	private ArrayList<Debuff> debuffs = new ArrayList<Debuff>();
 	
 	// Equipped Weapon (Active)
 	// Default is Armory.bareFists
@@ -117,6 +121,11 @@ public class Player implements Serializable {
 		// Next check to see if your weapon will hit anything
 		if(this.equippedWeapon.tryAttack(dx, dy)) {
 			// If we hit something, we don't move
+			return false;
+		}
+		
+		// Check if we are rooted and can't move
+		if(this.hasDebuff(Debuff.ROOTED)) {
 			return false;
 		}
 		
@@ -198,6 +207,11 @@ public class Player implements Serializable {
 		// Check if player is alive first
 		if(!this.isAlive()) {
 			// If player is dead, don't do anything
+			return false;
+		}
+		
+		// Check if we are rooted and can't move
+		if(this.hasDebuff(Debuff.ROOTED)) {
 			return false;
 		}
 		
@@ -309,6 +323,27 @@ public class Player implements Serializable {
 			}
 			LogScreen.log("Player has died! Game over.", GColors.DAMAGE);
 			return false;
+		}
+	}
+	
+	// Persists all the debuffs on the player for the turn
+	public void persistDebuffs() {
+		ArrayList<Debuff> hearse = new ArrayList<Debuff>();
+		for(Debuff d : this.debuffs) {
+			// Does the debuff's on-turn effect
+			d.doTurnEffect();
+			
+			// Checks if debuff is still active
+			if(d.persist()) {
+				System.out.println(d.getName() + " is removed from Player");
+				hearse.add(d);
+			}
+			
+			System.out.println(d.getName() + ": " + d.getDuration() + " turns remaining on Player.");
+		}
+		
+		for(Debuff d : hearse) {
+			this.removeDebuff(d);
 		}
 	}
 	
@@ -542,8 +577,80 @@ public class Player implements Serializable {
 		return this.vision;
 	}
 	
+	public void setVision(int vision) {
+		this.vision = vision;
+	}
+	
 	public void addVision(int dv) {
 		this.vision += dv;
+	}
+	
+	public ArrayList<Debuff> getDebuffs() {
+		return this.debuffs;
+	}
+	
+	public void addDebuff(Debuff debuff) {
+		if(this.hasDebuff(debuff.getName())) {
+			// Extend the current debuff
+			this.extendDebuff(debuff);
+		} else {
+			// Add new debuff
+			debuff.setPlayer(this);
+			debuff.activate();
+			this.debuffs.add(debuff);
+		}
+	}
+	
+	public boolean removeDebuff(Debuff debuff) {
+		if(this.debuffs.remove(debuff)) {
+			debuff.deactivate();
+			return true;
+		} else {
+			return false;
+		}
+	}
+	
+	public boolean removeDebuff(String name) {
+		Debuff removeDebuff = null;
+		for(Debuff d : this.debuffs) {
+			if(d.getName().equals(name)) {
+				removeDebuff = d;
+				break;
+			}
+		}
+		
+		if(removeDebuff != null) {
+			removeDebuff.deactivate();
+			return true;
+		} else {
+			return false;
+		}
+	}
+	
+	public void extendDebuff(Debuff debuff) {
+		Debuff extendDebuff = null;
+		for(Debuff d : this.debuffs) {
+			if(d.getName().equals(debuff.getName())) {
+				extendDebuff = d;
+				break;
+			}
+		}
+		
+		if(extendDebuff != null) {
+			if(debuff.getDuration() > extendDebuff.getDuration()) {
+				extendDebuff.setDuration(debuff.getDuration());
+			}
+		}
+	}
+	
+	public boolean hasDebuff(String name) {
+		for(Debuff d : this.debuffs) {
+			if(d.getName().equals(name)) {
+				return true;
+			}
+		}
+
+		return false;
 	}
 	
 }

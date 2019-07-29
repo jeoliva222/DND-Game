@@ -1,5 +1,7 @@
 package projectiles;
 
+import characters.GCharacter;
+import debuffs.BurnDebuff;
 import helpers.GPath;
 import weapons.special.KingStaff;
 
@@ -45,6 +47,13 @@ public class KingStaffFlame extends GProjectile {
 			// Otherwise, use regular results
 			return result;
 		}
+	}
+	
+	@Override
+	public int calculateDamage(double dmgMult, GCharacter npc) {
+		int output = super.calculateDamage(dmgMult, npc);
+		npc.addDebuff(new BurnDebuff(3));
+		return output;
 	}
 	
 

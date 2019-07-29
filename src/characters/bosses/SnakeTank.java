@@ -7,6 +7,7 @@ import ai.PatrolPattern;
 import characters.ArrowTurret;
 import characters.GCharacter;
 import characters.allies.Player;
+import debuffs.Debuff;
 import effects.BulletEffect;
 import effects.GEffect;
 import gui.GameScreen;
@@ -201,6 +202,12 @@ public class SnakeTank extends GCharacter {
 	public void playerInitiate() {
 		SoundPlayer.playWAV(GPath.createSoundPath("Beanpole_ATTACK.wav"));
 		this.attackPlayer();
+	}
+	
+	@Override
+	public void addDebuff(Debuff debuff) {
+		// Don't add the debuff
+		return;
 	}
 	
 	@Override

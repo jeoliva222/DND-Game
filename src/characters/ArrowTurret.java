@@ -1,6 +1,7 @@
 package characters;
 
 import ai.PatrolPattern;
+import debuffs.Debuff;
 import helpers.GPath;
 import helpers.SoundPlayer;
 import managers.EntityManager;
@@ -170,6 +171,12 @@ public class ArrowTurret extends GCharacter {
 	@Override
 	public void onDeath() {
 		// Doesn't die, so nothing
+	}
+	
+	@Override
+	public void addDebuff(Debuff debuff) {
+		// Don't add the debuff
+		return;
 	}
 	
 	// Makes the turret stop shooting

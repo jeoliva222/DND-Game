@@ -207,6 +207,9 @@ public class GameWindow extends JFrame implements KeyListener {
 			this.shiftEntity(currentX, currentY);
 		}
 		
+		// Persist debuffs
+		plr.persistDebuffs();
+		
 	}
 	
 	// Iterates through all 
@@ -222,6 +225,9 @@ public class GameWindow extends JFrame implements KeyListener {
 			
 			// Move character if possible
 			gchar.takeTurn();
+			
+			// Persist debuffs for the character
+			gchar.persistDebuffs();
 			
 			// Make the changes to the board
 			this.shiftEntity(currentX, currentY);

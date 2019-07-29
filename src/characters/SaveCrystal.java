@@ -1,5 +1,6 @@
 package characters;
 
+import debuffs.Debuff;
 import gui.GameWindow;
 import gui.LogScreen;
 import helpers.GColors;
@@ -36,6 +37,12 @@ public class SaveCrystal extends GCharacter {
 	public String getName() {
 		// TODO Auto-generated method stub
 		return "Save Crystal";
+	}
+	
+	@Override
+	public void addDebuff(Debuff debuff) {
+		// Don't add the debuff
+		return;
 	}
 
 	@Override

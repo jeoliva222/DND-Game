@@ -1,6 +1,7 @@
 package characters.special;
 
 import characters.GCharacter;
+import debuffs.Debuff;
 import gui.GameScreen;
 import gui.LogScreen;
 import helpers.GPath;
@@ -62,6 +63,12 @@ public class SkinAltar extends GCharacter {
 		} else {
 			return GPath.PLACEHOLDER;
 		}
+	}
+	
+	@Override
+	public void addDebuff(Debuff debuff) {
+		// Don't add the debuff
+		return;
 	}
 
 	@Override

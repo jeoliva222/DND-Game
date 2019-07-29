@@ -8,6 +8,7 @@ import ai.IslandChecker;
 import ai.PathFinder;
 import ai.PatrolPattern;
 import characters.allies.Player;
+import debuffs.RootDebuff;
 import gui.GameScreen;
 import helpers.GPath;
 import helpers.SoundPlayer;
@@ -25,11 +26,11 @@ public class Vish extends GCharacter {
 
 	private int MAX_HP = 6;
 	
-	private int MIN_DMG = 4;
-	private int MAX_DMG = 4;
+	private int MIN_DMG = 2;
+	private int MAX_DMG = 3;
 	
-	private double CRIT_CHANCE = 0.15;
-	private double CRIT_MULT = 1.5;
+	private double CRIT_CHANCE = 0.1;
+	private double CRIT_MULT = 1.4;
 	
 	//----------------------------
 	
@@ -148,6 +149,7 @@ public class Vish extends GCharacter {
 	@Override
 	public void playerInitiate() {
 		SoundPlayer.playWAV(GPath.createSoundPath("Bitester_ATTACK.wav"));
+		EntityManager.getInstance().getPlayer().addDebuff(new RootDebuff(1));
 		this.attackPlayer();
 	}
 

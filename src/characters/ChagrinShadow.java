@@ -4,6 +4,7 @@ import ai.IdleController;
 import ai.IslandChecker;
 import ai.PatrolPattern;
 import characters.allies.Player;
+import debuffs.Debuff;
 import gui.GameScreen;
 import gui.LogScreen;
 import helpers.GColors;
@@ -106,6 +107,12 @@ public class ChagrinShadow extends GCharacter {
 		
 		LogScreen.log("Player was dragged under...", GColors.DAMAGE);
 		player.damagePlayer(300);
+	}
+	
+	@Override
+	public void addDebuff(Debuff debuff) {
+		// Don't add the debuff
+		return;
 	}
 
 	@Override

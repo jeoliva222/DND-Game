@@ -6,6 +6,7 @@ import java.util.Random;
 
 import ai.PatrolPattern;
 import characters.allies.Player;
+import debuffs.Debuff;
 import gui.GameScreen;
 import gui.InfoScreen;
 import gui.LogScreen;
@@ -61,6 +62,9 @@ public abstract class GCharacter implements Serializable {
 	// List of what types of tiles the character can move on
 	protected ArrayList<MovableType> moveTypes = new ArrayList<MovableType>();
 	
+	// List of current debuffs
+	private ArrayList<Debuff> debuffs = new ArrayList<Debuff>();
+	
 	// Patrol pattern governing what characters do when idle
 	protected PatrolPattern patrolPattern;
 	
@@ -100,6 +104,11 @@ public abstract class GCharacter implements Serializable {
 
 	// Moves the character: Returns false if blocked, Returns true if moved successfully
 	public boolean moveCharacter(int dx, int dy) {
+		
+		// Check if we are rooted
+		if(this.hasDebuff(Debuff.ROOTED)) {
+			return false;
+		}
 		
 		// Check for collision with player
 		Player plr = EntityManager.getInstance().getPlayer();
@@ -190,6 +199,27 @@ public abstract class GCharacter implements Serializable {
 		return attackPlayer(1.0);
 	}
 	
+	// Persists all the debuffs on the character for the turn
+	public void persistDebuffs() {
+		ArrayList<Debuff> hearse = new ArrayList<Debuff>();
+		for(Debuff d : this.debuffs) {
+			// Does the debuff's on-turn effect
+			d.doTurnEffect();
+			
+			// Checks if debuff is still active
+			if(d.persist()) {
+				System.out.println(d.getName() + " is removed from " + this.getName());
+				hearse.add(d);
+			}
+			
+			System.out.println(d.getName() + ": " + d.getDuration() + " turns remaining on " + this.getName() + ".");
+		}
+		
+		for(Debuff d : hearse) {
+			this.removeDebuff(d);
+		}
+	}
+	
 	// Returns True if alive from damage, False if dead from damage
 	public boolean damageCharacter(int damage) {
 		this.currentHP = this.currentHP - damage;
@@ -252,6 +282,9 @@ public abstract class GCharacter implements Serializable {
 		// Set position to original position
 		this.xPos = this.xOrigin;
 		this.yPos = this.yOrigin;
+		
+		// Clear all debuffs
+		this.clearDebuffs();
 		
 		// Fill back to full health
 		this.fullyHeal();
@@ -366,5 +399,81 @@ public abstract class GCharacter implements Serializable {
 	
 	public boolean getIfInteractable() {
 		return this.isInteractable;
+	}
+	
+	public ArrayList<Debuff> getDebuffs() {
+		return this.debuffs;
+	}
+	
+	public void addDebuff(Debuff debuff) {
+		if(this.hasDebuff(debuff.getName())) {
+			// Extend the current debuff
+			this.extendDebuff(debuff);
+		} else {
+			// Add new debuff
+			debuff.setCharacter(this);
+			debuff.activate();
+			this.debuffs.add(debuff);
+		}
+	}
+	
+	public boolean removeDebuff(Debuff debuff) {
+		if(this.debuffs.remove(debuff)) {
+			debuff.deactivate();
+			return true;
+		} else {
+			return false;
+		}
+	}
+	
+	public boolean removeDebuff(String name) {
+		Debuff removeDebuff = null;
+		for(Debuff d : this.debuffs) {
+			if(d.getName().equals(name)) {
+				removeDebuff = d;
+				break;
+			}
+		}
+		
+		if(removeDebuff != null) {
+			removeDebuff.deactivate();
+			return true;
+		} else {
+			return false;
+		}
+	}
+	
+	public void clearDebuffs() {
+		for(Debuff d : this.debuffs) {
+			d.deactivate();
+		}
+		
+		this.debuffs.clear();
+	}
+	
+	public void extendDebuff(Debuff debuff) {
+		Debuff extendDebuff = null;
+		for(Debuff d : this.debuffs) {
+			if(d.getName().equals(debuff.getName())) {
+				extendDebuff = d;
+				break;
+			}
+		}
+		
+		if(extendDebuff != null) {
+			if(debuff.getDuration() > extendDebuff.getDuration()) {
+				extendDebuff.setDuration(debuff.getDuration());
+			}
+		}
+	}
+	
+	public boolean hasDebuff(String name) {
+		for(Debuff d : this.debuffs) {
+			if(d.getName().equals(name)) {
+				return true;
+			}
+		}
+
+		return false;
 	}
 }

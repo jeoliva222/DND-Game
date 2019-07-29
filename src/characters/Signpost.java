@@ -1,5 +1,6 @@
 package characters;
 
+import debuffs.Debuff;
 import gui.LogScreen;
 import helpers.GPath;
 
@@ -85,6 +86,12 @@ public class Signpost extends GCharacter {
 	@Override
 	public void takeTurn() {
 		// Do nothing, you're a signpost
+	}
+	
+	@Override
+	public void addDebuff(Debuff debuff) {
+		// Don't add the debuff
+		return;
 	}
 
 	@Override

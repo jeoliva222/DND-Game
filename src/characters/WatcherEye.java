@@ -22,6 +22,7 @@ import ai.LineDrawer;
 import ai.PathFinder;
 import ai.PatrolPattern;
 import characters.allies.Player;
+import debuffs.Debuff;
 import effects.EyeEffect;
 import gui.GameWindow;
 import helpers.GPath;
@@ -201,6 +202,12 @@ public class WatcherEye extends GCharacter {
 		      }
 		};
 		new Timer(delay, taskPerformer).start();
+	}
+	
+	@Override
+	public void addDebuff(Debuff debuff) {
+		// Don't add the debuff
+		return;
 	}
 	
 	@Override
