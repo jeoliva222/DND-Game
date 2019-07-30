@@ -1,7 +1,7 @@
 package characters;
 
 import ai.PatrolPattern;
-import debuffs.Debuff;
+import debuffs.Buff;
 import helpers.GPath;
 import helpers.SoundPlayer;
 import managers.EntityManager;
@@ -174,8 +174,8 @@ public class ArrowTurret extends GCharacter {
 	}
 	
 	@Override
-	public void addDebuff(Debuff debuff) {
-		// Don't add the debuff
+	public void addBuff(Buff debuff) {
+		// Don't add the buff
 		return;
 	}
 	

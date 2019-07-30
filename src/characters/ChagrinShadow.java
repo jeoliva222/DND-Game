@@ -4,7 +4,7 @@ import ai.IdleController;
 import ai.IslandChecker;
 import ai.PatrolPattern;
 import characters.allies.Player;
-import debuffs.Debuff;
+import debuffs.Buff;
 import gui.GameScreen;
 import gui.LogScreen;
 import helpers.GColors;
@@ -110,8 +110,8 @@ public class ChagrinShadow extends GCharacter {
 	}
 	
 	@Override
-	public void addDebuff(Debuff debuff) {
-		// Don't add the debuff
+	public void addBuff(Buff debuff) {
+		// Don't add the buff
 		return;
 	}
 

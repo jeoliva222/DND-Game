@@ -149,7 +149,7 @@ public class Vish extends GCharacter {
 	@Override
 	public void playerInitiate() {
 		SoundPlayer.playWAV(GPath.createSoundPath("Bitester_ATTACK.wav"));
-		EntityManager.getInstance().getPlayer().addDebuff(new RootDebuff(1));
+		EntityManager.getInstance().getPlayer().addBuff(new RootDebuff(1));
 		this.attackPlayer();
 	}
 

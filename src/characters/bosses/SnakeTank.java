@@ -7,7 +7,7 @@ import ai.PatrolPattern;
 import characters.ArrowTurret;
 import characters.GCharacter;
 import characters.allies.Player;
-import debuffs.Debuff;
+import debuffs.Buff;
 import effects.BulletEffect;
 import effects.GEffect;
 import gui.GameScreen;
@@ -205,8 +205,8 @@ public class SnakeTank extends GCharacter {
 	}
 	
 	@Override
-	public void addDebuff(Debuff debuff) {
-		// Don't add the debuff
+	public void addBuff(Buff debuff) {
+		// Don't add the buff
 		return;
 	}
 	

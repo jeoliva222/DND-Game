@@ -10,7 +10,7 @@ import tiles.TileType;
  * Debuff that affects the characters by damaging them each turn.
  * @author joliva
  */
-public class BurnDebuff extends Debuff {
+public class BurnDebuff extends Buff {
 	
 	// Serialization ID
 	private static final long serialVersionUID = 7916587426629061605L;
@@ -23,11 +23,13 @@ public class BurnDebuff extends Debuff {
 
 	public BurnDebuff(int duration) {
 		super(BURNING, DESC, duration);
+		this.isDebuff = true;
 	}
 	
 	public BurnDebuff(int duration, int burnDamage) {
 		super(BURNING, DESC, duration);
 		this.burnDamage = burnDamage;
+		this.isDebuff = true;
 	}
 
 	@Override

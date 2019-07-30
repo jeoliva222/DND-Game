@@ -5,10 +5,13 @@ import java.io.Serializable;
 import characters.GCharacter;
 import characters.allies.Player;
 
-public abstract class Debuff implements Serializable {
+public abstract class Buff implements Serializable {
 
 	// Serialization ID
 	private static final long serialVersionUID = 3390406349056475262L;
+	
+	// Reference to all buff names
+	public static final String RAGE = "Rage";
 	
 	// Reference to all debuff names
 	public static final String BLINDNESS = "Blindness";
@@ -31,8 +34,11 @@ public abstract class Debuff implements Serializable {
 	// Number of turns the effect persists
 	protected int duration;
 	
+	// Determines whether 'buff' is a positive or negative condition (Assumed positive by default).
+	protected boolean isDebuff = false;
+	
 	// Constructor
-	protected Debuff(String name, String description, int duration) {
+	protected Buff(String name, String description, int duration) {
 		this.name = name;
 		this.description = description;
 		this.duration = duration;
@@ -58,12 +64,12 @@ public abstract class Debuff implements Serializable {
 		}
 		
 		// Returns false if null or not a Debuff
-		if(!(obj instanceof Debuff)) {
+		if(!(obj instanceof Buff)) {
 			return false;
 		}
 		
 		// Object is a Debuff
-		Debuff db = (Debuff) obj;
+		Buff db = (Buff) obj;
 		
 		// Otherwise performs checks various parameters to check equality
 		return (this.name.equals(db.name));
@@ -96,6 +102,10 @@ public abstract class Debuff implements Serializable {
 	
 	public void setDuration(int duration) {
 		this.duration = duration;
+	}
+	
+	public boolean isDebuff() {
+		return this.isDebuff;
 	}
 	
 	public void setPlayer(Player player) {

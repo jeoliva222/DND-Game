@@ -1,6 +1,6 @@
 package characters;
 
-import debuffs.Debuff;
+import debuffs.Buff;
 import helpers.GPath;
 import managers.EntityManager;
 
@@ -84,8 +84,8 @@ public class BreakableWall extends GCharacter {
 	}
 	
 	@Override
-	public void addDebuff(Debuff debuff) {
-		// Don't add the debuff
+	public void addBuff(Buff debuff) {
+		// Don't add the buff
 		return;
 	}
 

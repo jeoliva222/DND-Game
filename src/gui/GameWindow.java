@@ -208,7 +208,7 @@ public class GameWindow extends JFrame implements KeyListener {
 		}
 		
 		// Persist debuffs
-		plr.persistDebuffs();
+		plr.persistBuffs();
 		
 	}
 	
@@ -227,7 +227,7 @@ public class GameWindow extends JFrame implements KeyListener {
 			gchar.takeTurn();
 			
 			// Persist debuffs for the character
-			gchar.persistDebuffs();
+			gchar.persistBuffs();
 			
 			// Make the changes to the board
 			this.shiftEntity(currentX, currentY);

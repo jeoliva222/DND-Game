@@ -6,7 +6,7 @@ import gui.GameWindow;
  * Debuff that affects the player by lowering their vision
  * @author joliva
  */
-public class BlindDebuff extends Debuff {
+public class BlindDebuff extends Buff {
 
 	// Serialization ID
 	private static final long serialVersionUID = 6491239491998947144L;
@@ -20,6 +20,7 @@ public class BlindDebuff extends Debuff {
 
 	public BlindDebuff(int duration) {
 		super(BLINDNESS, DESC, duration);
+		this.isDebuff = true;
 	}
 
 	@Override

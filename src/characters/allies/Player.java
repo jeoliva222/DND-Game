@@ -5,7 +5,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 
 import characters.GCharacter;
-import debuffs.Debuff;
+import debuffs.Buff;
 import gui.GameInitializer;
 import gui.GameScreen;
 import gui.GameWindow;
@@ -63,7 +63,7 @@ public class Player implements Serializable {
 	private ArrayList<MovableType> moveTypes = new ArrayList<MovableType>();
 	
 	// List of current debuffs
-	private ArrayList<Debuff> debuffs = new ArrayList<Debuff>();
+	private ArrayList<Buff> buffs = new ArrayList<Buff>();
 	
 	// Equipped Weapon (Active)
 	// Default is Armory.bareFists
@@ -125,7 +125,7 @@ public class Player implements Serializable {
 		}
 		
 		// Check if we are rooted and can't move
-		if(this.hasDebuff(Debuff.ROOTED)) {
+		if(this.hasBuff(Buff.ROOTED)) {
 			return false;
 		}
 		
@@ -211,7 +211,7 @@ public class Player implements Serializable {
 		}
 		
 		// Check if we are rooted and can't move
-		if(this.hasDebuff(Debuff.ROOTED)) {
+		if(this.hasBuff(Buff.ROOTED)) {
 			return false;
 		}
 		
@@ -326,24 +326,25 @@ public class Player implements Serializable {
 		}
 	}
 	
-	// Persists all the debuffs on the player for the turn
-	public void persistDebuffs() {
-		ArrayList<Debuff> hearse = new ArrayList<Debuff>();
-		for(Debuff d : this.debuffs) {
-			// Does the debuff's on-turn effect
-			d.doTurnEffect();
+	// Persists all the buffs on the player for the turn
+	public void persistBuffs() {
+		ArrayList<Buff> hearse = new ArrayList<Buff>();
+		for(Buff b : this.buffs) {
+			// Does the buff's on-turn effect
+			b.doTurnEffect();
 			
-			// Checks if debuff is still active
-			if(d.persist()) {
-				System.out.println(d.getName() + " is removed from Player");
-				hearse.add(d);
+			// Checks if buff is still active
+			if(b.persist()) {
+				LogScreen.log("Player's " + b.getName() + " wore off.");
+				System.out.println("Player's " + b.getName() + " wore off.");
+				hearse.add(b);
+			} else {
+				System.out.println(b.getName() + ": " + b.getDuration() + " turns remaining on Player.");
 			}
-			
-			System.out.println(d.getName() + ": " + d.getDuration() + " turns remaining on Player.");
 		}
 		
-		for(Debuff d : hearse) {
-			this.removeDebuff(d);
+		for(Buff b : hearse) {
+			this.removeBuff(b);
 		}
 	}
 	
@@ -585,67 +586,72 @@ public class Player implements Serializable {
 		this.vision += dv;
 	}
 	
-	public ArrayList<Debuff> getDebuffs() {
-		return this.debuffs;
+	public ArrayList<Buff> getBuffs() {
+		return this.buffs;
 	}
 	
-	public void addDebuff(Debuff debuff) {
-		if(this.hasDebuff(debuff.getName())) {
-			// Extend the current debuff
-			this.extendDebuff(debuff);
+	public void addBuff(Buff buff) {
+		if(this.hasBuff(buff.getName())) {
+			// Extend the current buff
+			this.extendBuff(buff);
 		} else {
-			// Add new debuff
-			debuff.setPlayer(this);
-			debuff.activate();
-			this.debuffs.add(debuff);
+			// Add new buff
+			buff.setPlayer(this);
+			buff.activate();
+			this.buffs.add(buff);
+			if(buff.isDebuff()) {
+				LogScreen.log("Player inflicted with " + buff.getName() + "!", GColors.DAMAGE);
+			} else {
+				LogScreen.log("Player gained " + buff.getName() + "!", GColors.ITEM);
+			}
 		}
 	}
 	
-	public boolean removeDebuff(Debuff debuff) {
-		if(this.debuffs.remove(debuff)) {
-			debuff.deactivate();
+	public boolean removeBuff(Buff buff) {
+		if(this.buffs.remove(buff)) {
+			buff.deactivate();
 			return true;
 		} else {
 			return false;
 		}
 	}
 	
-	public boolean removeDebuff(String name) {
-		Debuff removeDebuff = null;
-		for(Debuff d : this.debuffs) {
-			if(d.getName().equals(name)) {
-				removeDebuff = d;
+	public boolean removeBuff(String name) {
+		Buff removeBuff = null;
+		for(Buff b : this.buffs) {
+			if(b.getName().equals(name)) {
+				removeBuff = b;
 				break;
 			}
 		}
 		
-		if(removeDebuff != null) {
-			removeDebuff.deactivate();
+		if(removeBuff != null) {
+			removeBuff.deactivate();
 			return true;
 		} else {
 			return false;
 		}
 	}
 	
-	public void extendDebuff(Debuff debuff) {
-		Debuff extendDebuff = null;
-		for(Debuff d : this.debuffs) {
-			if(d.getName().equals(debuff.getName())) {
-				extendDebuff = d;
+	public void extendBuff(Buff buff) {
+		Buff extendBuff = null;
+		for(Buff b : this.buffs) {
+			if(b.getName().equals(buff.getName())) {
+				extendBuff = b;
 				break;
 			}
 		}
 		
-		if(extendDebuff != null) {
-			if(debuff.getDuration() > extendDebuff.getDuration()) {
-				extendDebuff.setDuration(debuff.getDuration());
+		if(extendBuff != null) {
+			if(buff.getDuration() > extendBuff.getDuration()) {
+				extendBuff.setDuration(buff.getDuration());
 			}
 		}
 	}
 	
-	public boolean hasDebuff(String name) {
-		for(Debuff d : this.debuffs) {
-			if(d.getName().equals(name)) {
+	public boolean hasBuff(String name) {
+		for(Buff b : this.buffs) {
+			if(b.getName().equals(name)) {
 				return true;
 			}
 		}

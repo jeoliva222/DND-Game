@@ -4,7 +4,7 @@ package debuffs;
  * Debuff that prevents affected characters from acting
  * @author joliva
  */
-public class StunDebuff extends Debuff {
+public class StunDebuff extends Buff {
 
 	// Serialization ID
 	private static final long serialVersionUID = -2669886272745915099L;
@@ -14,6 +14,7 @@ public class StunDebuff extends Debuff {
 	
 	public StunDebuff(int duration) {
 		super(STUNNED, DESC, duration);
+		this.isDebuff = true;
 	}
 
 	@Override

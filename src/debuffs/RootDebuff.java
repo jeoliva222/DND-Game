@@ -1,6 +1,6 @@
 package debuffs;
 
-public class RootDebuff extends Debuff {
+public class RootDebuff extends Buff {
 
 	// Serialization ID
 	private static final long serialVersionUID = -3003827801278730468L;
@@ -10,6 +10,7 @@ public class RootDebuff extends Debuff {
 	
 	public RootDebuff(int duration) {
 		super(ROOTED, DESC, duration);
+		this.isDebuff = true;
 	}
 
 	@Override

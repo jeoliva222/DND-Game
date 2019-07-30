@@ -3,6 +3,8 @@ package weapons;
 import java.util.Random;
 
 import characters.GCharacter;
+import debuffs.Buff;
+import debuffs.RageBuff;
 import effects.ChargeIndicator;
 import helpers.GColors;
 import managers.EntityManager;
@@ -71,6 +73,12 @@ public class Hammer extends Weapon {
 		Random r = new Random();
 		int dmg;
 		int halfArmor = npc.getArmor() / 2;
+		
+		// If player has rage, buff the damage multiplier
+		if(EntityManager.getInstance().getPlayer().hasBuff(Buff.RAGE)) {
+			dmgMult = dmgMult * RageBuff.dmgBoost;
+		}
+		
 		int newMin = (int) Math.floor(this.minDmg * dmgMult);
 		int newMax = (int) Math.floor((this.maxDmg * dmgMult) - halfArmor);
 		

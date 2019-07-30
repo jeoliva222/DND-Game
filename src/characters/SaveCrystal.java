@@ -1,6 +1,6 @@
 package characters;
 
-import debuffs.Debuff;
+import debuffs.Buff;
 import gui.GameWindow;
 import gui.LogScreen;
 import helpers.GColors;
@@ -40,8 +40,8 @@ public class SaveCrystal extends GCharacter {
 	}
 	
 	@Override
-	public void addDebuff(Debuff debuff) {
-		// Don't add the debuff
+	public void addBuff(Buff debuff) {
+		// Don't add the buff
 		return;
 	}
 

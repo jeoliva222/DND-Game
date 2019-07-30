@@ -4,6 +4,8 @@ import java.awt.Color;
 import java.util.Random;
 
 import characters.GCharacter;
+import debuffs.Buff;
+import debuffs.RageBuff;
 import gui.InventoryScreen;
 import gui.LogScreen;
 import gui.StatusScreen;
@@ -43,6 +45,12 @@ public abstract class Weapon extends GItem {
 		Random r = new Random();
 		int dmg;
 		int targetArmor = npc.getArmor();
+		
+		// If player has rage, buff the damage multiplier
+		if(EntityManager.getInstance().getPlayer().hasBuff(Buff.RAGE)) {
+			dmgMult = dmgMult * RageBuff.dmgBoost;
+		}
+		
 		int newMin = (int) Math.floor(this.minDmg * dmgMult);
 		int newMax = (int) Math.floor((this.maxDmg * dmgMult) - targetArmor);
 		

@@ -52,7 +52,7 @@ public class KingStaffFlame extends GProjectile {
 	@Override
 	public int calculateDamage(double dmgMult, GCharacter npc) {
 		int output = super.calculateDamage(dmgMult, npc);
-		npc.addDebuff(new BurnDebuff(3));
+		npc.addBuff(new BurnDebuff(2));
 		return output;
 	}
 	
