@@ -62,7 +62,7 @@ public class Player implements Serializable {
 	// List of tile categories you can move on
 	private ArrayList<MovableType> moveTypes = new ArrayList<MovableType>();
 	
-	// List of current debuffs
+	// List of current buffs/debuffs
 	private ArrayList<Buff> buffs = new ArrayList<Buff>();
 	
 	// Equipped Weapon (Active)
