@@ -230,4 +230,9 @@ public class InventoryTile extends JPanel {
 		return this.stackSize;
 	}
 	
+	// Gets the current stack size of the tile
+	public void setStackSize(int size) {
+		this.stackSize = size;
+	}
+	
 }

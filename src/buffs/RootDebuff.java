@@ -1,4 +1,4 @@
-package debuffs;
+package buffs;
 
 public class RootDebuff extends Buff {
 

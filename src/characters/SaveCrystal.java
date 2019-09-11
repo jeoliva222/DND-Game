@@ -1,6 +1,6 @@
 package characters;
 
-import debuffs.Buff;
+import buffs.Buff;
 import gui.GameWindow;
 import gui.LogScreen;
 import helpers.GColors;

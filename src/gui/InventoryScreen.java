@@ -213,7 +213,7 @@ public class InventoryScreen extends JPanel {
 				+tile.getItem().getName()+".", GColors.ITEM);
 		
 		// Place item on the ground (If not our bare fists)
-		if(!tile.getItem().equals(Armory.bareFists)) {
+		if(!tile.getItem().getName().equals(Armory.bareFists.getName())) {
 			EntityManager.getInstance().getPickupManager().addPickup(new GPickup(
 					EntityManager.getInstance().getPlayer().getXPos(),
 					EntityManager.getInstance().getPlayer().getYPos(),
@@ -253,7 +253,8 @@ public class InventoryScreen extends JPanel {
 		for(int y = InventoryScreen.currentY; y < invRows; y++) {
 			for(int x = startX; x < invCols; x++) {
 				// Get the item
-				GItem itemToShift = InventoryScreen.invTiles[y][x].getItem();
+				InventoryTile currentTile = InventoryScreen.invTiles[y][x];
+				GItem itemToShift = currentTile.getItem();
 				
 				// If the item is null, we've finished organizing
 				if(itemToShift == null) {
@@ -262,9 +263,10 @@ public class InventoryScreen extends JPanel {
 				
 				// Shift item to last index
 				InventoryScreen.invTiles[oldIndex.height][oldIndex.width].setItem(itemToShift);
+				InventoryScreen.invTiles[oldIndex.height][oldIndex.width].setStackSize(currentTile.getStackSize());
 				
 				// Clear item from this index
-				InventoryScreen.invTiles[y][x].clearItem();
+				currentTile.clearItem();
 				
 				// Update index
 				oldIndex = new Dimension(x, y);
@@ -281,7 +283,8 @@ public class InventoryScreen extends JPanel {
 		for(int y = yIndex; y < invRows; y++) {
 			for(int x = startX; x < invCols; x++) {
 				// Get the item
-				GItem itemToShift = InventoryScreen.invTiles[y][x].getItem();
+				InventoryTile currentTile = InventoryScreen.invTiles[y][x];
+				GItem itemToShift = currentTile.getItem();
 				
 				// If the item is null, we've finished organizing
 				if(itemToShift == null) {
@@ -290,9 +293,10 @@ public class InventoryScreen extends JPanel {
 				
 				// Shift item to last index
 				InventoryScreen.invTiles[oldIndex.height][oldIndex.width].setItem(itemToShift);
+				InventoryScreen.invTiles[oldIndex.height][oldIndex.width].setStackSize(currentTile.getStackSize());
 				
 				// Clear item from this index
-				InventoryScreen.invTiles[y][x].clearItem();
+				currentTile.clearItem();
 				
 				// Update index
 				oldIndex = new Dimension(x, y);

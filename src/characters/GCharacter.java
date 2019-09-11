@@ -5,9 +5,9 @@ import java.util.ArrayList;
 import java.util.Random;
 
 import ai.PatrolPattern;
+import buffs.Buff;
+import buffs.RageBuff;
 import characters.allies.Player;
-import debuffs.Buff;
-import debuffs.RageBuff;
 import gui.GameScreen;
 import gui.InfoScreen;
 import gui.LogScreen;

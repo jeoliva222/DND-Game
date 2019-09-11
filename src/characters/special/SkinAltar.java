@@ -1,7 +1,7 @@
 package characters.special;
 
+import buffs.Buff;
 import characters.GCharacter;
-import debuffs.Buff;
 import gui.GameScreen;
 import gui.LogScreen;
 import helpers.GPath;

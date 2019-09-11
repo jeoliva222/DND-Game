@@ -1,6 +1,6 @@
 package characters;
 
-import debuffs.Buff;
+import buffs.Buff;
 import helpers.GPath;
 import managers.EntityManager;
 

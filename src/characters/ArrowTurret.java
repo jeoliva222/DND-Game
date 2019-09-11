@@ -1,7 +1,7 @@
 package characters;
 
 import ai.PatrolPattern;
-import debuffs.Buff;
+import buffs.Buff;
 import helpers.GPath;
 import helpers.SoundPlayer;
 import managers.EntityManager;

@@ -1,4 +1,4 @@
-package debuffs;
+package buffs;
 
 /**
  * Debuff that prevents affected characters from acting

@@ -4,10 +4,10 @@ import java.util.Random;
 
 import ai.DumbFollow;
 import ai.PatrolPattern;
+import buffs.Buff;
 import characters.ArrowTurret;
 import characters.GCharacter;
 import characters.allies.Player;
-import debuffs.Buff;
 import effects.BulletEffect;
 import effects.GEffect;
 import gui.GameScreen;

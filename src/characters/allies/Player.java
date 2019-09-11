@@ -4,8 +4,8 @@ import java.awt.Dimension;
 import java.io.Serializable;
 import java.util.ArrayList;
 
+import buffs.Buff;
 import characters.GCharacter;
-import debuffs.Buff;
 import gui.GameInitializer;
 import gui.GameScreen;
 import gui.GameWindow;

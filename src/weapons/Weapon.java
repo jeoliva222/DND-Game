@@ -3,9 +3,9 @@ package weapons;
 import java.awt.Color;
 import java.util.Random;
 
+import buffs.Buff;
+import buffs.RageBuff;
 import characters.GCharacter;
-import debuffs.Buff;
-import debuffs.RageBuff;
 import gui.InventoryScreen;
 import gui.LogScreen;
 import gui.StatusScreen;

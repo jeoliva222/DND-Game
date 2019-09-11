@@ -2,9 +2,9 @@ package weapons;
 
 import java.util.Random;
 
+import buffs.Buff;
+import buffs.RageBuff;
 import characters.GCharacter;
-import debuffs.Buff;
-import debuffs.RageBuff;
 import effects.ChargeIndicator;
 import helpers.GColors;
 import managers.EntityManager;

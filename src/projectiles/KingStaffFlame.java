@@ -1,7 +1,7 @@
 package projectiles;
 
+import buffs.BurnDebuff;
 import characters.GCharacter;
-import debuffs.BurnDebuff;
 import helpers.GPath;
 import weapons.special.KingStaff;
 

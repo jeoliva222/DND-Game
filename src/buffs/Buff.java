@@ -1,4 +1,4 @@
-package debuffs;
+package buffs;
 
 import java.io.Serializable;
 

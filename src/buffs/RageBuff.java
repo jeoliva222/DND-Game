@@ -1,4 +1,4 @@
-package debuffs;
+package buffs;
 
 public class RageBuff extends Buff {
 
