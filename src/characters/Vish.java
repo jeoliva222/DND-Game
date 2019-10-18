@@ -280,7 +280,7 @@ public class Vish extends GCharacter {
 					this.state = Vish.STATE_IDLE;
 				} else {
 					// Path-find to our origin if possible
-					Dimension nextStep = PathFinder.findPath(this.xPos, this.yPos, plrX, plrY, this);
+					Dimension nextStep = PathFinder.findPath(this.xPos, this.yPos, this.xOrigin, this.yOrigin, this);
 					if(nextStep == null) {
 						// Blindly pursue the origin if path-finding not possible
 						DumbFollow.blindPursue(originDistX, originDistY, dx, dy, this);
