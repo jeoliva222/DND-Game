@@ -3,6 +3,7 @@ package weapons;
 import characters.GCharacter;
 import effects.ChargeIndicator;
 import gui.GameScreen;
+import gui.GameTile;
 import helpers.GColors;
 import managers.EntityManager;
 import tiles.MovableType;
@@ -39,11 +40,8 @@ public class Spear extends Weapon {
 			// Checks if immediately adjacent space is a wall
 			boolean nextToWall;
 			try {
-			nextToWall = GameScreen
-					.getTile((em.getPlayer().getXPos() + dx),
-							(em.getPlayer().getYPos() + dy))
-					.getTileType()
-					.getMovableType() == MovableType.WALL;
+				GameTile tile = GameScreen.getTile((em.getPlayer().getXPos() + dx), (em.getPlayer().getYPos() + dy));
+				nextToWall = MovableType.isWall(tile.getTileType().getMovableType());
 			} catch (ArrayIndexOutOfBoundsException e) {
 				nextToWall = true;
 			}

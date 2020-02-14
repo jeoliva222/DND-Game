@@ -66,11 +66,7 @@ public class Crossbow extends Weapon {
 				
 				// Then check for walls or OOB
 				try {
-					if (GameScreen.getTile(nextX, nextY)
-							.getTileType().getMovableType() == MovableType.WALL) {
-						// We hit a wall
-						isEndHit = true;
-					}
+					isEndHit = MovableType.isWall(GameScreen.getTile(nextX, nextY).getTileType().getMovableType());
 				} catch (ArrayIndexOutOfBoundsException e) {
 					// We went out-of-bounds
 					isEndHit = true;

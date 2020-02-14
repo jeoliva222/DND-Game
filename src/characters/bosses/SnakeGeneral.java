@@ -264,8 +264,10 @@ public class SnakeGeneral extends GCharacter {
 	}
 	
 	public void populateMoveTypes() {
-		this.moveTypes.add(MovableType.GROUND);
-		this.moveTypes.add(MovableType.WATER);
+		this.moveTypes = ((short) (moveTypes + (MovableType.GROUND)));
+		this.moveTypes = ((short) (moveTypes + (MovableType.ALT_GROUND)));
+		this.moveTypes = ((short) (moveTypes + (MovableType.WATER)));
+		this.moveTypes = ((short) (moveTypes + (MovableType.ALT_WATER)));
 	}
 
 	@Override
@@ -692,10 +694,7 @@ public class SnakeGeneral extends GCharacter {
 					
 					// Check for walls or OOB to see if we need to keep checking tiles
 					try {
-						isEndHit = GameScreen
-								.getTile(nextX, nextY)
-								.getTileType()
-								.getMovableType() == MovableType.WALL;
+						isEndHit = MovableType.isWall(GameScreen.getTile(nextX, nextY).getTileType().getMovableType());
 					} catch (ArrayIndexOutOfBoundsException e) {
 						isEndHit = true;
 					}
@@ -855,10 +854,7 @@ public class SnakeGeneral extends GCharacter {
 			case SnakeGeneral.STATE_SPC_ASSASSINATE_ATT: //------------------------------------------------------------
 				boolean inWallAtt = false;
 				try {
-					inWallAtt = GameScreen
-							.getTile(this.xPos, this.yPos)
-							.getTileType()
-							.getMovableType() == MovableType.WALL;
+					inWallAtt = MovableType.isWall(GameScreen.getTile(this.xPos, this.yPos).getTileType().getMovableType());
 				} catch (ArrayIndexOutOfBoundsException e) {
 					inWallAtt = true;
 				}
@@ -1094,10 +1090,7 @@ public class SnakeGeneral extends GCharacter {
 					// Warp to a corner in the arena if we're inside a wall
 					boolean inWallStn = false;
 					try {
-						inWallStn = GameScreen
-								.getTile(this.xPos, this.yPos)
-								.getTileType()
-								.getMovableType() == MovableType.WALL;
+						inWallStn = MovableType.isWall(GameScreen.getTile(this.xPos, this.yPos).getTileType().getMovableType());
 					} catch (ArrayIndexOutOfBoundsException e) {
 						inWallStn = true;
 					}

@@ -148,7 +148,7 @@ public class ChagrinShadow extends GCharacter {
 			case ChagrinShadow.STATE_PURSUE:
 				
 				// If player hops out of water, lose interest
-				if(tt.getMovableType() != MovableType.WATER) {
+				if(!MovableType.isWater(tt.getMovableType())) {
 					this.chaseCount = 0;
 					this.state = ChagrinShadow.STATE_IDLE;
 					return;
@@ -171,7 +171,7 @@ public class ChagrinShadow extends GCharacter {
 				break;
 			case ChagrinShadow.STATE_IDLE:
 				// Do nothing, until player steps in same pool of water
-				if(tt.getMovableType() == MovableType.WATER &&
+				if((MovableType.isWater(tt.getMovableType())) &&
 						IslandChecker.virusStart(this.poolXPos, this.poolYPos, plrX, plrY, MovableType.WATER)) {
 					// Alert and pursue if in same pool
 					SoundPlayer.playWAV(GPath.createSoundPath("Hoptooth_Breath1.wav"), -15);

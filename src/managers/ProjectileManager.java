@@ -80,7 +80,7 @@ public class ProjectileManager {
 		GameTile newTile = null;
 		try {
 			newTile = GameScreen.getTile(proj.getXPos(), proj.getYPos());
-			if((!proj.isWallPiercing()) && newTile.getTileType().getMovableType() == MovableType.WALL) {
+			if((!proj.isWallPiercing()) && MovableType.isWall(newTile.getTileType().getMovableType())) {
 				// Return if we spawned in a wall
 				return true;
 			}

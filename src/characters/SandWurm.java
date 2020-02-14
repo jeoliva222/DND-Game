@@ -17,7 +17,6 @@ import helpers.GPath;
 import helpers.SoundPlayer;
 import managers.EntityManager;
 import projectiles.SandwurmSpit;
-import tiles.Ground;
 import tiles.MovableType;
 import tiles.TileType;
 
@@ -114,7 +113,6 @@ public class SandWurm extends GCharacter {
 	
 	@Override
 	public String getImage() {
-		// TODO : Needs custom sprites
 		String imgPath = this.imageDir + this.swImage_base;
 		String hpPath = "";
 		String statePath = "";
@@ -168,7 +166,7 @@ public class SandWurm extends GCharacter {
 	}
 	
 	public void populateMoveTypes() {
-		this.moveTypes.add(MovableType.GROUND);
+		this.moveTypes = ((short) (moveTypes + (MovableType.GROUND)));
 	}
 
 	@Override
@@ -197,46 +195,6 @@ public class SandWurm extends GCharacter {
 	public void resetParams() {
 		this.dmgCount = 0;
 		this.canFocus = true;
-	}
-	
-	@Override
-	// Moves the character: Returns false if blocked, Returns true if moved successfully
-	// Override makes it so SandWurm only moves on sand (Ground) and not planks (AltGround)
-	public boolean moveCharacter(int dx, int dy) {
-		
-		// Check on collisions for other characters 
-		for(GCharacter npc : EntityManager.getInstance().getNPCManager().getCharacters()) {
-			if((this.xPos + dx) == npc.xPos && (this.yPos + dy) == npc.yPos) {
-				return false;
-			}
-		}
-		
-		// Then check for barriers, out-of-bounds, and immovable spaces
-		TileType tt;
-		try {
-			// Try to get the TileType of the GameTile
-			tt = GameScreen.getTile(this.xPos + dx, this.yPos + dy).getTileType();
-		} catch (IndexOutOfBoundsException e) {
-			return false;
-		}
-		
-		// Sandwurms can only move on regular ground
-		// If NPC can't move here, return without moving
-		if(!(tt instanceof Ground)) {
-			return false;
-		}
-		
-		// Otherwise, we can update the positions
-		
-		// Last position
-		this.lastX = this.xPos;
-		this.lastY = this.yPos;
-		
-		// New position
-		this.xPos += dx;
-		this.yPos += dy;
-		
-		return true;
 	}
 
 	@Override
@@ -495,7 +453,7 @@ public class SandWurm extends GCharacter {
 			}
 			
 			// If NPC can't move here, don't move to this spot
-			if(!(tt instanceof Ground)) {
+			if(!canMove(tt.getMovableType())) {
 				continue;
 			}
 			

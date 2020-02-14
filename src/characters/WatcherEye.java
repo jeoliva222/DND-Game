@@ -153,10 +153,12 @@ public class WatcherEye extends GCharacter {
 	}
 	
 	public void populateMoveTypes() {
-		this.moveTypes.add(MovableType.GROUND);
-		this.moveTypes.add(MovableType.WATER);
-		this.moveTypes.add(MovableType.AIR);
-		this.moveTypes.add(MovableType.ACID);
+		this.moveTypes = ((short) (moveTypes + (MovableType.GROUND)));
+		this.moveTypes = ((short) (moveTypes + (MovableType.ALT_GROUND)));
+		this.moveTypes = ((short) (moveTypes + (MovableType.WATER)));
+		this.moveTypes = ((short) (moveTypes + (MovableType.ALT_WATER)));
+		this.moveTypes = ((short) (moveTypes + (MovableType.ACID)));
+		this.moveTypes = ((short) (moveTypes + (MovableType.PIT)));
 	}
 
 	@Override

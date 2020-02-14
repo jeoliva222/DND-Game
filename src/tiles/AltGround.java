@@ -11,7 +11,7 @@ public class AltGround extends TileType {
 
 	// Constructor
 	public AltGround() {
-		this.moveType = MovableType.GROUND;
+		this.moveTypes = MovableType.ALT_GROUND;
 	}
 	
 	// Constructor

@@ -123,7 +123,8 @@ public class SilkFish extends GCharacter {
 	}
 	
 	public void populateMoveTypes() {
-		this.moveTypes.add(MovableType.WATER);
+		this.moveTypes = ((short) (moveTypes + (MovableType.WATER)));
+		this.moveTypes = ((short) (moveTypes + (MovableType.ALT_WATER)));
 	}
 
 	@Override
@@ -166,7 +167,7 @@ public class SilkFish extends GCharacter {
 			case SilkFish.STATE_FLEE:	
 				
 				// If player hops out of water, stop fleeing
-				if(tt.getMovableType() != MovableType.WATER) {
+				if(!MovableType.isWater(tt.getMovableType())) {
 					this.state = SilkFish.STATE_IDLE;
 					return;
 				}
@@ -194,7 +195,7 @@ public class SilkFish extends GCharacter {
 				break;
 			case SilkFish.STATE_IDLE:
 				// Do nothing, until player steps in same pool of water
-				if(tt.getMovableType() == MovableType.WATER &&
+				if((MovableType.isWater(tt.getMovableType())) &&
 						IslandChecker.virusStart(this.xPos, this.yPos, plrX, plrY, MovableType.WATER)) {
 					// Alert and flee if in same pool
 					SoundPlayer.playWAV(GPath.createSoundPath("Bitester_ALERT.wav"));

@@ -99,7 +99,6 @@ public class DungeonLevels implements Serializable {
 			add(new Beanpole(1, 6, PatrolPattern.STATIONARY));
 			add(new Beanpole(1, 7, PatrolPattern.STATIONARY));
 			add(new Beanpole(1, 8, PatrolPattern.STATIONARY));
-			add(new Bitester(4, 6, PatrolPattern.PATROL));
 			add(new Bitester(4, 8, PatrolPattern.PATROL));
 			add(new BunnyWarrior(3, 5, PatrolPattern.STATIONARY));
 		}}, new ArrayList<GPickup>() {{

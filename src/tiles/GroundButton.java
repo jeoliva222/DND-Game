@@ -17,13 +17,13 @@ public class GroundButton extends GButton {
 
 	public GroundButton(TriggerType trigger, boolean multiTrigger) {
 		super(trigger, multiTrigger);
-		this.moveType = MovableType.GROUND;
+		this.moveTypes = MovableType.GROUND;
 		this.visibility = GButton.VISIBLE;
 	}
 	
 	public GroundButton(TriggerType trigger, boolean multiTrigger, int visibility) {
 		super(trigger, multiTrigger, visibility);
-		this.moveType = MovableType.GROUND;
+		this.moveTypes = MovableType.GROUND;
 	}
 	
 	public GroundButton(TriggerType trigger,
@@ -57,7 +57,7 @@ public class GroundButton extends GButton {
 	
 	public GroundButton(TriggerType trigger, boolean multiTrigger, String soundPath) {
 		super(trigger, multiTrigger, soundPath);
-		this.moveType = MovableType.GROUND;
+		this.moveTypes = MovableType.GROUND;
 	}
 	
 	@Override

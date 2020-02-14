@@ -11,7 +11,7 @@ public class AltWall extends TileType {
 	
 	// Constructors
 	public AltWall() {
-		this.moveType = MovableType.WALL;
+		this.moveTypes = MovableType.ALT_WALL;
 	}
 	
 	public AltWall(String imagePath) {

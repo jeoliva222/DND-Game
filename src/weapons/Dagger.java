@@ -5,6 +5,7 @@ import characters.allies.Player;
 import gui.GameScreen;
 import helpers.GColors;
 import managers.EntityManager;
+import tiles.MovableType;
 import tiles.TileType;
 
 // Class representing 'Dagger' type weapons which can appear in-game
@@ -43,10 +44,9 @@ public class Dagger extends Weapon {
 					// Fetch tile the targeted enemy is on
 					TileType tt = GameScreen.getTile(player.getXPos() + dx, player.getYPos() + dy).getTileType();
 					
-					if(player.getMoveTypes().contains(tt.getMovableType()) &&
+					if(MovableType.canMove(player.getMoveTypes(), tt.getMovableType()) &&
 							player.leapPlayer(player.getXPos() + (dx*2), player.getYPos() + (dy*2))) {
-						///*** THIS LINE SOMETIMES CAUSES GRAPHICAL BUGS TODO
-						//tt.onStep();
+						//tt.onStep(); - THIS LINE SOMETIMES CAUSES GRAPHICAL BUGS - TODO
 						
 						// If space to backstab, deal modified damage and steb behind target
 						int dmg = this.calculateDamage(this.chargeMult, npc);

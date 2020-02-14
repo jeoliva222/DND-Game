@@ -13,6 +13,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import javax.swing.JFrame;
+import javax.swing.UIManager;
 
 import characters.GCharacter;
 import characters.allies.Player;
@@ -77,6 +78,14 @@ public class GameWindow extends JFrame implements KeyListener {
 	// Constructor
 	private GameWindow() {
 		super();
+		
+		// Sets cross-platform look and feel
+        try {
+        	UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
+        } catch (Exception e) {
+        	System.out.println("Error initializing look and feel!");
+        	e.printStackTrace();
+        }
 		
 		// Initialize MapScreen within window
 		GameWindow.map = new MapScreen();
@@ -371,7 +380,19 @@ public class GameWindow extends JFrame implements KeyListener {
 		this.updateProjectiles();
 		this.updateGUI();
 		System.out.println(dateFormat.format(new Date()) + " " + "Turn finished!");
+		this.printMemoryUsage();
 		System.out.println("------------");
+	}
+	
+	private void printMemoryUsage() {
+		final long ONE_MB = 1048576L;
+		Runtime runtime = Runtime.getRuntime();
+		long maxHeapSize = runtime.maxMemory() / ONE_MB;
+		long currentHeapSize = runtime.totalMemory() / ONE_MB;
+		long freeHeapSize = runtime.freeMemory() / ONE_MB;
+		long usedHeapSize = currentHeapSize - freeHeapSize;
+		System.out.println("Using " + usedHeapSize + "M of " + currentHeapSize + "M");
+		System.out.println("Maximum heap size is " + maxHeapSize + "M");
 	}
 	
 	// Updates all of the GUI on the screen

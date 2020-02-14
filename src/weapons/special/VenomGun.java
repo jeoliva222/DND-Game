@@ -68,10 +68,7 @@ public class VenomGun extends Weapon {
 				
 				// Then check for walls or OOB
 				try {
-					isEndHit = GameScreen
-							.getTile(nextX, nextY)
-							.getTileType()
-							.getMovableType() == MovableType.WALL;
+					isEndHit = MovableType.isWall(GameScreen.getTile(nextX, nextY).getTileType().getMovableType());
 				} catch (ArrayIndexOutOfBoundsException e) {
 					isEndHit = true;
 				}

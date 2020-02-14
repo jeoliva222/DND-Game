@@ -9,6 +9,7 @@ import characters.GCharacter;
 import gui.GameScreen;
 import helpers.DefaultHashMap;
 import managers.EntityManager;
+import tiles.MovableType;
 import tiles.TileType;
 
 // Class that implements A* Pathing for Enemy AI
@@ -158,7 +159,7 @@ public class PathFinder {
 			TileType tt = GameScreen.getTile(coord.width, coord.height).getTileType();
 			
 			// If the NPC can't move into it, return false
-			if(!npc.getMoveTypes().contains(tt.getMovableType())) {
+			if(!MovableType.canMove(npc.getMoveTypes(), tt.getMovableType())) {
 				return false;
 			}
 			

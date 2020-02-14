@@ -85,8 +85,8 @@ public class LineDrawer {
 			
 			// If we're diagonal from last tile, then check for walls on the sides of the diagonal
 			if(distX == 1 && distY == 1) {
-				botDiag = botDiag || (GameScreen.getTile(lastX, tile.getGridY()).getTileType().getMovableType() == MovableType.WALL);
-				topDiag = topDiag || (GameScreen.getTile(tile.getGridX(), lastY).getTileType().getMovableType() == MovableType.WALL);
+				botDiag = botDiag || (MovableType.isWall(GameScreen.getTile(lastX, tile.getGridY()).getTileType().getMovableType()));
+				topDiag = topDiag || (MovableType.isWall(GameScreen.getTile(tile.getGridX(), lastY).getTileType().getMovableType()));
 				if(botDiag && topDiag)
 				{
 					// If there are walls on both sides of the diagonal, return false
@@ -96,7 +96,7 @@ public class LineDrawer {
 			
 			// Check if current tile is not a wall
 			TileType tt = tile.getTileType();
-			if(tt.getMovableType() == MovableType.WALL) {
+			if(MovableType.isWall(tt.getMovableType())) {
 				return false;
 			}
 			

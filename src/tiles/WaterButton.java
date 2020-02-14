@@ -18,13 +18,13 @@ public class WaterButton extends GButton {
 
 	public WaterButton(TriggerType trigger, boolean multiTrigger) {
 		super(trigger, multiTrigger);
-		this.moveType = MovableType.WATER;
+		this.moveTypes = MovableType.WATER;
 		this.visibility = GButton.VISIBLE;
 	}
 	
 	public WaterButton(TriggerType trigger, boolean multiTrigger, int visibility) {
 		super(trigger, multiTrigger);
-		this.moveType = MovableType.WATER;
+		this.moveTypes = MovableType.WATER;
 		this.visibility = visibility;
 	}
 	
@@ -59,7 +59,7 @@ public class WaterButton extends GButton {
 	
 	public WaterButton(TriggerType trigger, boolean multiTrigger, String soundPath) {
 		super(trigger, multiTrigger, soundPath);
-		this.moveType = MovableType.WATER;
+		this.moveTypes = MovableType.WATER;
 	}
 	
 	@Override

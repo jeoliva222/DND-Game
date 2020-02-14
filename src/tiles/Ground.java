@@ -15,7 +15,7 @@ public class Ground extends TileType {
 
 	// Constructors
 	public Ground() {
-		this.moveType = MovableType.GROUND;
+		this.moveTypes = MovableType.GROUND;
 	}
 	
 	public Ground(String imagePath) {

@@ -11,7 +11,7 @@ public class Pit extends TileType {
 
 	// Constructors
 	public Pit() {	
-		this.moveType = MovableType.AIR;
+		this.moveTypes = MovableType.PIT;
 	}
 	
 	public Pit(String imagePath) {

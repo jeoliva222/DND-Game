@@ -16,7 +16,7 @@ public class Water extends TileType {
 	
 	// Constructors
 	public Water() {
-		this.moveType = MovableType.WATER;
+		this.moveTypes = MovableType.WATER;
 	}
 	
 	public Water(String imagePath) {

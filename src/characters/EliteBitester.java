@@ -132,7 +132,7 @@ public class EliteBitester extends Bitester {
 					}
 					
 					// If player hops out of water, start to lose interest
-					if(tt.getMovableType() != MovableType.WATER) {
+					if(!MovableType.isWater(tt.getMovableType())) {
 						this.chaseCount++;
 					} else {
 						this.chaseCount = 0;
@@ -158,7 +158,7 @@ public class EliteBitester extends Bitester {
 					// Attack if next to player and they're in water
 					if(((Math.abs(distX) == 1) && (Math.abs(distY) == 0)) ||
 							((Math.abs(distX) == 0) && (Math.abs(distY) == 1))) {
-						if(tt.getMovableType() == MovableType.WATER) {
+						if(MovableType.isWater(tt.getMovableType())) {
 							this.playerInitiate();
 							return;
 						}
@@ -179,7 +179,7 @@ public class EliteBitester extends Bitester {
 				break;
 			case EliteBitester.STATE_IDLE:
 				// Do nothing, until player steps in same pool of water
-				if(tt.getMovableType() == MovableType.WATER &&
+				if((MovableType.isWater(tt.getMovableType())) &&
 						IslandChecker.virusStart(this.xPos, this.yPos, plrX, plrY, MovableType.WATER)) {
 					// Alert and pursue player if in same pool
 					SoundPlayer.playWAV(GPath.createSoundPath("Bitester_ALERT.wav"));

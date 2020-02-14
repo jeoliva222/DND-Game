@@ -143,7 +143,8 @@ public class Vish extends GCharacter {
 	}
 	
 	public void populateMoveTypes() {
-		this.moveTypes.add(MovableType.WATER);
+		this.moveTypes = ((short) (moveTypes + (MovableType.WATER)));
+		this.moveTypes = ((short) (moveTypes + (MovableType.ALT_WATER)));
 	}
 
 	@Override
@@ -208,7 +209,7 @@ public class Vish extends GCharacter {
 				}
 				
 				// If player hops out of water, start to lose interest
-				if(tt.getMovableType() != MovableType.WATER) {
+				if(!MovableType.isWater(tt.getMovableType())) {
 					this.chaseCount++;
 				} else {
 					this.chaseCount = 0;
@@ -230,7 +231,7 @@ public class Vish extends GCharacter {
 				// Attack if next to player and they're in water
 				if(((Math.abs(distX) == 1) && (Math.abs(distY) == 0)) ||
 						((Math.abs(distX) == 0) && (Math.abs(distY) == 1))) {
-					if(tt.getMovableType() == MovableType.WATER) {
+					if(MovableType.isWater(tt.getMovableType())) {
 						this.playerInitiate();
 					}
 				} else {
@@ -249,7 +250,7 @@ public class Vish extends GCharacter {
 			case Vish.STATE_GO_HOME:
 				
 				// Check if player has re-entered the water
-				if(tt.getMovableType() == MovableType.WATER && (totalDist <= this.aggroDist) &&
+				if((MovableType.isWater(tt.getMovableType())) && (totalDist <= this.aggroDist) &&
 						IslandChecker.virusStart(this.xPos, this.yPos, plrX, plrY, MovableType.WATER)) {
 					// Alert and pursue if in same pool
 					SoundPlayer.playWAV(GPath.createSoundPath("Bitester_ALERT.wav"));
@@ -293,7 +294,7 @@ public class Vish extends GCharacter {
 				break;
 			case Vish.STATE_IDLE:
 				// Do nothing, until player steps in same pool of water
-				if(tt.getMovableType() == MovableType.WATER && (totalDist <= this.aggroDist) &&
+				if((MovableType.isWater(tt.getMovableType())) && (totalDist <= this.aggroDist) &&
 						IslandChecker.virusStart(this.xPos, this.yPos, plrX, plrY, MovableType.WATER)) {
 					// Alert and pursue if in same pool
 					SoundPlayer.playWAV(GPath.createSoundPath("Bitester_ALERT.wav"));

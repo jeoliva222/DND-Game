@@ -11,7 +11,7 @@ public class Wall extends TileType {
 
 	// Constructors
 	public Wall() {
-		this.moveType = MovableType.WALL;
+		this.moveTypes = MovableType.WALL;
 	}
 	
 	public Wall(String imagePath) {

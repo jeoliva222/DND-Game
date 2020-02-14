@@ -45,7 +45,7 @@ public class BurnDebuff extends Buff {
 				// Do nothing
 			}
 			
-			if(tt != null && tt.getMovableType() == MovableType.WATER) {
+			if(tt != null && MovableType.isWater(tt.getMovableType())) {
 				// Snuff the flames and deal no damage
 				this.duration = 0;
 			} else {
@@ -66,7 +66,7 @@ public class BurnDebuff extends Buff {
 				// Do nothing
 			}
 			
-			if(tt != null && tt.getMovableType() == MovableType.WATER) {
+			if(tt != null && MovableType.isWater(tt.getMovableType())) {
 				// Snuff the flames and deal no damage
 				this.duration = 0;
 			} else {

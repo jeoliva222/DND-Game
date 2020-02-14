@@ -60,7 +60,7 @@ public class Player implements Serializable {
 	private int vision;
 	
 	// List of tile categories you can move on
-	private ArrayList<MovableType> moveTypes = new ArrayList<MovableType>();
+	private Short moveTypes = 0;
 	
 	// List of current buffs/debuffs
 	private ArrayList<Buff> buffs = new ArrayList<Buff>();
@@ -183,7 +183,7 @@ public class Player implements Serializable {
 		}
 		
 		// If immovable, return false without changing position
-		if(tt == null || !this.moveTypes.contains(tt.getMovableType())) {
+		if(tt == null || !canMove(tt.getMovableType())) {
 			return false;
 		}
 		
@@ -228,7 +228,7 @@ public class Player implements Serializable {
 		}
 		
 		// If immovable, return false without changing position
-		if(!this.moveTypes.contains(tt.getMovableType())) {
+		if(!canMove(tt.getMovableType())) {
 			return false;
 		}
 		
@@ -369,24 +369,27 @@ public class Player implements Serializable {
 	
 	// Populates the list of movable tiles
 	private void populateMoveTypes() {
-		this.moveTypes.add(MovableType.GROUND);
-		this.moveTypes.add(MovableType.WATER);
-		this.moveTypes.add(MovableType.ACID);
+		this.moveTypes = ((short) (moveTypes + (MovableType.GROUND)));
+		this.moveTypes = ((short) (moveTypes + (MovableType.ALT_GROUND)));
+		this.moveTypes = ((short) (moveTypes + (MovableType.WATER)));
+		this.moveTypes = ((short) (moveTypes + (MovableType.ALT_WATER)));
+		this.moveTypes = ((short) (moveTypes + (MovableType.ACID)));
+	}
+	
+	// Returns true if the player can move to a given MovableType
+	public boolean canMove(Short mt) {
+		return MovableType.canMove(this.moveTypes, mt);
 	}
 	
 	// Adds a MovableType
-	public void addMoveType(MovableType mt) {
-		this.moveTypes.add(mt);
+	public void addMoveType(Short mt) {
+		this.moveTypes = (short) (this.moveTypes | mt);
 	}
 	
 	// Removes a MovableType if it currently exists in the list
-	public boolean removeMoveType(MovableType mt) {
-		if(this.moveTypes.contains(mt)) {
-			this.moveTypes.remove(mt);
-			return true;
-		} else {
-			return false;
-		}
+	public void removeMoveType(Short mt) {
+		mt = (short) (~mt & Short.MAX_VALUE);
+		this.moveTypes = (short) (this.moveTypes | mt);
 	}
 	
 	// Swaps equipped and sheathed weapon
@@ -550,7 +553,7 @@ public class Player implements Serializable {
 		this.currentHP = newHP;
 	}
 	
-	public ArrayList<MovableType> getMoveTypes() {
+	public Short getMoveTypes() {
 		return this.moveTypes;
 	}
 	

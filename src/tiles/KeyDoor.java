@@ -22,7 +22,7 @@ public class KeyDoor extends TileType {
 	// Constructor
 	public KeyDoor(int keycode) {
 		this.keycode = keycode;
-		this.moveType = MovableType.WALL;
+		this.moveTypes = MovableType.WALL;
 	}
 
 	@Override

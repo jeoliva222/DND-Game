@@ -61,7 +61,7 @@ public abstract class GCharacter implements Serializable {
 	protected boolean isInteractable = false;
 	
 	// List of what types of tiles the character can move on
-	protected ArrayList<MovableType> moveTypes = new ArrayList<MovableType>();
+	protected Short moveTypes = 0;
 	
 	// List of current buffs/debuffs
 	private ArrayList<Buff> buffs = new ArrayList<Buff>();
@@ -134,7 +134,7 @@ public abstract class GCharacter implements Serializable {
 		}
 		
 		// If NPC can't move here, return without moving
-		if(!this.moveTypes.contains(tt.getMovableType())) {
+		if(!canMove(tt.getMovableType())) {
 			return false;
 		}
 		
@@ -257,19 +257,20 @@ public abstract class GCharacter implements Serializable {
 		this.currentHP = this.maxHP;
 	}
 	
+	// Returns true if the character can move to a given MovableType
+	public boolean canMove(Short mt) {
+		return MovableType.canMove(this.moveTypes, mt);
+	}
+	
 	// Adds a MovableType
-	public void addMoveType(MovableType mt) {
-		this.moveTypes.add(mt);
+	public void addMoveType(Short mt) {
+		this.moveTypes = (short) (this.moveTypes | mt);
 	}
 	
 	// Removes a MovableType if it currently exists in the list
-	public boolean removeMoveType(MovableType mt) {
-		if(this.moveTypes.contains(mt)) {
-			this.moveTypes.remove(mt);
-			return true;
-		} else {
-			return false;
-		}
+	public void removeMoveType(Short mt) {
+		mt = (short) (~mt & Short.MAX_VALUE);
+		this.moveTypes = (short) (this.moveTypes | mt);
 	}
 	
 	// Checks if character is Alive
@@ -377,7 +378,7 @@ public abstract class GCharacter implements Serializable {
 		this.yPat = newVal;
 	}
 	
-	public ArrayList<MovableType> getMoveTypes() {
+	public Short getMoveTypes() {
 		return this.moveTypes;
 	}
 	

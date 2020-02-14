@@ -14,7 +14,7 @@ public class IslandChecker {
 	public static ArrayList<Dimension> checkedCoords = new ArrayList<Dimension>();
 
 	// Starts the virus spread
-	public static boolean virusStart(int originX, int originY, int destX, int destY, MovableType mt) {
+	public static boolean virusStart(int originX, int originY, int destX, int destY, Short mt) {
 		// Start by clearing checked coordinates list
 		IslandChecker.checkedCoords.clear();
 		IslandChecker.checkedCoords = null;
@@ -26,7 +26,7 @@ public class IslandChecker {
 	}
 	
 	// Recursing function that spreads 'virus' check to nearby tiles
-	private static boolean virusSpread(int x, int y, int destX, int destY, MovableType mt) {
+	private static boolean virusSpread(int x, int y, int destX, int destY, Short mt) {
 		// Firstly, check if we've already seen this coordinate
 		Dimension coord = new Dimension(x, y);
 		if(IslandChecker.checkedCoords.contains(coord)) {
@@ -43,7 +43,7 @@ public class IslandChecker {
 			GameTile tile = GameScreen.getTile(x, y);
 			
 			// Check if the tile is the right MovableType
-			if(tile.getTileType().getMovableType() == mt) {
+			if(MovableType.canMove(mt, tile.getTileType().getMovableType())) {
 				// Check if we've reached our destination
 				if(x == destX && y == destY) {
 					// If we have, return true

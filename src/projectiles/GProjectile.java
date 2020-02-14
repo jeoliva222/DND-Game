@@ -78,7 +78,7 @@ public abstract class GProjectile {
 		GameTile newTile = null;
 		try {
 			newTile = GameScreen.getTile(this.xPos + dx, this.yPos + dy);
-			if((!this.wallPiercing) && newTile.getTileType().getMovableType() == MovableType.WALL) {
+			if((!this.wallPiercing) && MovableType.isWall(newTile.getTileType().getMovableType())) {
 				// Return true if we hit a wall to indicate impact
 				return true;
 			}

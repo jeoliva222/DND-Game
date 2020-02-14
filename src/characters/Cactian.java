@@ -169,7 +169,8 @@ public class Cactian extends GCharacter {
 	}
 	
 	public void populateMoveTypes() {
-		this.moveTypes.add(MovableType.GROUND);
+		this.moveTypes = ((short) (moveTypes + (MovableType.GROUND)));
+		this.moveTypes = ((short) (moveTypes + (MovableType.ALT_GROUND)));
 	}
 
 	@Override
