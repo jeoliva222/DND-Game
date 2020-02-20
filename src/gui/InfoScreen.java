@@ -7,6 +7,8 @@ import java.awt.Image;
 import java.io.File;
 import java.net.URL;
 
+import javax.swing.Box;
+import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -45,7 +47,7 @@ public class InfoScreen extends JPanel {
 	private static JLabel nameInfo = new JLabel();
 	private static int nameWidth = 230;
 	private static int nameHeight = 50;
-	private static int nameFontSize = 28;
+	private static int nameFontSize = 24;
 	private static Font usualNameFont;
 	
 	// Object Image Panel fields
@@ -63,7 +65,7 @@ public class InfoScreen extends JPanel {
 	private static JTextArea descBox = new JTextArea();
 	private static int descWidth = 230;
 	private static int descHeight = 185;
-	private static int descFontSize = 22;
+	private static int descFontSize = 20;
 	private static Font usualDescFont;
 	
 	// Constructor
@@ -74,8 +76,8 @@ public class InfoScreen extends JPanel {
 		Dimension size = new Dimension(infoWidth, infoHeight);
 		this.setPreferredSize(size);
 		
-		// Set null content layout
-		this.setLayout(null);
+		// Set vertical Box layout
+		this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 		
 		// Set background color
 		this.setBackground(new Color(179, 179, 179));
@@ -96,12 +98,31 @@ public class InfoScreen extends JPanel {
 		InfoScreen.descHeight = (int) (InfoScreen.descHeight * GameInitializer.scaleFactor);
 		InfoScreen.descFontSize = (int) (InfoScreen.descFontSize * GameInitializer.scaleFactor);
 		
+		// Set up entity image panel
+		InfoScreen.updateEntityImage();
+		this.add(InfoScreen.entityImagePanel);
+		entityImagePanel.setPreferredSize(new Dimension(npcWidth, npcHeight));
+		
+		// Vertical spacer
+		add(Box.createVerticalGlue());
+		
+		// Set up name panel
+		InfoScreen.nameInfo.setText("-");
+		InfoScreen.usualNameFont = new Font(Font.SERIF, Font.BOLD, InfoScreen.nameFontSize);
+		InfoScreen.nameInfo.setFont(InfoScreen.usualNameFont);
+		InfoScreen.namePanel.add(InfoScreen.nameInfo);
+		this.add(InfoScreen.namePanel);
+		namePanel.setPreferredSize(new Dimension(nameWidth, nameHeight));
+		
+		// Vertical spacer
+		add(Box.createVerticalGlue());
+		
 		// Set up health panel
 		InfoScreen.healthInfo.setText("HP: - / -");
 		InfoScreen.healthInfo.setFont(new Font(Font.SERIF, Font.BOLD, InfoScreen.hpFontSize));
 		InfoScreen.healthPanel.add(InfoScreen.healthInfo);
 		this.add(InfoScreen.healthPanel);
-		InfoScreen.healthPanel.setBounds(infoWidth *9/54, infoHeight *16/27, hpWidth, hpHeight);
+		healthPanel.setPreferredSize(new Dimension(hpWidth, hpHeight));
 		
 		// Set up armor panel
 		InfoScreen.armorInfo.setText("DEF: -");
@@ -109,7 +130,10 @@ public class InfoScreen extends JPanel {
 		InfoScreen.armorPanel.add(InfoScreen.armorInfo);
 		InfoScreen.armorPanel.setBackground(new Color(130, 130, 130));
 		this.add(InfoScreen.armorPanel);
-		InfoScreen.armorPanel.setBounds(infoWidth *9/54, infoHeight *77/108, arWidth, arHeight);
+		armorPanel.setPreferredSize(new Dimension(arWidth, arHeight));
+		
+		// Vertical spacer
+		add(Box.createVerticalGlue());
 		
 		// Set up description panel
 		InfoScreen.descBox.setBackground(Color.LIGHT_GRAY);
@@ -123,19 +147,6 @@ public class InfoScreen extends JPanel {
 		InfoScreen.descBox.setVisible(true);
 		InfoScreen.shrinkDescBox();
 		this.add(InfoScreen.descBox);
-		
-		// Set up name panel
-		InfoScreen.nameInfo.setText("-");
-		InfoScreen.usualNameFont = new Font(Font.SERIF, Font.BOLD, InfoScreen.nameFontSize);
-		InfoScreen.nameInfo.setFont(InfoScreen.usualNameFont);
-		InfoScreen.namePanel.add(InfoScreen.nameInfo);
-		this.add(InfoScreen.namePanel);
-		InfoScreen.namePanel.setBounds(infoWidth *4/54, infoHeight *25/54, nameWidth, nameHeight);
-		
-		// Set up entity image panel
-		InfoScreen.updateEntityImage();
-		this.add(InfoScreen.entityImagePanel);
-		InfoScreen.entityImagePanel.setBounds(infoWidth *9/54, infoHeight / 18, npcWidth, npcHeight);
 	}
 	
 	// Updates the values in the health panel
@@ -262,14 +273,14 @@ public class InfoScreen extends JPanel {
 					URL url = file.toURI().toURL();
 					InfoScreen.itemImage = new ImageIcon(url).getImage();
 					
-					InfoScreen.itemImage = ImageHandler.scaleImage(InfoScreen.itemImage, 80, 80, GameInitializer.scaleFactor, GameInitializer.scaleFactor);
+					InfoScreen.itemImage = ImageHandler.scaleImage(InfoScreen.itemImage, npcWidth, npcHeight, GameInitializer.scaleFactor, GameInitializer.scaleFactor);
 				} catch (Exception e) {
 					// Let us know if we can't find the item image
 					System.out.println(focusedItem.imagePath + " not found.");
 					e.printStackTrace();
 				}
 				// Set item as new entity image
-				InfoScreen.itemImage = ImageHandler.scaleImage(InfoScreen.itemImage, 180, 180, scaleFactor, scaleFactor);
+				InfoScreen.itemImage = ImageHandler.scaleImage(InfoScreen.itemImage, npcWidth, npcHeight, scaleFactor, scaleFactor);
 				InfoScreen.entityImagePanel.setEImage(InfoScreen.itemImage);
 				
 				// Set blank tile image
@@ -286,18 +297,18 @@ public class InfoScreen extends JPanel {
 			
 			// Sets tile image
 			InfoScreen.tileImage = GameScreen.getTile(xPos, yPos).bgImage;
-			InfoScreen.tileImage = ImageHandler.scaleImage(InfoScreen.tileImage, 180, 180, scaleFactor, scaleFactor);
+			InfoScreen.tileImage = ImageHandler.scaleImage(InfoScreen.tileImage, npcWidth, npcHeight, scaleFactor, scaleFactor);
 			InfoScreen.entityImagePanel.setTImage(InfoScreen.tileImage);
 			
 			// Gets corpse image or entity image of NPC tile depending on NPC's health
 			if(focusedNPC.getCurrentHP() <= 0) {
 				InfoScreen.npcImage = GameScreen.getTile(xPos, yPos).corpseImage;
-				InfoScreen.npcImage = ImageHandler.scaleImage(InfoScreen.npcImage, 180, 180, scaleFactor, scaleFactor);
+				InfoScreen.npcImage = ImageHandler.scaleImage(InfoScreen.npcImage, npcWidth, npcHeight, scaleFactor, scaleFactor);
 				InfoScreen.entityImagePanel.setEImage(InfoScreen.npcImage);
 			} else {
 				// Gets NPC image
 				InfoScreen.npcImage = GameScreen.getTile(xPos, yPos).entityImage;
-				InfoScreen.npcImage = ImageHandler.scaleImage(InfoScreen.npcImage, 180, 180, scaleFactor, scaleFactor);
+				InfoScreen.npcImage = ImageHandler.scaleImage(InfoScreen.npcImage, npcWidth, npcHeight, scaleFactor, scaleFactor);
 				InfoScreen.entityImagePanel.setEImage(InfoScreen.npcImage);
 			}
 		}
@@ -368,11 +379,11 @@ public class InfoScreen extends JPanel {
 	}
 	
 	private static void shrinkDescBox() {
-		InfoScreen.descBox.setBounds(infoWidth *4/54, infoHeight *23/27, descWidth, (descHeight / 3));
+		descBox.setPreferredSize(new Dimension(descWidth, (descHeight / 3)));
 	}
 	
 	private static void growDescBox() {
-		InfoScreen.descBox.setBounds(infoWidth *4/54, infoHeight *16/27, descWidth, descHeight);
+		descBox.setPreferredSize(new Dimension(descWidth, descHeight));
 	}
 	
 	// *******************

@@ -1,6 +1,7 @@
 package gui;
 
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.Image;
 
 import javax.swing.JPanel;
@@ -15,20 +16,15 @@ public class EntityImagePanel extends JPanel {
 	private Image tileImage;
 	private Image entityImage;
 	
-	private boolean doTileRender = true;
-	private boolean doEntityRender = true;
-	
-	// X and Y buffers to set image in center
-	private int xBuffer = 10;
-	private int yBuffer = 10;
+	private boolean doTileRender = false;
+	private boolean doEntityRender = false;
 	
 	// Constructor
 	protected EntityImagePanel(int xBuf, int yBuf) {
 		super();
 		
-		// Adjust buffer size
-		this.xBuffer = (int) (xBuf * GameInitializer.scaleFactor);
-		this.yBuffer = (int) (yBuf * GameInitializer.scaleFactor);
+		// Transparent panel
+		this.setOpaque(false);
 	}
 
 	// Sets tile image for the panel
@@ -54,9 +50,16 @@ public class EntityImagePanel extends JPanel {
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
-        if(this.doTileRender)
-        	g.drawImage(tileImage, this.xBuffer, this.yBuffer, this); 
-        if(this.doEntityRender)
-        	g.drawImage(entityImage, this.xBuffer, this.yBuffer, this);           
+        Graphics2D g2d = (Graphics2D) g;
+        if (this.doTileRender) {
+	        int x = (this.getWidth() - tileImage.getWidth(null)) / 2;
+	        int y = (this.getHeight() - tileImage.getHeight(null)) / 2;
+        	g2d.drawImage(tileImage, x, y, this); 
+        }
+        if (this.doEntityRender) {
+	        int x = (this.getWidth() - entityImage.getWidth(null)) / 2;
+	        int y = (this.getHeight() - entityImage.getHeight(null)) / 2;
+        	g.drawImage(entityImage, x, y, this);    
+        }
     }
 }

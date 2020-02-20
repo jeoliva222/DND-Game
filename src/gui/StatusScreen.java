@@ -5,6 +5,8 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Image;
 
+import javax.swing.Box;
+import javax.swing.BoxLayout;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
@@ -63,8 +65,8 @@ public class StatusScreen extends JPanel {
 		Dimension size = new Dimension(statusWidth, statusHeight);
 		this.setPreferredSize(size);
 		
-		// Set null content layout
-		this.setLayout(null);
+		// Set vertical Box layout
+		this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 		
 		// Set background color
 		this.setBackground(new Color(128, 128, 255));
@@ -83,34 +85,43 @@ public class StatusScreen extends JPanel {
 		StatusScreen.sWeaponWidth = (int) (StatusScreen.sWeaponWidth * GameInitializer.scaleFactor);
 		StatusScreen.sWeaponHeight = (int) (StatusScreen.sWeaponHeight * GameInitializer.scaleFactor);
 		
+		// Set up player image panel
+		StatusScreen.updatePlayerImage();
+		add(StatusScreen.playerImagePanel);
+		playerImagePanel.setPreferredSize(new Dimension(piWidth, piHeight));
+		
+		// Vertical spacer
+		add(Box.createVerticalGlue());
+		
 		// Set up health panel
 		StatusScreen.healthInfo.setText("HP: " + Integer.toString(EntityManager.getInstance().getPlayer().getCurrentHP())
 				+ " / " + Integer.toString(EntityManager.getInstance().getPlayer().getMaxHP()));
 		StatusScreen.healthInfo.setFont(new Font(Font.SERIF, Font.BOLD, StatusScreen.hpFontSize));
 		StatusScreen.healthPanel.add(StatusScreen.healthInfo);
-		this.add(StatusScreen.healthPanel);
-		StatusScreen.healthPanel.setBounds(statusWidth *9/54, statusHeight *9/27, hpWidth, hpHeight);
+		add(StatusScreen.healthPanel);
+		healthPanel.setPreferredSize(new Dimension(hpWidth, hpHeight));
 		
 		// Set up armor panel
 		StatusScreen.armorInfo.setText("DEF: " + Integer.toString(EntityManager.getInstance().getPlayer().getArmor()));
 		StatusScreen.armorInfo.setFont(new Font(Font.SERIF, Font.BOLD, StatusScreen.arFontSize));
 		StatusScreen.armorPanel.add(StatusScreen.armorInfo);
 		StatusScreen.armorPanel.setBackground(new Color(130, 130, 130));
-		this.add(StatusScreen.armorPanel);
-		StatusScreen.armorPanel.setBounds(statusWidth *9/54, statusHeight *45/108, arWidth, arHeight);
+		add(StatusScreen.armorPanel);
+		armorPanel.setPreferredSize(new Dimension(arWidth, arHeight));
 		
-		// Set up player image panel
-		StatusScreen.updatePlayerImage();
-		this.add(StatusScreen.playerImagePanel);
-		StatusScreen.playerImagePanel.setBounds(statusWidth *9/54, statusHeight / 18, piWidth, piHeight);
+		// Vertical spacer
+		add(Box.createVerticalGlue());
 		
 		// Set up the primary weapon panel
-		this.add(StatusScreen.primaryWeaponPanel);
-		StatusScreen.primaryWeaponPanel.setBounds(statusWidth *4/54, statusHeight *14/27, pWeaponWidth, pWeaponHeight);
+		add(StatusScreen.primaryWeaponPanel);
+		primaryWeaponPanel.setPreferredSize(new Dimension(pWeaponWidth, pWeaponHeight));
+		
+		// Vertical spacer
+		add(Box.createVerticalGlue());
 		
 		// Set up the primary weapon panel
-		this.add(StatusScreen.sheathedWeaponBanner);
-		StatusScreen.sheathedWeaponBanner.setBounds(statusWidth *4/54, statusHeight *22/27, sWeaponWidth, sWeaponHeight);
+		add(StatusScreen.sheathedWeaponBanner);
+		sheathedWeaponBanner.setPreferredSize(new Dimension(sWeaponWidth, sWeaponHeight));
 	}
 	
 	// Updates the values in the health panel
@@ -154,12 +165,12 @@ public class StatusScreen extends JPanel {
 		
 		// Sets tile image
 		StatusScreen.tileImage = GameScreen.getTile(xPos, yPos).bgImage;
-		StatusScreen.tileImage = ImageHandler.scaleImage(StatusScreen.tileImage, 180, 180, scaleFactor, scaleFactor);
+		StatusScreen.tileImage = ImageHandler.scaleImage(StatusScreen.tileImage, piWidth, piHeight, scaleFactor, scaleFactor);
 		StatusScreen.playerImagePanel.setTImage(StatusScreen.tileImage);
 		
 		// Gets player image
 		StatusScreen.playerImage = GameScreen.getTile(xPos, yPos).entityImage;
-		StatusScreen.playerImage = ImageHandler.scaleImage(StatusScreen.playerImage, 180, 180, scaleFactor, scaleFactor);
+		StatusScreen.playerImage = ImageHandler.scaleImage(StatusScreen.playerImage, piWidth, piHeight, scaleFactor, scaleFactor);
 		StatusScreen.playerImagePanel.setEImage(StatusScreen.playerImage);
 
 		// Repaint the panel
