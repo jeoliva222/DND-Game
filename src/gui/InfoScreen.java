@@ -51,7 +51,7 @@ public class InfoScreen extends JPanel {
 	private static Font usualNameFont;
 	
 	// Object Image Panel fields
-	private static EntityImagePanel entityImagePanel = new EntityImagePanel(0, 0);
+	private static EntityImagePanel entityImagePanel = new EntityImagePanel();
 	private static GCharacter focusedNPC = null;
 	private static GItem focusedItem = null;
 	private static Image itemImage;
@@ -281,10 +281,10 @@ public class InfoScreen extends JPanel {
 				}
 				// Set item as new entity image
 				InfoScreen.itemImage = ImageHandler.scaleImage(InfoScreen.itemImage, npcWidth, npcHeight, scaleFactor, scaleFactor);
-				InfoScreen.entityImagePanel.setEImage(InfoScreen.itemImage);
+				InfoScreen.entityImagePanel.setForegroundImage(InfoScreen.itemImage);
 				
 				// Set blank tile image
-				InfoScreen.entityImagePanel.setTImage(null);
+				InfoScreen.entityImagePanel.setBackgroundImage(null);
 				
 			}
 		} else {
@@ -298,18 +298,18 @@ public class InfoScreen extends JPanel {
 			// Sets tile image
 			InfoScreen.tileImage = GameScreen.getTile(xPos, yPos).bgImage;
 			InfoScreen.tileImage = ImageHandler.scaleImage(InfoScreen.tileImage, npcWidth, npcHeight, scaleFactor, scaleFactor);
-			InfoScreen.entityImagePanel.setTImage(InfoScreen.tileImage);
+			InfoScreen.entityImagePanel.setBackgroundImage(InfoScreen.tileImage);
 			
 			// Gets corpse image or entity image of NPC tile depending on NPC's health
 			if(focusedNPC.getCurrentHP() <= 0) {
 				InfoScreen.npcImage = GameScreen.getTile(xPos, yPos).corpseImage;
 				InfoScreen.npcImage = ImageHandler.scaleImage(InfoScreen.npcImage, npcWidth, npcHeight, scaleFactor, scaleFactor);
-				InfoScreen.entityImagePanel.setEImage(InfoScreen.npcImage);
+				InfoScreen.entityImagePanel.setForegroundImage(InfoScreen.npcImage);
 			} else {
 				// Gets NPC image
 				InfoScreen.npcImage = GameScreen.getTile(xPos, yPos).entityImage;
 				InfoScreen.npcImage = ImageHandler.scaleImage(InfoScreen.npcImage, npcWidth, npcHeight, scaleFactor, scaleFactor);
-				InfoScreen.entityImagePanel.setEImage(InfoScreen.npcImage);
+				InfoScreen.entityImagePanel.setForegroundImage(InfoScreen.npcImage);
 			}
 		}
 
@@ -346,8 +346,8 @@ public class InfoScreen extends JPanel {
 		InfoScreen.healthPanel.setBackground(Color.WHITE);
 		
 		// Reset Entity Image panel
-		InfoScreen.entityImagePanel.setTImage(null);
-		InfoScreen.entityImagePanel.setEImage(null);
+		InfoScreen.entityImagePanel.setBackgroundImage(null);
+		InfoScreen.entityImagePanel.setForegroundImage(null);
 		
 		// Repaint all affected panels
 		InfoScreen.healthPanel.repaint();

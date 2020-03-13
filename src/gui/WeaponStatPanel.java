@@ -1,14 +1,17 @@
 package gui;
 
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Font;
-import java.awt.Graphics;
+import java.awt.GridLayout;
 import java.awt.Image;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
 import java.net.URL;
 
+import javax.swing.BorderFactory;
+import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -24,47 +27,37 @@ public class WeaponStatPanel extends JPanel {
 	private static final long serialVersionUID = 1L;
 	
 	// Weapon's image and image panel
+	private EntityImagePanel weaponImagePanel = new EntityImagePanel();
 	private Image weaponImage;
 	private Image borderImage;
-	private int wepXBuffer = 10;
-	private int wepYBuffer = 10;
 	private int weaponWidth = 80;
 	private int weaponHeight = 80;
 
 	// Usual font to use for the panel and default font size
 	private Font usualFont;
-	private int fontSize = 22;
+	private int fontSize = 20;
+	
+	// Bottom label buffer
+	private int labelXBuffer = 7;
 	
 	// Label for name
 	private JLabel nameLabel = new JLabel("Weapon Name");
-	private int nameXBuffer = 7;
-	private int nameYBuffer = 15;
-	private int nameWidth = 130;
-	private int nameHeight = 25;
 	
 	// Label for damage
 	private JLabel dmgLabel = new JLabel("DMG: # - #");
-	private int dmgWidth = 130;
-	private int dmgHeight = 25;
 	
 	// Label for critical hits
 	private JLabel critLabel = new JLabel("CRITS: #% / #.#x");
-	private int critWidth = 200;
-	private int critHeight = 25;
-	private int critYBuffer = 10;
 	
 	// Label for charge hits
 	private JLabel chargeLabel = new JLabel("CHARGE: #.#x");
-	private int chargeWidth = 200;
-	private int chargeHeight = 25;
-	private int chargeYBuffer = 5;
 	
 	// Constructor
 	protected WeaponStatPanel() {
 		super();
 		
-		// Set null content layout
-		this.setLayout(null);
+		// Set grid layout
+		this.setLayout(new GridLayout(2, 1));
 		
 		// Set background color
 		this.setBackground(new Color(179, 179, 179));
@@ -73,49 +66,54 @@ public class WeaponStatPanel extends JPanel {
 		double sf = GameInitializer.scaleFactor;
 		this.weaponWidth = (int) (this.weaponWidth * sf);
 		this.weaponHeight = (int) (this.weaponHeight * sf);
-		this.wepXBuffer = (int) (this.wepXBuffer * sf);
-		this.wepYBuffer = (int) (this.wepYBuffer * sf);
-		this.nameXBuffer = (int) (this.nameXBuffer * sf);
-		this.nameYBuffer = (int) (this.nameYBuffer * sf);
-		this.nameWidth = (int) (this.nameWidth * sf);
-		this.nameHeight = (int) (this.nameHeight * sf);
-		this.dmgWidth = (int) (this.dmgWidth * sf);
-		this.dmgHeight = (int) (this.dmgHeight * sf);
-		this.critWidth = (int) (this.critWidth * sf);
-		this.critHeight = (int) (this.critHeight * sf);
-		this.critYBuffer = (int) (this.critYBuffer * sf);
-		this.chargeWidth = (int) (this.chargeWidth * sf);
-		this.chargeHeight = (int) (this.chargeHeight * sf);
-		this.chargeYBuffer = (int) (this.chargeYBuffer * sf);
+		this.labelXBuffer = (int) (this.labelXBuffer * sf);
 		this.fontSize = (int) (this.fontSize * sf);
 		
 		// Set up usual font
 		this.usualFont = new Font(Font.SERIF, Font.BOLD, this.fontSize);
 		
-		// Add in Name label
-		this.nameLabel.setFont(this.usualFont);
-		this.add(this.nameLabel);
-		this.nameLabel.setBounds((this.nameXBuffer + this.weaponWidth + this.wepXBuffer),
-				this.nameYBuffer, this.nameWidth, this.nameHeight);
+		//-----------------------
+		// Upper half panel
+		JPanel topPanel = new JPanel();
+		topPanel.setLayout(new BoxLayout(topPanel, BoxLayout.X_AXIS));
+		topPanel.setOpaque(false);
 		
-		// Add in Damage label
+		// Add in Weapon image panel to Upper half panel
+		topPanel.add(this.weaponImagePanel);
+		weaponImagePanel.setPreferredSize(new Dimension(weaponWidth, weaponHeight));
+		
+		//-----------------------
+		// Upper right panel
+		JPanel topRightPanel = new JPanel();
+		topRightPanel.setLayout(new GridLayout(2, 1));
+		topRightPanel.setOpaque(false);
+		
+		// Add in Name label to Upper right panel
+		this.nameLabel.setFont(this.usualFont);
+		topRightPanel.add(this.nameLabel);
+		
+		// Add in Damage label to Upper right panel
 		this.dmgLabel.setFont(this.usualFont);
-		this.add(this.dmgLabel);
-		this.dmgLabel.setBounds((this.nameXBuffer + this.weaponWidth + this.wepXBuffer),
-				((this.nameYBuffer * 2) + this.nameHeight), this.dmgWidth, this.dmgHeight);
+		topRightPanel.add(this.dmgLabel);
+		
+		// Add Upper right panel to Upper half panel
+		topPanel.add(topRightPanel);
+		
+		//-----------------------
+		// Bottom half panel
+		JPanel bottomPanel = new JPanel();
+		bottomPanel.setLayout(new GridLayout(2, 1));
+		bottomPanel.setOpaque(false);
 		
 		// Add in Critical label
 		this.critLabel.setFont(this.usualFont);
-		this.add(this.critLabel);
-		this.critLabel.setBounds(this.wepXBuffer, (this.critYBuffer + this.weaponHeight + this.wepYBuffer),
-				this.critWidth, this.critHeight);
+		bottomPanel.add(this.critLabel);
+		this.critLabel.setBorder(BorderFactory.createEmptyBorder(0, labelXBuffer, 0, 0));
 		
 		// Add in Critical label
 		this.chargeLabel.setFont(this.usualFont);
-		this.add(this.chargeLabel);
-		this.chargeLabel.setBounds(this.wepXBuffer,
-				(this.critYBuffer + this.chargeYBuffer + this.weaponHeight + this.wepYBuffer + this.critHeight),
-				this.chargeWidth, this.chargeHeight);
+		bottomPanel.add(this.chargeLabel);
+		this.chargeLabel.setBorder(BorderFactory.createEmptyBorder(0, labelXBuffer, 0, 0));
 		
 		// Mouse Listener for focusing on equipped item
 		this.addMouseListener(new MouseAdapter() {
@@ -129,6 +127,10 @@ public class WeaponStatPanel extends JPanel {
 		    	 }
 		     }
 		});
+		
+		// Add components to main panel
+		this.add(topPanel);
+		this.add(bottomPanel);
 		
 		// Initialize panel with correct information about weapon
 		this.setBorderPath(GPath.BORDER);
@@ -189,11 +191,11 @@ public class WeaponStatPanel extends JPanel {
 			URL url = file.toURI().toURL();
 			this.weaponImage = new ImageIcon(url).getImage();
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			System.out.println(filepath + " not found.");
 			e.printStackTrace();
 		}
-		this.weaponImage = ImageHandler.scaleImage(this.weaponImage, 80, 80, GameInitializer.scaleFactor, GameInitializer.scaleFactor);
+		this.weaponImage = ImageHandler.scaleImage(this.weaponImage, weaponWidth, weaponHeight, GameInitializer.scaleFactor, GameInitializer.scaleFactor);
+		this.weaponImagePanel.setForegroundImage(this.weaponImage);
 		this.repaint();
 	}
 	
@@ -204,19 +206,12 @@ public class WeaponStatPanel extends JPanel {
 			URL url = file.toURI().toURL();
 			this.borderImage = new ImageIcon(url).getImage();
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			System.out.println(filepath + " not found.");
 			e.printStackTrace();
 		}
-		this.borderImage = ImageHandler.scaleImage(this.borderImage, 80, 80, GameInitializer.scaleFactor, GameInitializer.scaleFactor);
+		this.borderImage = ImageHandler.scaleImage(this.borderImage, weaponWidth, weaponHeight, GameInitializer.scaleFactor, GameInitializer.scaleFactor);
+		this.weaponImagePanel.setBackgroundImage(this.borderImage);
 		this.repaint();
 	}
-	
-    @Override
-    protected void paintComponent(Graphics g) {
-        super.paintComponent(g);
-        g.drawImage(borderImage, this.wepXBuffer, this.wepYBuffer, this);
-        g.drawImage(weaponImage, this.wepXBuffer, this.wepYBuffer, this);
-    }
 
 }

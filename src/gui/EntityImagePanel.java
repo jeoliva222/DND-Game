@@ -6,44 +6,45 @@ import java.awt.Image;
 
 import javax.swing.JPanel;
 
-// Displays the player's image in the StatusScreen
+// JPanel class that displays a foreground and background image
 public class EntityImagePanel extends JPanel {
 	
 	// Prevents warnings
 	private static final long serialVersionUID = 1L;
 	
 	// Images to draw
-	private Image tileImage;
-	private Image entityImage;
+	private Image backgroundImage;
+	private Image foregroundImage;
 	
-	private boolean doTileRender = false;
-	private boolean doEntityRender = false;
+	// Flags indicating whether to paint background/foreground images
+	private boolean doBackgroundRender = false;
+	private boolean doForegroundRender = false;
 	
 	// Constructor
-	protected EntityImagePanel(int xBuf, int yBuf) {
+	protected EntityImagePanel() {
 		super();
 		
 		// Transparent panel
 		this.setOpaque(false);
 	}
 
-	// Sets tile image for the panel
-	protected void setTImage(Image tileImage) {
+	// Sets background image for the panel
+	protected void setBackgroundImage(Image tileImage) {
 		if(tileImage == null) {
-			this.doTileRender = false;
+			this.doBackgroundRender = false;
 		} else {
-			this.doTileRender = true;
-			this.tileImage = tileImage;
+			this.doBackgroundRender = true;
+			this.backgroundImage = tileImage;
 		}
 	}
 	
-	// Sets the player image for the panel
-	protected void setEImage(Image entityImage) {
+	// Sets the foreground image for the panel
+	protected void setForegroundImage(Image entityImage) {
 		if(entityImage == null) {
-			this.doEntityRender = false;
+			this.doForegroundRender = false;
 		} else {
-			this.doEntityRender = true;
-			this.entityImage = entityImage;
+			this.doForegroundRender = true;
+			this.foregroundImage = entityImage;
 		}
 	}
 	
@@ -51,15 +52,15 @@ public class EntityImagePanel extends JPanel {
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
         Graphics2D g2d = (Graphics2D) g;
-        if (this.doTileRender) {
-	        int x = (this.getWidth() - tileImage.getWidth(null)) / 2;
-	        int y = (this.getHeight() - tileImage.getHeight(null)) / 2;
-        	g2d.drawImage(tileImage, x, y, this); 
+        if (this.doBackgroundRender) {
+	        int x = (this.getWidth() - backgroundImage.getWidth(null)) / 2;
+	        int y = (this.getHeight() - backgroundImage.getHeight(null)) / 2;
+        	g2d.drawImage(backgroundImage, x, y, this); 
         }
-        if (this.doEntityRender) {
-	        int x = (this.getWidth() - entityImage.getWidth(null)) / 2;
-	        int y = (this.getHeight() - entityImage.getHeight(null)) / 2;
-        	g.drawImage(entityImage, x, y, this);    
+        if (this.doForegroundRender) {
+	        int x = (this.getWidth() - foregroundImage.getWidth(null)) / 2;
+	        int y = (this.getHeight() - foregroundImage.getHeight(null)) / 2;
+        	g.drawImage(foregroundImage, x, y, this);    
         }
     }
 }

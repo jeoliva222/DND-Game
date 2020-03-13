@@ -39,7 +39,7 @@ public class StatusScreen extends JPanel {
 	private static int arFontSize = 28;
 	
 	// Player Image Panel fields
-	private static EntityImagePanel playerImagePanel = new EntityImagePanel(0, 0);
+	private static EntityImagePanel playerImagePanel = new EntityImagePanel();
 	private static Image playerImage;
 	private static Image tileImage;
 	private static int piWidth = 180;
@@ -166,12 +166,12 @@ public class StatusScreen extends JPanel {
 		// Sets tile image
 		StatusScreen.tileImage = GameScreen.getTile(xPos, yPos).bgImage;
 		StatusScreen.tileImage = ImageHandler.scaleImage(StatusScreen.tileImage, piWidth, piHeight, scaleFactor, scaleFactor);
-		StatusScreen.playerImagePanel.setTImage(StatusScreen.tileImage);
+		StatusScreen.playerImagePanel.setBackgroundImage(StatusScreen.tileImage);
 		
 		// Gets player image
 		StatusScreen.playerImage = GameScreen.getTile(xPos, yPos).entityImage;
 		StatusScreen.playerImage = ImageHandler.scaleImage(StatusScreen.playerImage, piWidth, piHeight, scaleFactor, scaleFactor);
-		StatusScreen.playerImagePanel.setEImage(StatusScreen.playerImage);
+		StatusScreen.playerImagePanel.setForegroundImage(StatusScreen.playerImage);
 
 		// Repaint the panel
 		StatusScreen.playerImagePanel.repaint();
