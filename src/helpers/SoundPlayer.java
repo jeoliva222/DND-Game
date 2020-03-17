@@ -58,7 +58,7 @@ public class SoundPlayer {
 	    try {
 	    	File wavFile = new File(wavPath);
 	        AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(wavFile);
-	        Clip clip = AudioSystem.getClip();
+	        final Clip clip = AudioSystem.getClip();
 	        clip.open(audioInputStream);
 	        if(gain != 0.0f) {
 				FloatControl gainControl = 

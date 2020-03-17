@@ -72,6 +72,8 @@ public class GameTile extends JPanel {
 	// Scale factor of game images
 	private double scaleFactor;
 	
+	private int tileLength;
+	
 	// Flags to determine whether objects should be rendered or not
 	private boolean setCorpse = false;
 	private boolean setEntity = false;
@@ -86,6 +88,7 @@ public class GameTile extends JPanel {
 		
 		this.tType = type;
 		this.scaleFactor = scaleFactor;
+		this.tileLength = (int) (GameInitializer.tileArtSize * scaleFactor);
 		
 		String bgpath = type.selectImage();
 		String mgpath = GPath.NULL;
@@ -171,7 +174,7 @@ public class GameTile extends JPanel {
 	// Sets the tile (ground) image
 	public void setBG(String filepath) {
 		this.bgImage = this.loadImage(filepath, true);
-		this.bgImage = ImageHandler.scaleImage(this.bgImage, 80, 80, this.scaleFactor, this.scaleFactor);
+		this.bgImage = ImageHandler.scaleImage(this.bgImage, this.tileLength, this.tileLength, this.scaleFactor, this.scaleFactor);
 		this.repaint();
 	}
 	
@@ -185,7 +188,7 @@ public class GameTile extends JPanel {
 		}
 		
 		this.corpseImage = this.loadImage(filepath, true);
-		this.corpseImage = ImageHandler.scaleImage(this.corpseImage, 80, 80, this.scaleFactor, this.scaleFactor);
+		this.corpseImage = ImageHandler.scaleImage(this.corpseImage, this.tileLength, this.tileLength, this.scaleFactor, this.scaleFactor);
 		this.repaint();
 	}
 	
@@ -199,7 +202,7 @@ public class GameTile extends JPanel {
 		}
 		
 		this.pickupImage = this.loadImage(filepath, true);
-		this.pickupImage = ImageHandler.scaleImage(this.pickupImage, 80, 80, this.scaleFactor, this.scaleFactor);
+		this.pickupImage = ImageHandler.scaleImage(this.pickupImage, this.tileLength, this.tileLength, this.scaleFactor, this.scaleFactor);
 		this.repaint();
 	}
 	
@@ -211,7 +214,7 @@ public class GameTile extends JPanel {
 		}
 		
 		Image newEffect = this.loadImage(filepath, true);
-		newEffect = ImageHandler.scaleImage(newEffect, 80, 80, this.scaleFactor, this.scaleFactor);
+		newEffect = ImageHandler.scaleImage(newEffect, this.tileLength, this.tileLength, this.scaleFactor, this.scaleFactor);
 		this.fxImages.put(fx, newEffect);
 		this.repaint();
 	}
@@ -224,7 +227,7 @@ public class GameTile extends JPanel {
 		}
 		
 		Image newProj = this.loadImage(filepath, true);
-		newProj = ImageHandler.scaleImage(newProj, 80, 80, this.scaleFactor, this.scaleFactor);
+		newProj = ImageHandler.scaleImage(newProj, this.tileLength, this.tileLength, this.scaleFactor, this.scaleFactor);
 		this.projImages.put(proj, newProj);
 		this.repaint();
 	}
@@ -239,7 +242,7 @@ public class GameTile extends JPanel {
 		}
 		
 		this.entityImage = this.loadImage(filepath);
-		this.entityImage = ImageHandler.scaleImage(this.entityImage, 80, 80, this.scaleFactor, this.scaleFactor);
+		this.entityImage = ImageHandler.scaleImage(this.entityImage, this.tileLength, this.tileLength, this.scaleFactor, this.scaleFactor);
 		this.repaint();
 	}
 	
@@ -247,7 +250,7 @@ public class GameTile extends JPanel {
 	private Image getDarkImage() {
 		if(GameTile.darkImg == null) {
 			GameTile.darkImg = this.loadImage(GPath.createImagePath(GPath.TILE, GPath.GENERIC, "area_dark.png"), true);
-			GameTile.darkImg = ImageHandler.scaleImage(GameTile.darkImg, 80, 80, this.scaleFactor, this.scaleFactor);
+			GameTile.darkImg = ImageHandler.scaleImage(GameTile.darkImg, this.tileLength, this.tileLength, this.scaleFactor, this.scaleFactor);
 		}
 		return GameTile.darkImg;
 	}
@@ -256,7 +259,7 @@ public class GameTile extends JPanel {
 	private Image getFadingDarkImage() {
 		if(GameTile.fadeImg == null) {
 			GameTile.fadeImg = this.loadImage(GPath.createImagePath(GPath.TILE, GPath.GENERIC, "area_fade.png"), true);
-			GameTile.fadeImg = ImageHandler.scaleImage(GameTile.fadeImg, 80, 80, this.scaleFactor, this.scaleFactor);
+			GameTile.fadeImg = ImageHandler.scaleImage(GameTile.fadeImg, this.tileLength, this.tileLength, this.scaleFactor, this.scaleFactor);
 		}
 		return GameTile.fadeImg;
 	}

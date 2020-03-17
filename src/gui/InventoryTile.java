@@ -143,7 +143,7 @@ public class InventoryTile extends JPanel {
 			System.out.println(filepath + " not found.");
 			e.printStackTrace();
 		}
-		this.itemImage = ImageHandler.scaleImage(this.itemImage, 100, 100, upScaleFactor, upScaleFactor);
+		this.itemImage = ImageHandler.scaleImage(this.itemImage, this.tileWidth, this.tileHeight, upScaleFactor, upScaleFactor);
 		this.repaint();
 	}
 	
@@ -157,7 +157,7 @@ public class InventoryTile extends JPanel {
 			System.out.println(filepath + " not found.");
 			e.printStackTrace();
 		}
-		this.borderImage = ImageHandler.scaleImage(this.borderImage, 100, 100, upScaleFactor, upScaleFactor);
+		this.borderImage = ImageHandler.scaleImage(this.borderImage, this.tileWidth, this.tileHeight, upScaleFactor, upScaleFactor);
 		this.repaint();
 	}
 	
