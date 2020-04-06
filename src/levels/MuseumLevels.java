@@ -170,12 +170,12 @@ public class MuseumLevels implements Serializable {
 				new ExtraTile(7, 6, 
 						new Ground(GPath.createImagePath(GPath.TILE, GPath.MUSEUM, "spotlight.png")))
 		}, new ArrayList<GCharacter>() {{
-			add(new MuseumMoveStatue(2, 6, "statue1.png", "Evolution of Decay: Part 1", 8, 6, 2, 4));
-			add(new Signpost(3, 6, "statue1.png", "Evolution of Decay: Part 2"));
-			add(new Signpost(4, 6, "statue1.png", "Evolution of Decay: Part 3"));
-			add(new Signpost(5, 6, "statue1.png", "Evolution of Decay: Part 4"));
-			add(new Signpost(6, 6, "statue1.png", "Evolution of Decay: Part 5"));
-			add(new Signpost(7, 6, "statue1.png", "Evolution of Decay: Part 6"));
+			add(new MuseumMoveStatue(2, 6, "statue_decay1.png", "Evolution of Decay: Part 1", 8, 6, 2, 4));
+			add(new Signpost(3, 6, "statue_decay2.png", "Evolution of Decay: Part 2"));
+			add(new Signpost(4, 6, "statue_decay3.png", "Evolution of Decay: Part 3"));
+			add(new Signpost(5, 6, "statue_decay4.png", "Evolution of Decay: Part 4"));
+			add(new Signpost(6, 6, "statue_decay5.png", "Evolution of Decay: Part 5"));
+			add(new Signpost(7, 6, "statue_decay6.png", "Evolution of Decay: Part 6"));
 		}}, new ArrayList<GPickup>() {{
 		}});
 		
