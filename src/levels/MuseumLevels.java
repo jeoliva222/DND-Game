@@ -21,6 +21,7 @@ import tiles.GButton;
 import tiles.Ground;
 import tiles.GroundButton;
 import tiles.TriggerType;
+import tiles.Wall;
 import weapons.Armory;
 
 // Class representing level(s)/area definition for Skin Museum area
@@ -69,14 +70,26 @@ public class MuseumLevels implements Serializable {
 			{3, 3, 3, 3, 3, 3, 3, 3, 3, 3},
 			{3, 1, 1, 1, 1, 1, 1, 1, 1, 3},
 			{3, 1, 1, 1, 1, 1, 1, 1, 1, 1},
-			{3, 1, 1, 1, 3, 3, 1, 1, 1, 1},
-			{3, 1, 1, 1, 3, 3, 1, 1, 1, 3},
-			{3, 1, 1, 1, 3, 3, 1, 1, 1, 3},
+			{3, 1, 1, 1, 4, 4, 1, 1, 1, 1},
+			{3, 1, 1, 1, 4, 4, 1, 1, 1, 3},
+			{3, 1, 1, 1, 4, 4, 1, 1, 1, 3},
 			{3, 1, 1, 1, 1, 1, 1, 1, 1, 3},
 			{3, 1, 1, 1, 1, 1, 1, 1, 1, 3},
 			{3, 1, 1, 1, 1, 1, 1, 1, 1, 3},
 			{3, 1, 1, 1, 3, 3, 3, 3, 3, 3}
 		}, new ExtraTile[] {
+				new ExtraTile(4, 5, 
+						new Wall(GPath.createImagePath(GPath.TILE, GPath.MUSEUM, "sculpture_00.png"))),
+				new ExtraTile(4, 4, 
+						new Wall(GPath.createImagePath(GPath.TILE, GPath.MUSEUM, "sculpture_01.png"))),
+				new ExtraTile(4, 3, 
+						new Wall(GPath.createImagePath(GPath.TILE, GPath.MUSEUM, "sculpture_02.png"))),
+				new ExtraTile(5, 5, 
+						new Wall(GPath.createImagePath(GPath.TILE, GPath.MUSEUM, "sculpture_10.png"))),
+				new ExtraTile(5, 4, 
+						new Wall(GPath.createImagePath(GPath.TILE, GPath.MUSEUM, "sculpture_11.png"))),
+				new ExtraTile(5, 3, 
+						new Wall(GPath.createImagePath(GPath.TILE, GPath.MUSEUM, "sculpture_12.png")))
 		}, new ArrayList<GCharacter>() {{
 			add(new Hoptooth(7, 2));
 		}}, new ArrayList<GPickup>() {{
