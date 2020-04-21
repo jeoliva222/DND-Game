@@ -68,8 +68,8 @@ public class Hoptooth extends GCharacter {
 	private String imageDir = GPath.createImagePath(GPath.ENEMY, GPath.HOPTOOTH);
 	private String htImage_base = "hoptooth";
 	
-	private String htImage_DEAD = GPath.createImagePath(GPath.ENEMY, GPath.BEANPOLE, "beanpole_dead.png");
-	private String htImage_DEAD_CRIT = GPath.createImagePath(GPath.ENEMY, GPath.BEANPOLE, "beanpole_dead_CRIT.png");
+	private String htImage_DEAD = GPath.createImagePath(GPath.ENEMY, GPath.HOPTOOTH, "hoptooth_dead.png");
+	private String htImage_DEAD_CRIT = GPath.createImagePath(GPath.ENEMY, GPath.HOPTOOTH, "hoptooth_dead.png");
 
 
 	public Hoptooth(int startX, int startY) {
@@ -125,7 +125,7 @@ public class Hoptooth extends GCharacter {
 		if(this.currentHP > (this.maxHP / 2)) {
 			hpPath = "_full";
 		} else if(this.currentHP > 0) {
-			hpPath = "_full";
+			hpPath = "_fatal";
 		} else {
 			hpPath = "_dead";
 			return (imgPath + hpPath + ".png");
