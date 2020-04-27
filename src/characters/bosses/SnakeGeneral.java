@@ -126,10 +126,10 @@ public class SnakeGeneral extends GCharacter {
 	//----------------------------
 	
 	// File paths to images
-	private String imageDir = GPath.createImagePath(GPath.ENEMY, GPath.SNAKE_COMMANDER);
-	private String sgImage_base = "snakecommander";
+	private String imageDir = GPath.createImagePath(GPath.ENEMY, GPath.SNAKE_GENERAL);
+	private String sgImage_base = "snakegeneral";
 	
-	private String sgImage_DEAD = GPath.createImagePath(GPath.ENEMY, GPath.SNAKE_COMMANDER, "snakecommander_dead.png");
+	private String sgImage_DEAD = GPath.createImagePath(GPath.ENEMY, GPath.SNAKE_COMMANDER, "snakecommander_dead.png"); // TODO
 
 	// Constructors
 	public SnakeGeneral(int startX, int startY) {
@@ -156,7 +156,6 @@ public class SnakeGeneral extends GCharacter {
 		return "General Hanz";
 	}
 	
-	// TODO
 	@Override
 	public String getImage() {
 		String imgPath = this.imageDir + this.sgImage_base;
@@ -166,7 +165,7 @@ public class SnakeGeneral extends GCharacter {
 		if(this.currentHP > (this.maxHP / 4)) {
 			hpPath = "_full";
 		} else if(this.currentHP > 0) {
-			hpPath = "_fatal";
+			hpPath = "_full"; // TODO - Change to "_fatal"
 		} else {
 			return GPath.NULL;
 		}
@@ -180,13 +179,13 @@ public class SnakeGeneral extends GCharacter {
 			statePath = "_ALERT";
 			break;
 		case SnakeGeneral.STATE_PREP_COMBO:
-			statePath = "_PREP_BITE";
+			statePath = "_PREP_COMBO";
 			break;
 		case SnakeGeneral.STATE_ATT_COMBO:
 			if(this.attCount % 2 == 0) {
-				statePath = "_ATT_BITE";
+				statePath = "_ATT_COMBO_STAB";
 			} else {
-				statePath = "_ATT_SWIPE";
+				statePath = "_ATT_COMBO_SWIPE";
 			}
 			break;
 		case SnakeGeneral.STATE_PREP_RETREAT:
@@ -207,19 +206,19 @@ public class SnakeGeneral extends GCharacter {
 			break;
 		case SnakeGeneral.STATE_PREP_CHAINGUN:
 			if(this.attCount == 0) {
-				statePath = "_PREP_FIRE";
+				statePath = "_PREP_GUN";
 			} else {
-				statePath = "_ATT_FIRE";
+				statePath = "_ATT_GUN";
 			}
 			break;
 		case SnakeGeneral.STATE_ATT_CHAINGUN:
-			statePath = "_ATT_FIRE_ALT";
+			statePath = "_ATT_GUN";
 			break;
 		case SnakeGeneral.STATE_SET_BOMB:
-			statePath = "_ATT_SWIPE";
+			statePath = "_ATT_COMBO_SWIPE";
 			break;
 		case SnakeGeneral.STATE_WARP_AWAY:
-			statePath = "_ATT_SWIPE_ALT";
+			statePath = "_ATT_COMBO_SWIPE";
 			break;
 		case SnakeGeneral.STATE_SPC_ASSASSINATE:
 			if(this.attCount <= 4) {
@@ -235,7 +234,7 @@ public class SnakeGeneral extends GCharacter {
 			if(this.attCount <= 7) {
 				return GPath.NULL;
 			} else if(this.attCount == 8) {
-				statePath = "_ATT_SWIPE";
+				statePath = "_ATT_COMBO_SWIPE";
 			} else {
 				// No extra path
 			}
@@ -248,7 +247,7 @@ public class SnakeGeneral extends GCharacter {
 			}
 			break;
 		case SnakeGeneral.STATE_STUN:
-			statePath = "_PREP_SLAM";
+			// No extra path - TODO
 			break;
 		default:
 			System.out.println
