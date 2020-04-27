@@ -1,5 +1,6 @@
 package gui;
 
+import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
@@ -13,6 +14,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
+import javax.swing.SwingConstants;
 
 import characters.GCharacter;
 import helpers.ImageHandler;
@@ -108,9 +110,11 @@ public class InfoScreen extends JPanel {
 		
 		// Set up name panel
 		InfoScreen.nameInfo.setText("-");
+		InfoScreen.nameInfo.setHorizontalAlignment(SwingConstants.CENTER);
 		InfoScreen.usualNameFont = new Font(Font.SERIF, Font.BOLD, InfoScreen.nameFontSize);
 		InfoScreen.nameInfo.setFont(InfoScreen.usualNameFont);
-		InfoScreen.namePanel.add(InfoScreen.nameInfo);
+		InfoScreen.namePanel.setLayout(new BorderLayout());
+		InfoScreen.namePanel.add(InfoScreen.nameInfo, BorderLayout.CENTER);
 		this.add(InfoScreen.namePanel);
 		namePanel.setPreferredSize(new Dimension(nameWidth, nameHeight));
 		
