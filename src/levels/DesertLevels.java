@@ -75,16 +75,8 @@ public class DesertLevels implements Serializable {
 		}, new ExtraTile[] {
 		}, new ArrayList<GCharacter>() {{
 			add(new Bitester(7, 4, PatrolPattern.SURFACE_CW));
+			add(new Signpost(2, 2, "desert_sign.png", "Outposts located at Midsouth and Northeast points of desert."));
 		}}, new ArrayList<GPickup>() {{
-//			add(new GPickup(4, 1, new SmallHealthPotion()));
-//			add(new GPickup(5, 1, new SmallMaxPotion()));
-//			add(new GPickup(6, 1, new MediumHealthPotion()));
-//			add(new GPickup(4, 2, new MediumMaxPotion()));
-//			add(new GPickup(5, 2, new LargeHealthPotion()));
-//			add(new GPickup(6, 2, new LargeMaxPotion()));
-//			add(new GPickup(4, 3, new GKey(KeyDoor.BLUE)));
-//			add(new GPickup(4, 4, new GKey(KeyDoor.YELLOW)));
-//			add(new GPickup(4, 5, new GKey(KeyDoor.RED)));
 		}});
 		
 		//-------------------
@@ -215,6 +207,7 @@ public class DesertLevels implements Serializable {
 			add(new SandBeep(5, 4));
 			add(new SandWurm(2, 3));
 			add(new SandWurm(6, 7));
+			add(new Signpost(8, 5, "desert_sign.png", "Museum Entrance: Located in opposite corner of the desert."));
 		}}, new ArrayList<GPickup>() {{
 			add(new GPickup(6, 2, new SmallMaxPotion()));
 			add(new GPickup(7, 3, new SmallHealthPotion()));
@@ -829,6 +822,7 @@ public class DesertLevels implements Serializable {
 						}}))
 		}, new ArrayList<GCharacter>() {{
 			add(new SaveCrystal(5, 6));
+			add(new Signpost(7, 2, "desert_sign.png", "I have the spare. Currently salvaging western base. - Leon"));
 		}}, new ArrayList<GPickup>() {{
 			add(new GPickup(2, 8, new GKey(KeyDoor.COMMANDER)));
 			add(new GPickup(7, 8, new GKey(KeyDoor.COMMANDER)));
@@ -1174,7 +1168,7 @@ public class DesertLevels implements Serializable {
 		}, new ExtraTile[] {
 		}, new ArrayList<GCharacter>() {{
 			add(new SkinAltar(2, 4));
-			add(new Signpost(2, 6, "test.png", "A silken skin offering opens these doors."));
+			add(new Signpost(2, 6, "desert_sign.png", "A silken skin offering opens these doors."));
 		}}, new ArrayList<GPickup>() {{
 			//add(new GPickup(5, 6, new SilkFishSkin()));
 		}});

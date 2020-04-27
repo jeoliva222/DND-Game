@@ -23,7 +23,7 @@ public class SilkFish extends GCharacter {
 
 	// Modifiers/Statistics
 
-	private int MAX_HP = 6;
+	private int MAX_HP = 1;
 	
 	private int MIN_DMG = 0;
 	private int MAX_DMG = 0;
@@ -41,8 +41,8 @@ public class SilkFish extends GCharacter {
 	//----------------------------
 	
 	// File paths to images
-	private String imageDir = GPath.createImagePath(GPath.ENEMY, GPath.BITESTER);
-	private String btImage_base = "bitester";
+	private String imageDir = GPath.createImagePath(GPath.ENEMY, GPath.SILKFISH);
+	private String btImage_base = "silkfish";
 
 	public SilkFish(int startX, int startY) {
 		super(startX, startY);
@@ -91,27 +91,11 @@ public class SilkFish extends GCharacter {
 		String statePath = "";
 		
 		// Add path modifier based on current health level
-		if(this.currentHP > (this.maxHP / 2)) {
+		if(this.currentHP > 0) {
 			hpPath = "_full";
-		} else if(this.currentHP > 0) {
-			hpPath = "_fatal";
 		} else {
 			hpPath = "_dead";
 			return (imgPath + hpPath + ".png");
-		}
-		
-		// Add path modifier based on current AI state
-		switch(this.state) {
-		case SilkFish.STATE_FLEE:
-			statePath = "_ALERT";
-			break;
-		case SilkFish.STATE_IDLE:
-			// No extra path
-			break;
-		default:
-			System.out.println
-				(this.getName() + " couldn't find a proper image: " + Integer.toString(this.state));
-			return GPath.NULL;
 		}
 		
 		return (imgPath + hpPath + statePath + ".png");
@@ -198,7 +182,6 @@ public class SilkFish extends GCharacter {
 				if((MovableType.isWater(tt.getMovableType())) &&
 						IslandChecker.virusStart(this.xPos, this.yPos, plrX, plrY, MovableType.WATER)) {
 					// Alert and flee if in same pool
-					SoundPlayer.playWAV(GPath.createSoundPath("Bitester_ALERT.wav"));
 					this.state = SilkFish.STATE_FLEE;
 					return;
 				} else {

@@ -122,6 +122,8 @@ public class GPath {
 	
 	public static String SIGNPOST = "signpost" + File.separator;
 	
+	public static String SILKFISH = "silkfish" + File.separator;
+	
 	public static String SNAKE_COMMANDER = "snake_commander" + File.separator;
 	
 	public static String SNAKE_GENERAL = "snake_general" + File.separator;
