@@ -14,7 +14,7 @@ public class SilkFishSkin extends GItem {
 	// Serialization ID
 	private static final long serialVersionUID = -4711121752022658482L;
 	
-	private static final String imagePath = GPath.PLACEHOLDER;
+	private static final String imagePath = GPath.createImagePath(GPath.ENEMY, GPath.SILKFISH, "silkfish_dead.png");
 	
 	// Constructor
 	public SilkFishSkin() {

@@ -33,6 +33,12 @@ public class SkinAltar extends GCharacter {
 	// Flag indicating whether skin was placed or not
 	private boolean skinPlaced = false;
 	
+	//-----------------------
+	
+	// File paths to images
+	private String imageDir = GPath.createImagePath(GPath.ENEMY, GPath.SIGNPOST);
+	private String imageBase = "skin_altar";
+	
 	// Constructor
 	public SkinAltar(int startX, int startY) {
 		super(startX, startY);
@@ -57,12 +63,16 @@ public class SkinAltar extends GCharacter {
 	
 	@Override
 	public String getImage() {
-		// Return full path
+		String imgPath = (imageDir + imageBase);
+		
+		// Check if skin is placed or not
 		if(skinPlaced) {
-			return GPath.NULL; // TODO
+			imgPath += "_on";
 		} else {
-			return GPath.PLACEHOLDER;
+			imgPath += "_off";
 		}
+		
+		return (imgPath + ".png");
 	}
 	
 	@Override
@@ -82,6 +92,7 @@ public class SkinAltar extends GCharacter {
 	public void placeSkin() {
 		if(!this.skinPlaced) {
 			this.skinPlaced = true;
+			this.message = "The museum awaits...";
 			
 			// Open the Museum
 			GameScreen.getTile(2, 9).setTileType(new AltGround());

@@ -1166,11 +1166,12 @@ public class DesertLevels implements Serializable {
 			{3, 3, 0, 0, 0, 1, 3, 1, 1, 3},
 			{3, 4, 4, 4, 4, 4, 3, 3, 3, 3}
 		}, new ExtraTile[] {
+				new ExtraTile(2, 4, 
+						new Ground(GPath.createImagePath(GPath.TILE, GPath.MUSEUM, "spotlight.png")))
 		}, new ArrayList<GCharacter>() {{
 			add(new SkinAltar(2, 4));
 			add(new Signpost(2, 6, "desert_sign.png", "A silken skin offering opens these doors."));
 		}}, new ArrayList<GPickup>() {{
-			//add(new GPickup(5, 6, new SilkFishSkin()));
 		}});
 		
 		//-------------------
