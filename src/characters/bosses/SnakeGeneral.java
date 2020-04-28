@@ -1,5 +1,8 @@
 package characters.bosses;
 
+import items.GPickup;
+import items.MediumHealthPotion;
+
 import java.awt.Dimension;
 import java.util.ArrayList;
 import java.util.Random;
@@ -14,6 +17,7 @@ import effects.BombEffect;
 import effects.BulletEffect;
 import effects.DamageIndicator;
 import effects.FakeSnakeEffect;
+import effects.FakeSnakeEffect.FakeSnakeType;
 import effects.FireEffect;
 import effects.GEffect;
 import effects.WarningIndicator;
@@ -25,10 +29,12 @@ import helpers.GPath;
 import helpers.SoundPlayer;
 import helpers.Triplet;
 import managers.EntityManager;
+import managers.PickupManager;
 import projectiles.GProjectile;
 import projectiles.SnakeCannonball;
 import tiles.AltGround;
 import tiles.MovableType;
+import weapons.Armory;
 
 // Class representing the 2nd Phase of the Desert area boss
 public class SnakeGeneral extends GCharacter {
@@ -94,6 +100,9 @@ public class SnakeGeneral extends GCharacter {
 	// Counter that determines whether General should do special attack
 	private int spcCount = 0;
 	private final int SPC_MAX = 30;
+	
+	private final int CANNON_MAX = 8;
+	private final int CANNON_COOLDOWN = 3;
 	
 	// Flags telling the snake whether we did certain special attacks
 	private boolean didSpc0 = false;
@@ -162,7 +171,7 @@ public class SnakeGeneral extends GCharacter {
 		String hpPath = "";
 		String statePath = "";
 		
-		if(this.currentHP > (this.maxHP / 4)) {
+		if(this.currentHP > (this.maxHP / 3)) {
 			hpPath = "_full";
 		} else if(this.currentHP > 0) {
 			hpPath = "_full"; // TODO - Change to "_fatal"
@@ -242,8 +251,20 @@ public class SnakeGeneral extends GCharacter {
 		case SnakeGeneral.STATE_SPC_CANNON:
 			if(this.attCount <= 1) {
 				return GPath.NULL;
+			} else if (attCount > (CANNON_MAX + 1)) {
+				statePath = "_PREP_CANNON";
+			} else if (this.xPos == 9) {
+				if (this.attCount % 2 == 0) {
+					statePath = "_PREP_CANNON";
+				} else {
+					statePath = "_ATT_CANNON";
+				}
 			} else {
-				statePath = "_ATT_FIRE";
+				if (this.attCount % 2 == 0) {
+					statePath = "_ATT_CANNON";
+				} else {
+					statePath = "_PREP_CANNON";
+				}
 			}
 			break;
 		case SnakeGeneral.STATE_STUN:
@@ -286,6 +307,15 @@ public class SnakeGeneral extends GCharacter {
 		// Open the doors to the arena
 		GameScreen.getTile(4, 1).setTileType(new AltGround());
 		GameScreen.getTile(5, 1).setTileType(new AltGround());
+		
+		// Open loot compartment
+		GameScreen.getTile(7, 1).setTileType(new AltGround());
+		GameScreen.getTile(8, 1).setTileType(new AltGround());
+		
+		// Drop loot
+		PickupManager puManager = EntityManager.getInstance().getPickupManager();
+		puManager.addPickup(new GPickup(7, 1, new MediumHealthPotion()));
+		puManager.addPickup(new GPickup(8, 1, Armory.venomGun));
 		
 		// Change music to regular music
 		SoundPlayer.changeMidi(EntityManager.getInstance().getActiveArea().getMusic(),
@@ -794,22 +824,22 @@ public class SnakeGeneral extends GCharacter {
 					
 					// Up direction
 					if(!((plrX == this.xPos) && (plrY - 1 == this.yPos))) {
-						this.addEffect(new FakeSnakeEffect(plrX, plrY - 1));
+						this.addEffect(new FakeSnakeEffect(plrX, plrY - 1, FakeSnakeType.FIRE_PREP));
 					}
 					
 					// Right direction
 					if(!((plrX + 1 == this.xPos) && (plrY == this.yPos))) {
-						this.addEffect(new FakeSnakeEffect(plrX + 1, plrY));
+						this.addEffect(new FakeSnakeEffect(plrX + 1, plrY, FakeSnakeType.FIRE_PREP));
 					}
 					
 					// Down direction
 					if(!((plrX == this.xPos) && (plrY + 1 == this.yPos))) {
-						this.addEffect(new FakeSnakeEffect(plrX, plrY + 1));
+						this.addEffect(new FakeSnakeEffect(plrX, plrY + 1, FakeSnakeType.FIRE_PREP));
 					}
 					
 					// Left direction
 					if(!((plrX - 1 == this.xPos) && (plrY == this.yPos))) {
-						this.addEffect(new FakeSnakeEffect(plrX - 1, plrY));
+						this.addEffect(new FakeSnakeEffect(plrX - 1, plrY, FakeSnakeType.FIRE_PREP));
 					}
 					
 				} else {
@@ -908,10 +938,10 @@ public class SnakeGeneral extends GCharacter {
 						// Display a fake General at the location
 						if(this.attCount % 2 == 0) {
 							// Left side
-							this.addEffect(new FakeSnakeEffect(3, this.rowOrder[(this.attCount-4)]));
+							this.addEffect(new FakeSnakeEffect(3, this.rowOrder[(this.attCount-4)], FakeSnakeType.SWIPE_ATT));
 						} else {
 							// Right side
-							this.addEffect(new FakeSnakeEffect(9, this.rowOrder[(this.attCount-4)]));
+							this.addEffect(new FakeSnakeEffect(9, this.rowOrder[(this.attCount-4)], FakeSnakeType.SWIPE_ATT));
 						}
 					}
 					
@@ -977,7 +1007,7 @@ public class SnakeGeneral extends GCharacter {
 					this.addEffect(new WarpFizzleEffect(3, this.rowOrder[1]));
 					this.addEffect(new WarpFizzleEffect(9, this.rowOrder[2]));
 					this.addEffect(new WarpFizzleEffect(9, this.rowOrder[3]));
-				} else if(this.attCount <= 8) {
+				} else if(this.attCount <= CANNON_MAX) {
 					
 					// Warp in on the first turn of attack
 					if(this.attCount == 1) {
@@ -1004,32 +1034,52 @@ public class SnakeGeneral extends GCharacter {
 						break;
 					}
 					
+					// Flag indicating if we're attacking on the left side
+					// True = Left side | False = Right side
+					boolean isLeftSideTurn = (this.attCount % 2 == 1);
+					
 					// Mark other firing spots with Fake Generals
 					// First row (Left)
 					if(!((this.xPos == 3) && (this.yPos == this.rowOrder[0]))) {
-						this.addEffect(new FakeSnakeEffect(3, this.rowOrder[0]));
+						if (isLeftSideTurn) {
+							this.addEffect(new FakeSnakeEffect(3, this.rowOrder[0], FakeSnakeType.CANNON_ATT));
+						} else {
+							this.addEffect(new FakeSnakeEffect(3, this.rowOrder[0], FakeSnakeType.CANNON_PREP));
+						}
 					}
 					
 					// Second row (Left)
 					if(!((this.xPos == 3) && (this.yPos == this.rowOrder[1]))) {
-						this.addEffect(new FakeSnakeEffect(3, this.rowOrder[1]));
+						if (isLeftSideTurn) {
+							this.addEffect(new FakeSnakeEffect(3, this.rowOrder[1], FakeSnakeType.CANNON_ATT));
+						} else {
+							this.addEffect(new FakeSnakeEffect(3, this.rowOrder[1], FakeSnakeType.CANNON_PREP));
+						}
 					}
 					
 					// Third row (Right)
 					if(!((this.xPos == 9) && (this.yPos == this.rowOrder[2]))) {
-						this.addEffect(new FakeSnakeEffect(9, this.rowOrder[2]));
+						if (isLeftSideTurn) {
+							this.addEffect(new FakeSnakeEffect(9, this.rowOrder[2], FakeSnakeType.CANNON_PREP));
+						} else {
+							this.addEffect(new FakeSnakeEffect(9, this.rowOrder[2], FakeSnakeType.CANNON_ATT));
+						}
 					}
 					
 					// Fourth row (Right)
 					if(!((this.xPos == 9) && (this.yPos == this.rowOrder[3]))) {
-						this.addEffect(new FakeSnakeEffect(9, this.rowOrder[3]));
+						if (isLeftSideTurn) {
+							this.addEffect(new FakeSnakeEffect(9, this.rowOrder[3], FakeSnakeType.CANNON_PREP));
+						} else {
+							this.addEffect(new FakeSnakeEffect(9, this.rowOrder[3], FakeSnakeType.CANNON_ATT));
+						}
 					}
 					
 					// Play cannon sound
 					this.playCannonSound();
 					
 					// Alternate cannon-firing side
-					if(this.attCount % 2 == 1) {
+					if(isLeftSideTurn) {
 						// Fire left cannons for the turn
 						this.addProjectile(new SnakeCannonball(4, this.rowOrder[0], 1, 0, this.getClass()));
 						this.addProjectile(new SnakeCannonball(4, this.rowOrder[1], 1, 0, this.getClass()));
@@ -1042,8 +1092,8 @@ public class SnakeGeneral extends GCharacter {
 						this.addEffect(new DamageIndicator(8, this.rowOrder[2]));
 						this.addEffect(new DamageIndicator(8, this.rowOrder[3]));
 					}
-				} else if(this.attCount <= 11) { 
-					// Cooldown for three turns
+				} else if(this.attCount <= (CANNON_MAX + CANNON_COOLDOWN)) { 
+					// Cooldown period
 					
 					// If we're hit during cooldown, enter stun
 					if(this.recentDmg) {
