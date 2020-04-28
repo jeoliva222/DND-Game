@@ -176,7 +176,7 @@ public class SnakeGeneral extends GCharacter {
 		String hpPath = "";
 		String statePath = "";
 		
-		if(this.currentHP > (this.maxHP / 3)) {
+		if(isHealthy()) {
 			hpPath = "_full";
 		} else if(this.currentHP > 0) {
 			hpPath = "_fatal";
@@ -349,6 +349,12 @@ public class SnakeGeneral extends GCharacter {
 		this.breakRetreat = false;
 		this.recentDmg = false;
 		this.hitShots = false;
+	}
+	
+	// Returns whether General is considered healthy or not
+	// Used for determining image rendering
+	private boolean isHealthy() {
+		return (this.currentHP > (this.maxHP / 3));
 	}
 	
 	// Override that increments internal counter ands sets logic flags
@@ -836,25 +842,26 @@ public class SnakeGeneral extends GCharacter {
 					this.yPos = plrY + this.yMarkDir;
 					
 					// Display fakes in other directions (if general is not there)
+					boolean hpFlag = isHealthy();
 					
 					// Up direction
 					if(!((plrX == this.xPos) && (plrY - 1 == this.yPos))) {
-						this.addEffect(new FakeSnakeEffect(plrX, plrY - 1, FakeSnakeType.FIRE_PREP));
+						this.addEffect(new FakeSnakeEffect(plrX, plrY - 1, FakeSnakeType.FIRE_PREP, hpFlag));
 					}
 					
 					// Right direction
 					if(!((plrX + 1 == this.xPos) && (plrY == this.yPos))) {
-						this.addEffect(new FakeSnakeEffect(plrX + 1, plrY, FakeSnakeType.FIRE_PREP));
+						this.addEffect(new FakeSnakeEffect(plrX + 1, plrY, FakeSnakeType.FIRE_PREP, hpFlag));
 					}
 					
 					// Down direction
 					if(!((plrX == this.xPos) && (plrY + 1 == this.yPos))) {
-						this.addEffect(new FakeSnakeEffect(plrX, plrY + 1, FakeSnakeType.FIRE_PREP));
+						this.addEffect(new FakeSnakeEffect(plrX, plrY + 1, FakeSnakeType.FIRE_PREP, hpFlag));
 					}
 					
 					// Left direction
 					if(!((plrX - 1 == this.xPos) && (plrY == this.yPos))) {
-						this.addEffect(new FakeSnakeEffect(plrX - 1, plrY, FakeSnakeType.FIRE_PREP));
+						this.addEffect(new FakeSnakeEffect(plrX - 1, plrY, FakeSnakeType.FIRE_PREP, hpFlag));
 					}
 					
 				} else {
@@ -956,10 +963,10 @@ public class SnakeGeneral extends GCharacter {
 						// Display a fake General at the location
 						if(this.attCount % 2 == 0) {
 							// Left side
-							this.addEffect(new FakeSnakeEffect(3, this.rowOrder[(this.attCount-4)], FakeSnakeType.SWIPE_ATT));
+							this.addEffect(new FakeSnakeEffect(3, this.rowOrder[(this.attCount-4)], FakeSnakeType.SWIPE_ATT, isHealthy()));
 						} else {
 							// Right side
-							this.addEffect(new FakeSnakeEffect(9, this.rowOrder[(this.attCount-4)], FakeSnakeType.SWIPE_ATT));
+							this.addEffect(new FakeSnakeEffect(9, this.rowOrder[(this.attCount-4)], FakeSnakeType.SWIPE_ATT, isHealthy()));
 						}
 					}
 					
@@ -1056,40 +1063,43 @@ public class SnakeGeneral extends GCharacter {
 					// True = Left side | False = Right side
 					boolean isLeftSideTurn = (this.attCount % 2 == 1);
 					
+					// Health flag for displaying fakes
+					boolean hpFlag = isHealthy();
+					
 					// Mark other firing spots with Fake Generals
 					// First row (Left)
 					if(!((this.xPos == 3) && (this.yPos == this.rowOrder[0]))) {
 						if (isLeftSideTurn) {
-							this.addEffect(new FakeSnakeEffect(3, this.rowOrder[0], FakeSnakeType.CANNON_ATT));
+							this.addEffect(new FakeSnakeEffect(3, this.rowOrder[0], FakeSnakeType.CANNON_ATT, hpFlag));
 						} else {
-							this.addEffect(new FakeSnakeEffect(3, this.rowOrder[0], FakeSnakeType.CANNON_PREP));
+							this.addEffect(new FakeSnakeEffect(3, this.rowOrder[0], FakeSnakeType.CANNON_PREP, hpFlag));
 						}
 					}
 					
 					// Second row (Left)
 					if(!((this.xPos == 3) && (this.yPos == this.rowOrder[1]))) {
 						if (isLeftSideTurn) {
-							this.addEffect(new FakeSnakeEffect(3, this.rowOrder[1], FakeSnakeType.CANNON_ATT));
+							this.addEffect(new FakeSnakeEffect(3, this.rowOrder[1], FakeSnakeType.CANNON_ATT, hpFlag));
 						} else {
-							this.addEffect(new FakeSnakeEffect(3, this.rowOrder[1], FakeSnakeType.CANNON_PREP));
+							this.addEffect(new FakeSnakeEffect(3, this.rowOrder[1], FakeSnakeType.CANNON_PREP, hpFlag));
 						}
 					}
 					
 					// Third row (Right)
 					if(!((this.xPos == 9) && (this.yPos == this.rowOrder[2]))) {
 						if (isLeftSideTurn) {
-							this.addEffect(new FakeSnakeEffect(9, this.rowOrder[2], FakeSnakeType.CANNON_PREP));
+							this.addEffect(new FakeSnakeEffect(9, this.rowOrder[2], FakeSnakeType.CANNON_PREP, hpFlag));
 						} else {
-							this.addEffect(new FakeSnakeEffect(9, this.rowOrder[2], FakeSnakeType.CANNON_ATT));
+							this.addEffect(new FakeSnakeEffect(9, this.rowOrder[2], FakeSnakeType.CANNON_ATT, hpFlag));
 						}
 					}
 					
 					// Fourth row (Right)
 					if(!((this.xPos == 9) && (this.yPos == this.rowOrder[3]))) {
 						if (isLeftSideTurn) {
-							this.addEffect(new FakeSnakeEffect(9, this.rowOrder[3], FakeSnakeType.CANNON_PREP));
+							this.addEffect(new FakeSnakeEffect(9, this.rowOrder[3], FakeSnakeType.CANNON_PREP, hpFlag));
 						} else {
-							this.addEffect(new FakeSnakeEffect(9, this.rowOrder[3], FakeSnakeType.CANNON_ATT));
+							this.addEffect(new FakeSnakeEffect(9, this.rowOrder[3], FakeSnakeType.CANNON_ATT, hpFlag));
 						}
 					}
 					

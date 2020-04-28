@@ -7,16 +7,17 @@ public class FakeSnakeEffect extends GEffect {
 
 	private static String fakeImageBase = GPath.createImagePath(GPath.ENEMY, GPath.SNAKE_GENERAL, "fake");
 	
-	public FakeSnakeEffect(int xPos, int yPos, FakeSnakeType fakeType) {
-		super(xPos, yPos, getFakeImage(fakeType));
+	public FakeSnakeEffect(int xPos, int yPos, FakeSnakeType fakeType, boolean isHealthy) {
+		super(xPos, yPos, getFakeImage(fakeType, isHealthy));
 	}
 	
-	public FakeSnakeEffect(int xPos, int yPos, int countDown, FakeSnakeType fakeType) {
-		super(xPos, yPos, getFakeImage(fakeType), countDown);
+	public FakeSnakeEffect(int xPos, int yPos, int countDown, FakeSnakeType fakeType, boolean isHealthy) {
+		super(xPos, yPos, getFakeImage(fakeType, isHealthy), countDown);
 	}
 	
-	private static String getFakeImage(FakeSnakeType fakeType) {
-		return (fakeImageBase + fakeType.imgSuffix + ".png");
+	private static String getFakeImage(FakeSnakeType fakeType, boolean isHealthy) {
+		String healthStr = (isHealthy ? "_full" : "_fatal");
+		return (fakeImageBase + healthStr + fakeType.imgSuffix + ".png");
 	}
 	
 	public enum FakeSnakeType {
