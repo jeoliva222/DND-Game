@@ -67,13 +67,14 @@ public class SnakeGeneral extends GCharacter {
 	private static final int STATE_ATT_RETREAT = 6;
 	private static final int STATE_PREP_CHAINGUN = 7;
 	private static final int STATE_ATT_CHAINGUN = 8;
-	private static final int STATE_SET_BOMB = 9;
-	private static final int STATE_WARP_AWAY = 10;
-	private static final int STATE_SPC_ASSASSINATE = 11;
-	private static final int STATE_SPC_ASSASSINATE_ATT = 12;
-	private static final int STATE_SPC_BLITZ = 13;
-	private static final int STATE_SPC_CANNON = 14;
-	private static final int STATE_STUN = 15;
+	private static final int STATE_PREP_MINE = 9;
+	private static final int STATE_ATT_MINE = 10;
+	private static final int STATE_WARP_AWAY = 11;
+	private static final int STATE_SPC_ASSASSINATE = 12;
+	private static final int STATE_SPC_ASSASSINATE_ATT = 13;
+	private static final int STATE_SPC_BLITZ = 14;
+	private static final int STATE_SPC_CANNON = 15;
+	private static final int STATE_STUN = 16;
 	
 	//----------------------------
 	// Additional Behavior
@@ -101,8 +102,12 @@ public class SnakeGeneral extends GCharacter {
 	private int spcCount = 0;
 	private final int SPC_MAX = 30;
 	
+	// Limits defining Cannon attack/cooldown time
 	private final int CANNON_MAX = 8;
 	private final int CANNON_COOLDOWN = 3;
+	
+	// Limit defining stun time
+	private final int STUN_TIME = 2;
 	
 	// Flags telling the snake whether we did certain special attacks
 	private boolean didSpc0 = false;
@@ -171,7 +176,7 @@ public class SnakeGeneral extends GCharacter {
 		String hpPath = "";
 		String statePath = "";
 		
-		if(this.currentHP > (this.maxHP / 3)) {
+		if(this.currentHP > (this.maxHP / 4)) {
 			hpPath = "_full";
 		} else if(this.currentHP > 0) {
 			hpPath = "_full"; // TODO - Change to "_fatal"
@@ -223,11 +228,14 @@ public class SnakeGeneral extends GCharacter {
 		case SnakeGeneral.STATE_ATT_CHAINGUN:
 			statePath = "_ATT_GUN";
 			break;
-		case SnakeGeneral.STATE_SET_BOMB:
-			statePath = "_ATT_COMBO_SWIPE";
+		case SnakeGeneral.STATE_PREP_MINE:
+			statePath = "_PREP_MINE";
+			break;
+		case SnakeGeneral.STATE_ATT_MINE:
+			statePath = "_ATT_MINE";
 			break;
 		case SnakeGeneral.STATE_WARP_AWAY:
-			statePath = "_ATT_COMBO_SWIPE";
+			statePath = "_WARP";
 			break;
 		case SnakeGeneral.STATE_SPC_ASSASSINATE:
 			if(this.attCount <= 4) {
@@ -268,11 +276,14 @@ public class SnakeGeneral extends GCharacter {
 			}
 			break;
 		case SnakeGeneral.STATE_STUN:
-			// No extra path - TODO
+			if (this.attCount % 2 == 0) {
+				statePath = "_STUN";
+			} else {
+				statePath = "_STUN_ALT";
+			}
 			break;
 		default:
-			System.out.println
-				(this.getName() + " couldn't find a proper image: " + Integer.toString(this.state));
+			System.out.println(this.getName() + " couldn't find a proper image: " + Integer.toString(this.state));
 			return GPath.NULL;
 		}
 		
@@ -409,6 +420,10 @@ public class SnakeGeneral extends GCharacter {
 				// then transition to the chase
 				this.state = SnakeGeneral.STATE_PURSUE;
 				break;
+			case SnakeGeneral.STATE_ATT_MINE:
+				// Continue through to pursue logic
+				this.state = SnakeGeneral.STATE_PURSUE;
+				// ----
 			case SnakeGeneral.STATE_PURSUE:	 //------------------------------------------------------------
 				// Calculate relative movement directions
 				// X-movement
@@ -748,7 +763,7 @@ public class SnakeGeneral extends GCharacter {
 				this.hitShots = false;
 				this.state = SnakeGeneral.STATE_PURSUE;
 				break;
-			case SnakeGeneral.STATE_SET_BOMB: //------------------------------------------------------------
+			case SnakeGeneral.STATE_PREP_MINE: //------------------------------------------------------------
 				// Relative movement direction (Initialize at 0)
 				dx = 0;
 				dy = 0;
@@ -774,8 +789,8 @@ public class SnakeGeneral extends GCharacter {
 				this.addEffect(new BombEffect(this.xPos + dx, this.yPos + dy, false));
 				this.placedBombs.add(new Triplet<Integer, Integer, Integer>(this.xPos + dx, this.yPos + dy, 5));
 
-				// Switch back to pursuit
-				this.state = SnakeGeneral.STATE_PURSUE;
+				// Switch back to mine attack state (AKA: pursuit)
+				this.state = SnakeGeneral.STATE_ATT_MINE;
 				break;
 			case SnakeGeneral.STATE_WARP_AWAY: //------------------------------------------------------------
 				// Warp away to top-right corner (Outside of arena)
@@ -861,6 +876,9 @@ public class SnakeGeneral extends GCharacter {
 						this.addEffect(new FireEffect(this.xPos + (this.xMarkDir*2), this.yPos + (this.yMarkDir*2)));
 						this.addEffect(new FireEffect(this.xPos + this.xMarkDir - (this.yMarkDir), this.yPos + this.yMarkDir - (this.xMarkDir)));
 						this.addEffect(new FireEffect(this.xPos + this.xMarkDir + (this.yMarkDir), this.yPos + this.yMarkDir + (this.xMarkDir)));
+						
+						// Play fire sound
+						SoundPlayer.playWAV(GPath.createSoundPath("fire_ATT.wav"));
 						
 						// Attack player if in affected space
 						if((plrX == this.xPos + this.xMarkDir && plrY == this.yPos + this.yMarkDir) ||
@@ -1132,7 +1150,7 @@ public class SnakeGeneral extends GCharacter {
 				break;
 			case SnakeGeneral.STATE_STUN: //------------------------------------------------------------
 				// Stay stunned for a few turns
-				if(this.attCount <= 2) {
+				if(this.attCount <= STUN_TIME) {
 					// Do nothing
 					this.attCount += 1;
 				} else {
@@ -1263,7 +1281,7 @@ public class SnakeGeneral extends GCharacter {
 		} else if(whichAttack <= 18) {
 			this.state = SnakeGeneral.STATE_PREP_COMBO;
 		} else {
-			this.state = SnakeGeneral.STATE_SET_BOMB;
+			this.state = SnakeGeneral.STATE_PREP_MINE;
 		}
 	}
 	
@@ -1279,7 +1297,7 @@ public class SnakeGeneral extends GCharacter {
 			SoundPlayer.playWAV(GPath.createSoundPath("Chaingun_Rev.wav"));
 			this.state = SnakeGeneral.STATE_PREP_CHAINGUN;
 		} else {
-			this.state = SnakeGeneral.STATE_SET_BOMB;
+			this.state = SnakeGeneral.STATE_PREP_MINE;
 		}
 	}
 	
