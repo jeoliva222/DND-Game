@@ -142,8 +142,8 @@ public class SnakeGeneral extends GCharacter {
 	// File paths to images
 	private String imageDir = GPath.createImagePath(GPath.ENEMY, GPath.SNAKE_GENERAL);
 	private String sgImage_base = "snakegeneral";
-	
-	private String sgImage_DEAD = GPath.createImagePath(GPath.ENEMY, GPath.SNAKE_COMMANDER, "snakecommander_dead.png"); // TODO
+	//--
+	private String sgImage_DEAD = GPath.createImagePath(GPath.ENEMY, GPath.SNAKE_GENERAL, "snakegeneral_dead.png");
 
 	// Constructors
 	public SnakeGeneral(int startX, int startY) {
@@ -176,10 +176,10 @@ public class SnakeGeneral extends GCharacter {
 		String hpPath = "";
 		String statePath = "";
 		
-		if(this.currentHP > (this.maxHP / 4)) {
+		if(this.currentHP > (this.maxHP / 3)) {
 			hpPath = "_full";
 		} else if(this.currentHP > 0) {
-			hpPath = "_full"; // TODO - Change to "_fatal"
+			hpPath = "_fatal";
 		} else {
 			return GPath.NULL;
 		}
