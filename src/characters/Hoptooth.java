@@ -187,7 +187,7 @@ public class Hoptooth extends GCharacter {
 	
 	@Override
 	public void onDeath() {
-		SoundPlayer.playWAV(GPath.createSoundPath("Hoptooth_Death.wav"), -5f);
+		SoundPlayer.playWAV(GPath.createSoundPath("Hoptooth_Death.wav"), 3f);
 	}
 
 	@Override
@@ -217,7 +217,7 @@ public class Hoptooth extends GCharacter {
 			case Hoptooth.STATE_IDLE:
 				boolean hasLOS = LineDrawer.hasSight(this.xPos, this.yPos, plrX, plrY);
 				if(hasLOS) {
-					SoundPlayer.playWAV(GPath.createSoundPath("Hoptooth_Alert.wav"), -5f);
+					SoundPlayer.playWAV(GPath.createSoundPath("Hoptooth_Alert.wav"));
 					this.state = Hoptooth.STATE_ALERTED;
 				} else {
 					// Handle movement for Idling
@@ -297,7 +297,7 @@ public class Hoptooth extends GCharacter {
 							this.markX = dx;
 							this.markY = dy;
 							
-							SoundPlayer.playWAV(GPath.createSoundPath("Hoptooth_Breath1.wav"), -10f);
+							SoundPlayer.playWAV(GPath.createSoundPath("Hoptooth_Breath1.wav"), -5f);
 							this.state = Hoptooth.STATE_PREP_CHOMP;
 						}
 					}
@@ -350,13 +350,13 @@ public class Hoptooth extends GCharacter {
 					EntityManager.getInstance().getEffectManager().addEffect(new WarningIndicator(this.xPos + this.markX, this.yPos + this.markY));
 					
 					// Play warning sound
-					SoundPlayer.playWAV(GPath.createSoundPath("Hoptooth_Breath2.wav"), -5f);
+					SoundPlayer.playWAV(GPath.createSoundPath("Hoptooth_Breath2.wav"));
 				} else if(this.attCount >= this.windupMax) {
 					// Mark tile with damage indicator
 					EntityManager.getInstance().getEffectManager().addEffect(new DamageIndicator(this.xPos + this.markX, this.yPos + this.markY));
 					
 					// Play chomp sound
-					SoundPlayer.playWAV(GPath.createSoundPath("Hoptooth_Chomp.wav"), -2f);
+					SoundPlayer.playWAV(GPath.createSoundPath("Hoptooth_Chomp.wav"));
 					
 					// Attack in marked direction
 					if((this.xPos + this.markX) == plrX && (this.yPos + this.markY) == plrY) {
@@ -384,7 +384,7 @@ public class Hoptooth extends GCharacter {
 	private void chooseMeleeAttack() {
 		int whichAttack = new Random().nextInt(3);
 		if(whichAttack == 0) {
-			SoundPlayer.playWAV(GPath.createSoundPath("Hoptooth_Breath1.wav"), -10f);
+			SoundPlayer.playWAV(GPath.createSoundPath("Hoptooth_Breath1.wav"), -5f);
 			this.state = Hoptooth.STATE_PREP_CHOMP;
 		} else {
 			this.state = Hoptooth.STATE_PREP_SWING;
