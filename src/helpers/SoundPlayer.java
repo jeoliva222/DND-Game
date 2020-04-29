@@ -21,14 +21,21 @@ import javax.sound.sampled.FloatControl;
 import javax.sound.sampled.LineEvent;
 import javax.sound.sampled.LineListener;
 
-// Class that handles the playing of WAV, MIDI, and MP3 audio files
-// for game sound effects and music
+/**
+ * Class that handles the playing of WAV and MIDI audio files
+ * for game sound effects and music
+ * @author jeoliva
+ */
 public class SoundPlayer {
 	
 	private static ScheduledExecutorService clipExecutor = createClipExecutor();
 	private static Sequencer midiSequence = null;
 	private static InputStream musicStream;
 	
+	/**
+	 * Small helper function to "cache" sound playing logic. 
+	 * Called at the start of the application once.
+	 */
 	public static void cacheSoundPlaying() {
 		SoundPlayer.playWAV(GPath.createSoundPath("Beanpole_ALERT.wav"), -80.0f);
 	}
@@ -44,12 +51,19 @@ public class SoundPlayer {
 		});
     }
 	
-	// Play a WAV audio file at default volume
+	/**
+	 * Play a WAV audio file at default volume
+	 * @param wavPath File path of audio clip
+	 */
 	public static void playWAV(String wavPath) {
 		SoundPlayer.playWAV(wavPath, 0.0f);
 	}
 	
-	// Play WAV audio file with given gain (increases or decreases volume)
+	/**
+	 * Play WAV audio file with given gain (increases or decreases volume)
+	 * @param wavPath File path of audio clip
+	 * @param gain Float determining gain of audio clip. Accepts values [-80.0f to 6.0f]
+	 */
 	public static void playWAV(String wavPath, float gain) {
 		// Check for out-of-range gain level
 		// If out-of-range, reduce to 0.0f;
@@ -99,7 +113,11 @@ public class SoundPlayer {
 		clipExecutor.execute(clipTask);
 	}
 	
-	/// Midi play with set volume for each channel
+	/**
+	 * Play MIDI with set volume for each channel
+	 * @param midiPath File path of the MIDI
+	 * @param volume Volume to play MIDI channels at
+	 */
 	public static void playMidi(String midiPath, int volume) {
 		// If the requested volume is full, don't modify the volume of the tracks
 		if (volume >= 100) {
@@ -158,7 +176,10 @@ public class SoundPlayer {
 		clipExecutor.execute(midiTask);
 	}
 	
-	// Play Midi without volume set
+	/**
+	 * Play MIDI at default channel volumes
+	 * @param midiPath File path of the MIDI
+	 */
 	public static void playMidi(String midiPath) {
 		// Finalize variables
 		final String finalMidiPath = midiPath;
@@ -197,7 +218,10 @@ public class SoundPlayer {
 		clipExecutor.execute(midiTask);
 	}
 	
-	// Change MIDI background music
+	/**
+	 * Change the currently playing MIDI
+	 * @param midiPath File path of the new MIDI
+	 */
 	public static void changeMidi(String midiPath) {
 		// Stop the current music
 		SoundPlayer.stopMidi();
@@ -206,7 +230,11 @@ public class SoundPlayer {
 		SoundPlayer.playMidi(midiPath);
 	}
 	
-	// Change MIDI background music with volume control
+	/**
+	 * Change the currently playing MIDI, and play the next MIDI with set channel volume
+	 * @param midiPath File path of the new MIDI
+	 * @param volume Volume to play new MIDI channels at
+	 */
 	public static void changeMidi(String midiPath, int volume) {
 		// Stop the current music
 		SoundPlayer.stopMidi();
@@ -215,6 +243,9 @@ public class SoundPlayer {
 		SoundPlayer.playMidi(midiPath, volume);
 	}
 	
+	/**
+	 * Stops the currently playing MIDI
+	 */
 	public static void stopMidi() {
 		if (SoundPlayer.midiSequence != null) {
 			SoundPlayer.midiSequence.stop();

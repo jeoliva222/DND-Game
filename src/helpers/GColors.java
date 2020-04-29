@@ -2,7 +2,10 @@ package helpers;
 
 import java.awt.Color;
 
-// File containing reference to game palette colors
+/**
+ * File containing references to game palette colors
+ * @author jeoliva
+ */
 public class GColors {
 
 	public final static Color BASIC = Color.black;

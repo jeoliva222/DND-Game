@@ -2,8 +2,13 @@ package helpers;
 
 import java.util.HashMap;
 
-// Simple override to regular HashMap that has default values
-// Code by 'maerics'
+/**
+ * Simple override to regular HashMap that has default values
+ * @author maerics
+ * 
+ * @param <K> Key type
+ * @param <V> Value type
+ */
 @SuppressWarnings("serial")
 public class DefaultHashMap<K,V> extends HashMap<K,V> {
 

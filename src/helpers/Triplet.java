@@ -2,6 +2,7 @@ package helpers;
 
 /**
  * Class intended to hold three variable members of any type.
+ * @author jeoliva
  */
 public class Triplet<X, Y, Z> {
 
@@ -17,16 +18,16 @@ public class Triplet<X, Y, Z> {
 	
 	@Override
 	public String toString() {
-		return "(" + x.toString() + ", " + y.toString() + ", " + z.toString() + ")";
+		return "(" + String.valueOf(x) + ", " + String.valueOf(y) + ", " + String.valueOf(z) + ")";
 	}
 	
 	@Override
 	public boolean equals(Object obj) {
-		if(obj == this) {
+		if (obj == this) {
 			return true;
 		}
 		
-		if(!(obj instanceof Triplet)) {
+		if (!(obj instanceof Triplet)) {
 			return false;
 		}
 		

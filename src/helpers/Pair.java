@@ -2,6 +2,7 @@ package helpers;
 
 /**
  * Class intended to hold two variable members of any type.
+ * @author jeoliva
  */
 public class Pair<X, Y> {
 
@@ -15,16 +16,16 @@ public class Pair<X, Y> {
 	
 	@Override
 	public String toString() {
-		return "(" + x.toString() + ", " + y.toString() + ")";
+		return "(" + String.valueOf(x) + ", " + String.valueOf(y) + ")";
 	}
 	
 	@Override
 	public boolean equals(Object obj) {
-		if(obj == this) {
+		if (obj == this) {
 			return true;
 		}
 		
-		if(!(obj instanceof Pair)) {
+		if (!(obj instanceof Pair)) {
 			return false;
 		}
 		

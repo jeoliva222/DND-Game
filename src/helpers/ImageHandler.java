@@ -5,7 +5,9 @@ import java.awt.Image;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 
-// Handles image scaling functionality
+/**
+ * Class containing image scaling functionality
+ */
 public class ImageHandler {
 
 	/**
@@ -22,7 +24,7 @@ public class ImageHandler {
 	public static BufferedImage scaleImage(Image img, int dWidth, int dHeight, double fWidth, double fHeight) {
 	    BufferedImage sbi = ImageHandler.toBufferedImage(img);
 		BufferedImage dbi = null;
-	    if(sbi != null) {
+	    if (sbi != null) {
 	        dbi = new BufferedImage(dWidth, dHeight, BufferedImage.TYPE_INT_ARGB);
 	        Graphics2D g = dbi.createGraphics();
 	        AffineTransform at = AffineTransform.getScaleInstance(fWidth, fHeight);
@@ -39,8 +41,7 @@ public class ImageHandler {
 	 */
 	public static BufferedImage toBufferedImage(Image img)
 	{
-	    if (img instanceof BufferedImage)
-	    {
+	    if (img instanceof BufferedImage) {
 	        return (BufferedImage) img;
 	    }
 
