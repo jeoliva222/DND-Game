@@ -18,7 +18,10 @@ import helpers.SoundPlayer;
 import managers.EntityManager;
 import tiles.MovableType;
 
-// Class representing the 'Angel' enemy, who serves to revive allies from the dead
+/**
+ * Class representing the 'Angel' enemy, who serves to revive allies from the dead
+ * @author jeoliva
+ */
 public class Angel extends GCharacter {
 
 	// Serialization ID
@@ -72,21 +75,7 @@ public class Angel extends GCharacter {
 
 
 	public Angel(int startX, int startY) {
-		super(startX, startY);
-		
-		this.maxHP = MAX_HP;
-		this.currentHP = this.maxHP;
-		
-		this.minDmg = MIN_DMG;
-		this.maxDmg = MAX_DMG;
-		
-		this.critChance = CRIT_CHANCE;
-		this.critMult = CRIT_MULT;
-		
-		this.state = Angel.STATE_IDLE;
-		this.patrolPattern = PatrolPattern.WANDER;
-		
-		this.imagePath = this.getImage();
+		this(startX, startY, PatrolPattern.WANDER);
 	}
 	
 	public Angel(int startX, int startY, PatrolPattern patpat) {
@@ -104,7 +93,7 @@ public class Angel extends GCharacter {
 		this.state = Angel.STATE_IDLE;
 		this.patrolPattern = patpat;
 		
-		this.imagePath = this.getImage();
+		this.imagePath = getImage();
 	}
 	
 	public String getName() {
@@ -117,43 +106,42 @@ public class Angel extends GCharacter {
 		String hpPath = "";
 		String statePath = "";
 		
-		if(this.currentHP > (this.maxHP / 2)) {
+		if (this.currentHP > (maxHP / 2)) {
 			hpPath = "_full";
-		} else if(this.currentHP > 0) {
+		} else if (currentHP > 0) {
 			hpPath = "_fatal";
 		} else {
 			hpPath = "_dead";
 			return (imgPath + hpPath + ".png");
 		}
 		
-		switch(this.state) {
-		case Angel.STATE_IDLE:
-		case Angel.STATE_PURSUE:
-			// No extra path
-			break;
-		case Angel.STATE_ALERTED:
-		case Angel.STATE_PREP_ATT:
-		case Angel.STATE_PREP_REZ:
-			statePath = "_PREP";
-			break;
-		case Angel.STATE_ATT:
-		case Angel.STATE_REZ:
-			statePath = "_ATT";
-			break;
-		default:
-			System.out.println
-				(this.getName() + " couldn't find a proper image: " + Integer.toString(this.state));
-			return GPath.NULL;
+		switch (state) {
+			case Angel.STATE_IDLE:
+			case Angel.STATE_PURSUE:
+				// No extra path
+				break;
+			case Angel.STATE_ALERTED:
+			case Angel.STATE_PREP_ATT:
+			case Angel.STATE_PREP_REZ:
+				statePath = "_PREP";
+				break;
+			case Angel.STATE_ATT:
+			case Angel.STATE_REZ:
+				statePath = "_ATT";
+				break;
+			default:
+				System.out.println(getName() + " couldn't find a proper image: " + Integer.toString(state));
+				return GPath.NULL;
 		}
 		
 		return (imgPath + hpPath + statePath + ".png");
 	}
 	
 	public String getCorpseImage() {
-		if(this.currentHP < -(this.maxHP / 2)) {
-			return this.bpImage_DEAD_CRIT;
+		if (currentHP < -(maxHP / 2)) {
+			return bpImage_DEAD_CRIT;
 		} else {
-			return this.bpImage_DEAD;
+			return bpImage_DEAD;
 		}
 	}
 	
@@ -172,17 +160,17 @@ public class Angel extends GCharacter {
 		SoundPlayer.playWAV(GPath.createSoundPath("Beanpole_ATTACK.wav"));
 		
 		// Attack player
-		this.attackPlayer();
+		attackPlayer();
 		
 		// Lifesteal on attack
 		int lifeSteal = 5;
-		this.healCharacter(lifeSteal);
-		LogScreen.log(this.getName() + " recovered " + lifeSteal + " health when attacking!");
+		healCharacter(lifeSteal);
+		LogScreen.log(getName() + " recovered " + lifeSteal + " health when attacking!");
 	}
 	
 	@Override
 	public void onDeath() {
-		if(this.currentHP < -(this.maxHP / 2)) {
+		if (currentHP < -(maxHP / 2)) {
 			SoundPlayer.playWAV(GPath.createSoundPath("Beanpole_DEATH_CRIT.wav"));
 		} else {
 			SoundPlayer.playWAV(GPath.createSoundPath("Beanpole_DEATH.wav"));
@@ -202,7 +190,7 @@ public class Angel extends GCharacter {
 		Player player = EntityManager.getInstance().getPlayer();
 		
 		// If this is dead or the player is dead, don't do anything
-		if(!this.isAlive() || !player.isAlive()) {
+		if (!isAlive() || !player.isAlive()) {
 			// Do nothing
 			return;
 		}
@@ -215,10 +203,10 @@ public class Angel extends GCharacter {
 		int distX = plrX - this.xPos;
 		int distY = plrY - this.yPos;
 		
-		switch(this.state) {
+		switch (state) {
 			case Angel.STATE_IDLE:
-				boolean hasLOS = LineDrawer.hasSight(this.xPos, this.yPos, plrX, plrY);
-				if(hasLOS) {
+				boolean hasLOS = LineDrawer.hasSight(xPos, yPos, plrX, plrY);
+				if (hasLOS) {
 					SoundPlayer.playWAV(GPath.createSoundPath("Beanpole_ALERT.wav"));
 					this.state = Angel.STATE_ALERTED;
 				} else {
@@ -237,20 +225,20 @@ public class Angel extends GCharacter {
 				int dy = 0;
 				
 				// Calculate relative movement directions
-				if(distX > 0) {
+				if (distX > 0) {
 					dx = 1;
 				} else if (distX < 0) {
 					dx = -1;
 				}
 				
-				if(distY > 0) {
+				if (distY > 0) {
 					dy = 1;
 				} else if (distY < 0) {
 					dy = -1;
 				}
 				
 				// Change state to prep if next to player
-				if(((Math.abs(distX) == 1) && (Math.abs(distY) == 0)) ||
+				if (((Math.abs(distX) == 1) && (Math.abs(distY) == 0)) ||
 						((Math.abs(distX) == 0) && (Math.abs(distY) == 1))) {
 					// Mark direction to attack next turn
 					this.markX = dx;
@@ -265,12 +253,12 @@ public class Angel extends GCharacter {
 				ArrayList<Corpse> corpses = EntityManager.getInstance().getCorpseManager().getCorpses();
 				
 				// If corpse we're chasing has been removed, stop chasing it
-				if (this.corpse != null && !corpses.contains(this.corpse)) {
+				if (corpse != null && !corpses.contains(corpse)) {
 					this.corpse = null;
 				}
 				
 				// If we have no corpse to chase, try to find one
-				if (this.corpse == null && corpses.size() > 0) {
+				if (corpse == null && corpses.size() > 0) {
 					// Set sights on random corpse
 					this.corpse = corpses.get(new Random().nextInt(corpses.size()));
 				}
@@ -278,69 +266,69 @@ public class Angel extends GCharacter {
 				if (corpse != null) {
 					// CORPSE EXISTS ---------------------------------------------------------
 					// Get relative location to position of corpse we want to revive
-					int corpseDistX = this.corpse.getXPos() - this.xPos;
-					int corpseDistY = this.corpse.getYPos() - this.yPos;
+					int corpseDistX = (corpse.getXPos() - xPos);
+					int corpseDistY = (corpse.getYPos() - yPos);
 					
 					// Calculate relative movement directions to get to corpse
-					if(corpseDistX > 0) {
+					if (corpseDistX > 0) {
 						dx = 1;
 					} else if (corpseDistX < 0) {
 						dx = -1;
 					}
 					
-					if(corpseDistY > 0) {
+					if (corpseDistY > 0) {
 						dy = 1;
 					} else if (corpseDistY < 0) {
 						dy = -1;
 					}
 					
 					
-					if(((Math.abs(corpseDistX) == 1) && (Math.abs(corpseDistY) == 0)) ||
+					if (((Math.abs(corpseDistX) == 1) && (Math.abs(corpseDistY) == 0)) ||
 							((Math.abs(corpseDistX) == 0) && (Math.abs(corpseDistY) == 1))) {
 						// Change states to revive
 						this.rezCount += 1;
 						this.state = Angel.STATE_PREP_REZ;
 					} else {
 						// Path-find to the corpse if we can
-						Dimension nextStep = PathFinder.findPath(this.xPos, this.yPos, this.corpse.getXPos(), this.corpse.getYPos(), this);
-						if(nextStep == null) {
+						Dimension nextStep = PathFinder.findPath(xPos, yPos, corpse.getXPos(), corpse.getYPos(), this);
+						if (nextStep == null) {
 							// Blindly pursue the corpse
-							System.out.println("CORPSE BLIND");
 							DumbFollow.blindPursue(corpseDistX, corpseDistY, dx, dy, this);
 						} else {
-							int changeX = nextStep.width - this.xPos;
-							int changeY = nextStep.height - this.yPos;
+							int changeX = (nextStep.width - xPos);
+							int changeY = (nextStep.height - yPos);
 							
 							// If we are on top of the corpse, then shift off to the side randomly
 							if (changeX == 0 && changeY == 0) {
-								this.shiftRandom();
+								shiftRandom();
 							} else {
-								this.moveCharacter(changeX, changeY);
+								moveCharacter(changeX, changeY);
 							}
 						}
 					}
 				} else {
 					// NO CORPSE EXISTS ------------------------------------------------------
 					// Path-find to the player if we can
-					Dimension nextStep = PathFinder.findPath(this.xPos, this.yPos, plrX, plrY, this);
-					if(nextStep == null) {
+					Dimension nextStep = PathFinder.findPath(xPos, yPos, plrX, plrY, this);
+					if (nextStep == null) {
 						// Blindly pursue the target
 						DumbFollow.blindPursue(distX, distY, dx, dy, this);
 					} else {
-						int changeX = nextStep.width - this.xPos;
-						int changeY = nextStep.height - this.yPos;
-						this.moveCharacter(changeX, changeY);
+						int changeX = (nextStep.width - xPos);
+						int changeY = (nextStep.height - yPos);
+						moveCharacter(changeX, changeY);
 					}
 				}
 				
 				break;
 			case Angel.STATE_PREP_ATT:
 				// Mark tile with damage indicator
-				EntityManager.getInstance().getEffectManager().addEffect(new DamageIndicator(this.xPos + this.markX, this.yPos + this.markY));
+				EntityManager.getInstance().getEffectManager().addEffect(new DamageIndicator(xPos + markX, yPos + markY));
 				
 				// Attack in marked direction
-				if((this.xPos + this.markX) == plrX && (this.yPos + this.markY) == plrY)
-					this.playerInitiate();
+				if ((xPos + markX) == plrX && (yPos + markY) == plrY) {
+					playerInitiate();
+				}
 				this.state = Angel.STATE_ATT;
 				break;
 			case Angel.STATE_ATT:
@@ -356,7 +344,7 @@ public class Angel extends GCharacter {
 				}
 				
 				// If player is on corpse, switch to attack mode
-				if(this.corpse.getXPos() == plrX && this.corpse.getYPos() == plrY) {
+				if (corpse.getXPos() == plrX && corpse.getYPos() == plrY) {
 					this.rezCount = 0;
 					
 					this.markX = (plrX - this.xPos);
@@ -367,7 +355,7 @@ public class Angel extends GCharacter {
 				}
 				
 				// Spend 'rezMax' turns doing the resurrection
-				if (this.rezCount < this.rezMax) {
+				if (rezCount < rezMax) {
 					this.rezCount += 1;
 					break;
 				}
@@ -379,14 +367,14 @@ public class Angel extends GCharacter {
 					
 					// If another NPC is on the corpse, then cancel the rez
 					boolean npcBlock = false;
-					for(GCharacter npc : em.getNPCManager().getCharacters()) {
-						if(npc.getXPos() == this.corpse.getXPos() && npc.getYPos() == this.corpse.getYPos()) {
+					for (GCharacter npc : em.getNPCManager().getCharacters()) {
+						if (npc.getXPos() == corpse.getXPos() && npc.getYPos() == corpse.getYPos()) {
 							npcBlock = true;
 							break; // Breaks out of GCharacter loop
 						}
 					}
 					
-					if(npcBlock) {
+					if (npcBlock) {
 						this.rezCount = 0;
 						this.corpse = null;
 						this.state = Angel.STATE_PURSUE;
@@ -394,20 +382,20 @@ public class Angel extends GCharacter {
 					}
 					
 					// Mark tile with indicator
-					em.getEffectManager().addEffect(new WarningIndicator(this.corpse.getXPos(), this.corpse.getYPos()));
+					em.getEffectManager().addEffect(new WarningIndicator(corpse.getXPos(), corpse.getYPos()));
 					
 					// Resurrect the corpse ----
 					// Reset the corpse's NPC
-					this.corpse.getNPC().fullyHeal();
-					this.corpse.getNPC().state = 0;
-					this.corpse.getNPC().resetParams();
+					corpse.getNPC().fullyHeal();
+					corpse.getNPC().state = 0;
+					corpse.getNPC().resetParams();
 					
 					// Add character and then remove corpse
-					em.getNPCManager().addPendingCharacter(this.corpse.getNPC());
-					em.getCorpseManager().removeCorpse(this.corpse);
+					em.getNPCManager().addPendingCharacter(corpse.getNPC());
+					em.getCorpseManager().removeCorpse(corpse);
 					
 					// Log the result
-					LogScreen.log(this.corpse.getNPC().getName() + " was resurrected!");
+					LogScreen.log(corpse.getNPC().getName() + " was resurrected!");
 					
 					// Reset rez parameters
 					this.rezCount = 0;
@@ -422,7 +410,7 @@ public class Angel extends GCharacter {
 				this.state = Angel.STATE_PURSUE;
 				break;
 			default:
-				System.out.println(this.getName() +
+				System.out.println(getName() +
 						" couldn't take its turn. State = " + Integer.toString(this.state));
 				return;
 		}
@@ -439,7 +427,7 @@ public class Angel extends GCharacter {
 		
 		// Shuffle the potential move coordinates
 		Random r = new Random();
-		for(int i = 3; i > 0; i--) {
+		for (int i = 3; i > 0; i--) {
 			// Randomize swap index
 			int shuffCoord = r.nextInt(i + 1);
 			
@@ -450,8 +438,8 @@ public class Angel extends GCharacter {
 		}
 		
 		// Try to shift to the side
-		for(int j = 0; j < moveSpots.length; j++) {
-			if(this.moveCharacter(moveSpots[j].width, moveSpots[j].height)) {
+		for (int j = 0; j < moveSpots.length; j++) {
+			if (moveCharacter(moveSpots[j].width, moveSpots[j].height)) {
 				return;
 			}
 		}
