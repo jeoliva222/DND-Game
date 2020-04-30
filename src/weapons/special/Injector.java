@@ -11,7 +11,10 @@ import managers.EntityManager;
 import tiles.MovableType;
 import weapons.Weapon;
 
-// Class representing the special weapon: The Injector
+/**
+ * Class representing the special weapon: 'The Injector'
+ * @author jeoliva
+ */
 public class Injector extends Weapon {
 
 	// Serialization ID
@@ -36,9 +39,9 @@ public class Injector extends Weapon {
 		// Retrieve instance of EntityManager
 		EntityManager em = EntityManager.getInstance();
 		
-		if(this.isCharged) {
+		if (isCharged) {
 			// First, discharge weapon
-			this.dischargeWeapon();
+			dischargeWeapon();
 			
 			// Checks if we hit at least one target
 			boolean foundTarget = false;
@@ -56,65 +59,66 @@ public class Injector extends Weapon {
 			}
 			
 			// If charged, check for NPCs two spaces away from player to attack
-			for(GCharacter npc : em.getNPCManager().getCharacters()) {
-				// First check for immediately adjacent positions to attack
-				if((em.getPlayer().getXPos() + dx) == npc.getXPos()
+			for (GCharacter npc : em.getNPCManager().getCharacters()) {
+				// Check for enemies either one or two tiles away to attack
+				if ((em.getPlayer().getXPos() + dx) == npc.getXPos()
 						&& (em.getPlayer().getYPos() + dy) == npc.getYPos()) {
-					int dmg = this.calculateDamage(this.chargeMult, npc);
-					if(!npc.damageCharacter(dmg)) targetsKilled++;
-					this.sendToLog("Player siphoned and dealt " + Integer.toString(dmg)
-						+ " damage to " + npc.getName() + ".", GColors.ATTACK, npc);				
+					int dmg = calculateDamage(chargeMult, npc);
+					if (!npc.damageCharacter(dmg)) {
+						targetsKilled++;
+					}
+					sendToLog("Player siphoned and dealt " + Integer.toString(dmg)
+							+ " damage to " + npc.getName() + ".", GColors.ATTACK, npc);				
 					foundTarget = true;
-				// Then check for positions two tiles away to attack
 				} else if((em.getPlayer().getXPos() + (dx*2)) == npc.getXPos()
 						&& (em.getPlayer().getYPos() + (dy*2)) == npc.getYPos()) {
 					// Check that previous space isn't a wall
-					if(!nextToWall) {
+					if (!nextToWall) {
 						// Deal multiplier on regular damage and discharge weapon
-						int dmg = this.calculateDamage(this.chargeMult, npc);
-						if(!npc.damageCharacter(dmg)) targetsKilled++;
-						this.sendToLog("Player siphoned and dealt " + Integer.toString(dmg)
-							+ " damage to " + npc.getName() + ".", GColors.ATTACK, npc);				
+						int dmg = calculateDamage(chargeMult, npc);
+						if (!npc.damageCharacter(dmg)) {
+							targetsKilled++;
+						}
+						sendToLog("Player siphoned and dealt " + Integer.toString(dmg)
+								+ " damage to " + npc.getName() + ".", GColors.ATTACK, npc);				
 						foundTarget = true;
 					}
 				}
 			}
 			
 			// If we found a target, return true and mark tiles with attack effects
-			if(foundTarget) {
-				em.getEffectManager()
-					.addEffect(new ChargeIndicator(em.getPlayer().getXPos() + dx,
-							em.getPlayer().getYPos() + dy));
-				if(!nextToWall) {
+			if (foundTarget) {
+				em.getEffectManager().addEffect(new ChargeIndicator(em.getPlayer().getXPos() + dx,
+						em.getPlayer().getYPos() + dy));
+				if (!nextToWall) {
 					// Only mark 2nd tile if we're not attacking through a wall
-					em.getEffectManager()
-						.addEffect(new ChargeIndicator(em.getPlayer().getXPos() + (dx*2),
-								em.getPlayer().getYPos() + (dy*2)));
+					em.getEffectManager().addEffect(new ChargeIndicator(em.getPlayer().getXPos() + (dx*2),
+							em.getPlayer().getYPos() + (dy*2)));
 				}
 				
 				// Apply lifesteal from kills if we killed at least one target
-				if(targetsKilled > 0) {
+				if (targetsKilled > 0) {
 					// Heal player and log result
 					em.getPlayer().healPlayer(targetsKilled);
 					LogScreen.log("Player drank " + Integer.toString(targetsKilled)
-					+ " health from his enemies.", GColors.HEAL);
+							+ " health from his enemies.", GColors.HEAL);
 				}
 				
 				// Play attack sound and return true to indicate we hit something
-				this.playSwingSound();
+				playSwingSound();
 				return true;
 			}
 		} else {
 			// If not charged, check for immediately adjacent NPCs to attack
-			for(GCharacter npc : em.getNPCManager().getCharacters()) {
-				if((em.getPlayer().getXPos() + dx) == npc.getXPos()
+			for (GCharacter npc : em.getNPCManager().getCharacters()) {
+				if ((em.getPlayer().getXPos() + dx) == npc.getXPos()
 						&& (em.getPlayer().getYPos() + dy) == npc.getYPos()) {
 					// If not charged deal normal damage
-					int dmg = this.calculateDamage(npc);
+					int dmg = calculateDamage(npc);
 					npc.damageCharacter(dmg);
-					this.sendToLog("Player stabbed and dealt " + Integer.toString(dmg)
-						+ " damage to " + npc.getName() + ".", GColors.ATTACK, npc);	
-					this.playSwingSound();
+					sendToLog("Player stabbed and dealt " + Integer.toString(dmg)
+							+ " damage to " + npc.getName() + ".", GColors.ATTACK, npc);	
+					playSwingSound();
 					return true;
 				}
 			}

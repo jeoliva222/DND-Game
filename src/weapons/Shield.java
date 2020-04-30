@@ -6,8 +6,11 @@ import gui.LogScreen;
 import helpers.GColors;
 import managers.EntityManager;
 
-// Class representing the Shield weapons
-// These weapons can block damage when charging and 
+/**
+ * Class representing the 'Shield' type weapons in-game.
+ * Shields can raise the player's armor when charging
+ * @author jeoliva
+ */ 
 public class Shield extends Weapon {
 	
 	// Serialization ID
@@ -36,28 +39,28 @@ public class Shield extends Weapon {
 		// Attack multiplier
 		double attMult = 1.0;
 		
-		// If we are charged, lower block and try attack with off-hand weapon
-		if(this.isCharged) {
+		// If we are charged, affect the damage multiplier of the attack
+		if (isCharged) {
 			// First, discharge shield
-			this.dischargeWeapon();
+			dischargeWeapon();
 			
 			// Modify attack multiplier if charged
-			attMult = this.chargeMult;
+			attMult = chargeMult;
 		}
 		
-		// If not charged, attack normally
-		for(GCharacter npc : em.getNPCManager().getCharacters()) {
+		// Attack adjacent targets normally
+		for (GCharacter npc : em.getNPCManager().getCharacters()) {
 			// If we're attacking at an NPC's position, complete attack
-			if((em.getPlayer().getXPos() + dx) == npc.getXPos()
+			if ((em.getPlayer().getXPos() + dx) == npc.getXPos()
 					&& (em.getPlayer().getYPos() + dy) == npc.getYPos()) {
 				// Hit immediately adjacent characters
-				int dmg = this.calculateDamage(attMult, npc);
+				int dmg = calculateDamage(attMult, npc);
 				npc.damageCharacter(dmg);
-				this.sendToLog("Player bashed and dealt " + Integer.toString(dmg)
-					+ " damage to " + npc.getName() + ".", GColors.ATTACK, npc);
+				sendToLog("Player bashed and dealt " + Integer.toString(dmg)
+						+ " damage to " + npc.getName() + ".", GColors.ATTACK, npc);
 				
 				// Play swing sound and return true
-				this.playSwingSound();
+				playSwingSound();
 				return true;
 			}
 			
@@ -69,19 +72,19 @@ public class Shield extends Weapon {
 	
 	@Override
 	public void chargeWeapon() {
-		// Fetech reference to player
+		// Fetch reference to player
 		Player plr = EntityManager.getInstance().getPlayer();
 		
 		// If player is dead, don't do anything
-		if(!plr.isAlive()) {
+		if (!plr.isAlive()) {
 			return;
 		}
 		
-		if(this.isCharged) {
+		if (isCharged) {
 			// Do nothing extra
 		} else {
-			LogScreen.log("Raised shield for " + Integer.toString(this.blockValue) + " block!");
-			plr.addArmor(this.blockValue);
+			LogScreen.log("Raised shield for " + Integer.toString(blockValue) + " block!");
+			plr.addArmor(blockValue);
 			this.isCharged = true;
 		}
 	}
@@ -89,21 +92,17 @@ public class Shield extends Weapon {
 	@Override
 	public void dischargeWeapon() {
 		// If we're not charged, don't do anything
-		if(!this.isCharged) return;
+		if (!isCharged) {
+			return;
+		}
 		
 		// Get instance of player
 		Player plr = EntityManager.getInstance().getPlayer();
 		
 		// Lower shield block
 		LogScreen.log("Lowered shield block.");
-		plr.addArmor(-(this.blockValue));
+		plr.addArmor(-(blockValue));
 		this.isCharged = false;
-	}
-	
-	@Override
-	public void doOffhand() {
-		// Charges the weapon in offhand
-		this.chargeWeapon();
 	}
 
 }

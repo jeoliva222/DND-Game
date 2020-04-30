@@ -10,7 +10,10 @@ import managers.EntityManager;
 import projectiles.KingStaffFlame;
 import weapons.Weapon;
 
-// Class representing the special weapon: King's Staff
+/**
+ * Class representing the special weapon: 'King's Staff'
+ * @author jeoliva
+ */
 public class KingStaff extends Weapon {
 	
 	// Serialization ID
@@ -21,7 +24,8 @@ public class KingStaff extends Weapon {
 	public static final double STAFF_CRIT_CHANCE = 0.2;
 	public static final double STAFF_CRIT_MULT = 1.7;
 	
-	private final double FIRE_CHANCE = 0.35;
+	// Chance for fire projectiles to spawn on attack
+	private static final double FIRE_CHANCE = 0.35;
 
 	// Constructor
 	public KingStaff() {
@@ -42,16 +46,17 @@ public class KingStaff extends Weapon {
 		// Retrieve instance of EntityManager
 		EntityManager em = EntityManager.getInstance();
 		
-		for(GCharacter npc : em.getNPCManager().getCharacters()) {
+		for (GCharacter npc : em.getNPCManager().getCharacters()) {
 			// If we're attacking at an NPC's position, complete attack
-			if((em.getPlayer().getXPos() + dx) == npc.getXPos()
-					&& (em.getPlayer().getYPos() + dy) == npc.getYPos()) {
-				if(this.isCharged) { // CHARGED ----------------------------------
+			if ((em.getPlayer().getXPos() + dx) == npc.getXPos() && (em.getPlayer().getYPos() + dy) == npc.getYPos()) {
+				if (isCharged) { // CHARGED ----------------------------------------------------
+					
 					// First, discharge weapon
-					this.dischargeWeapon();
+					dischargeWeapon();
 					
 					// Determine randomly whether to spawn flames
-					if(Math.random() < this.FIRE_CHANCE) { // FLAME ---------------
+					if (Math.random() < FIRE_CHANCE) { // FLAME ---------------
+						
 						// Fire a flame in the direction the player attacked
 						em.getProjectileManager()
 							.addProjectile(new KingStaffFlame((em.getPlayer().getXPos() + dx),
@@ -76,29 +81,27 @@ public class KingStaff extends Weapon {
 						// Play fire sound
 						SoundPlayer.playWAV(GPath.createSoundPath("fire_ATT.wav"));
 					} else { // REGULAR ------------------------------------------
+						
 						// If charged deal extra damage with standard attack
-						int dmg = this.calculateDamage(this.chargeMult, npc);
+						int dmg = calculateDamage(chargeMult, npc);
 						npc.damageCharacter(dmg);
-						this.sendToLog("Player swiped and dealt " + Integer.toString(dmg)
-							+ " damage to " + npc.getName() + ".", GColors.ATTACK, npc);
+						sendToLog("Player swiped and dealt " + Integer.toString(dmg)
+								+ " damage to " + npc.getName() + ".", GColors.ATTACK, npc);
 						
 						// Mark location with effect
 						em.getEffectManager().addEffect(new ChargeIndicator(em.getPlayer().getXPos() + dx, em.getPlayer().getYPos() + dy));
 						
 						// Then, deal damage to adjacent foes
-						this.findSwipeTargets(dx, dy);
+						findSwipeTargets(dx, dy);
 						
 						// Play swipe sound
-						this.playSwingSound();
+						playSwingSound();
 					}
-					
-
-					
-					
-				} else { // NOT CHARGED ------------------------------------------
+				} else { // NOT CHARGED ----------------------------------------------------
 					
 					// Determine randomly whether to spawn flame
-					if(Math.random() < this.FIRE_CHANCE) { // FLAME ---------------
+					if (Math.random() < FIRE_CHANCE) { // FLAME ---------------
+						
 						// Fire a flame in the direction the player attacked
 						em.getProjectileManager()
 							.addProjectile(new KingStaffFlame((em.getPlayer().getXPos() + dx),
@@ -108,23 +111,22 @@ public class KingStaff extends Weapon {
 						
 						// Play fire sound
 						SoundPlayer.playWAV(GPath.createSoundPath("fire_ATT.wav"));
-						
 					} else { // REGULAR ------------------------------------------
+						
 						// If not charged deal normal damage and attack normally
-						int dmg = this.calculateDamage(npc);
+						int dmg = calculateDamage(npc);
 						npc.damageCharacter(dmg);
-						this.sendToLog("Player slashed and dealt " + Integer.toString(dmg)
-							+ " damage to " + npc.getName() + ".", GColors.ATTACK, npc);
+						sendToLog("Player slashed and dealt " + Integer.toString(dmg)
+								+ " damage to " + npc.getName() + ".", GColors.ATTACK, npc);
 						
 						// Play swipe sound
-						this.playSwingSound();
+						playSwingSound();
 					}
-				
 				}
+				
 				// We hit something, so return true
 				return true;
 			}
-			
 		}
 		
 		// If we hit nothing, return false
@@ -147,14 +149,14 @@ public class KingStaff extends Weapon {
 		em.getEffectManager().addEffect(new ChargeIndicator(xPos2, yPos2));	
 		
 		// Damage affected characters
-		for(GCharacter npc : em.getNPCManager().getCharacters()) {
-			if((xPos1 == npc.getXPos() && yPos1 == npc.getYPos()) ||
+		for (GCharacter npc : em.getNPCManager().getCharacters()) {
+			if ((xPos1 == npc.getXPos() && yPos1 == npc.getYPos()) ||
 					(xPos2 == npc.getXPos() && yPos2 == npc.getYPos())) {
 				// Damage target and log result
-				int dmg = this.calculateDamage(this.chargeMult, npc);
+				int dmg = calculateDamage(chargeMult, npc);
 				npc.damageCharacter(dmg);
-				this.sendToLog("Player swiped and dealt " + Integer.toString(dmg)
-				+ " damage to " + npc.getName() + ".", GColors.ATTACK, npc);
+				sendToLog("Player swiped and dealt " + Integer.toString(dmg)
+						+ " damage to " + npc.getName() + ".", GColors.ATTACK, npc);
 			}
 		}
 	}

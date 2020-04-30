@@ -9,7 +9,10 @@ import helpers.SoundPlayer;
 import managers.EntityManager;
 import tiles.MovableType;
 
-// Class that represents the 'Crossbow' weapons in-game
+/**
+ * Class that represents the 'Crossbow' weapons in-game
+ * @author jeoliva
+ */
 public class Crossbow extends Weapon {
 
 	// Serialization ID
@@ -31,31 +34,30 @@ public class Crossbow extends Weapon {
 	public boolean tryAttack(int dx, int dy) {
 		// Retrieve instance of EntityManager
 		EntityManager em = EntityManager.getInstance();
-		if(this.isCharged) {
+		if (isCharged) {
 			// Discharge weapon
-			this.dischargeWeapon();
+			dischargeWeapon();
 			
 			// While we still have a open bullet path, check for NPCs to hit
 			int nextX = (em.getPlayer().getXPos() + dx);
 			int nextY = (em.getPlayer().getYPos() + dy);
 			boolean isEndHit = false;
 			boolean isNPCHit = false;
-			while(!isEndHit) { // Begin While --------------------------------------
+			while (!isEndHit) { // Begin While --------------------------------------
 				// First check for NPCs to hit
-				for(GCharacter npc : em.getNPCManager().getCharacters()) {
-					if(nextX == npc.getXPos() && nextY == npc.getYPos()) {
+				for (GCharacter npc : em.getNPCManager().getCharacters()) {
+					if (nextX == npc.getXPos() && nextY == npc.getYPos()) {
 						// Damage the NPC
-						int dmg = this.calculateDamage(this.chargeMult, npc);
+						int dmg = calculateDamage(chargeMult, npc);
 						npc.damageCharacter(dmg);
-						this.sendToLog("Player sniped " + npc.getName() + " and dealt "
-						+ Integer.toString(dmg) + " damage.", GColors.ATTACK, npc);
+						sendToLog("Player sniped " + npc.getName() + " and dealt "
+								+ Integer.toString(dmg) + " damage.", GColors.ATTACK, npc);
 						
 						// Play arrow firing sound
 						SoundPlayer.playWAV(GPath.createSoundPath("arrow_SHOT.wav"));
 						
 						// Add on-hit effect
-						em.getEffectManager()
-							.addEffect(new ChargeIndicator(npc.getXPos(), npc.getYPos()));
+						em.getEffectManager().addEffect(new ChargeIndicator(npc.getXPos(), npc.getYPos()));
 						
 						// We hit an NPC
 						isEndHit = true;
@@ -80,22 +82,23 @@ public class Crossbow extends Weapon {
 			
 			// Return whether or not we hit an NPC
 			return isNPCHit;
-			
 		} else {
 			// If not charged, check for immediately adjacent NPCs to punch
-			for(GCharacter npc : em.getNPCManager().getCharacters()) {
-				if((em.getPlayer().getXPos() + dx) == npc.getXPos()
+			for (GCharacter npc : em.getNPCManager().getCharacters()) {
+				if ((em.getPlayer().getXPos() + dx) == npc.getXPos()
 						&& (em.getPlayer().getYPos() + dy) == npc.getYPos()) {
 					// If not charged deal normal damage and attack normally
-					int dmg = this.calculateDamage(npc);
+					int dmg = calculateDamage(npc);
 					npc.damageCharacter(dmg);
-					this.sendToLog("Player punched and dealt " + Integer.toString(dmg)
-						+ " damage to " + npc.getName() + ".", GColors.ATTACK, npc);
-					this.playSwingSound();
+					sendToLog("Player punched and dealt " + Integer.toString(dmg)
+							+ " damage to " + npc.getName() + ".", GColors.ATTACK, npc);
+					playSwingSound();
 					return true;
 				}
 			}
 		}
+		
+		// If we didn't connect with anything, return false
 		return false;
 	}
 

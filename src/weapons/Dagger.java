@@ -8,7 +8,10 @@ import managers.EntityManager;
 import tiles.MovableType;
 import tiles.TileType;
 
-// Class representing 'Dagger' type weapons which can appear in-game
+/**
+ * Class representing 'Dagger' type weapons which can appear in-game
+ * @author jeoliva
+ */
 public class Dagger extends Weapon {
 
 	// Serialization ID
@@ -33,45 +36,42 @@ public class Dagger extends Weapon {
 		// Fetch reference to the player
 		Player player = em.getPlayer();
 		
-		for(GCharacter npc : em.getNPCManager().getCharacters()) {
+		for (GCharacter npc : em.getNPCManager().getCharacters()) {
 			// If we're attacking at an NPC's position, complete attack
-			if((player.getXPos() + dx) == npc.getXPos()
-					&& (player.getYPos() + dy) == npc.getYPos()) {
-				if(this.isCharged) {
+			if ((player.getXPos() + dx) == npc.getXPos() && (player.getYPos() + dy) == npc.getYPos()) {
+				if (isCharged) {
 					// First, discharge weapon
-					this.dischargeWeapon();
+					dischargeWeapon();
 					
 					// Fetch tile the targeted enemy is on
 					TileType tt = GameScreen.getTile(player.getXPos() + dx, player.getYPos() + dy).getTileType();
 					
-					if(MovableType.canMove(player.getMoveTypes(), tt.getMovableType()) &&
+					if (MovableType.canMove(player.getMoveTypes(), tt.getMovableType()) &&
 							player.leapPlayer(player.getXPos() + (dx*2), player.getYPos() + (dy*2))) {
-						//tt.onStep(); - THIS LINE SOMETIMES CAUSES GRAPHICAL BUGS - TODO
-						
-						// If space to backstab, deal modified damage and steb behind target
-						int dmg = this.calculateDamage(this.chargeMult, npc);
+						// If space to backstab, deal modified damage and step behind target
+						int dmg = calculateDamage(chargeMult, npc);
 						npc.damageCharacter(dmg);
-						this.sendToLog("Player backstabbed "+ npc.getName() +" and dealt " + Integer.toString(dmg)
-						+ " damage.", GColors.ATTACK, npc);
+						sendToLog("Player backstabbed "+ npc.getName() +" and dealt " + Integer.toString(dmg)
+								+ " damage.", GColors.ATTACK, npc);
 					} else {
 						// If no space to backstab, deal normal damage and attack normally
-						int dmg = this.calculateDamage(npc);
+						int dmg = calculateDamage(npc);
 						npc.damageCharacter(dmg);
-						this.sendToLog("Player cut "+ npc.getName() +" and dealt " + Integer.toString(dmg)
-						+ " damage.", GColors.ATTACK, npc);
+						sendToLog("Player cut "+ npc.getName() +" and dealt " + Integer.toString(dmg)
+								+ " damage.", GColors.ATTACK, npc);
 					}
 				} else {
 					// If not charged deal normal damage and attack normally
-					int dmg = this.calculateDamage(npc);
+					int dmg = calculateDamage(npc);
 					npc.damageCharacter(dmg);
-					this.sendToLog("Player cut "+ npc.getName() +" and dealt " + Integer.toString(dmg)
-						+ " damage.", GColors.ATTACK, npc);
+					sendToLog("Player cut "+ npc.getName() +" and dealt " + Integer.toString(dmg)
+							+ " damage.", GColors.ATTACK, npc);
 				}
+				
 				// We hit something, so return true
-				this.playSwingSound();
+				playSwingSound();
 				return true;
 			}
-			
 		}
 		
 		// If we hit nothing, return false

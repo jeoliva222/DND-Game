@@ -15,7 +15,11 @@ import helpers.SoundPlayer;
 import items.GItem;
 import managers.EntityManager;
 
-// Class that contains basic functionality for all weapons
+/**
+ * Class representing a 'Weapon' type item in-game.
+ * This class contains basic functionality for all weapons.
+ * @author jeoliva
+ */
 public abstract class Weapon extends GItem {
 	
 	// Serialization ID
@@ -47,33 +51,33 @@ public abstract class Weapon extends GItem {
 		int targetArmor = npc.getArmor();
 		
 		// If player has rage, buff the damage multiplier
-		if(EntityManager.getInstance().getPlayer().hasBuff(Buff.RAGE)) {
+		if (EntityManager.getInstance().getPlayer().hasBuff(Buff.RAGE)) {
 			dmgMult = dmgMult * RageBuff.dmgBoost;
 		}
 		
-		int newMin = (int) Math.floor(this.minDmg * dmgMult);
-		int newMax = (int) Math.floor((this.maxDmg * dmgMult) - targetArmor);
+		int newMin = (int) Math.floor(minDmg * dmgMult);
+		int newMax = (int) Math.floor((maxDmg * dmgMult) - targetArmor);
 		
 		// Maximum damage cannot drop below 0
-		if(newMax < 0) {
+		if (newMax < 0) {
 			newMax = 0;
 		}
 		
 		// If new maximum damage is below minimum damage, drop the minimum damage to match
-		if(newMin > newMax) {
+		if (newMin > newMax) {
 			newMin = newMax;
 		}
 		
 		// If the player gets lucky, they crit the enemy
 		// Otherwise, calculate damage normally
-		if(Math.random() < this.critChance) {
-			dmg = (int) Math.floor(newMax * this.critMult);
+		if (Math.random() < critChance) {
+			dmg = (int) Math.floor(newMax * critMult);
 		} else {
 			dmg = r.nextInt((newMax - newMin) + 1) + newMin;
 		}
 		
 		// Limit minimum damage at 0
-		if(dmg < 0) {
+		if (dmg < 0) {
 			dmg = 0;
 		}
 		
@@ -86,28 +90,28 @@ public abstract class Weapon extends GItem {
 		return calculateDamage(1.0, npc);
 	}
 	
-	// Charges the weapon
+	/**
+	 * Charges the weapon
+	 */
 	public void chargeWeapon() {
 		// If player is dead, don't do anything
-		if(!EntityManager.getInstance().getPlayer().isAlive()) {
+		if (!EntityManager.getInstance().getPlayer().isAlive()) {
 			return;
 		}
 		
-		if(this.isCharged) {
+		if (isCharged) {
 			// Do nothing extra
 		} else {
-			// Charge the equipped weapon and log it
-			//LogScreen.log("Charged weapon...");
+			// Charge the equipped weapon
 			this.isCharged = true;
-			
-			// Do your offhand weapon's action
-			EntityManager.getInstance().getPlayer().getSheathedWeapon().doOffhand();
 		}
 	}
 	
 	// Sets the charge of the weapon to false if it is currently charged
 	public void dischargeWeapon() {
-		if(this.isCharged) this.isCharged = false;
+		if (isCharged) {
+			this.isCharged = false;
+		}
 	}
 	
 	// Does an action when offhanded and charging
@@ -132,21 +136,22 @@ public abstract class Weapon extends GItem {
 		InventoryScreen.getTile(InventoryScreen.getXIndex(), InventoryScreen.getYIndex()).setItem(oldWep);
 		
 		// Log the resulting action
-		LogScreen.log("Player swapped to "+this.name+".", GColors.ITEM);
-		
+		LogScreen.log("Player swapped to " + name + ".", GColors.ITEM);
 		return true;
 	}
 	
 	// Sends the attack message to the LogScreen if the object is an enemy (Not an Interactable)
 	protected void sendToLog(String message, Color color, GCharacter npc) {
-		if(!npc.getIfInteractable())	LogScreen.log(message, color);
+		if (!npc.getIfInteractable()) {
+			LogScreen.log(message, color);
+		}
 	}
 	
 	// Plays a random swinging sound effect
 	public void playSwingSound() {
 		Random r = new Random();
 		int whichSound = r.nextInt(3);
-		if(whichSound == 0) {
+		if (whichSound == 0) {
 			SoundPlayer.playWAV(GPath.createSoundPath("player_SWING.wav"));
 		} else if (whichSound == 1) {
 			SoundPlayer.playWAV(GPath.createSoundPath("player_SWING2.wav"));

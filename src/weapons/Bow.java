@@ -6,7 +6,10 @@ import helpers.GColors;
 import managers.EntityManager;
 import projectiles.Arrow;
 
-// Class representing the 'Bow' weapons in-game
+/**
+ * Class representing the 'Bow' weapons in-game
+ * @author jeoliva
+ */
 public class Bow extends Weapon {
 	
 	// Serialization ID
@@ -31,9 +34,9 @@ public class Bow extends Weapon {
 		// Retrieve instance of EntityManager
 		EntityManager em = EntityManager.getInstance();
 		
-		if(this.isCharged) {
+		if (isCharged) {
 			// Discharge weapon
-			this.dischargeWeapon();
+			dischargeWeapon();
 			
 			// Fire an arrow in the direction the player attacked
 			em.getProjectileManager()
@@ -46,19 +49,18 @@ public class Bow extends Weapon {
 			return true;
 		} else {
 			// If not charged, check for immediately adjacent NPCs to punch
-			for(GCharacter npc : em.getNPCManager().getCharacters()) {
-				if((em.getPlayer().getXPos() + dx) == npc.getXPos()
+			for (GCharacter npc : em.getNPCManager().getCharacters()) {
+				if ((em.getPlayer().getXPos() + dx) == npc.getXPos()
 						&& (em.getPlayer().getYPos() + dy) == npc.getYPos()) {
 					// If not charged deal normal damage and attack normally
-					int dmg = this.calculateDamage(npc);
+					int dmg = calculateDamage(npc);
 					npc.damageCharacter(dmg);
-					this.sendToLog("Player punched and dealt " + Integer.toString(dmg)
+					sendToLog("Player punched and dealt " + Integer.toString(dmg)
 						+ " damage to " + npc.getName() + ".", GColors.ATTACK, npc);
-					this.playSwingSound();
+					playSwingSound();
 					return true;
 				}
 			}
-			
 		}
 		
 		// If we didn't connect with anything, return false

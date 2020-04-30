@@ -409,8 +409,14 @@ public class Player implements Serializable {
 	
 	// Charges both weapons the player has on them
 	public void chargeWeapons() {
-		this.equippedWeapon.chargeWeapon();
-		this.sheathedWeapon.chargeWeapon();
+		// Charge both equipped weapons
+		equippedWeapon.chargeWeapon();
+		sheathedWeapon.chargeWeapon();
+		
+		// Do your offhand weapon's action
+		sheathedWeapon.doOffhand();
+		
+		// Log a message
        	LogScreen.log("Charged weapons...");
 	}
 	

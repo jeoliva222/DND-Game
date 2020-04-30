@@ -5,7 +5,10 @@ import effects.ChargeIndicator;
 import helpers.GColors;
 import managers.EntityManager;
 
-// Basic weapon class that can only attack adjacent foes
+/**
+ * Basic weapon class that can only attack adjacent foes
+ * @author jeoliva
+ */
 public class Fists extends Weapon {
 
 	// Serialization ID
@@ -27,35 +30,34 @@ public class Fists extends Weapon {
 		// Retrieve instance of EntityManager
 		EntityManager em = EntityManager.getInstance();
 		
-		for(GCharacter npc : em.getNPCManager().getCharacters()) {
+		for (GCharacter npc : em.getNPCManager().getCharacters()) {
 			// If we're attacking at an NPC's position, complete attack
-			if((em.getPlayer().getXPos() + dx) == npc.getXPos()
-					&& (em.getPlayer().getYPos() + dy) == npc.getYPos()) {
-				if(this.isCharged) {
+			if ((em.getPlayer().getXPos() + dx) == npc.getXPos() && (em.getPlayer().getYPos() + dy) == npc.getYPos()) {
+				if (isCharged) {
 					// First, discharge weapon
-					this.dischargeWeapon();
+					dischargeWeapon();
 					
 					// If charged deal extra damage with standard attack
-					int dmg = this.calculateDamage(this.chargeMult, npc);
+					int dmg = calculateDamage(chargeMult, npc);
 					npc.damageCharacter(dmg);
 					
 					// Add effect on attacked tile and relay log message
 					em.getEffectManager().addEffect(new ChargeIndicator(em.getPlayer().getXPos() + dx,
 							em.getPlayer().getYPos() + dy));
-					this.sendToLog("Player punched and dealt " + Integer.toString(dmg)
-						+ " damage to " + npc.getName() + ".", GColors.ATTACK, npc);
+					sendToLog("Player punched and dealt " + Integer.toString(dmg)
+							+ " damage to " + npc.getName() + ".", GColors.ATTACK, npc);
 				} else {
 					// If not charged deal normal damage and attack normally
-					int dmg = this.calculateDamage(npc);
+					int dmg = calculateDamage(npc);
 					npc.damageCharacter(dmg);
-					this.sendToLog("Player slapped and dealt " + Integer.toString(dmg)
-						+ " damage to " + npc.getName() + ".", GColors.ATTACK, npc);
+					sendToLog("Player slapped and dealt " + Integer.toString(dmg)
+							+ " damage to " + npc.getName() + ".", GColors.ATTACK, npc);
 				}
+				
 				// We hit something, so return true
-				this.playSwingSound();
+				playSwingSound();
 				return true;
 			}
-			
 		}
 		
 		// If we hit nothing, return false

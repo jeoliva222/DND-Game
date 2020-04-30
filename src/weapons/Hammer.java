@@ -9,7 +9,10 @@ import effects.ChargeIndicator;
 import helpers.GColors;
 import managers.EntityManager;
 
-// Class representing the Hammer-class weapons usable by the player
+/**
+ * Class representing the Hammer-class weapons usable by the player
+ * @author jeoliva
+ */
 public class Hammer extends Weapon {
 
 	// Serialization ID
@@ -34,15 +37,15 @@ public class Hammer extends Weapon {
 		int plrX = em.getPlayer().getXPos();
 		int plrY = em.getPlayer().getYPos();
 		
-		for(GCharacter npc : em.getNPCManager().getCharacters()) {
+		for (GCharacter npc : em.getNPCManager().getCharacters()) {
 			// If we're attacking at an NPC's position, complete attack
-			if((plrX + dx) == npc.getXPos() && (plrY + dy) == npc.getYPos()) {
-				if(this.isCharged) {
+			if ((plrX + dx) == npc.getXPos() && (plrY + dy) == npc.getYPos()) {
+				if (isCharged) {
 					// First, discharge weapon
-					this.dischargeWeapon();
+					dischargeWeapon();
 					
 					// If charged, hit all adjacent targets with piercing damage
-					this.hitAdjacents(plrX, plrY);
+					hitAdjacents(plrX, plrY);
 					
 					// Mark the tiles
 					em.getEffectManager().addEffect(new ChargeIndicator(plrX + 1, plrY));
@@ -51,16 +54,16 @@ public class Hammer extends Weapon {
 					em.getEffectManager().addEffect(new ChargeIndicator(plrX, plrY - 1));
 				} else {
 					// If not charged deal normal damage and attack normally
-					int dmg = this.calculateDamage(npc);
+					int dmg = calculateDamage(npc);
 					npc.damageCharacter(dmg);
-					this.sendToLog("Player smashed and dealt " + Integer.toString(dmg)
-						+ " damage to " + npc.getName() + ".", GColors.ATTACK, npc);
+					sendToLog("Player smashed and dealt " + Integer.toString(dmg)
+							+ " damage to " + npc.getName() + ".", GColors.ATTACK, npc);
 				}
+				
 				// We hit something, so return true
-				this.playSwingSound();
+				playSwingSound();
 				return true;
 			}
-			
 		}
 		
 		// If we hit nothing, return false
@@ -75,33 +78,33 @@ public class Hammer extends Weapon {
 		int halfArmor = npc.getArmor() / 2;
 		
 		// If player has rage, buff the damage multiplier
-		if(EntityManager.getInstance().getPlayer().hasBuff(Buff.RAGE)) {
+		if (EntityManager.getInstance().getPlayer().hasBuff(Buff.RAGE)) {
 			dmgMult = dmgMult * RageBuff.dmgBoost;
 		}
 		
-		int newMin = (int) Math.floor(this.minDmg * dmgMult);
-		int newMax = (int) Math.floor((this.maxDmg * dmgMult) - halfArmor);
+		int newMin = (int) Math.floor(minDmg * dmgMult);
+		int newMax = (int) Math.floor((maxDmg * dmgMult) - halfArmor);
 		
 		// Maximum damage cannot drop below 0
-		if(newMax < 0) {
+		if (newMax < 0) {
 			newMax = 0;
 		}
 		
 		// If new maximum damage is below minimum damage, drop the minimum damage to match
-		if(newMin > newMax) {
+		if (newMin > newMax) {
 			newMin = newMax;
 		}
 		
 		// If the player gets lucky, they crit the enemy
 		// Otherwise, calculate damage normally
-		if(Math.random() < this.critChance) {
-			dmg = (int) Math.floor(newMax * this.critMult);
+		if (Math.random() < critChance) {
+			dmg = (int) Math.floor(newMax * critMult);
 		} else {
 			dmg = r.nextInt((newMax - newMin) + 1) + newMin;
 		}
 		
 		// Limit minimum damage at 0
-		if(dmg < 0) {
+		if (dmg < 0) {
 			dmg = 0;
 		}
 		
@@ -118,12 +121,12 @@ public class Hammer extends Weapon {
 			int distX = plrX - npc.getXPos();
 			int distY = plrY - npc.getYPos();
 			
-			if(((Math.abs(distX) == 1) && (Math.abs(distY) == 0)) ||
+			if (((Math.abs(distX) == 1) && (Math.abs(distY) == 0)) ||
 					((Math.abs(distX) == 0) && (Math.abs(distY) == 1))) {
-				int dmg = this.calculatePierceDamage(this.chargeMult, npc);
+				int dmg = calculatePierceDamage(chargeMult, npc);
 				npc.damageCharacter(dmg);
-				this.sendToLog("Player slammed and dealt " + Integer.toString(dmg)
-					+ " damage to " + npc.getName() + ".", GColors.ATTACK, npc);
+				sendToLog("Player slammed and dealt " + Integer.toString(dmg)
+						+ " damage to " + npc.getName() + ".", GColors.ATTACK, npc);
 			}
 		}
 	}

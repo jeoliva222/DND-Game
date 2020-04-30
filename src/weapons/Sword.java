@@ -5,7 +5,12 @@ import effects.ChargeIndicator;
 import helpers.GColors;
 import managers.EntityManager;
 
-// Swords are the most basic weapon with a charged attack that deals extra damage
+/**
+ * Class representing the 'Sword' type weapons in-game.
+ * Swords are a basic weapon with a charged attack that cleaves the three spaces in
+ * front of the user.
+ * @author jeoliva
+ */
 public class Sword extends Weapon {
 	
 	// Serialization ID
@@ -28,34 +33,35 @@ public class Sword extends Weapon {
 		EntityManager em = EntityManager.getInstance();
 		
 		// For every NPC, check if we're attacking in their direction next to them
-		for(GCharacter npc : em.getNPCManager().getCharacters()) {
+		for (GCharacter npc : em.getNPCManager().getCharacters()) {
 			// If we're attacking at an NPC's position, do attack
-			if((em.getPlayer().getXPos() + dx) == npc.getXPos()
+			if ((em.getPlayer().getXPos() + dx) == npc.getXPos()
 					&& (em.getPlayer().getYPos() + dy) == npc.getYPos()) {
 				// If weapon is charged, swipe 3 tiles and multiply damage
-				if(this.isCharged) {
+				if (isCharged) {
 					// Discharge weapon
-					this.dischargeWeapon();
+					dischargeWeapon();
 					
 					// Deal damage to middle target first
-					int dmg = this.calculateDamage(this.chargeMult, npc);
+					int dmg = calculateDamage(chargeMult, npc);
 					npc.damageCharacter(dmg);
 					em.getEffectManager().addEffect
 						(new ChargeIndicator((em.getPlayer().getXPos() + dx),
 							(em.getPlayer().getYPos() + dy)));
-					this.sendToLog("Player swiped and dealt " + Integer.toString(dmg)
-						+ " damage to " + npc.getName() + ".", GColors.ATTACK, npc);
+					sendToLog("Player swiped and dealt " + Integer.toString(dmg)
+							+ " damage to " + npc.getName() + ".", GColors.ATTACK, npc);
 					
-					// Then check/attack for characters to relative left of attack
-					this.findSwipeTargets(dx, dy);
+					// Then check/attack for characters to relative left/right of initial attack
+					findSwipeTargets(dx, dy);
 				} else {
 					// If not charged deal normal damage and attack normally
-					int dmg = this.calculateDamage(npc);
+					int dmg = calculateDamage(npc);
 					npc.damageCharacter(dmg);
-					this.sendToLog("Player swung and dealt " + Integer.toString(dmg)
-						+ " damage to " + npc.getName() + ".", GColors.ATTACK, npc);
+					sendToLog("Player swung and dealt " + Integer.toString(dmg)
+							+ " damage to " + npc.getName() + ".", GColors.ATTACK, npc);
 				}
-				this.playSwingSound();
+				
+				playSwingSound();
 				return true;
 			}
 		}
@@ -63,56 +69,30 @@ public class Sword extends Weapon {
 		return false;
 	}
 	
-	// Finds and attacks edge targets of swipe/charged sword attack
-	private void findSwipeTargets(int dx, int dy) {
+	// Finds the swipe target coordinates, marks the tiles, then damages characters
+	public void findSwipeTargets(int dx, int dy) {
 		// Retrieve instance of EntityManager
 		EntityManager em = EntityManager.getInstance();
 		
-		if(Math.abs(dx) > Math.abs(dy)) {
-			// Target is to left or right of player
-			em.getEffectManager().addEffect(new ChargeIndicator(em.getPlayer().getXPos() + dx, em.getPlayer().getYPos() + 1));
-			em.getEffectManager().addEffect(new ChargeIndicator(em.getPlayer().getXPos() + dx, em.getPlayer().getYPos() - 1));	
-			
-			// Find and attack upper/lower targets if they exist
-			for(GCharacter npc : em.getNPCManager().getCharacters()) {
-				if((em.getPlayer().getXPos() + dx) == npc.getXPos()
-						&& (em.getPlayer().getYPos() + 1) == npc.getYPos()) {
-					// Upper target attack
-					int dmg = this.calculateDamage(this.chargeMult, npc);
-					npc.damageCharacter(dmg);
-					this.sendToLog("Player swiped and dealt " + Integer.toString(dmg)
-					+ " damage to " + npc.getName() + ".", GColors.ATTACK, npc);
-				} else if ((em.getPlayer().getXPos() + dx) == npc.getXPos()
-						&& (em.getPlayer().getYPos() - 1) == npc.getYPos()) {
-					// Lower target
-					int dmg = this.calculateDamage(this.chargeMult, npc);
-					npc.damageCharacter(dmg);
-					this.sendToLog("Player swiped and dealt " + Integer.toString(dmg)
-					+ " damage to " + npc.getName() + ".", GColors.ATTACK, npc);
-				}
-			}
-		} else {
-			// Target is above/below the player
-			em.getEffectManager().addEffect(new ChargeIndicator(em.getPlayer().getXPos() + 1, em.getPlayer().getYPos() + dy));
-			em.getEffectManager().addEffect(new ChargeIndicator(em.getPlayer().getXPos() - 1, em.getPlayer().getYPos() + dy));	
-			
-			// Find and attack left/right targets if they exist
-			for(GCharacter npc : em.getNPCManager().getCharacters()) {
-				if((em.getPlayer().getXPos() + 1) == npc.getXPos()
-						&& (em.getPlayer().getYPos() + dy) == npc.getYPos()) {
-					// Right target
-					int dmg = this.calculateDamage(this.chargeMult, npc);
-					npc.damageCharacter(dmg);
-					this.sendToLog("Player swiped and dealt " + Integer.toString(dmg)
-					+ " damage to " + npc.getName() + ".", GColors.ATTACK, npc);
-				} else if ((em.getPlayer().getXPos() - 1) == npc.getXPos()
-						&& (em.getPlayer().getYPos() + dy) == npc.getYPos()) {
-					// Left target
-					int dmg = this.calculateDamage(this.chargeMult, npc);
-					npc.damageCharacter(dmg);
-					this.sendToLog("Player swiped and dealt " + Integer.toString(dmg)
-					+ " damage to " + npc.getName() + ".", GColors.ATTACK, npc);
-				}
+		// Define attack coordinates
+		int xPos1 = (em.getPlayer().getXPos() + dx + Math.abs(dy));
+		int yPos1 = (em.getPlayer().getYPos() + dy + Math.abs(dx));
+		int xPos2 = (em.getPlayer().getXPos() + dx - Math.abs(dy));
+		int yPos2 = (em.getPlayer().getYPos() + dy - Math.abs(dx));
+		
+		// Mark damaged spots
+		em.getEffectManager().addEffect(new ChargeIndicator(xPos1, yPos1));
+		em.getEffectManager().addEffect(new ChargeIndicator(xPos2, yPos2));	
+		
+		// Damage affected characters
+		for (GCharacter npc : em.getNPCManager().getCharacters()) {
+			if ((xPos1 == npc.getXPos() && yPos1 == npc.getYPos()) ||
+					(xPos2 == npc.getXPos() && yPos2 == npc.getYPos())) {
+				// Damage target and log result
+				int dmg = calculateDamage(chargeMult, npc);
+				npc.damageCharacter(dmg);
+				sendToLog("Player swiped and dealt " + Integer.toString(dmg)
+						+ " damage to " + npc.getName() + ".", GColors.ATTACK, npc);
 			}
 		}
 	}
