@@ -9,16 +9,33 @@ import gui.GameTile;
 import tiles.MovableType;
 import tiles.TileType;
 
-// Class that has helper methods that help determine if Line-of-sight (LOS) exists
+/**
+ * Class that has helper methods that help determine if Line-of-sight (LOS) exists
+ * @author jeoliva
+ */
 public class LineDrawer {
 	
-	// Checks if a position has sight towards another position
+	/**
+	 * Checks if a position has sight towards another position
+	 * @param originX Origin X-position
+	 * @param originY Origin Y-position
+	 * @param destX Destination X-position
+	 * @param destY Destination Y-position
+	 * @return
+	 */
 	public static boolean hasSight(int originX, int originY, int destX, int destY) {
-		ArrayList<GameTile> tiles = LineDrawer.fetchSightPath(originX, originY, destX, destY);
-		return LineDrawer.isLOS(tiles, originX, originY, destX, destY);
+		ArrayList<GameTile> tiles = fetchSightPath(originX, originY, destX, destY);
+		return isLOS(tiles, originX, originY, destX, destY);
 	}
 	
-	// Fetches the LOS path between two points
+	/**
+	 * Fetches the LOS path between two points
+	 * @param originX Origin X-position
+	 * @param originY Origin Y-position
+	 * @param destX Destination X-position
+	 * @param destY Destination Y-position
+	 * @return ArrayList of GameTiles between the two specified positions
+	 */
 	public static ArrayList<GameTile> fetchSightPath(int originX, int originY, int destX, int destY) {
 		// Initialize variables for general direction of line being drawn
 		int xDir = 0;
@@ -30,14 +47,14 @@ public class LineDrawer {
 		int dy = destY - originY;
 		
 		// Set X-Directional
-		if(dx > 0) {
+		if (dx > 0) {
 			xDir = 1;
 		} else if (dx < 0) {
 			xDir = -1;
 		}
 		
 		// Set Y-Direction
-		if(dy > 0) {
+		if (dy > 0) {
 			yDir = 1;
 		} else if (dy < 0) {
 			yDir = -1;
@@ -45,23 +62,31 @@ public class LineDrawer {
 		
 		// If straight line to target, use simpler algorithm
 		// Otherwise, calculate slope
-		if((dx == 0) || (dy == 0)) {
-			return LineDrawer.drawStraightLine(originX, originY, destX, destY, xDir, yDir);
+		if ((dx == 0) || (dy == 0)) {
+			return drawStraightLine(originX, originY, destX, destY, xDir, yDir);
 		} else {
 			slope = (double) dy / dx;
 		}
 		
 		// Set dominant direction
-		if(Math.abs(slope) > 1.0) {
+		if (Math.abs(slope) > 1.0) {
 			// Dominant direction is Y
-			return LineDrawer.drawYLine(originX, originY, destX, destY, xDir, yDir, slope);
+			return drawYLine(originX, originY, destX, destY, xDir, yDir, slope);
 		} else {
 			// Dominant direction is X
-			return LineDrawer.drawXLine(originX, originY, destX, destY, xDir, yDir, slope);
+			return drawXLine(originX, originY, destX, destY, xDir, yDir, slope);
 		}
 	}
 	
-	// Returns a boolean indicating whether it detected any walls in the list of tiles
+	/**
+	 * Returns a boolean indicating whether it detected any walls in the list of tiles
+	 * @param tiles ArrayList of GameTiles to check for LOS
+	 * @param originX Origin X-position
+	 * @param originY Origin Y-position
+	 * @param destX Destination X-position
+	 * @param destY Destination Y-position
+	 * @return True if LOS between two positions across tiles | False if not
+	 */
 	public static boolean isLOS(ArrayList<GameTile> tiles, int originX, int originY, int destX, int destY) {	
 		// Initialize variables
 		int lastX = originX;
@@ -70,12 +95,14 @@ public class LineDrawer {
 		boolean topDiag = false;
 		
 		// Check through all tiles and return false if we hit a wall or if we hit diagonal walls
-		for(int i = 0; i < tiles.size(); i++) {
+		for (int i = 0; i < tiles.size(); i++) {
 			// Fetch reference to the tile
 			GameTile tile = tiles.get(i);
 			
 			// Check if tile is our destination
-			if((tile.getGridX() == destX) && (tile.getGridY() == destY)) return true;
+			if ((tile.getGridX() == destX) && (tile.getGridY() == destY)) {
+				return true;
+			}
 			
 			// Check for adjacent walls if our LOS path goes diagonally
 			
@@ -84,11 +111,10 @@ public class LineDrawer {
 			int distY = Math.abs(tile.getGridY() - lastY);
 			
 			// If we're diagonal from last tile, then check for walls on the sides of the diagonal
-			if(distX == 1 && distY == 1) {
+			if (distX == 1 && distY == 1) {
 				botDiag = botDiag || (MovableType.isWall(GameScreen.getTile(lastX, tile.getGridY()).getTileType().getMovableType()));
 				topDiag = topDiag || (MovableType.isWall(GameScreen.getTile(tile.getGridX(), lastY).getTileType().getMovableType()));
-				if(botDiag && topDiag)
-				{
+				if (botDiag && topDiag) {
 					// If there are walls on both sides of the diagonal, return false
 					return false;
 				}
@@ -96,7 +122,7 @@ public class LineDrawer {
 			
 			// Check if current tile is not a wall
 			TileType tt = tile.getTileType();
-			if(MovableType.isWall(tt.getMovableType())) {
+			if (MovableType.isWall(tt.getMovableType())) {
 				return false;
 			}
 			
@@ -109,9 +135,17 @@ public class LineDrawer {
 		return false;
 	}
 	
-	// Deals with straight line drawing, returning the set of intersecting GameTiles
-	public static ArrayList<GameTile> drawStraightLine(int originX, int originY,
-			int destX, int destY, int xDir, int yDir) {
+	/**
+	 * Deals with straight line drawing, returning the set of intersecting GameTiles
+	 * @param originX Origin X-position
+	 * @param originY Origin Y-position
+	 * @param destX Destination X-position
+	 * @param destY Destination Y-position
+	 * @param xDir X-direction to draw line
+	 * @param yDir Y-direction to draw line
+	 * @return ArrayList of GameTiles between the two specified positions
+	 */
+	public static ArrayList<GameTile> drawStraightLine(int originX, int originY, int destX, int destY, int xDir, int yDir) {
 		ArrayList<GameTile> tiles = new ArrayList<GameTile>();
 		
 		// Increment counter
@@ -119,7 +153,7 @@ public class LineDrawer {
 		int currentY = originY + yDir;
 		
 		// Keep marking until we hit the destination
-		while((currentX != destX) || (currentY != destY)) {
+		while ((currentX != destX) || (currentY != destY)) {
 			tiles.add(GameScreen.getTile(currentX, currentY));
 			currentX += xDir;
 			currentY += yDir;
@@ -132,10 +166,19 @@ public class LineDrawer {
 		return tiles;
 	}
 
-	// Grabs an Arraylist of Gametiles that intersect the two points
-	// Scans along the X-axis
-	private static ArrayList<GameTile> drawXLine(int originX, int originY,
-			int destX, int destY, int xDir, int yDir, double slope) {
+	/**
+	 * Grabs an ArrayList of GameTiles that intersect the two points. 
+	 * Scans along the X-axis
+	 * @param originX Origin X-position
+	 * @param originY Origin Y-position
+	 * @param destX Destination X-position
+	 * @param destY Destination Y-position
+	 * @param xDir X-direction to draw line
+	 * @param yDir Y-direction to draw line
+	 * @param slope Slope of the line to draw
+	 * @return ArrayList of GameTiles between the two specified positions
+	 */
+	private static ArrayList<GameTile> drawXLine(int originX, int originY, int destX, int destY, int xDir, int yDir, double slope) {
 		// Dominant direction is X
 		ArrayList<GameTile> tiles = new ArrayList<GameTile>();
 		double oldFloor = (double) originY;
@@ -147,23 +190,23 @@ public class LineDrawer {
 		double endX = (double) destX + 0.5;
 		
 		// Repeat until we've reached the destination coordinate
-		while(currentX != endX) {
+		while (currentX != endX) {
 			currentY += ((0.5 * slope) * xDir);
-			double roundedY = LineDrawer.round(currentY, 2);
+			double roundedY = round(currentY, 2);
 			
 			// Check if we're on an even x-coordinate
-			if((currentX % 1.0) == 0.0) {
+			if ((currentX % 1.0) == 0.0) {
 				// Check if we're on an even y-coordinate as well
 				if (roundedY % 1.0 == 0.0) {
 					// If we are, set a flag that we're intersecting the middle of two tiles
 					middleFlag = true;
-				} else if(Math.floor(currentY) != oldFloor) {
+				} else if (Math.floor(currentY) != oldFloor) {
 					// If we've changed 'floors', mark the tile we passed
 					int markedY = (int) Math.floor(currentY);
 					int markedX = 0;
 					// Set the x-marked coordinate differently depending on whether we're
 					// going right or left x-wise
-					if(xDir > 0) {
+					if (xDir > 0) {
 						markedX = (int) Math.floor(currentX) - xDir;
 					} else {
 						markedX = (int) Math.floor(currentX);
@@ -174,7 +217,7 @@ public class LineDrawer {
 			} else {
 				// Check if we've changed floors AND we didn't intersect 
 				// in the middle of two tiles last pass
-				if(Math.floor(currentY) != oldFloor && (!middleFlag)) {
+				if (Math.floor(currentY) != oldFloor && (!middleFlag)) {
 					// If so, add marked tile
 					int markedY = (int) Math.floor(currentY) - yDir;
 					int markedX = (int) Math.floor(currentX);
@@ -192,7 +235,7 @@ public class LineDrawer {
 			// Increment currentY and update floor
 			oldFloor = Math.floor(currentY);
 			currentX += (0.5 * xDir);
-			currentX = LineDrawer.round(currentX, 1);
+			currentX = round(currentX, 1);
 		}
 		
 		// Add destination tile
@@ -202,10 +245,19 @@ public class LineDrawer {
 		return tiles;
 	}
 	
-	// Grabs an Arraylist of Gametiles that intersect the two points
-	// Scans along the Y-axis
-	private static ArrayList<GameTile> drawYLine(int originX, int originY,
-			int destX, int destY, int xDir, int yDir, double slope) {
+	/**
+	 * Grabs an ArrayList of GameTiles that intersect the two points. 
+	 * Scans along the Y-axis
+	 * @param originX Origin X-position
+	 * @param originY Origin Y-position
+	 * @param destX Destination X-position
+	 * @param destY Destination Y-position
+	 * @param xDir X-direction to draw line
+	 * @param yDir Y-direction to draw line
+	 * @param slope Slope of the line to draw
+	 * @return ArrayList of GameTiles between the two specified positions
+	 */
+	private static ArrayList<GameTile> drawYLine(int originX, int originY, int destX, int destY, int xDir, int yDir, double slope) {
 		// Dominant direction is Y
 		ArrayList<GameTile> tiles = new ArrayList<GameTile>();
 		double oldFloor = (double) originX;
@@ -217,23 +269,23 @@ public class LineDrawer {
 		double endY = (double) destY + 0.5;
 		
 		// Repeat until we've reached the destination coordinate
-		while(currentY != endY) {
+		while (currentY != endY) {
 			currentX += ((0.5 / slope) * yDir);
-			double roundedX = LineDrawer.round(currentX, 2);
+			double roundedX = round(currentX, 2);
 			
 			// Check if we're on an even y-coordinate
-			if((currentY % 1.0) == 0.0) {
+			if ((currentY % 1.0) == 0.0) {
 				// Check if we're on an even x-coordinate as well
 				if (roundedX % 1.0 == 0.0) {
 					// If we are, set a flag that we're intersecting the middle of two tiles
 					middleFlag = true;
-				} else if(Math.floor(currentX) != oldFloor) {
+				} else if (Math.floor(currentX) != oldFloor) {
 					// If we've changed 'floors', mark the tile we passed
 					int markedX = (int) Math.floor(currentX);
 					int markedY = 0;
 					// Set the y-marked coordinate differently depending on whether we're
 					// going up or down y-wise
-					if(yDir > 0) {
+					if (yDir > 0) {
 						markedY = (int) Math.floor(currentY) - yDir;
 					} else {
 						markedY = (int) Math.floor(currentY);
@@ -244,7 +296,7 @@ public class LineDrawer {
 			} else {
 				// Check if we've changed floors AND we didn't intersect 
 				// in the middle of two tiles last pass
-				if(Math.floor(currentX) != oldFloor && (!middleFlag)) {
+				if (Math.floor(currentX) != oldFloor && (!middleFlag)) {
 					// If so, add marked tile
 					int markedX = (int) Math.floor(currentX) - xDir;
 					int markedY = (int) Math.floor(currentY);
@@ -262,7 +314,7 @@ public class LineDrawer {
 			// Increment currentY and update floor
 			oldFloor = Math.floor(currentX);
 			currentY += (0.5 * yDir);
-			currentY = LineDrawer.round(currentY, 1);
+			currentY = round(currentY, 1);
 		}
 		// Add destination tile
 		tiles.add(GameScreen.getTile(destX, destY));
@@ -271,9 +323,16 @@ public class LineDrawer {
 		return tiles;
 	}
 	
-	// Rounds a double: Function by Jonik
-	static double round(double value, int places) {
-	    if (places < 0) throw new IllegalArgumentException();
+	/**
+	 * Rounds a double: Function by Jonik
+	 * @param value Double value to round
+	 * @param places Number of places to round to
+	 * @return Rounded double
+	 */
+	private static double round(double value, int places) {
+	    if (places < 0) {
+	    	throw new IllegalArgumentException();
+	    }
 
 	    BigDecimal bd = new BigDecimal(value);
 	    bd = bd.setScale(places, RoundingMode.HALF_UP);

@@ -7,13 +7,24 @@ import gui.GameScreen;
 import gui.GameTile;
 import tiles.MovableType;
 
-// Class that does a 'virus' check to see if two coordinates are on the same 'island'
+/**
+ * Class that does a 'virus spread' check to see if two coordinates are on the same 'island'
+ * @author jeoliva
+ */
 public class IslandChecker {
 	
 	// List of coordinates that have been checked
-	public static ArrayList<Dimension> checkedCoords = new ArrayList<Dimension>();
+	private static ArrayList<Dimension> checkedCoords = new ArrayList<Dimension>();
 
-	// Starts the virus spread
+	/**
+	 * Performs a check to see if two positions are on the same 'island'
+	 * @param originX Origin X-position
+	 * @param originY Origin Y-position
+	 * @param destX Destination X-position
+	 * @param destY Destination Y-position
+	 * @param mt MovableType mask indicating tiles that are valid for the same 'island'
+	 * @return True if positions are connected by 'island' | False if not
+	 */
 	public static boolean virusStart(int originX, int originY, int destX, int destY, Short mt) {
 		// Start by clearing checked coordinates list
 		IslandChecker.checkedCoords.clear();
@@ -25,16 +36,24 @@ public class IslandChecker {
 		return virusSpread(originX, originY, destX, destY, mt);
 	}
 	
-	// Recursing function that spreads 'virus' check to nearby tiles
+	/**
+	 * Recursing function that spreads 'virus' check to nearby tiles
+	 * @param x Current tile X-position
+	 * @param y Current tile Y-position
+	 * @param destX Destination X-position
+	 * @param destY Destination Y-position
+	 * @param mt MovableType mask indicating tiles that are valid to spread 'virus' to
+	 * @return True if located destination | False if not
+	 */
 	private static boolean virusSpread(int x, int y, int destX, int destY, Short mt) {
 		// Firstly, check if we've already seen this coordinate
 		Dimension coord = new Dimension(x, y);
-		if(IslandChecker.checkedCoords.contains(coord)) {
+		if (checkedCoords.contains(coord)) {
 			// If we've seen it, return false
 			return false;
 		} else {
 			// If we haven't seen it, add it to the list of seen coordinates and continue
-			IslandChecker.checkedCoords.add(coord);
+			checkedCoords.add(coord);
 		}
 		
 		// Surround in try/catch to detect OOB checks and return false
@@ -43,17 +62,17 @@ public class IslandChecker {
 			GameTile tile = GameScreen.getTile(x, y);
 			
 			// Check if the tile is the right MovableType
-			if(MovableType.canMove(mt, tile.getTileType().getMovableType())) {
+			if (MovableType.canMove(mt, tile.getTileType().getMovableType())) {
 				// Check if we've reached our destination
-				if(x == destX && y == destY) {
+				if (x == destX && y == destY) {
 					// If we have, return true
 					return true;
 				} else {
 					// Otherwise, continue to spread
-					return (IslandChecker.virusSpread(x-1, y, destX, destY, mt) ||
-							IslandChecker.virusSpread(x+1, y, destX, destY, mt) ||
-							IslandChecker.virusSpread(x, y-1, destX, destY, mt) ||
-							IslandChecker.virusSpread(x, y+1, destX, destY, mt));
+					return (virusSpread(x-1, y, destX, destY, mt) ||
+							virusSpread(x+1, y, destX, destY, mt) ||
+							virusSpread(x, y-1, destX, destY, mt) ||
+							virusSpread(x, y+1, destX, destY, mt));
 				}
 			} else {
 				// If not the correct MovableType, return false
@@ -63,7 +82,6 @@ public class IslandChecker {
 			// We're out of bounds, so return false
 			return false;
 		}
-		
 	}
 	
 }
