@@ -24,9 +24,6 @@ public class GKey extends GItem {
 		super("", "", GPath.NULL, 4);
 		this.keycode = keycode;
 		
-		// We don't want keys to be discarded
-		this.isDiscardable = false;
-		
 		// Initialize variables of the key
 		this.initializeKey();
 	}

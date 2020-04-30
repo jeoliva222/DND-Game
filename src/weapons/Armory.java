@@ -9,7 +9,9 @@ import weapons.special.Injector;
 import weapons.special.KingStaff;
 import weapons.special.VenomGun;
 
-// Class where all weapon definitions are stored
+/** 
+ * Class where all weapon definitions are stored
+ */
 public class Armory {
 	
 	// Fist Weapons -----------------------------
@@ -205,11 +207,11 @@ public class Armory {
 		double max = wep.maxDmg - armor;
 		double min = wep.minDmg;
 		
-		if(max < 0) {
+		if (max < 0) {
 			max = 0;
 		}
 		
-		if(min > max) {
+		if (min > max) {
 			min = max;
 		}
 		
@@ -225,22 +227,24 @@ public class Armory {
 		
 		String spacer = "";
 		
-		for(int i = 0; i < (18 - wep.name.length()); i++) {
+		for (int i = 0; i < (18 - wep.getName().length()); i++) {
 			spacer += " ";
 		}
 		
 		DecimalFormat df = new DecimalFormat("#.00");
 		String formatDouble = df.format(totalAvg);
-		if(formatDouble.startsWith(".")) {
+		if (formatDouble.startsWith(".")) {
 			formatDouble = "0" + formatDouble;
 		}
 		
-		System.out.println(wep.name + spacer + ": Average Damage = " +
+		System.out.println(wep.getName() + spacer + ": Average Damage = " +
 				formatDouble + " | Crit Damage = " + critDmg);
 	}
 	
 	public static double round(double value, int places) {
-	    if (places < 0) throw new IllegalArgumentException();
+	    if (places < 0) {
+	    	throw new IllegalArgumentException();
+	    }
 
 	    BigDecimal bd = new BigDecimal(value);
 	    bd = bd.setScale(places, RoundingMode.HALF_UP);

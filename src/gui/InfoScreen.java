@@ -1,13 +1,14 @@
 package gui;
 
-import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.GridLayout;
 import java.awt.Image;
 import java.io.File;
 import java.net.URL;
 
+import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
@@ -68,6 +69,7 @@ public class InfoScreen extends JPanel {
 	private static int descWidth = 230;
 	private static int descHeight = 185;
 	private static int descFontSize = 20;
+	private static int descSidePadSize = 8;
 	private static Font usualDescFont;
 	
 	// Constructor
@@ -76,87 +78,97 @@ public class InfoScreen extends JPanel {
 		
 		// Set preferred size of the the log screen
 		Dimension size = new Dimension(infoWidth, infoHeight);
-		this.setPreferredSize(size);
+		setPreferredSize(size);
 		
 		// Set vertical Box layout
-		this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 		
 		// Set background color
-		this.setBackground(new Color(179, 179, 179));
+		setBackground(new Color(179, 179, 179));
 		
 		// Scale down dimensions and fonts
-		InfoScreen.hpWidth = (int) (InfoScreen.hpWidth * GameInitializer.scaleFactor);
-		InfoScreen.hpHeight = (int) (InfoScreen.hpHeight * GameInitializer.scaleFactor);
-		InfoScreen.hpFontSize = (int) (InfoScreen.hpFontSize * GameInitializer.scaleFactor);
-		InfoScreen.arWidth = (int) (InfoScreen.arWidth * GameInitializer.scaleFactor);
-		InfoScreen.arHeight = (int) (InfoScreen.arHeight * GameInitializer.scaleFactor);
-		InfoScreen.arFontSize = (int) (InfoScreen.arFontSize * GameInitializer.scaleFactor);
-		InfoScreen.nameWidth = (int) (InfoScreen.nameWidth * GameInitializer.scaleFactor);
-		InfoScreen.nameHeight = (int) (InfoScreen.nameHeight * GameInitializer.scaleFactor);
-		InfoScreen.nameFontSize = (int) (InfoScreen.nameFontSize * GameInitializer.scaleFactor);
-		InfoScreen.npcWidth = (int) (InfoScreen.npcWidth * GameInitializer.scaleFactor);
-		InfoScreen.npcHeight = (int) (InfoScreen.npcHeight * GameInitializer.scaleFactor);
-		InfoScreen.descWidth = (int) (InfoScreen.descWidth * GameInitializer.scaleFactor);
-		InfoScreen.descHeight = (int) (InfoScreen.descHeight * GameInitializer.scaleFactor);
-		InfoScreen.descFontSize = (int) (InfoScreen.descFontSize * GameInitializer.scaleFactor);
+		hpWidth = (int) (hpWidth * GameInitializer.scaleFactor);
+		hpHeight = (int) (hpHeight * GameInitializer.scaleFactor);
+		hpFontSize = (int) (hpFontSize * GameInitializer.scaleFactor);
+		arWidth = (int) (arWidth * GameInitializer.scaleFactor);
+		arHeight = (int) (arHeight * GameInitializer.scaleFactor);
+		arFontSize = (int) (arFontSize * GameInitializer.scaleFactor);
+		nameWidth = (int) (nameWidth * GameInitializer.scaleFactor);
+		nameHeight = (int) (nameHeight * GameInitializer.scaleFactor);
+		nameFontSize = (int) (nameFontSize * GameInitializer.scaleFactor);
+		npcWidth = (int) (npcWidth * GameInitializer.scaleFactor);
+		npcHeight = (int) (npcHeight * GameInitializer.scaleFactor);
+		descWidth = (int) (descWidth * GameInitializer.scaleFactor);
+		descHeight = (int) (descHeight * GameInitializer.scaleFactor);
+		descFontSize = (int) (descFontSize * GameInitializer.scaleFactor);
+		descSidePadSize = (int) (descSidePadSize * GameInitializer.scaleFactor);
 		
 		// Set up entity image panel
-		InfoScreen.updateEntityImage();
-		this.add(InfoScreen.entityImagePanel);
+		updateEntityImage();
+		add(entityImagePanel);
 		entityImagePanel.setPreferredSize(new Dimension(npcWidth, npcHeight));
 		
 		// Vertical spacer
 		add(Box.createVerticalGlue());
 		
 		// Set up name panel
-		InfoScreen.nameInfo.setText("-");
-		InfoScreen.nameInfo.setHorizontalAlignment(SwingConstants.CENTER);
-		InfoScreen.usualNameFont = new Font(Font.SERIF, Font.BOLD, InfoScreen.nameFontSize);
-		InfoScreen.nameInfo.setFont(InfoScreen.usualNameFont);
-		InfoScreen.namePanel.setLayout(new BorderLayout());
-		InfoScreen.namePanel.add(InfoScreen.nameInfo, BorderLayout.CENTER);
-		this.add(InfoScreen.namePanel);
+		nameInfo.setText("-");
+		nameInfo.setHorizontalAlignment(SwingConstants.CENTER);
+		usualNameFont = new Font(Font.SERIF, Font.BOLD, nameFontSize);
+		nameInfo.setFont(usualNameFont);
+		namePanel.setLayout(new GridLayout(1, 1));
+		namePanel.add(nameInfo);
+		//--
+		add(namePanel);
 		namePanel.setPreferredSize(new Dimension(nameWidth, nameHeight));
 		
 		// Vertical spacer
 		add(Box.createVerticalGlue());
 		
 		// Set up health panel
-		InfoScreen.healthInfo.setText("HP: - / -");
-		InfoScreen.healthInfo.setFont(new Font(Font.SERIF, Font.BOLD, InfoScreen.hpFontSize));
-		InfoScreen.healthPanel.add(InfoScreen.healthInfo);
-		this.add(InfoScreen.healthPanel);
+		healthInfo.setText("HP: - / -");
+		healthInfo.setHorizontalAlignment(SwingConstants.CENTER);
+		healthInfo.setFont(new Font(Font.SERIF, Font.BOLD, hpFontSize));
+		healthPanel.setLayout(new GridLayout(1, 1));
+		healthPanel.add(healthInfo);
+		//--
+		add(healthPanel);
 		healthPanel.setPreferredSize(new Dimension(hpWidth, hpHeight));
 		
 		// Set up armor panel
-		InfoScreen.armorInfo.setText("DEF: -");
-		InfoScreen.armorInfo.setFont(new Font(Font.SERIF, Font.BOLD, InfoScreen.arFontSize));
-		InfoScreen.armorPanel.add(InfoScreen.armorInfo);
-		InfoScreen.armorPanel.setBackground(new Color(130, 130, 130));
-		this.add(InfoScreen.armorPanel);
+		armorInfo.setText("DEF: -");
+		armorInfo.setHorizontalAlignment(SwingConstants.CENTER);
+		armorInfo.setFont(new Font(Font.SERIF, Font.BOLD, arFontSize));
+		armorPanel.setLayout(new GridLayout(1, 1));
+		armorPanel.add(armorInfo);
+		armorPanel.setBackground(new Color(130, 130, 130));
+		//--
+		add(armorPanel);
 		armorPanel.setPreferredSize(new Dimension(arWidth, arHeight));
 		
 		// Vertical spacer
 		add(Box.createVerticalGlue());
 		
 		// Set up description panel
-		InfoScreen.descBox.setBackground(Color.LIGHT_GRAY);
-		InfoScreen.usualDescFont = new Font(Font.SERIF, Font.BOLD, InfoScreen.descFontSize);
-		InfoScreen.descBox.setFont(InfoScreen.usualDescFont);
-		InfoScreen.descBox.setLineWrap(true);
-		InfoScreen.descBox.setWrapStyleWord(true);
-		InfoScreen.descBox.setEditable(false);
-		InfoScreen.descBox.setOpaque(true);
-		InfoScreen.descBox.setFocusable(false);
-		InfoScreen.descBox.setVisible(true);
-		InfoScreen.shrinkDescBox();
-		this.add(InfoScreen.descBox);
+		descBox.setBackground(Color.LIGHT_GRAY);
+		descBox.setBorder(BorderFactory.createEmptyBorder(0, descSidePadSize, 0, descSidePadSize));
+		usualDescFont = new Font(Font.SERIF, Font.BOLD, descFontSize);
+		descBox.setFont(usualDescFont);
+		descBox.setLineWrap(true);
+		descBox.setWrapStyleWord(true);
+		descBox.setEditable(false);
+		descBox.setOpaque(true);
+		descBox.setFocusable(false);
+		descBox.setVisible(true);
+		shrinkDescBox();
+		//--
+		add(InfoScreen.descBox);
 	}
 	
 	// Updates the values in the health panel
 	public static void updateHealthValues() {
 		// If we have no focused NPC, return
-		if(focusedNPC == null) {
+		if (focusedNPC == null) {
 			return;
 		}
 		
@@ -165,29 +177,28 @@ public class InfoScreen extends JPanel {
 		int max = focusedNPC.getMaxHP();
 		
 		// Set Health text
-		InfoScreen.healthInfo.setText("HP: " + Integer.toString(hp)
-				+ " / " + Integer.toString(max));
+		healthInfo.setText("HP: " + Integer.toString(hp) + " / " + Integer.toString(max));
 		
 		// Based on percentage of health left, get color
 		Color healthColor;
-		if(hp > (max/2)) {
+		if (hp > (max/2)) {
 			healthColor = new Color(102, 255, 102);
-		} else if(hp > 0) {
+		} else if (hp > 0) {
 			healthColor = new Color(255, 153, 0);
 		} else {
 			healthColor = new Color(204, 51, 0);
 		}
 		
 		// Set color background
-		InfoScreen.healthPanel.setBackground(healthColor);
+		healthPanel.setBackground(healthColor);
 		
 		// Repaint the panel
-		InfoScreen.healthPanel.repaint();
+		healthPanel.repaint();
 	}
 	
 	public static void updateArmorValues() {
 		// If we have no focused NPC, return
-		if(focusedNPC == null) {
+		if (focusedNPC == null) {
 			return;
 		}
 		
@@ -195,35 +206,36 @@ public class InfoScreen extends JPanel {
 		int armor = focusedNPC.getArmor();
 		
 		// Set armor text
-		InfoScreen.armorInfo.setText("DEF: " + Integer.toString(armor));
+		armorInfo.setText("DEF: " + Integer.toString(armor));
 		
-		InfoScreen.armorPanel.repaint();
+		// Repaint the panel
+		armorPanel.repaint();
 	}
 	
 	// Updates the values in the description panel
 	public static void updateDescValues() {
 		// If we have no focused Item, check for focused NPC
-		if(focusedItem == null) {
+		if (focusedItem == null) {
 			// If no focused NPC either, return
-			if(focusedNPC == null) {
+			if (focusedNPC == null) {
 				return;
 			} else {
 				// Populate Description Box with NPC description
 				
 				// Set new text
-				InfoScreen.descBox.setText(focusedNPC.getStatDescString());
+				descBox.setText(focusedNPC.getStatDescString());
 				
 				// Repaint the panel
-				InfoScreen.descBox.repaint();
+				descBox.repaint();
 			}
 		} else {
 			// Populate Description Box with Item description
 			
 			// Set new text
-			InfoScreen.descBox.setText(focusedItem.getDesc());
+			descBox.setText(focusedItem.getDesc());
 			
 			// Repaint the panel
-			InfoScreen.descBox.repaint();
+			descBox.repaint();
 		}
 	}
 	
@@ -233,9 +245,9 @@ public class InfoScreen extends JPanel {
 		String name = "";
 		
 		// If we have no focused NPC, check for focused item
-		if(focusedNPC == null) {
+		if (focusedNPC == null) {
 			// If no focused item either, return
-			if(focusedItem == null) {
+			if (focusedItem == null) {
 				return;
 			} else {
 				// Get the name value of the item
@@ -247,23 +259,23 @@ public class InfoScreen extends JPanel {
 		}
 		
 		// Shrink the font if the name is too long
-		if(name.length() > 16) {
-			InfoScreen.nameInfo.setFont(new Font(Font.SERIF, Font.BOLD, InfoScreen.nameFontSize * 16 / (name.length())));
+		if (name.length() > 16) {
+			nameInfo.setFont(new Font(Font.SERIF, Font.BOLD, nameFontSize * 16 / (name.length())));
 		} else {
-			InfoScreen.nameInfo.setFont(InfoScreen.usualNameFont);
+			nameInfo.setFont(usualNameFont);
 		}
 		
 		// Set Health text
-		InfoScreen.nameInfo.setText(name);
+		nameInfo.setText(name);
 		
 		// Repaint the panel
-		InfoScreen.namePanel.repaint();
+		namePanel.repaint();
 	}
 	
 	public static void updateEntityImage() {
 		// If we don't have a NPC to follow yet, then return
-		if(focusedNPC == null) {
-			if(focusedItem == null) {
+		if (focusedNPC == null) {
+			if (focusedItem == null) {
 				return;
 			} else {
 				// Paint item image
@@ -273,113 +285,112 @@ public class InfoScreen extends JPanel {
 				
 				// Get item image
 				try {
-					File file = new File(focusedItem.imagePath);
+					File file = new File(focusedItem.getImagePath());
 					URL url = file.toURI().toURL();
-					InfoScreen.itemImage = new ImageIcon(url).getImage();
-					
-					InfoScreen.itemImage = ImageHandler.scaleImage(InfoScreen.itemImage, npcWidth, npcHeight, GameInitializer.scaleFactor, GameInitializer.scaleFactor);
-				} catch (Exception e) {
+					itemImage = new ImageIcon(url).getImage();
+					itemImage = ImageHandler.scaleImage(itemImage, npcWidth, npcHeight, GameInitializer.scaleFactor, GameInitializer.scaleFactor);
+				} catch (Exception ex) {
 					// Let us know if we can't find the item image
-					System.out.println(focusedItem.imagePath + " not found.");
-					e.printStackTrace();
+					System.out.println("'" + focusedItem.getImagePath() + "' not found.");
+					ex.printStackTrace();
 				}
+				
 				// Set item as new entity image
-				InfoScreen.itemImage = ImageHandler.scaleImage(InfoScreen.itemImage, npcWidth, npcHeight, scaleFactor, scaleFactor);
-				InfoScreen.entityImagePanel.setForegroundImage(InfoScreen.itemImage);
+				itemImage = ImageHandler.scaleImage(itemImage, npcWidth, npcHeight, scaleFactor, scaleFactor);
+				entityImagePanel.setForegroundImage(itemImage);
 				
 				// Set blank tile image
-				InfoScreen.entityImagePanel.setBackgroundImage(null);
-				
+				entityImagePanel.setBackgroundImage(null);
 			}
 		} else {
 			// Get position of NPC
-			int xPos = InfoScreen.focusedNPC.getXPos();
-			int yPos = InfoScreen.focusedNPC.getYPos();
+			int xPos = focusedNPC.getXPos();
+			int yPos = focusedNPC.getYPos();
 			
 			// Get new scale factor
 			double scaleFactor = upScaleFactor;
 			
 			// Sets tile image
-			InfoScreen.tileImage = GameScreen.getTile(xPos, yPos).bgImage;
-			InfoScreen.tileImage = ImageHandler.scaleImage(InfoScreen.tileImage, npcWidth, npcHeight, scaleFactor, scaleFactor);
-			InfoScreen.entityImagePanel.setBackgroundImage(InfoScreen.tileImage);
+			tileImage = GameScreen.getTile(xPos, yPos).bgImage;
+			tileImage = ImageHandler.scaleImage(tileImage, npcWidth, npcHeight, scaleFactor, scaleFactor);
+			entityImagePanel.setBackgroundImage(tileImage);
 			
 			// Gets corpse image or entity image of NPC tile depending on NPC's health
-			if(focusedNPC.getCurrentHP() <= 0) {
-				InfoScreen.npcImage = GameScreen.getTile(xPos, yPos).corpseImage;
-				InfoScreen.npcImage = ImageHandler.scaleImage(InfoScreen.npcImage, npcWidth, npcHeight, scaleFactor, scaleFactor);
-				InfoScreen.entityImagePanel.setForegroundImage(InfoScreen.npcImage);
+			if (focusedNPC.getCurrentHP() <= 0) {
+				npcImage = GameScreen.getTile(xPos, yPos).corpseImage;
+				npcImage = ImageHandler.scaleImage(npcImage, npcWidth, npcHeight, scaleFactor, scaleFactor);
+				entityImagePanel.setForegroundImage(npcImage);
 			} else {
 				// Gets NPC image
-				InfoScreen.npcImage = GameScreen.getTile(xPos, yPos).entityImage;
-				InfoScreen.npcImage = ImageHandler.scaleImage(InfoScreen.npcImage, npcWidth, npcHeight, scaleFactor, scaleFactor);
-				InfoScreen.entityImagePanel.setForegroundImage(InfoScreen.npcImage);
+				npcImage = GameScreen.getTile(xPos, yPos).entityImage;
+				npcImage = ImageHandler.scaleImage(npcImage, npcWidth, npcHeight, scaleFactor, scaleFactor);
+				entityImagePanel.setForegroundImage(npcImage);
 			}
 		}
 
 		// Repaint the panel
-		InfoScreen.entityImagePanel.repaint();
+		entityImagePanel.repaint();
 	}
 	
 	// Defocus everything
 	public static void defocusAll() {
 		// Set focused entities to null
-		InfoScreen.focusedNPC = null;
-		InfoScreen.focusedItem = null;
+		focusedNPC = null;
+		focusedItem = null;
 		
 		int xIndex = InventoryScreen.getXIndex();
 		int yIndex = InventoryScreen.getYIndex();
 		GItem newSelected = InventoryScreen.getTile(xIndex, yIndex).getItem();
-		if(newSelected != null) {
-			InfoScreen.setItemFocus(newSelected);
+		if (newSelected != null) {
+			setItemFocus(newSelected);
 			return;
 		}
 		
 		// Reinitialize visible components
-		InfoScreen.healthPanel.setVisible(true);
-		InfoScreen.armorPanel.setVisible(true);
+		healthPanel.setVisible(true);
+		armorPanel.setVisible(true);
 		
 		// Reset text values
-		InfoScreen.healthInfo.setText("HP: - / -");
-		InfoScreen.armorInfo.setText("DEF: -");
-		InfoScreen.nameInfo.setText("-");
-		InfoScreen.descBox.setText("");
-		InfoScreen.shrinkDescBox();
+		healthInfo.setText("HP: - / -");
+		armorInfo.setText("DEF: -");
+		nameInfo.setText("-");
+		descBox.setText("");
+		shrinkDescBox();
 		
 		// Reset color values
-		InfoScreen.healthPanel.setBackground(Color.WHITE);
+		healthPanel.setBackground(Color.WHITE);
 		
 		// Reset Entity Image panel
-		InfoScreen.entityImagePanel.setBackgroundImage(null);
-		InfoScreen.entityImagePanel.setForegroundImage(null);
+		entityImagePanel.setBackgroundImage(null);
+		entityImagePanel.setForegroundImage(null);
 		
 		// Repaint all affected panels
-		InfoScreen.healthPanel.repaint();
-		InfoScreen.namePanel.repaint();
-		InfoScreen.entityImagePanel.repaint();
+		healthPanel.repaint();
+		namePanel.repaint();
+		entityImagePanel.repaint();
 	}
 	
 	// Defocuses if we are focused on an item
 	public static void defocusIfItem() {
-		if(InfoScreen.focusedItem != null) {
-			InfoScreen.defocusAll();
+		if (focusedItem != null) {
+			defocusAll();
 		}
 	}
 	
 	// Defocuses if we are focused on an NPC
 	public static void defocusIfNPC() {
-		if(InfoScreen.focusedNPC != null) {
-			InfoScreen.defocusAll();
+		if (focusedNPC != null) {
+			defocusAll();
 		}
 	}
 	
 	// Update the whole screen
 	public static void updateInfoScreen() {
-		InfoScreen.updateHealthValues();
-		InfoScreen.updateArmorValues();
-		InfoScreen.updateNameValues();
-		InfoScreen.updateDescValues();
-		InfoScreen.updateEntityImage();
+		updateHealthValues();
+		updateArmorValues();
+		updateNameValues();
+		updateDescValues();
+		updateEntityImage();
 	}
 	
 	private static void shrinkDescBox() {
@@ -396,49 +407,49 @@ public class InfoScreen extends JPanel {
 	// Sets InfoScreen to relay information about an NPC
 	public static void setNPCFocus(GCharacter npc) {
 		// If our NPC is null, defocus everything
-		if(npc == null) {
-			InfoScreen.defocusAll();
+		if (npc == null) {
+			defocusAll();
 		}
 		
 		// Set focus on NPC and not item
-		InfoScreen.focusedNPC = npc;
-		InfoScreen.focusedItem = null;
+		focusedNPC = npc;
+		focusedItem = null;
 		
 		// Make health panel visible and hide description box
-		InfoScreen.shrinkDescBox();
-		InfoScreen.healthPanel.setVisible(true);
-		InfoScreen.armorPanel.setVisible(true);
+		shrinkDescBox();
+		healthPanel.setVisible(true);
+		armorPanel.setVisible(true);
 		
 		// Update everything
-		InfoScreen.updateInfoScreen();
+		updateInfoScreen();
 	}
 	
 	// Sets InfoScreen to relay information about an item
 	public static void setItemFocus(GItem item) {
 		// If our item is null, defocus everything
-		if(item == null) {
-			InfoScreen.defocusAll();
+		if (item == null) {
+			defocusAll();
 		}
 		
 		// Set focus on item and not NPC
-		InfoScreen.focusedItem = item;
-		InfoScreen.focusedNPC = null;
+		focusedItem = item;
+		focusedNPC = null;
 		
 		// Make description box visible and hide health panel
-		InfoScreen.growDescBox();
-		InfoScreen.healthPanel.setVisible(false);
-		InfoScreen.armorPanel.setVisible(false);
+		growDescBox();
+		healthPanel.setVisible(false);
+		armorPanel.setVisible(false);
 		
 		// Update everything
-		InfoScreen.updateInfoScreen();
+		updateInfoScreen();
 	}
 	
 	public static int getInfoWidth() {
-		return InfoScreen.infoWidth;
+		return infoWidth;
 	}
 	
 	public static int getInfoHeight() {
-		return InfoScreen.infoHeight;
+		return infoHeight;
 	}
 
 }

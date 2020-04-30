@@ -4,7 +4,10 @@ import java.awt.Color;
 
 import helpers.GColors;
 
-// Class that represent an in-game log on the Log Screen
+/**
+ * Class that represents an in-game log message on the LogScreen
+ * @author jeoliva
+ */
 public class GLog {
 
 	// Message that the log displays
@@ -22,6 +25,14 @@ public class GLog {
 	// Constructor that defaults color to black
 	protected GLog(String message) {
 		this(message, GColors.BASIC);
+	}
+	
+	/**
+	 * Returns whether or not the log is empty
+	 * @return True if message is null or empty | False otherwise
+	 */
+	public boolean isEmpty() {
+		return (message == null || message.isEmpty());
 	}
 	
 }

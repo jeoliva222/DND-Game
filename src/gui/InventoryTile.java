@@ -82,41 +82,41 @@ public class InventoryTile extends JPanel {
 		this.upScaleFactor = this.upScaleFactor * GameInitializer.scaleFactor;
 		
 		// Set size of panels
-		this.setMinimumSize(new Dimension(tileWidth, tileHeight));
-		this.setMaximumSize(new Dimension(tileWidth, tileHeight));
+		setMinimumSize(new Dimension(tileWidth, tileHeight));
+		setMaximumSize(new Dimension(tileWidth, tileHeight));
 		
 		// Mouse Listener for selecting items
-		this.addMouseListener(new MouseAdapter() {
+		addMouseListener(new MouseAdapter() {
 		     @Override
 		     public void mousePressed(MouseEvent mouseEvent) {
 		    	 InventoryScreen.leapSelected(InventoryTile.this.xIndex, InventoryTile.this.yIndex);
 		     }
 		});
 		
-		this.setBackground(Color.LIGHT_GRAY);
+		setBackground(Color.LIGHT_GRAY);
 	}
 	
 	// Use the tile's item
 	public boolean useItem() {
 		// If tile is empty, don't do anything
-		if(this.item == null) {
+		if (item == null) {
 			return false;
 		}
 		
 		// Check if the item uses correctly
-		if(this.item.use()) {
-			if(!(item instanceof Weapon)) {
+		if (item.use()) {
+			if (!(item instanceof Weapon)) {
 				// If we're not a weapon, remove one count of the
 				// item from the inventory
-				if(this.stackSize >= this.item.maxStack) {
+				if (stackSize >= item.getMaxStack()) {
 					// If a full stack, search for a smaller stack to remove from
-					InventoryScreen.removeFromSmallestStack(this.item);
-				} else if(this.stackSize > 1) {
+					InventoryScreen.removeFromSmallestStack(item);
+				} else if (stackSize > 1) {
 					// If not a full stack (but still more than 1), decrease stack count by 1
-					this.decrementStack();
+					decrementStack();
 				} else {
 					// Otherwise, clear the item
-					this.clearItem();
+					clearItem();
 					InventoryScreen.organizeInventoryScreen();
 					InventoryScreen.incrementItemCount(-1);
 				}
@@ -124,11 +124,12 @@ public class InventoryTile extends JPanel {
 			// Defocus item from InfoScreen
 			InfoScreen.defocusIfItem();
 			
-			this.repaint();
+			// Repaint and return
+			repaint();
 			return true;
 		} else {
 			// If item didn't use properly or was null, return false
-			LogScreen.log("Using "+this.item.getName()+" didn't work.", GColors.ITEM);
+			LogScreen.log("Using "+item.getName()+" didn't work.", GColors.ITEM);
 			return false;
 		}
 	}
@@ -139,12 +140,12 @@ public class InventoryTile extends JPanel {
 			File file = new File(filepath);
 			URL url = file.toURI().toURL();
 			this.itemImage = new ImageIcon(url).getImage();
-		} catch (Exception e) {
-			System.out.println(filepath + " not found.");
-			e.printStackTrace();
+		} catch (Exception ex) {
+			System.out.println("'" + filepath + "' not found.");
+			ex.printStackTrace();
 		}
-		this.itemImage = ImageHandler.scaleImage(this.itemImage, this.tileWidth, this.tileHeight, upScaleFactor, upScaleFactor);
-		this.repaint();
+		this.itemImage = ImageHandler.scaleImage(itemImage, tileWidth, tileHeight, upScaleFactor, upScaleFactor);
+		repaint();
 	}
 	
 	// Sets the border image
@@ -153,23 +154,23 @@ public class InventoryTile extends JPanel {
 			File file = new File(filepath);
 			URL url = file.toURI().toURL();
 			this.borderImage = new ImageIcon(url).getImage();
-		} catch (Exception e) {
-			System.out.println(filepath + " not found.");
-			e.printStackTrace();
+		} catch (Exception ex) {
+			System.out.println("'" + filepath + "' not found.");
+			ex.printStackTrace();
 		}
-		this.borderImage = ImageHandler.scaleImage(this.borderImage, this.tileWidth, this.tileHeight, upScaleFactor, upScaleFactor);
-		this.repaint();
+		this.borderImage = ImageHandler.scaleImage(borderImage, tileWidth, tileHeight, upScaleFactor, upScaleFactor);
+		repaint();
 	}
 	
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
-        g.drawImage(itemImage, this.xBuffer, this.yBuffer, this);
-        g.drawImage(borderImage, this.xBuffer, this.yBuffer, this);
-        if(this.stackSize > 1) {
+        g.drawImage(itemImage, xBuffer, yBuffer, this);
+        g.drawImage(borderImage, xBuffer, yBuffer, this);
+        if (stackSize > 1) {
         	g.setColor(Color.BLACK);
-        	g.setFont(this.stackFont);
-        	g.drawString(Integer.toString(this.stackSize), this.stackTextX, this.stackTextY);
+        	g.setFont(stackFont);
+        	g.drawString(Integer.toString(stackSize), stackTextX, stackTextY);
         }
     }
 
@@ -200,14 +201,14 @@ public class InventoryTile extends JPanel {
 	public void setItem(GItem item) {
 		this.item = item;
 		this.stackSize = 1;
-		this.setItemPath(item.imagePath);
+		setItemPath(item.getImagePath());
 	}
 	
 	// Clears the item from the tile
 	public void clearItem() {
 		this.item = null;
 		this.stackSize = 0;
-		this.setItemPath(GPath.NULL);
+		setItemPath(GPath.NULL);
 	}
 	
 	// Increases stack size by 1

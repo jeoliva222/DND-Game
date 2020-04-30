@@ -24,7 +24,10 @@ import items.GItem;
 import managers.EntityManager;
 import projectiles.GProjectile;
 
-// Window of the game, containing all the important game GUI elements as well as the game screen
+/**
+ * Main frame class of the application, containing all the important game GUI elements as well as the game screen
+ * @author jeoliva
+ */
 public class GameWindow extends JFrame implements KeyListener {
 	
 	// Prevents warnings
@@ -82,78 +85,78 @@ public class GameWindow extends JFrame implements KeyListener {
 		// Sets cross-platform look and feel
         try {
         	UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
-        } catch (Exception e) {
-        	System.out.println("Error initializing look and feel!");
-        	e.printStackTrace();
+        } catch (Exception ex) {
+        	System.out.println("Error initializing look and feel in GameWindow!");
+        	ex.printStackTrace();
         }
 		
 		// Initialize MapScreen within window
-		GameWindow.map = new MapScreen();
+		map = new MapScreen();
 		
 		// Initialize GameScreen within window
-		GameWindow.screen = new GameScreen();
+		screen = new GameScreen();
 		
 		// Initialize LogScreen within window
-		GameWindow.logs = new LogScreen();
+		logs = new LogScreen();
 		
 		// Initialize StatusScreen within window
-		GameWindow.statusHUD = new StatusScreen();
+		statusHUD = new StatusScreen();
 		
 		// Initialize DebuffScreen within window
-		GameWindow.debuffHUD = new DebuffScreen();
+		debuffHUD = new DebuffScreen();
 		
 		// Initialize InventoryScreen within window
-		GameWindow.inventoryHUD = new InventoryScreen();
+		inventoryHUD = new InventoryScreen();
 		
 		// Initialize InfoScreen within the window
-		GameWindow.infoHUD = new InfoScreen();
+		infoHUD = new InfoScreen();
 		
-		/// Spawn Player and Character **TEMPORARY**
-		this.updateAll();
+		/// Draw Player and Character
+		updateAll();
 
 		// Set content layout to null
-		this.setLayout(null);
+		setLayout(null);
 		
 		// Add screens to game --------------
 		
 		// Map screen 
-		this.add(GameWindow.map);
-		GameWindow.map.setBounds(StatusScreen.getStatusWidth(), 0, MapScreen.getMWidth(), MapScreen.getMHeight());
+		add(map);
+		map.setBounds(StatusScreen.getStatusWidth(), 0, MapScreen.getMWidth(), MapScreen.getMHeight());
 		
 		// Main screen 
-		this.add(GameWindow.screen);
-		GameWindow.screen.setBounds(StatusScreen.getStatusWidth(), 0, GameScreen.getGWidth(), GameScreen.getGHeight());
+		add(screen);
+		screen.setBounds(StatusScreen.getStatusWidth(), 0, GameScreen.getGWidth(), GameScreen.getGHeight());
 		
 		// Log Screen
-		this.add(GameWindow.logs);
-		GameWindow.logs.setBounds(StatusScreen.getStatusWidth(), GameScreen.getGHeight(), LogScreen.getLWidth(), LogScreen.getLHeight());
+		add(logs);
+		logs.setBounds(StatusScreen.getStatusWidth(), GameScreen.getGHeight(), LogScreen.getLWidth(), LogScreen.getLHeight());
 		
 		// Status Screen
-		this.add(GameWindow.statusHUD);
-		GameWindow.statusHUD.setBounds(0, 0, StatusScreen.getStatusWidth(), StatusScreen.getStatusHeight());
+		add(statusHUD);
+		statusHUD.setBounds(0, 0, StatusScreen.getStatusWidth(), StatusScreen.getStatusHeight());
 		
 		// Buff/Debuff Screen
-		this.add(GameWindow.debuffHUD);
-		GameWindow.debuffHUD.setBounds(0, StatusScreen.getStatusHeight(), DebuffScreen.getDebuffWidth(), DebuffScreen.getDebuffHeight());
+		add(debuffHUD);
+		debuffHUD.setBounds(0, StatusScreen.getStatusHeight(), DebuffScreen.getDebuffWidth(), DebuffScreen.getDebuffHeight());
 		
 		// Inventory Screen
-		this.add(GameWindow.inventoryHUD);
-		GameWindow.inventoryHUD.setBounds((StatusScreen.getStatusWidth() + GameScreen.getGWidth()), 0, InventoryScreen.getInvWidth(), InventoryScreen.getInvHeight());
+		add(inventoryHUD);
+		inventoryHUD.setBounds((StatusScreen.getStatusWidth() + GameScreen.getGWidth()), 0, InventoryScreen.getInvWidth(), InventoryScreen.getInvHeight());
 		
 		// Info Screen
-		this.add(GameWindow.infoHUD);
-		GameWindow.infoHUD.setBounds((StatusScreen.getStatusWidth() + GameScreen.getGWidth()), InventoryScreen.getInvHeight(), InfoScreen.getInfoWidth(), InfoScreen.getInfoHeight());
+		add(infoHUD);
+		infoHUD.setBounds((StatusScreen.getStatusWidth() + GameScreen.getGWidth()), InventoryScreen.getInvHeight(), InfoScreen.getInfoWidth(), InfoScreen.getInfoHeight());
 		
 		// Set window size parameters
 		int xOffset = (int) (GameInitializer.xOffset * GameInitializer.scaleFactor);
 		int yOffset = (int) (GameInitializer.yOffset * GameInitializer.scaleFactor);
 		Dimension size = new Dimension((GameScreen.getGWidth() + StatusScreen.getStatusWidth() + InventoryScreen.getInvWidth() + xOffset),
 				(GameScreen.getGHeight() + LogScreen.getLHeight() + yOffset));
-		this.setPreferredSize(size);
-		this.setMinimumSize(size);
+		setPreferredSize(size);
+		setMinimumSize(size);
 		
 		// Set on-close listener
-	    this.addWindowListener(new WindowAdapter() {
+	    addWindowListener(new WindowAdapter() {
 	        @Override
 	        public void windowClosing(WindowEvent event) {
 	        	// Delete all temporary files and exit the frame on close
@@ -166,17 +169,17 @@ public class GameWindow extends JFrame implements KeyListener {
 	    this.focusAdapter = new MouseAdapter() {
 	    	@Override
 	    	public void mouseClicked(MouseEvent me) {
-	    		GameWindow.this.requestFocus();
+	    		requestFocus();
 	    		System.out.println("Click regained focus.");
 	    	}
 	    };
-	    this.addMouseListener(this.focusAdapter);
-	    GameWindow.infoHUD.addMouseListener(this.focusAdapter);
+	    addMouseListener(focusAdapter);
+	    infoHUD.addMouseListener(focusAdapter);
 	    
 	    // Checks for debug mode
 	    String debug = System.getProperty("debug");
-	    if(debug != null && debug.equals("T")) {
-	    	GameWindow.isDebug = true;
+	    if (debug != null && debug.equals("T")) {
+	    	isDebug = true;
 	    }
 		
 		// "Caches" sound playing code by playing a silent sound.
@@ -188,11 +191,11 @@ public class GameWindow extends JFrame implements KeyListener {
 				EntityManager.getInstance().getActiveArea().getMusicVolume());
 		
 		// Set some extra parameters and then make visible
-		this.setTitle("Frog VS World");
-		this.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
-		this.addKeyListener(this);
-		this.setVisible(true);
-		this.pack();
+		setTitle("Frog VS World");
+		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+		addKeyListener(this);
+		pack();
+		setVisible(true);
 	}
 	
 	// Moves the player x-wise/y-wise then updates the screen to show it
@@ -204,7 +207,7 @@ public class GameWindow extends JFrame implements KeyListener {
 		plr.updateLastCoords();
 		
 		// Only move player if we have a direction
-		if(!(dx == 0 && dy == 0)) {
+		if (!(dx == 0 && dy == 0)) {
 			// Get player position before switch
 			int currentX = plr.getXPos();
 			int currentY = plr.getYPos();
@@ -213,18 +216,17 @@ public class GameWindow extends JFrame implements KeyListener {
 			plr.movePlayer(dx, dy);
 			
 			// Make the changes to the board
-			this.shiftEntity(currentX, currentY);
+			shiftEntity(currentX, currentY);
 		}
 		
 		// Persist debuffs
 		plr.persistBuffs();
-		
 	}
 	
 	// Iterates through all 
 	public void moveCharacters() {
 		// Iterate through all characters
-		for(GCharacter gchar : EntityManager.getInstance().getNPCManager().getCharacters()) {
+		for (GCharacter gchar : EntityManager.getInstance().getNPCManager().getCharacters()) {
 			// Get character position before switch
 			int currentX = gchar.getXPos();
 			int currentY = gchar.getYPos();
@@ -239,14 +241,14 @@ public class GameWindow extends JFrame implements KeyListener {
 			gchar.persistBuffs();
 			
 			// Make the changes to the board
-			this.shiftEntity(currentX, currentY);
+			shiftEntity(currentX, currentY);
 		}
 	}
 	
 	// Takes turns for all the projectiles
 	public void moveProjectiles() {
 		// Iterate through all projectiles
-		for(GProjectile proj : EntityManager.getInstance().getProjectileManager().getProjectiles()) {
+		for (GProjectile proj : EntityManager.getInstance().getProjectileManager().getProjectiles()) {
 			// Get projectile position before switch
 			int currentX = proj.getXPos();
 			int currentY = proj.getYPos();
@@ -255,7 +257,7 @@ public class GameWindow extends JFrame implements KeyListener {
 			proj.takeTurn();
 			
 			// Make the changes to the board
-			this.shiftProjectile(currentX, currentY, proj);
+			shiftProjectile(currentX, currentY, proj);
 		}
 	}
 	
@@ -263,18 +265,19 @@ public class GameWindow extends JFrame implements KeyListener {
 	public void completeTurn(int playerDx, int playerDy) {
 		DateFormat dateFormat = new SimpleDateFormat("HH:mm:ss.SSS");
 		System.out.println(dateFormat.format(new Date()) + " " + "Moving Player");
+		
 		// Move the player
-		this.movePlayer(playerDx, playerDy);
+		movePlayer(playerDx, playerDy);
 		
 		// If we changed screen, enemies and projectiles don't
 		// act for this turn.
-		if(GameWindow.changedScreen) {
-			GameWindow.changedScreen = false;
+		if (changedScreen) {
+			changedScreen = false;
 			return;
 		} else {
 			System.out.println(dateFormat.format(new Date()) + " " + "Moving Characters/Projectiles");
-    		this.moveCharacters();
-    		this.moveProjectiles();
+    		moveCharacters();
+    		moveProjectiles();
 		}
 	}
 	
@@ -311,39 +314,41 @@ public class GameWindow extends JFrame implements KeyListener {
 		}
 		
 		// Set new image path for player's tile
-		if(updateTile != null)
+		if (updateTile != null) {
 			updateTile.setFG(playerImage);
+		}
 	}
 	
 	// Update image[s] for characters
 	public void updateCharacters() {
 		// Iterate through all characters
-		for(GCharacter gchar : EntityManager.getInstance().getNPCManager().getCharacters()) {
+		for (GCharacter gchar : EntityManager.getInstance().getNPCManager().getCharacters()) {
 			// Get character image path
 			String charImage = gchar.getImage();
 			
-			// Get npc position before switch
+			// Get NPC position before switch
 			int currentX = gchar.getXPos();
 			int currentY = gchar.getYPos();
 			
-			// Fetch tile the npc is on
+			// Fetch tile the NPC is on
 			GameTile updateTile = null;
 			try {
 				updateTile = GameScreen.getTile(currentX, currentY);
 			} catch (IndexOutOfBoundsException e) {
-				// If npc is out-of-bounds, don't set tile value
+				// If NPC is out-of-bounds, don't set tile value
 			}
 			
-			// Set new image path for npc's tile if not null
-			if(updateTile != null)
+			// Set new image path for NPC's tile if not null
+			if (updateTile != null) {
 				updateTile.setFG(charImage);
+			}
 		}
 	}
 	
 	// Update image[s] for projectiles
 	public void updateProjectiles() {
 		// Iterate through all projectiles
-		for(GProjectile proj : EntityManager.getInstance().getProjectileManager().getProjectiles()) {
+		for (GProjectile proj : EntityManager.getInstance().getProjectileManager().getProjectiles()) {
 			// Get projectile image path
 			String projImage = proj.getImage();
 			
@@ -360,27 +365,31 @@ public class GameWindow extends JFrame implements KeyListener {
 			}
 			
 			// Set new image path for projectile's tile if not null
-			if(updateTile != null)
+			if (updateTile != null) {
 				updateTile.setProjectileImage(projImage, proj);
+			}
 		}
 	}
 	
 	// Updates everything in the window
 	public void updateAll() {
 		DateFormat dateFormat = new SimpleDateFormat("HH:mm:ss.SSS");
+		//--
 		System.out.println(dateFormat.format(new Date()) + " " + "Managing entities");
 		EntityManager.getInstance().manageAll();
-		if(GameWindow.shouldSave) {
-			this.saveGame();
-			GameWindow.shouldSave = false;
+		if (shouldSave) {
+			saveGame();
+			shouldSave = false;
 		}
+		//--
 		System.out.println(dateFormat.format(new Date()) + " " + "Rendering changes");
-		this.updatePlayer();
-		this.updateCharacters();
-		this.updateProjectiles();
-		this.updateGUI();
+		updatePlayer();
+		updateCharacters();
+		updateProjectiles();
+		updateGUI();
+		//--
 		System.out.println(dateFormat.format(new Date()) + " " + "Turn finished!");
-		this.printMemoryUsage();
+		printMemoryUsage();
 		System.out.println("------------");
 	}
 	
@@ -406,7 +415,7 @@ public class GameWindow extends JFrame implements KeyListener {
 	// Saves the game to a save file
 	public void saveGame() {
 		// Don't save if player is dead
-    	if(EntityManager.getInstance().getPlayer().isAlive()) {
+    	if (EntityManager.getInstance().getPlayer().isAlive()) {
     		// Grab items from inventory
         	GItem[] inv = InventoryScreen.getItemArray();
         	
@@ -414,7 +423,7 @@ public class GameWindow extends JFrame implements KeyListener {
         	Player player = EntityManager.getInstance().getPlayer();
         	
         	// Save the current level state without reseting NPC locations
-           	GameWindow.getScreen().saveLevel(false);
+           	getScreen().saveLevel(false);
         	
            	// Save the current area to a file in the temp folder
            	GameState.saveCurrentArea();
@@ -430,8 +439,8 @@ public class GameWindow extends JFrame implements KeyListener {
 	// Loads the game from the save file
 	public void loadGame() {
 		// We don't want to load without all of the files!
-		// Only load if we have a save file
-		if(!(new File(GPath.SAVE + "player.ser").exists())) {
+		// Only load if we have a player save file
+		if (!(new File(GPath.SAVE + GameState.PLAYER + GameState.SUFFIX).exists())) {
 			return;
 		}
 		
@@ -448,8 +457,8 @@ public class GameWindow extends JFrame implements KeyListener {
 		em.removeEverything();
 		
 		// Clear the GameTile images
-		for(int y = 0; y < GameInitializer.yDimen; y++) {
-			for(int x = 0; x < GameInitializer.xDimen; x++) {
+		for (int y = 0; y < GameInitializer.yDimen; y++) {
+			for (int x = 0; x < GameInitializer.xDimen; x++) {
 				GameScreen.getTile(x, y).clearAll();
 			}
 		}
@@ -458,7 +467,7 @@ public class GameWindow extends JFrame implements KeyListener {
 		EntityManager.getInstance().setActiveArea(em.getPlayer().fetchArea());
 		
 		// Load the level our player is at
-		GameWindow.getScreen().loadLevel(em.getCurrentLevel());
+		getScreen().loadLevel(em.getCurrentLevel());
 		
 		// Change music
 		SoundPlayer.changeMidi(em.getActiveArea().getMusic(), em.getActiveArea().getMusicVolume());
@@ -467,7 +476,7 @@ public class GameWindow extends JFrame implements KeyListener {
 		LogScreen.log("Loaded game...");
 		
 		// Updated the screen to show the changes
-		this.updateAll();
+		updateAll();
 	}
 	
 	// ****************
@@ -476,124 +485,123 @@ public class GameWindow extends JFrame implements KeyListener {
 	@Override
 	public void keyPressed(KeyEvent e) {
 		// Map mode
-		if(GameWindow.mapDisplayed) {
-			GameWindow.mapDisplayed = false;
-			GameWindow.map.hideMap();
+		if (mapDisplayed) {
+			mapDisplayed = false;
+			map.hideMap();
 			return;
 		}
-		
 		
 		//---------------
 		
 		// Disable key repeat
-		if(GameWindow.isKeyDown || GameWindow.turnInProgress) {
+		if (isKeyDown || turnInProgress) {
 			return;
 		} else {
-			GameWindow.isKeyDown = true;
-			GameWindow.turnInProgress = true;
+			isKeyDown = true;
+			turnInProgress = true;
 		}
 		
-		if(e.getKeyCode() == KeyEvent.VK_RIGHT ||
+		if (e.getKeyCode() == KeyEvent.VK_RIGHT ||
 				e.getKeyCode()== KeyEvent.VK_D) {
 			// Move right
-			this.completeTurn(1, 0);
-			this.updateAll();
+			completeTurn(1, 0);
+			updateAll();
 		}
-        else if(e.getKeyCode() == KeyEvent.VK_LEFT ||
+        else if (e.getKeyCode() == KeyEvent.VK_LEFT ||
         		e.getKeyCode()== KeyEvent.VK_A) {
         	// Move left
-        	this.completeTurn(-1, 0);
-        	this.updateAll();
+        	completeTurn(-1, 0);
+        	updateAll();
         }
-        else if(e.getKeyCode() == KeyEvent.VK_DOWN ||
+        else if (e.getKeyCode() == KeyEvent.VK_DOWN ||
         		e.getKeyCode()== KeyEvent.VK_S) {
         	// Move down
-        	this.completeTurn(0, 1);
-        	this.updateAll();
+        	completeTurn(0, 1);
+        	updateAll();
         }
-        else if(e.getKeyCode() == KeyEvent.VK_UP ||
+        else if (e.getKeyCode() == KeyEvent.VK_UP ||
         		e.getKeyCode()== KeyEvent.VK_W) {
         	// Move up
-        	this.completeTurn(0, -1);
-        	this.updateAll();
+        	completeTurn(0, -1);
+        	updateAll();
         } 
-        else if(e.getKeyCode() == KeyEvent.VK_SPACE) {
+        else if (e.getKeyCode() == KeyEvent.VK_SPACE) {
         	// Charge weapon and hold position for the turn
         	EntityManager.getInstance().getPlayer().chargeWeapons();
-        	this.completeTurn(0, 0);
-        	this.updateAll();
+        	completeTurn(0, 0);
+        	updateAll();
         } 
         else if (e.getKeyCode() == KeyEvent.VK_CONTROL) {
         	// Hold position for the turn, discharging player weapons
         	EntityManager.getInstance().getPlayer().dischargeWeapons();
-        	this.completeTurn(0, 0);
-        	this.updateAll();
+        	completeTurn(0, 0);
+        	updateAll();
         }
-        else if(e.getKeyCode() == KeyEvent.VK_Z) {
+        else if (e.getKeyCode() == KeyEvent.VK_Z) {
         	// Shift inventory selector to the left without consuming turn
         	InventoryScreen.shiftSelected(-1);
         }
-        else if(e.getKeyCode() == KeyEvent.VK_X) {
+        else if (e.getKeyCode() == KeyEvent.VK_X) {
         	// Shift inventory selector to the right without consuming turn
         	InventoryScreen.shiftSelected(1);
         }
         else if(e.getKeyCode() == KeyEvent.VK_ENTER) {
         	// Uses selected item
-        	if(InventoryScreen.useSelected()) {
-            	this.completeTurn(0, 0);
+        	if (InventoryScreen.useSelected()) {
+            	completeTurn(0, 0);
         	}
-        	this.updateAll();
+        	updateAll();
         }
-        else if(e.getKeyCode() == KeyEvent.VK_BACK_SPACE) {
+        else if (e.getKeyCode() == KeyEvent.VK_BACK_SPACE) {
         	// Discards selected item in inventory without consuming turn
         	InventoryScreen.discardSelected();
-        	this.updateAll();
+        	updateAll();
         }
-        else if(e.getKeyCode() == KeyEvent.VK_SHIFT) {
+        else if (e.getKeyCode() == KeyEvent.VK_SHIFT) {
         	// Swaps active weapon with offhand weapon without consuming turn
         	EntityManager.getInstance().getPlayer().swapEquippedWeapon();
         }
-        else if(e.getKeyCode() == KeyEvent.VK_M) {
+        else if (e.getKeyCode() == KeyEvent.VK_M) {
         	// Display the map of the area
-        	GameWindow.mapDisplayed = true;
-        	GameWindow.map.displayMap();
+        	mapDisplayed = true;
+        	map.displayMap();
         	LogScreen.log("Green = You / Blue = Explored");
-        	this.updateGUI();
+        	updateGUI();
         }
-        else if(e.getKeyCode() == KeyEvent.VK_F9) {
+        else if (e.getKeyCode() == KeyEvent.VK_F9) {
         	// Load the player's save file
-        	this.loadGame();
+        	loadGame();
         }
-        else if(GameWindow.isDebug && e.getKeyCode() == KeyEvent.VK_9) {
+        else if (isDebug && e.getKeyCode() == KeyEvent.VK_9) {
         	// *** DEBUG: Damages player by 1
         	EntityManager.getInstance().getPlayer().damagePlayer(1);
-        	this.updateAll();
+        	updateAll();
         }
-        else if(GameWindow.isDebug && e.getKeyCode() == KeyEvent.VK_0) {
+        else if (isDebug && e.getKeyCode() == KeyEvent.VK_0) {
         	// *** DEBUG: Heals player by 1
         	EntityManager.getInstance().getPlayer().healPlayer(1, false);
-        	this.updateAll();
+        	updateAll();
         }
-	    else if(GameWindow.isDebug && e.getKeyCode() == KeyEvent.VK_F5) {
+	    else if (isDebug && e.getKeyCode() == KeyEvent.VK_F5) {
 	    	// *** DEBUG: Saves the game
-	    	this.saveGame();
-	    	this.updateAll();
+	    	saveGame();
+	    	updateAll();
 	    }
 		
 		// If we're in a dark area or level, refresh all tiles every move
-		if(EntityManager.getInstance().isDark()) {
-			GameWindow.screen.refreshTiles();
+		if (EntityManager.getInstance().isDark()) {
+			screen.refreshTiles();
 		}
 		
 		// Indicate turn is finished
-		GameWindow.turnInProgress = false;
+		turnInProgress = false;
 	}
 	
 	@Override
 	public void keyReleased(KeyEvent e) {
 		// Mark that the key has been released and
 		// that we can hit another key
-		GameWindow.isKeyDown = false;
+		isKeyDown = false;
 	}
 
 	@Override
@@ -605,7 +613,7 @@ public class GameWindow extends JFrame implements KeyListener {
 	// Getters and setters
 	
 	public static GameWindow getInstance() {
-		if(instance == null) {
+		if (instance == null) {
 			instance = new GameWindow();
 		}
 		

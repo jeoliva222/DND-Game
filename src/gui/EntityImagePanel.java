@@ -6,7 +6,10 @@ import java.awt.Image;
 
 import javax.swing.JPanel;
 
-// JPanel class that displays a foreground and background image
+/**
+ * Panel class that displays a foreground and background image
+ * @author jeoliva
+ */
 public class EntityImagePanel extends JPanel {
 	
 	// Prevents warnings
@@ -25,12 +28,12 @@ public class EntityImagePanel extends JPanel {
 		super();
 		
 		// Transparent panel
-		this.setOpaque(false);
+		setOpaque(false);
 	}
 
 	// Sets background image for the panel
 	protected void setBackgroundImage(Image tileImage) {
-		if(tileImage == null) {
+		if (tileImage == null) {
 			this.doBackgroundRender = false;
 		} else {
 			this.doBackgroundRender = true;
@@ -40,7 +43,7 @@ public class EntityImagePanel extends JPanel {
 	
 	// Sets the foreground image for the panel
 	protected void setForegroundImage(Image entityImage) {
-		if(entityImage == null) {
+		if (entityImage == null) {
 			this.doForegroundRender = false;
 		} else {
 			this.doForegroundRender = true;
@@ -52,14 +55,14 @@ public class EntityImagePanel extends JPanel {
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
         Graphics2D g2d = (Graphics2D) g;
-        if (this.doBackgroundRender) {
-	        int x = (this.getWidth() - backgroundImage.getWidth(null)) / 2;
-	        int y = (this.getHeight() - backgroundImage.getHeight(null)) / 2;
+        if (doBackgroundRender) {
+	        int x = (getWidth() - backgroundImage.getWidth(null)) / 2;
+	        int y = (getHeight() - backgroundImage.getHeight(null)) / 2;
         	g2d.drawImage(backgroundImage, x, y, this); 
         }
-        if (this.doForegroundRender) {
-	        int x = (this.getWidth() - foregroundImage.getWidth(null)) / 2;
-	        int y = (this.getHeight() - foregroundImage.getHeight(null)) / 2;
+        if (doForegroundRender) {
+	        int x = (getWidth() - foregroundImage.getWidth(null)) / 2;
+	        int y = (getHeight() - foregroundImage.getHeight(null)) / 2;
         	g.drawImage(foregroundImage, x, y, this);    
         }
     }

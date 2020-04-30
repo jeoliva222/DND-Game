@@ -21,21 +21,21 @@ public class DebuffScreen extends JPanel {
 		
 		// Set preferred size of the the log screen
 		Dimension size = new Dimension(debuffWidth, debuffHeight);
-		this.setPreferredSize(size);
+		setPreferredSize(size);
 		
 		/// TEMP
-		this.setBackground(new Color(128, 128, 255));
+		setBackground(new Color(128, 128, 255));
 	}
 	
 	// *******************
 	// Getters and Setters
 	
 	public static int getDebuffWidth() {
-		return DebuffScreen.debuffWidth;
+		return debuffWidth;
 	}
 	
 	public static int getDebuffHeight() {
-		return DebuffScreen.debuffHeight;
+		return debuffHeight;
 	}
 
 }

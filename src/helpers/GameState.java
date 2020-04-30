@@ -22,11 +22,11 @@ import managers.EntityManager;
 public class GameState {
 	
 	// Important definitions
-	private static final String TEMP_SAVE = (GPath.SAVE + GPath.TEMP);
-	private static final String PLAYER = "player";
-	private static final String INVENTORY = "inventory";
-	private static final String SUFFIX = ".ser";
-	private static final String README_SUFFIX = ".md";
+	public static final String TEMP_SAVE = (GPath.SAVE + GPath.TEMP);
+	public static final String PLAYER = "player";
+	public static final String INVENTORY = "inventory";
+	public static final String SUFFIX = ".ser";
+	public static final String README_SUFFIX = ".md";
 	
 	/**
 	 * Serializes the game data into a save files.

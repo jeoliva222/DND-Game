@@ -8,19 +8,16 @@ public abstract class GItem implements Serializable {
 	private static final long serialVersionUID = -7222629182476419595L;
 
 	// Name of the item
-	public String name;
+	protected String name;
 	
 	// Description of the item
-	public String description;
+	protected String description;
 	
 	// Image Path of the item
-	public String imagePath;
+	protected String imagePath;
 	
 	// Maximum amount of the item that can be stacked
-	public int maxStack;
-	
-	// Marks whether the item is discardable or not
-	public boolean isDiscardable;
+	protected int maxStack;
 	
 	// Constructor
 	public GItem(String name, String description, String imagePath, int maxStack) {
@@ -28,7 +25,6 @@ public abstract class GItem implements Serializable {
 		this.description = description;
 		this.imagePath = imagePath;
 		this.maxStack = maxStack;
-		this.isDiscardable = true;
 	}
 	
 	// Function that controls the logic of using an item
@@ -41,6 +37,14 @@ public abstract class GItem implements Serializable {
 	
 	public String getDesc() {
 		return this.description;
+	}
+	
+	public String getImagePath() {
+		return this.imagePath;
+	}
+	
+	public int getMaxStack() {
+		return this.maxStack;
 	}
 	
 }

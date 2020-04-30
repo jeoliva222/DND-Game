@@ -11,6 +11,7 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 
 import helpers.GPath;
+import helpers.GameState;
 
 public class MainMenuFrame extends JFrame implements KeyListener {
 
@@ -38,19 +39,19 @@ public class MainMenuFrame extends JFrame implements KeyListener {
 		this.loadGameButton = new JButton("Load Game");
 		
 		// Add button listeners - TEMP TODO
-		this.newGameButton.addActionListener(new ActionListener() {
+		newGameButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				MainMenuFrame.this.createNewGame();
-				MainMenuFrame.this.dispose();
+				createNewGame();
+				dispose();
 			}
 		});
-		this.loadGameButton.addActionListener(new ActionListener() {
+		loadGameButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				boolean result = MainMenuFrame.this.loadGame();
-				if(result) {
-					MainMenuFrame.this.dispose();
+				boolean result = loadGame();
+				if (result) {
+					dispose();
 				}
 			}
 		});
@@ -59,26 +60,26 @@ public class MainMenuFrame extends JFrame implements KeyListener {
 		screenWidth = (int) (screenWidth * GameInitializer.scaleFactor);
 		screenHeight = (int) (screenHeight * GameInitializer.scaleFactor);
 		Dimension size = new Dimension(screenWidth, screenHeight);
-		this.setPreferredSize(size);
-		this.setMinimumSize(size);
+		setPreferredSize(size);
+		setMinimumSize(size);
 		
 		// Set content layout to null
-		this.setLayout(null);
+		setLayout(null);
 		
 		// Set component positioning
-		this.newGameButton.setBounds(screenWidth / 4, screenHeight / 2, screenWidth / 2, screenHeight / 8);
-		this.loadGameButton.setBounds(screenWidth / 4, screenHeight * 3/4, screenWidth / 2, screenHeight / 8);
+		newGameButton.setBounds(screenWidth / 4, screenHeight / 2, screenWidth / 2, screenHeight / 8);
+		loadGameButton.setBounds(screenWidth / 4, screenHeight * 3/4, screenWidth / 2, screenHeight / 8);
 		
 		// Add components
-		this.add(this.newGameButton);
-		this.add(this.loadGameButton);
+		add(newGameButton);
+		add(loadGameButton);
 		
 		// Set some extra parameters and then make visible
-		this.setTitle("Frog VS World");
-		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		this.addKeyListener(this);
-		this.setVisible(true);
-		this.pack();
+		setTitle("Frog VS World");
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		addKeyListener(this);
+		pack();
+		setVisible(true);
 	}
 	
 	private void createNewGame() {
@@ -88,8 +89,8 @@ public class MainMenuFrame extends JFrame implements KeyListener {
 	}
 	
 	private boolean loadGame() {
-		// Check for a save file
-		if(!(new File(GPath.SAVE + "player.ser").exists())) {
+		// Check for a player save file
+		if (!(new File(GPath.SAVE + GameState.PLAYER + GameState.SUFFIX).exists())) {
 			return false;
 		}
 		
@@ -101,7 +102,7 @@ public class MainMenuFrame extends JFrame implements KeyListener {
 	
 	// Singleton instance getter
 	public static MainMenuFrame getInstance() {
-		if(instance == null) {
+		if (instance == null) {
 			instance = new MainMenuFrame();
 		}
 		
@@ -111,23 +112,23 @@ public class MainMenuFrame extends JFrame implements KeyListener {
 	@Override
 	public void keyPressed(KeyEvent e) {
 		// Help navigate the menu - TODO
-		if(e.getKeyCode() == KeyEvent.VK_RIGHT ||
+		if (e.getKeyCode() == KeyEvent.VK_RIGHT ||
 				e.getKeyCode()== KeyEvent.VK_D) {
 			// Navigate right
 		}
-        else if(e.getKeyCode() == KeyEvent.VK_LEFT ||
+        else if (e.getKeyCode() == KeyEvent.VK_LEFT ||
         		e.getKeyCode()== KeyEvent.VK_A) {
         	// Navigate left
         }
-        else if(e.getKeyCode() == KeyEvent.VK_DOWN ||
+        else if (e.getKeyCode() == KeyEvent.VK_DOWN ||
         		e.getKeyCode()== KeyEvent.VK_S) {
         	// Navigate down
         }
-        else if(e.getKeyCode() == KeyEvent.VK_UP ||
+        else if (e.getKeyCode() == KeyEvent.VK_UP ||
         		e.getKeyCode()== KeyEvent.VK_W) {
         	// Navigate up
         } 
-        else if(e.getKeyCode() == KeyEvent.VK_SPACE ||
+        else if (e.getKeyCode() == KeyEvent.VK_SPACE ||
         		e.getKeyCode() == KeyEvent.VK_ENTER) {
         	// Make the current selection
         } 

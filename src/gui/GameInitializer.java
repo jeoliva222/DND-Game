@@ -1,5 +1,9 @@
 package gui;
 
+/**
+ * Class containing static definitions for application sizing
+ * @author jeoliva
+ */
 public class GameInitializer {
 
 	// ***NEVER CHANGE*** //

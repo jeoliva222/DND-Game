@@ -57,10 +57,10 @@ public class WeaponStatPanel extends JPanel {
 		super();
 		
 		// Set grid layout
-		this.setLayout(new GridLayout(2, 1));
+		setLayout(new GridLayout(2, 1));
 		
 		// Set background color
-		this.setBackground(new Color(179, 179, 179));
+		setBackground(new Color(179, 179, 179));
 		
 		// Scale down dimensions and fonts
 		double sf = GameInitializer.scaleFactor;
@@ -79,7 +79,7 @@ public class WeaponStatPanel extends JPanel {
 		topPanel.setOpaque(false);
 		
 		// Add in Weapon image panel to Upper half panel
-		topPanel.add(this.weaponImagePanel);
+		topPanel.add(weaponImagePanel);
 		weaponImagePanel.setPreferredSize(new Dimension(weaponWidth, weaponHeight));
 		
 		//-----------------------
@@ -89,12 +89,12 @@ public class WeaponStatPanel extends JPanel {
 		topRightPanel.setOpaque(false);
 		
 		// Add in Name label to Upper right panel
-		this.nameLabel.setFont(this.usualFont);
-		topRightPanel.add(this.nameLabel);
+		nameLabel.setFont(usualFont);
+		topRightPanel.add(nameLabel);
 		
 		// Add in Damage label to Upper right panel
-		this.dmgLabel.setFont(this.usualFont);
-		topRightPanel.add(this.dmgLabel);
+		dmgLabel.setFont(usualFont);
+		topRightPanel.add(dmgLabel);
 		
 		// Add Upper right panel to Upper half panel
 		topPanel.add(topRightPanel);
@@ -106,35 +106,36 @@ public class WeaponStatPanel extends JPanel {
 		bottomPanel.setOpaque(false);
 		
 		// Add in Critical label
-		this.critLabel.setFont(this.usualFont);
-		bottomPanel.add(this.critLabel);
-		this.critLabel.setBorder(BorderFactory.createEmptyBorder(0, labelXBuffer, 0, 0));
+		critLabel.setFont(usualFont);
+		bottomPanel.add(critLabel);
+		critLabel.setBorder(BorderFactory.createEmptyBorder(0, labelXBuffer, 0, 0));
 		
 		// Add in Critical label
-		this.chargeLabel.setFont(this.usualFont);
-		bottomPanel.add(this.chargeLabel);
-		this.chargeLabel.setBorder(BorderFactory.createEmptyBorder(0, labelXBuffer, 0, 0));
+		chargeLabel.setFont(usualFont);
+		bottomPanel.add(chargeLabel);
+		chargeLabel.setBorder(BorderFactory.createEmptyBorder(0, labelXBuffer, 0, 0));
 		
 		// Mouse Listener for focusing on equipped item
-		this.addMouseListener(new MouseAdapter() {
+		addMouseListener(new MouseAdapter() {
 		     @Override
 		     public void mouseEntered(MouseEvent mouseEvent) {
 		    	 // Try to focus on Equipped weapon if it exists
-		    	 if(EntityManager.getInstance().getPlayer().getWeapon() == null) {
+		    	 Weapon activeWeapon = EntityManager.getInstance().getPlayer().getWeapon();
+		    	 if (activeWeapon == null) {
 		    		 return;
 		    	 } else {
-		    		 InfoScreen.setItemFocus(EntityManager.getInstance().getPlayer().getWeapon());
+		    		 InfoScreen.setItemFocus(activeWeapon);
 		    	 }
 		     }
 		});
 		
 		// Add components to main panel
-		this.add(topPanel);
-		this.add(bottomPanel);
+		add(topPanel);
+		add(bottomPanel);
 		
 		// Initialize panel with correct information about weapon
-		this.setBorderPath(GPath.BORDER);
-		this.updateWeaponPanel();
+		setBorderPath(GPath.BORDER);
+		updateWeaponPanel();
 	}
 	
 	public void updateWeaponPanel() {
@@ -142,43 +143,43 @@ public class WeaponStatPanel extends JPanel {
 		Weapon newWep = EntityManager.getInstance().getPlayer().getWeapon();
 		
 		// Updates the weapon image
-		this.setWeaponPath(newWep.imagePath);
+		setWeaponPath(newWep.getImagePath());
 		
 		// Set border image
-		if(newWep.isCharged) {
-			this.setBorderPath(GPath.IMAGE + "template_charge.png");
+		if (newWep.isCharged) {
+			setBorderPath(GPath.IMAGE + "template_charge.png");
 		} else {
-			this.setBorderPath(GPath.BORDER);
+			setBorderPath(GPath.BORDER);
 		}
 		
 		// Sets the new name value
-		this.nameLabel.setText(newWep.name);
+		this.nameLabel.setText(newWep.getName());
 		
 		// If name is too long, shrink the font size
-		if(newWep.name.length() > 11) {
-			this.nameLabel.setFont(new Font(Font.SERIF, Font.BOLD, this.fontSize * 11 / (newWep.name.length())));
+		if (newWep.getName().length() > 11) {
+			nameLabel.setFont(new Font(Font.SERIF, Font.BOLD, this.fontSize * 11 / (newWep.getName().length())));
 		} else {
-			this.nameLabel.setFont(this.usualFont);
+			nameLabel.setFont(this.usualFont);
 		}
 		
 		// Sets new damage values
-		this.dmgLabel.setText("DMG: "+Integer.toString(newWep.minDmg)+" - "
+		dmgLabel.setText("DMG: "+Integer.toString(newWep.minDmg)+" - "
 				+Integer.toString(newWep.maxDmg));
 		
 		// Sets new crit values
-		this.critLabel.setText("CRITS: "+toPercent(newWep.critChance)+" / "
+		critLabel.setText("CRITS: "+toPercent(newWep.critChance)+" / "
 				+Double.toString(newWep.critMult)+"x");
 		
 		// Sets new charge values
-		this.chargeLabel.setText("CHARGED: "+Double.toString(newWep.chargeMult)+"x");
+		chargeLabel.setText("CHARGED: "+Double.toString(newWep.chargeMult)+"x");
 	}
 	
-	public String toPercent(double num) {
+	public static String toPercent(double num) {
 		// Convert double to int percent
 		int percent = (int) (num * 100);
 		
 		// Convert to string
-		String output = Integer.toString(percent) + "%";
+		String output = (Integer.toString(percent) + "%");
 		
 		// Return output
 		return output;
@@ -190,28 +191,28 @@ public class WeaponStatPanel extends JPanel {
 			File file = new File(filepath);
 			URL url = file.toURI().toURL();
 			this.weaponImage = new ImageIcon(url).getImage();
-		} catch (Exception e) {
-			System.out.println(filepath + " not found.");
-			e.printStackTrace();
+		} catch (Exception ex) {
+			System.out.println("'" + filepath + "' not found.");
+			ex.printStackTrace();
 		}
-		this.weaponImage = ImageHandler.scaleImage(this.weaponImage, weaponWidth, weaponHeight, GameInitializer.scaleFactor, GameInitializer.scaleFactor);
-		this.weaponImagePanel.setForegroundImage(this.weaponImage);
-		this.repaint();
+		this.weaponImage = ImageHandler.scaleImage(weaponImage, weaponWidth, weaponHeight, GameInitializer.scaleFactor, GameInitializer.scaleFactor);
+		weaponImagePanel.setForegroundImage(weaponImage);
+		repaint();
 	}
 	
-	// Sets the item image
+	// Sets the border image
 	public void setBorderPath(String filepath) {
 		try {
 			File file = new File(filepath);
 			URL url = file.toURI().toURL();
 			this.borderImage = new ImageIcon(url).getImage();
-		} catch (Exception e) {
-			System.out.println(filepath + " not found.");
-			e.printStackTrace();
+		} catch (Exception ex) {
+			System.out.println("'" + filepath + "' not found.");
+			ex.printStackTrace();
 		}
-		this.borderImage = ImageHandler.scaleImage(this.borderImage, weaponWidth, weaponHeight, GameInitializer.scaleFactor, GameInitializer.scaleFactor);
-		this.weaponImagePanel.setBackgroundImage(this.borderImage);
-		this.repaint();
+		this.borderImage = ImageHandler.scaleImage(borderImage, weaponWidth, weaponHeight, GameInitializer.scaleFactor, GameInitializer.scaleFactor);
+		weaponImagePanel.setBackgroundImage(borderImage);
+		repaint();
 	}
 
 }

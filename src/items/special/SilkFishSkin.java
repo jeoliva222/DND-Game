@@ -21,9 +21,6 @@ public class SilkFishSkin extends GItem {
 		super("Soft Skin",
 				"Beautiful skin, cold to the touch. A worthy offering.",
 				imagePath, 1);
-		
-		// We don't want this to be discarded
-		this.isDiscardable = false;
 	}
 	
 	@Override

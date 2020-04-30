@@ -45,10 +45,10 @@ public class WeaponBanner extends JPanel {
 		super();
 		
 		// Set horizontal Box layout
-		this.setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
+		setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
 		
 		// Set background color
-		this.setBackground(new Color(150, 150, 150));
+		setBackground(new Color(150, 150, 150));
 		
 		// Scale down dimensions and fonts
 		double sf = GameInitializer.scaleFactor;
@@ -65,32 +65,33 @@ public class WeaponBanner extends JPanel {
 		rightPanel.setOpaque(false);
 		
 		// Add in Name label
-		this.nameLabel.setFont(this.usualFont);
-		rightPanel.add(this.nameLabel);
+		nameLabel.setFont(this.usualFont);
+		rightPanel.add(nameLabel);
 		
 		// Add in weapon image panel to main panel
-		this.add(this.weaponImagePanel);
+		add(weaponImagePanel);
 		weaponImagePanel.setPreferredSize(new Dimension(weaponWidth, weaponHeight));
 		
 		// Add in right panel to main panel
-		this.add(rightPanel);
+		add(rightPanel);
 		
 		// Mouse Listener for focusing on equipped item
-		this.addMouseListener(new MouseAdapter() {
+		addMouseListener(new MouseAdapter() {
 		     @Override
 		     public void mouseEntered(MouseEvent mouseEvent) {
 		    	 // Try to focus on Equipped weapon if it exists
-		    	 if(EntityManager.getInstance().getPlayer().getSheathedWeapon() == null) {
+		    	 Weapon sheathedWeapon = EntityManager.getInstance().getPlayer().getSheathedWeapon();
+		    	 if (sheathedWeapon == null) {
 		    		 return;
 		    	 } else {
-		    		 InfoScreen.setItemFocus(EntityManager.getInstance().getPlayer().getSheathedWeapon());
+		    		 InfoScreen.setItemFocus(sheathedWeapon);
 		    	 }
 		     }
 		});
 		
 		// Initialize panel with correct information about weapon
-		this.setBorderPath(GPath.BORDER);
-		this.updateWeaponBanner();
+		setBorderPath(GPath.BORDER);
+		updateWeaponBanner();
 	}
 	
 	public void updateWeaponBanner() {
@@ -98,23 +99,23 @@ public class WeaponBanner extends JPanel {
 		Weapon newWep = EntityManager.getInstance().getPlayer().getSheathedWeapon();
 		
 		// Updates the weapon image
-		this.setWeaponPath(newWep.imagePath);
+		setWeaponPath(newWep.getImagePath());
 		
 		// Set border image
-		if(newWep.isCharged) {
-			this.setBorderPath(GPath.IMAGE + "template_charge.png");
+		if (newWep.isCharged) {
+			setBorderPath(GPath.IMAGE + "template_charge.png");
 		} else {
-			this.setBorderPath(GPath.BORDER);
+			setBorderPath(GPath.BORDER);
 		}
 		
 		// Sets the new name value
-		this.nameLabel.setText(newWep.name);
+		nameLabel.setText(newWep.getName());
 		
 		// If name is too long, shrink the font size
-		if(newWep.name.length() > 11) {
-			this.nameLabel.setFont(new Font(Font.SERIF, Font.BOLD, this.fontSize * 11 / (newWep.name.length())));
+		if (newWep.getName().length() > 11) {
+			nameLabel.setFont(new Font(Font.SERIF, Font.BOLD, fontSize * 11 / (newWep.getName().length())));
 		} else {
-			this.nameLabel.setFont(this.usualFont);
+			nameLabel.setFont(this.usualFont);
 		}
 	}
 	
@@ -125,28 +126,28 @@ public class WeaponBanner extends JPanel {
 			File file = new File(filepath);
 			URL url = file.toURI().toURL();
 			this.weaponImage = new ImageIcon(url).getImage();
-		} catch (Exception e) {
-			System.out.println(filepath + " not found.");
-			e.printStackTrace();
+		} catch (Exception ex) {
+			System.out.println("'" + filepath + "' not found.");
+			ex.printStackTrace();
 		}
-		this.weaponImage = ImageHandler.scaleImage(this.weaponImage, weaponWidth, weaponHeight, GameInitializer.scaleFactor, GameInitializer.scaleFactor);
-		this.weaponImagePanel.setForegroundImage(this.weaponImage);
-		this.repaint();
+		this.weaponImage = ImageHandler.scaleImage(weaponImage, weaponWidth, weaponHeight, GameInitializer.scaleFactor, GameInitializer.scaleFactor);
+		weaponImagePanel.setForegroundImage(weaponImage);
+		repaint();
 	}
 	
-	// Sets the item image
+	// Sets the border image
 	public void setBorderPath(String filepath) {
 		try {
 			File file = new File(filepath);
 			URL url = file.toURI().toURL();
 			this.borderImage = new ImageIcon(url).getImage();
 		} catch (Exception e) {
-			System.out.println(filepath + " not found.");
+			System.out.println("'" + filepath + "' not found.");
 			e.printStackTrace();
 		}
-		this.borderImage = ImageHandler.scaleImage(this.borderImage, weaponWidth, weaponHeight, GameInitializer.scaleFactor, GameInitializer.scaleFactor);
-		this.weaponImagePanel.setBackgroundImage(this.borderImage);
-		this.repaint();
+		this.borderImage = ImageHandler.scaleImage(borderImage, weaponWidth, weaponHeight, GameInitializer.scaleFactor, GameInitializer.scaleFactor);
+		weaponImagePanel.setBackgroundImage(borderImage);
+		repaint();
 	}
 	
 }

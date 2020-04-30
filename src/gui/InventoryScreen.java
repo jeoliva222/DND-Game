@@ -7,6 +7,7 @@ import java.util.List;
 
 import javax.swing.JPanel;
 
+import characters.allies.Player;
 import helpers.GColors;
 import helpers.GPath;
 import items.GItem;
@@ -49,47 +50,46 @@ public class InventoryScreen extends JPanel {
 		
 		// Set preferred size of the the log screen
 		Dimension size = new Dimension(inventoryWidth, inventoryHeight);
-		this.setPreferredSize(size);
+		setPreferredSize(size);
 		
 		// Set up correct layout
-		this.setLayout(null);
+		setLayout(null);
 		
 		// Scale buffers
-		InventoryScreen.rowBuffer = (int) (InventoryScreen.rowBuffer * GameInitializer.scaleFactor);
-		InventoryScreen.colBuffer = (int) (InventoryScreen.colBuffer * GameInitializer.scaleFactor);
+		rowBuffer = (int) (rowBuffer * GameInitializer.scaleFactor);
+		colBuffer = (int) (colBuffer * GameInitializer.scaleFactor);
 		
 		// Set all tiles
-		for(int y = 0; y < invRows; y++) {
-			for(int x = 0; x < invCols; x++) {
+		for (int y = 0; y < invRows; y++) {
+			for (int x = 0; x < invCols; x++) {
 				// Create new InventoryTile and add it screen/references
 				InventoryTile newTile = new InventoryTile(x, y, 0, 0);
-				InventoryScreen.invTiles[y][x] = newTile;
+				invTiles[y][x] = newTile;
 				int tileWidth = newTile.getInvTileWidth();
 				int tileHeight = newTile.getInvTileHeight();
 				newTile.setBounds(((x * (tileWidth + rowBuffer)) + rowBuffer), ((y * (tileHeight + colBuffer)) + colBuffer),
 						tileWidth, tileHeight);
-				this.add(newTile);
+				add(newTile);
 			}
 		}
 		
 		// Set border image on first tile
-		InventoryScreen.invTiles[currentY][currentX].setBorderPath(selectBorder);
+		invTiles[currentY][currentX].setBorderPath(selectBorder);
 		
 		// Set background color
-		this.setBackground(new Color(221, 221, 136));
+		setBackground(new Color(221, 221, 136));
 	}
 	
 	// Add item to inventory screen
 	public static boolean addItem(GItem item) {
-		
 		// Check for open stacks of same item
-		for(int y = 0; y < invRows; y++) {
-			for(int x = 0; x < invCols; x++) {
-				InventoryTile tile = InventoryScreen.invTiles[y][x];
-				if(tile.getItem() != null && tile.getItem().getName().equals(item.getName())) {
-					if (InventoryScreen.invTiles[y][x].getStackSize() < item.maxStack) {
-						InventoryScreen.invTiles[y][x].incrementStack();
-						InventoryScreen.invTiles[y][x].repaint();
+		for (int y = 0; y < invRows; y++) {
+			for (int x = 0; x < invCols; x++) {
+				InventoryTile tile = invTiles[y][x];
+				if (tile.getItem() != null && tile.getItem().getName().equals(item.getName())) {
+					if (invTiles[y][x].getStackSize() < item.getMaxStack()) {
+						invTiles[y][x].incrementStack();
+						invTiles[y][x].repaint();
 						return true;
 					}
 				}
@@ -97,7 +97,7 @@ public class InventoryScreen extends JPanel {
 		}
 		
 		// If we're out of space in our inventory, don't add
-		if(currentItems >= maxItems) {
+		if (currentItems >= maxItems) {
 			LogScreen.log("Inventory is too full!", GColors.ITEM);
 			return false;
 		}
@@ -107,10 +107,10 @@ public class InventoryScreen extends JPanel {
 		int addY = Math.floorDiv(currentItems, invCols);
 		
 		// Add the item
-		InventoryScreen.invTiles[addY][addX].setItem(item);
+		invTiles[addY][addX].setItem(item);
 		
 		// Increment the counter of current items
-		InventoryScreen.currentItems += 1;
+		currentItems += 1;
 		
 		return true;
 	}
@@ -118,45 +118,44 @@ public class InventoryScreen extends JPanel {
 	// Shifts which tile in the inventory is selected
 	public static void shiftSelected(int dx) {
 		// Deselect current tile
-		InventoryScreen.invTiles[currentY][currentX].setBorderPath(GPath.NULL);
+		invTiles[currentY][currentX].setBorderPath(GPath.NULL);
 		
 		// Increment indices
-		InventoryScreen.currentX += dx;
+		currentX += dx;
 		
 		// Check if we're going out of the bounds of the row
-		if(currentX >= invCols) {
+		if (currentX >= invCols) {
 			// If going over right-wise
 			// Set X-index back to 0
-			InventoryScreen.currentX = 0;
+			currentX = 0;
 			
 			// Increment Y index
-			InventoryScreen.currentY += 1;
+			currentY += 1;
 			
 			// If going over the top Y-wise, set to 0
-			if(currentY >= invRows) {
-				InventoryScreen.currentY = 0;
+			if (currentY >= invRows) {
+				currentY = 0;
 			}
-			
-		} else if(currentX < 0) {
+		} else if (currentX < 0) {
 			// If going over left-wise
 			// Set X-index to right-hand side of lower row
-			InventoryScreen.currentX = (byte) (InventoryScreen.invCols - 1);
+			currentX = (byte) (invCols - 1);
 			
 			// Decrement Y index
-			InventoryScreen.currentY += -1;
+			currentY += -1;
 			
 			// If going under index Y-wise, set to Y to last row index
-			if(currentY < 0) {
-				InventoryScreen.currentY = (byte) (InventoryScreen.invRows - 1);
+			if (currentY < 0) {
+				currentY = (byte) (invRows - 1);
 			}
 		}
 		
 		// Set border on the new current selected tile
-		InventoryScreen.invTiles[currentY][currentX].setBorderPath(selectBorder);
+		invTiles[currentY][currentX].setBorderPath(selectBorder);
 		
 		// Set focus on new item if not null
-		GItem newItem = InventoryScreen.invTiles[currentY][currentX].getItem();
-		if(newItem != null) {
+		GItem newItem = invTiles[currentY][currentX].getItem();
+		if (newItem != null) {
 			InfoScreen.setItemFocus(newItem);
 		} else {
 			InfoScreen.defocusIfItem();
@@ -166,18 +165,18 @@ public class InventoryScreen extends JPanel {
 	// Leaps selected tile to new index
 	public static void leapSelected(int newX, int newY) {
 		// Deselect current tile
-		InventoryScreen.invTiles[currentY][currentX].setBorderPath(GPath.NULL);
+		invTiles[currentY][currentX].setBorderPath(GPath.NULL);
 		
 		// Set new selected index
-		InventoryScreen.currentX = (byte) newX;
-		InventoryScreen.currentY = (byte) newY;
+		currentX = (byte) newX;
+		currentY = (byte) newY;
 		
 		// Set border on the new current selected tile
-		InventoryScreen.invTiles[currentY][currentX].setBorderPath(selectBorder);
+		invTiles[currentY][currentX].setBorderPath(selectBorder);
 		
 		// Set focus on new item if not null
-		GItem newItem = InventoryScreen.invTiles[currentY][currentX].getItem();
-		if(newItem != null) {
+		GItem newItem = invTiles[currentY][currentX].getItem();
+		if (newItem != null) {
 			InfoScreen.setItemFocus(newItem);
 		} else {
 			InfoScreen.defocusIfItem();
@@ -187,12 +186,12 @@ public class InventoryScreen extends JPanel {
 	// Use the currently selected item
 	public static boolean useSelected() {
 		// If the player isn't alive, return false
-		if(!EntityManager.getInstance().getPlayer().isAlive()) {
+		if (!EntityManager.getInstance().getPlayer().isAlive()) {
 			return false;
 		}
 		
 		// Get result of using item
-		boolean result = InventoryScreen.invTiles[currentY][currentX].useItem();
+		boolean result = invTiles[currentY][currentX].useItem();
 		
 		// Return the result
 		return result;
@@ -200,11 +199,13 @@ public class InventoryScreen extends JPanel {
 	
 	// Discards/Trashes the currently selected item
 	public static boolean discardSelected() {
-		InventoryTile tile = InventoryScreen.invTiles[currentY][currentX];
+		InventoryTile tile = invTiles[currentY][currentX];
+		
+		// Fetch reference to player
+		Player player = EntityManager.getInstance().getPlayer();
 		
 		// If the player isn't alive or item is null, return false
-		if(!EntityManager.getInstance().getPlayer().isAlive() ||
-				(tile.getItem() == null)) {
+		if (!player.isAlive() || (tile.getItem() == null)) {
 			return false;
 		}
 		
@@ -213,18 +214,16 @@ public class InventoryScreen extends JPanel {
 				+tile.getItem().getName()+".", GColors.ITEM);
 		
 		// Place item on the ground (If not our bare fists)
-		if(!tile.getItem().getName().equals(Armory.bareFists.getName())) {
+		if (!tile.getItem().getName().equals(Armory.bareFists.getName())) {
 			EntityManager.getInstance().getPickupManager().addPickup(new GPickup(
-					EntityManager.getInstance().getPlayer().getXPos(),
-					EntityManager.getInstance().getPlayer().getYPos(),
-					tile.getItem()));
+					player.getXPos(), player.getYPos(), tile.getItem()));
 		}
 		
 		// Discard the item
-		if(tile.getStackSize() >= tile.getItem().maxStack) {
+		if (tile.getStackSize() >= tile.getItem().getMaxStack()) {
 			// If we have a full stack of the item, look for the smallest stack to discard from
-			InventoryScreen.removeFromSmallestStack(tile.getItem());
-		} else if(tile.getStackSize() > 1) {
+			removeFromSmallestStack(tile.getItem());
+		} else if (tile.getStackSize() > 1) {
 			// If multiple stacks of the item (but not a max stack), only discard one
 			tile.decrementStack();
 			tile.repaint();
@@ -233,13 +232,13 @@ public class InventoryScreen extends JPanel {
 			tile.clearItem();
 			
 			// Reorganize the inventory
-			InventoryScreen.organizeInventoryScreen();
+			organizeInventoryScreen();
 			
 			// Defocus InfoScreen
 			InfoScreen.defocusIfItem();
 			
 			// Decrement current items counter
-			InventoryScreen.currentItems += -1;
+			currentItems += -1;
 		}
 		
 		return true;
@@ -248,22 +247,22 @@ public class InventoryScreen extends JPanel {
 	// Reorganizes the items in the inventory around current selection
 	public static void organizeInventoryScreen() {
 		// Iterate through remaining items, shifting each one slot back
-		int startX = (InventoryScreen.currentX + 1);
-		Dimension oldIndex = new Dimension(InventoryScreen.currentX, InventoryScreen.currentY);
-		for(int y = InventoryScreen.currentY; y < invRows; y++) {
-			for(int x = startX; x < invCols; x++) {
+		int startX = (currentX + 1);
+		Dimension oldIndex = new Dimension(currentX, currentY);
+		for (int y = currentY; y < invRows; y++) {
+			for (int x = startX; x < invCols; x++) {
 				// Get the item
-				InventoryTile currentTile = InventoryScreen.invTiles[y][x];
+				InventoryTile currentTile = invTiles[y][x];
 				GItem itemToShift = currentTile.getItem();
 				
 				// If the item is null, we've finished organizing
-				if(itemToShift == null) {
+				if (itemToShift == null) {
 					return;
 				}
 				
 				// Shift item to last index
-				InventoryScreen.invTiles[oldIndex.height][oldIndex.width].setItem(itemToShift);
-				InventoryScreen.invTiles[oldIndex.height][oldIndex.width].setStackSize(currentTile.getStackSize());
+				invTiles[oldIndex.height][oldIndex.width].setItem(itemToShift);
+				invTiles[oldIndex.height][oldIndex.width].setStackSize(currentTile.getStackSize());
 				
 				// Clear item from this index
 				currentTile.clearItem();
@@ -280,20 +279,20 @@ public class InventoryScreen extends JPanel {
 		// Iterate through remaining items, shifting each one slot back
 		int startX = (xIndex + 1);
 		Dimension oldIndex = new Dimension(xIndex, yIndex);
-		for(int y = yIndex; y < invRows; y++) {
-			for(int x = startX; x < invCols; x++) {
+		for (int y = yIndex; y < invRows; y++) {
+			for (int x = startX; x < invCols; x++) {
 				// Get the item
-				InventoryTile currentTile = InventoryScreen.invTiles[y][x];
+				InventoryTile currentTile = invTiles[y][x];
 				GItem itemToShift = currentTile.getItem();
 				
 				// If the item is null, we've finished organizing
-				if(itemToShift == null) {
+				if (itemToShift == null) {
 					return;
 				}
 				
 				// Shift item to last index
-				InventoryScreen.invTiles[oldIndex.height][oldIndex.width].setItem(itemToShift);
-				InventoryScreen.invTiles[oldIndex.height][oldIndex.width].setStackSize(currentTile.getStackSize());
+				invTiles[oldIndex.height][oldIndex.width].setItem(itemToShift);
+				invTiles[oldIndex.height][oldIndex.width].setStackSize(currentTile.getStackSize());
 				
 				// Clear item from this index
 				currentTile.clearItem();
@@ -308,12 +307,12 @@ public class InventoryScreen extends JPanel {
 	// If we have a full stack of the item, look for the smallest stack to discard from
 	// Check for open stacks of same item
 	public static boolean removeFromSmallestStack(GItem item) {
-		for(int y = (invRows - 1); y >= 0; y--) {
-			for(int x = (invCols - 1); x >= 0; x--) {
-				InventoryTile stackTile = InventoryScreen.invTiles[y][x];
-				if(stackTile.getItem() != null && stackTile.getItem().getName().equals(item.getName())) {
+		for (int y = (invRows - 1); y >= 0; y--) {
+			for (int x = (invCols - 1); x >= 0; x--) {
+				InventoryTile stackTile = invTiles[y][x];
+				if (stackTile.getItem() != null && stackTile.getItem().getName().equals(item.getName())) {
 					// Discard from this stack instead
-					if(stackTile.getStackSize() > 1) {
+					if (stackTile.getStackSize() > 1) {
 						// If multiple stacks of the item (but not a max stack), only discard one
 						stackTile.decrementStack();
 						stackTile.repaint();
@@ -322,13 +321,13 @@ public class InventoryScreen extends JPanel {
 						stackTile.clearItem();
 
 						// Reorganize the inventory
-						InventoryScreen.organizeInventoryScreen(x, y);
+						organizeInventoryScreen(x, y);
 						
 						// Defocus InfoScreen
 						InfoScreen.defocusIfItem();
 						
 						// Decrement current items counter
-						InventoryScreen.currentItems += -1;
+						currentItems += -1;
 					}
 					
 					// We removed an item, so return true
@@ -345,11 +344,11 @@ public class InventoryScreen extends JPanel {
 	// Getters and Setters
 	
 	protected static void incrementItemCount(int dx) {
-		InventoryScreen.currentItems += dx;
+		currentItems += dx;
 	}
 	
 	public static InventoryTile getTile(int x, int y) {
-		return InventoryScreen.invTiles[y][x];
+		return invTiles[y][x];
 	}
 	
 	// Fetch inventory items in the form of an array
@@ -357,15 +356,15 @@ public class InventoryScreen extends JPanel {
 		List<GItem> itemList = new ArrayList<GItem>();
 		
 		int count = 0;
-		for(int row = 0; row < invRows; row++) {
-			for(int col = 0; col < invCols; col++) {
-				if(count >= InventoryScreen.currentItems) {
-					return InventoryScreen.itemListToArray(itemList);
+		for (int row = 0; row < invRows; row++) {
+			for (int col = 0; col < invCols; col++) {
+				if (count >= currentItems) {
+					return itemListToArray(itemList);
 				}
 				
 				// Add item to output for each stack we have
-				for(int i = 0; i < InventoryScreen.invTiles[row][col].getStackSize(); i++) {
-					GItem item = InventoryScreen.invTiles[row][col].getItem();
+				for (int i = 0; i < invTiles[row][col].getStackSize(); i++) {
+					GItem item = invTiles[row][col].getItem();
 					itemList.add(item);
 				}
 
@@ -374,12 +373,12 @@ public class InventoryScreen extends JPanel {
 			}
 		}
 		
-		return InventoryScreen.itemListToArray(itemList);
+		return itemListToArray(itemList);
 	}
 	
 	public static GItem[] itemListToArray(List<GItem> list) {
 		GItem[] output = new GItem[list.size()];
-		for(int i = 0; i < list.size(); i++) {
+		for (int i = 0; i < list.size(); i++) {
 			output[i] = list.get(i);
 		}
 		
@@ -389,38 +388,38 @@ public class InventoryScreen extends JPanel {
 	// Set inventory items based off input array
 	public static void setItemArray(GItem[] newInv) {
 		// Clear inventory
-		for(int row = 0; row < invRows; row++) {
-			for(int col = 0; col < invCols; col++) {
-				InventoryScreen.invTiles[row][col].clearItem();
+		for (int row = 0; row < invRows; row++) {
+			for (int col = 0; col < invCols; col++) {
+				invTiles[row][col].clearItem();
 			}
 		}
 		
 		// Reset item count
-		InventoryScreen.currentItems = 0;
+		currentItems = 0;
 		
 		// For each item, add it to the inventory
-		for(GItem item : newInv) {
-			InventoryScreen.addItem(item);
+		for (GItem item : newInv) {
+			addItem(item);
 		}
 	}
 	
 	public static int getXIndex() {
-		return InventoryScreen.currentX;
+		return currentX;
 	}
 	
 	public static int getYIndex() {
-		return InventoryScreen.currentY;
+		return currentY;
 	}
 	
 	public static int getInvWidth() {
-		return InventoryScreen.inventoryWidth;
+		return inventoryWidth;
 	}
 	
 	public static int getInvHeight() {
-		return InventoryScreen.inventoryHeight;
+		return inventoryHeight;
 	}
 
 	public static boolean isFull() {
-		return (InventoryScreen.currentItems >= InventoryScreen.maxItems);
+		return (currentItems >= maxItems);
 	}
 }

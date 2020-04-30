@@ -20,32 +20,28 @@ public class MapScreen extends JPanel {
 	// Size of all tiles
 	private static int tileSize = 80;
 	
-	// Height and width of GameScreen
+	// Height and width of MapScreen
 	private static int mWidth, mHeight;
 	
 	protected MapScreen() {
 		super();
 		
-		double scaleFactor = GameInitializer.scaleFactor;
-		int xDimen = GameInitializer.xDimen;
-		int yDimen = GameInitializer.yDimen;
-		
 		// Calculate tile size
-		MapScreen.tileSize = (int) (scaleFactor * GameInitializer.tileArtSize);
+		tileSize = (int) (GameInitializer.scaleFactor * GameInitializer.tileArtSize);
 		
 		// Initialize screen size
-		MapScreen.mWidth = xDimen * MapScreen.tileSize;
-		MapScreen.mHeight = yDimen * MapScreen.tileSize;
+		mWidth = GameInitializer.xDimen * tileSize;
+		mHeight = GameInitializer.yDimen * tileSize;
 		
 		// Set the size of the screen
 		Dimension size = new Dimension(MapScreen.mWidth, MapScreen.mHeight);
-		this.setPreferredSize(size);
+		setPreferredSize(size);
 		
 		// Set layout
-		this.setLayout(new BorderLayout());
+		setLayout(new BorderLayout());
 		
 		// Set various attributes of MapScreen
-		this.setVisible(false);
+		setVisible(false);
 	}
 	
 	// Display the map of the current area
@@ -69,9 +65,9 @@ public class MapScreen extends JPanel {
 		grid.setPreferredSize(this.getPreferredSize());
 		
 		// Populate map with data
-		for(int y = 0; y < aHeight; y++) {
+		for (int y = 0; y < aHeight; y++) {
 			String line = "";
-			for(int x = 0; x < aLength; x++) {
+			for (int x = 0; x < aLength; x++) {
 				// Initialize panel
 				JPanel p = new JPanel();
 				p.setPreferredSize(new Dimension(MapScreen.tileSize, MapScreen.tileSize));
@@ -79,14 +75,14 @@ public class MapScreen extends JPanel {
 				p.setBorder(BorderFactory.createLineBorder(Color.BLACK, 1, false));
 				
 				// Set panel color based on area exploration and player position
-				if(player.getLevelX() == x && player.getLevelY() == y) {
+				if (player.getLevelX() == x && player.getLevelY() == y) {
 					line += "P - ";
 					p.setBackground(Color.GREEN.brighter());
 				} else {
-					if(area.getLevel(x, y) == null) {
+					if (area.getLevel(x, y) == null) {
 						line += "N - ";
 						p.setBackground(Color.BLACK);
-					} else if(area.getLevel(x, y).wasExplored()) {
+					} else if (area.getLevel(x, y).wasExplored()) {
 						line += "X - ";
 						p.setBackground(Color.BLUE.brighter());
 					} else {
@@ -104,24 +100,24 @@ public class MapScreen extends JPanel {
 		System.out.println("------------");
 		
 		// Add the map grid to the screen
-		this.add(grid, BorderLayout.CENTER);
+		add(grid, BorderLayout.CENTER);
 		
 		// Make screen visible
-		this.setVisible(true);
+		setVisible(true);
 	}
 	
 	// Hide the MapScreen from view
 	protected void hideMap() {
-		this.removeAll();
-		this.setVisible(false);
+		removeAll();
+		setVisible(false);
 	}
 	
 	public static int getMWidth() {
-		return MapScreen.mWidth;
+		return mWidth;
 	}
 	
 	public static int getMHeight() {
-		return MapScreen.mHeight;
+		return mHeight;
 	}
 	
 }
