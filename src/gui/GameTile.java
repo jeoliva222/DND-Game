@@ -294,7 +294,7 @@ public class GameTile extends JPanel {
 	private boolean findItem() {
 		for (GPickup pu: EntityManager.getInstance().getPickupManager().getPickups()) {
 			if (gridX == pu.getXPos() && gridY == pu.getYPos()) {
-				InfoScreen.setItemFocus(pu.item);
+				InfoScreen.setItemFocus(pu.getItem());
 				return true;
 			}
 		}

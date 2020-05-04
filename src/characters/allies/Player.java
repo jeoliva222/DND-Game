@@ -25,6 +25,10 @@ import tiles.TileType;
 import weapons.Armory;
 import weapons.Weapon;
 
+/**
+ * Class that defines the game's player and their functionality
+ * @author jeoliva
+ */
 public class Player implements Serializable {
 	
 	// Serialization ID
@@ -79,8 +83,8 @@ public class Player implements Serializable {
 		// Default is 6, 2
 		this.xPos = 6;
 		this.yPos = 2;
-		this.lastX = this.xPos;
-		this.lastY = this.yPos;
+		this.lastX = xPos;
+		this.lastY = yPos;
 		
 		/// ***TEMP*** Set the area coordinates
 		// Default is 0, 1
@@ -106,47 +110,52 @@ public class Player implements Serializable {
 		this.vision = 2;
 		
 		// Dictate what player can move on
-		this.populateMoveTypes();
+		populateMoveTypes();
 	}
 	
-	// Moves the player in a particular direction
+	/**
+	 * Moves the player in a particular direction
+	 * @param dx X-movement
+	 * @param dy Y-movement
+	 * @return True if player moved | False if player remained in place
+	 */
 	public boolean movePlayer(int dx, int dy) {
 		
 		// Check if player is alive first
-		if(!this.isAlive()) {
+		if (!isAlive()) {
 			// If player is dead, don't do anything
 			return false;
 		}
 		
 		// Next check to see if your weapon will hit anything
-		if(this.equippedWeapon.tryAttack(dx, dy)) {
+		if (equippedWeapon.tryAttack(dx, dy)) {
 			// If we hit something, we don't move
 			return false;
 		}
 		
 		// Check if we are rooted and can't move
-		if(this.hasBuff(Buff.ROOTED)) {
+		if (hasBuff(Buff.ROOTED)) {
 			return false;
 		}
 		
 		// Discharge weapons if player isn't attacking this turn
-		this.dischargeWeapons();
+		dischargeWeapons();
 		
 		// Then check for barriers, out-of-bounds, and immovable spaces
 		TileType tt = null;
 		try {
 			// Try to get the TileType of the GameTile
-			tt = GameScreen.getTile(this.xPos + dx, this.yPos + dy).getTileType();
+			tt = GameScreen.getTile(xPos + dx, yPos + dy).getTileType();
 		} catch (IndexOutOfBoundsException e) {
 			// If we're going out of bounds, that means we're switching screens
 			
 			// Try to swap levels
-			if(GameWindow.getScreen().swapLevel(dx, dy)) {
+			if (GameWindow.getScreen().swapLevel(dx, dy)) {
 				// Change the player's position
 				
 				// Get the new relative coordinates of the player
-				int newX = this.xPos + dx;
-				int newY = this.yPos + dy;
+				int newX = (xPos + dx);
+				int newY = (yPos + dy);
 				
 				// Load the border limits of the screen
 				int xMax = GameInitializer.xDimen;
@@ -154,22 +163,22 @@ public class Player implements Serializable {
 				
 				// Switch the player x-wise to other end of the screen
 				// if past the limits
-				if(newX >= xMax) {
+				if (newX >= xMax) {
 					newX = 0;
-				} else if(newX < 0) {
+				} else if (newX < 0) {
 					newX = xMax - 1;
 				}
 				
 				// Switch the player y-wise to other end of the screen
 				// if past the limits
-				if(newY >= yMax) {
+				if (newY >= yMax) {
 					newY = 0;
-				} else if(newY < 0) {
+				} else if (newY < 0) {
 					newY = yMax - 1;
 				}
 				
 				// Try to place player at the correct position on the new screen
-				if(this.leapPlayer(newX, newY, true)) {
+				if (leapPlayer(newX, newY, true)) {
 					return true;
 				} else {
 					System.out.println("Screen existed, but 'leap' function failed.");
@@ -183,7 +192,7 @@ public class Player implements Serializable {
 		}
 		
 		// If immovable, return false without changing position
-		if(tt == null || !canMove(tt.getMovableType())) {
+		if (tt == null || !canMove(tt.getMovableType())) {
 			return false;
 		}
 		
@@ -192,7 +201,7 @@ public class Player implements Serializable {
 		this.yPos += dy;
 		
 		// Grab any items at the new position
-		this.grabItems();
+		grabItems();
 		
 		// Trigger the TileType's onStep method
 		tt.onStep();
@@ -201,22 +210,27 @@ public class Player implements Serializable {
 		return true;
 	}
 	
-	// Leaps player to an entirely new position
-	// If considered a 'teleport', this will potentially telefrag enemies.
+	/**
+	 * Leaps player to an entirely new position.
+	 * If considered a 'teleport', this will potentially tele-frag enemies.
+	 * @param newX New X-position
+	 * @param newY New Y-position
+	 * @param isTeleport True = Can warp inside enemies and tele-frag them | False = Cannot move into enemies
+	 */
 	public boolean leapPlayer(int newX, int newY, boolean isTeleport) {
 		// Check if player is alive first
-		if(!this.isAlive()) {
+		if (!isAlive()) {
 			// If player is dead, don't do anything
 			return false;
 		}
 		
 		// Check if we are rooted and can't move
-		if(this.hasBuff(Buff.ROOTED)) {
+		if (hasBuff(Buff.ROOTED)) {
 			return false;
 		}
 		
 		// Discharge weapons if player isn't attacking this turn
-		this.dischargeWeapons();
+		dischargeWeapons();
 		
 		// Check for barriers, out-of-bounds, and immovable spaces
 		TileType tt;
@@ -228,16 +242,17 @@ public class Player implements Serializable {
 		}
 		
 		// If immovable, return false without changing position
-		if(!canMove(tt.getMovableType())) {
+		if (!canMove(tt.getMovableType())) {
 			return false;
 		}
 		
 		// Finally check for collision
-		for(GCharacter npc : EntityManager.getInstance().getNPCManager().getCharacters()) {
-			if((newX) == npc.getXPos() && (newY) == npc.getYPos()) {
-				if(isTeleport) {
+		for (GCharacter npc : EntityManager.getInstance().getNPCManager().getCharacters()) {
+			if (newX == npc.getXPos() && newY == npc.getYPos()) {
+				if (isTeleport) {
 					npc.damageCharacter(1000);
 					LogScreen.log("Player telefragged " + npc.getName() + ".", GColors.ATTACK);
+					break;
 				} else {
 					return false;
 				}
@@ -249,7 +264,7 @@ public class Player implements Serializable {
 		this.yPos = newY;
 		
 		// Grab any items at the new position
-		this.grabItems();
+		grabItems();
 		
 		// Trigger the TileType's onStep method
 		tt.onStep();
@@ -258,25 +273,32 @@ public class Player implements Serializable {
 		return true;
 	}
 	
-	// Overload with default value of 'false' to isTeleport parameter
+	/**
+	 * Leaps player to an entirely new position.
+	 * Cannot move to a space occupied by an enemy.
+	 * @param newX New X-position
+	 * @param newY New Y-position
+	 */
 	public boolean leapPlayer(int newX, int newY) {
-		return this.leapPlayer(newX, newY, false);
+		return leapPlayer(newX, newY, false);
 	}
 	
-	// Attempt to grab any items at the player's position
+	/**
+	 * Attempt to grab any items at the player's current position
+	 */
 	public void grabItems() {
 		// Grab any items at the new position
 		ArrayList<GPickup> grabbedItems = new ArrayList<GPickup>();
-		for(GPickup pu: EntityManager.getInstance().getPickupManager().getPickups()) {
-			if(pu.getXPos() == this.xPos && pu.getYPos() == this.yPos) {
+		for (GPickup pu: EntityManager.getInstance().getPickupManager().getPickups()) {
+			if (pu.getXPos() == xPos && pu.getYPos() == yPos) {
 				// Add item to inventory if we have inventory space
-				if(InventoryScreen.addItem(pu.item)) {
+				if (InventoryScreen.addItem(pu.getItem())) {
 				
 					// Set focus on new item
-					InfoScreen.setItemFocus(pu.item);
+					InfoScreen.setItemFocus(pu.getItem());
 					
 					// Log what player grabbed
-					LogScreen.log("Player looted "+pu.item.getName()+".", GColors.ITEM);
+					LogScreen.log("Player looted "+pu.getItem().getName()+".", GColors.ITEM);
 					
 					// Mark item as grabbed
 					grabbedItems.add(pu);
@@ -285,13 +307,13 @@ public class Player implements Serializable {
 		}
 		
 		// Remove grabbed items from level
-		for(GPickup rpu: grabbedItems) {
+		for (GPickup rpu: grabbedItems) {
 			// Remove item from manager
 			EntityManager.getInstance().getPickupManager().removePickup(rpu);
 		}
 		
 		// If we grabbed at least one item, play item-get sound
-		if(grabbedItems.size() > 0) {
+		if (grabbedItems.size() > 0) {
 			// Play a sound
 			SoundPlayer.playWAV(GPath.createSoundPath("Item_GET.wav"));
 		}
@@ -300,22 +322,24 @@ public class Player implements Serializable {
 		grabbedItems = null;
 	}
 	
-	// Subtracts health from player and kills them if they reach 0 health
-	// Actual damage calculations performed in GCharacter class
-	// Returns True if alive from damage, False if dead from damage
+	/**
+	 * Subtracts health from player and kills them if they reach 0 health
+	 * @param damage Damage to deal to player
+	 * @return True if alive after damage, False if dead after damage
+	 */
 	public boolean damagePlayer(int damage) {
 		// If damage is equal to or less than 0, do nothing and return
-		if(damage <= 0) {
+		if (damage <= 0) {
 			return true;
 		}
 		
 		// Otherwise, deal damage, play hurt sound, and declare whether play is dead
-		this.currentHP = this.currentHP - damage;
-		if(this.isAlive()) {
+		this.currentHP = (currentHP - damage);
+		if (isAlive()) {
 			SoundPlayer.playWAV(GPath.createSoundPath("Player_HURT.wav"), -15);
 			return true;
 		} else {
-			if(this.currentHP < -100) {
+			if (currentHP < -100) {
 				// Play no death sound
 			} else {
 				// Play a death sound
@@ -326,48 +350,58 @@ public class Player implements Serializable {
 		}
 	}
 	
-	// Persists all the buffs on the player for the turn
+	/**
+	 * Persists all the buffs on the player for the turn
+	 */
 	public void persistBuffs() {
 		ArrayList<Buff> hearse = new ArrayList<Buff>();
-		for(Buff b : this.buffs) {
+		for (Buff b : buffs) {
 			// Does the buff's on-turn effect
 			b.doTurnEffect();
 			
 			// Checks if buff is still active
-			if(b.persist()) {
+			if (b.persist()) {
 				LogScreen.log("Player's " + b.getName() + " wore off.");
-				System.out.println("Player's " + b.getName() + " wore off.");
 				hearse.add(b);
-			} else {
-				System.out.println(b.getName() + ": " + b.getDuration() + " turns remaining on Player.");
 			}
 		}
 		
-		for(Buff b : hearse) {
-			this.removeBuff(b);
+		// Remove expired buffs
+		for (Buff b : hearse) {
+			removeBuff(b);
 		}
 	}
 	
-	// Heal player: Up to, but not over, max if not over-heal /
-	// Up and over max if over-heal
+	/**
+	 * Heals the player, with the option to over-heal
+	 * @param heal Health points to heal the player
+	 * @param isOverHeal True if healing can go above maximum HP | False if not
+	 */
 	public void healPlayer(int heal, boolean isOverHeal) {
-		this.currentHP = this.currentHP + heal;
-		if((this.currentHP > this.maxHP) && (!isOverHeal)) {
-			this.currentHP = this.maxHP;
+		this.currentHP = currentHP + heal;
+		if ((currentHP > maxHP) && (!isOverHeal)) {
+			this.currentHP = maxHP;
 		}
 	}
 	
-	// Overload that assumes heal isn't an over-heal
+	/**
+	 * Heals this character (cannot go above maximum HP)
+	 * @param heal Health points to heal the player
+	 */
 	public void healPlayer(int heal) {
-		this.healPlayer(heal, false);
+		healPlayer(heal, false);
 	}
 	
-	// Heals the player to full health
+	/**
+	 * Heals the player to full health
+	 */
 	public void fullyHeal() {
-		this.healPlayer(this.maxHP);
+		healPlayer(maxHP);
 	}
 	
-	// Populates the list of movable tiles
+	/**
+	 * Populates the list of movable tiles
+	 */
 	private void populateMoveTypes() {
 		this.moveTypes = ((short) (moveTypes + (MovableType.GROUND)));
 		this.moveTypes = ((short) (moveTypes + (MovableType.ALT_GROUND)));
@@ -376,29 +410,41 @@ public class Player implements Serializable {
 		this.moveTypes = ((short) (moveTypes + (MovableType.ACID)));
 	}
 	
-	// Returns true if the player can move to a given MovableType
+	/**
+	 * Checks if the player can move to a given MovableType
+	 * @param mt MovableType to check
+	 * @return True if the player can move to a given MovableType | False if not
+	 */
 	public boolean canMove(Short mt) {
-		return MovableType.canMove(this.moveTypes, mt);
+		return MovableType.canMove(moveTypes, mt);
 	}
 	
-	// Adds a MovableType
+	/**
+	 * Adds an allowed MovableType to the player
+	 * @param mt MovableType to add
+	 */
 	public void addMoveType(Short mt) {
-		this.moveTypes = (short) (this.moveTypes | mt);
+		this.moveTypes = (short) (moveTypes | mt);
 	}
 	
-	// Removes a MovableType if it currently exists in the list
+	/**
+	 * Removes an allowed MovableType from the player
+	 * @param mt MovableType to remove
+	 */
 	public void removeMoveType(Short mt) {
 		mt = (short) (~mt & Short.MAX_VALUE);
-		this.moveTypes = (short) (this.moveTypes | mt);
+		this.moveTypes = (short) (moveTypes & mt);
 	}
 	
-	// Swaps equipped and sheathed weapon
+	/**
+	 * Swaps equipped and sheathed weapon
+	 */
 	public void swapEquippedWeapon() {
 		// Store reference to equipped weapon
-		Weapon swapWep = this.equippedWeapon;
+		Weapon swapWep = equippedWeapon;
 		
 		// Equip sheathed weapon
-		this.equippedWeapon = this.sheathedWeapon;
+		this.equippedWeapon = sheathedWeapon;
 		
 		// Sheath previously equipped weapon
 		this.sheathedWeapon = swapWep;
@@ -407,7 +453,9 @@ public class Player implements Serializable {
 		StatusScreen.updateWeapons();
 	}
 	
-	// Charges both weapons the player has on them
+	/**
+	 * Charges both weapons the player has equipped
+	 */
 	public void chargeWeapons() {
 		// Charge both equipped weapons
 		equippedWeapon.chargeWeapon();
@@ -420,21 +468,28 @@ public class Player implements Serializable {
        	LogScreen.log("Charged weapons...");
 	}
 	
-	// Discharges both weapons the player has on them
+	/**
+	 * Discharges both weapons the player has equipped
+	 */
 	public void dischargeWeapons() {
-		this.equippedWeapon.dischargeWeapon();
-		this.sheathedWeapon.dischargeWeapon();
+		equippedWeapon.dischargeWeapon();
+		sheathedWeapon.dischargeWeapon();
 	}
 	
-	// Checks if player is Alive
+	/**
+	 * Checks if player is Alive
+	 * @return True if alive | False if dead
+	 */
 	public boolean isAlive() {
-		return (this.currentHP > 0);
+		return (currentHP > 0);
 	}
 	
-	// Updates coordinates the player was on last turn
+	/**
+	 * Updates coordinates the player was on last turn
+	 */
 	public void updateLastCoords() {
-		this.lastX = this.xPos;
-		this.lastY = this.yPos;
+		this.lastX = xPos;
+		this.lastY = yPos;
 	}
 	
 	// *******************
@@ -442,22 +497,22 @@ public class Player implements Serializable {
 	
 	// Gets player image based off health levels
 	public String getPlayerImage() {
-		int hp = this.currentHP;
-		int max = this.maxHP;
-		if(hp > (max*3/4)) {
-			return this.playerImage_FULL;
-		} else if(hp > (max/2)) {
-			return this.playerImage_BRUISED;
-		} else if(hp > (max/4)) {
-			return this.playerImage_INJURED;
-		} else if(hp > 0) {
-			return this.playerImage_FATAL;
-		} else if(hp < -100) {
+		int hp = currentHP;
+		int max = maxHP;
+		if (hp > (max*3/4)) {
+			return playerImage_FULL;
+		} else if (hp > (max/2)) {
+			return playerImage_BRUISED;
+		} else if (hp > (max/4)) {
+			return playerImage_INJURED;
+		} else if (hp > 0) {
+			return playerImage_FATAL;
+		} else if (hp < -100) {
 			// Crit death
-			return this.playerImage_DEAD_CRIT;
+			return playerImage_DEAD_CRIT;
 		} else {
 			// Normal death
-			return this.playerImage_DEAD;
+			return playerImage_DEAD;
 		}
 	}
 	
@@ -534,8 +589,8 @@ public class Player implements Serializable {
 	}
 	
 	public void setFullPos(int newX, int newY) {
-		this.setXPos(newX);
-		this.setYPos(newY);
+		setXPos(newX);
+		setYPos(newY);
 	}
 	
 	public int getMaxHP() {
@@ -599,16 +654,20 @@ public class Player implements Serializable {
 		return this.buffs;
 	}
 	
+	/**
+	 * Adds a buff/debuff to the player
+	 * @param buff Buff/Debuff to add
+	 */
 	public void addBuff(Buff buff) {
-		if(this.hasBuff(buff.getName())) {
+		if (hasBuff(buff.getName())) {
 			// Extend the current buff
-			this.extendBuff(buff);
+			extendBuff(buff);
 		} else {
 			// Add new buff
 			buff.setPlayer(this);
 			buff.activate();
-			this.buffs.add(buff);
-			if(buff.isDebuff()) {
+			buffs.add(buff);
+			if (buff.isDebuff()) {
 				LogScreen.log("Player inflicted with " + buff.getName() + "!", GColors.DAMAGE);
 			} else {
 				LogScreen.log("Player gained " + buff.getName() + "!", GColors.ITEM);
@@ -616,8 +675,12 @@ public class Player implements Serializable {
 		}
 	}
 	
+	/**
+	 * Removes a buff/debuff from the player
+	 * @param buff Buff/Debuff to remove
+	 */
 	public boolean removeBuff(Buff buff) {
-		if(this.buffs.remove(buff)) {
+		if (buffs.remove(buff)) {
 			buff.deactivate();
 			return true;
 		} else {
@@ -625,16 +688,20 @@ public class Player implements Serializable {
 		}
 	}
 	
+	/**
+	 * Removes a buff/debuff from the player
+	 * @param name Name of buff/debuff to remove
+	 */
 	public boolean removeBuff(String name) {
 		Buff removeBuff = null;
-		for(Buff b : this.buffs) {
-			if(b.getName().equals(name)) {
+		for (Buff b : buffs) {
+			if (b.getName().equals(name)) {
 				removeBuff = b;
 				break;
 			}
 		}
 		
-		if(removeBuff != null) {
+		if (removeBuff != null) {
 			removeBuff.deactivate();
 			return true;
 		} else {
@@ -642,25 +709,45 @@ public class Player implements Serializable {
 		}
 	}
 	
+	/**
+	 * Clears all buffs/debuffs from the player
+	 */
+	public void clearBuffs() {
+		for (Buff b : buffs) {
+			b.deactivate();
+		}
+		
+		buffs.clear();
+	}
+	
+	/**
+	 * Extends a buff/debuff on the player
+	 * @param buff Buff/Debuff to extend
+	 */
 	public void extendBuff(Buff buff) {
 		Buff extendBuff = null;
-		for(Buff b : this.buffs) {
-			if(b.getName().equals(buff.getName())) {
+		for (Buff b : buffs) {
+			if (b.getName().equals(buff.getName())) {
 				extendBuff = b;
 				break;
 			}
 		}
 		
-		if(extendBuff != null) {
-			if(buff.getDuration() > extendBuff.getDuration()) {
+		if (extendBuff != null) {
+			if (buff.getDuration() > extendBuff.getDuration()) {
 				extendBuff.setDuration(buff.getDuration());
 			}
 		}
 	}
 	
+	/**
+	 * Checks if this character has a particular buff/debuff
+	 * @param name Name of buff/debuff to check
+	 * @return True if player has buff/debuff | False if not
+	 */
 	public boolean hasBuff(String name) {
-		for(Buff b : this.buffs) {
-			if(b.getName().equals(name)) {
+		for (Buff b : buffs) {
+			if (b.getName().equals(name)) {
 				return true;
 			}
 		}

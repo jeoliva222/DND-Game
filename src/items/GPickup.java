@@ -9,21 +9,16 @@ public class GPickup implements Serializable {
 	private static final long serialVersionUID = 8298057130151904666L;
 
 	// X and Y coordinates on the screen
-	public int xPos, yPos;
+	protected int xPos, yPos;
 	
 	// Item that the pickup holds
-	public GItem item;
+	protected GItem item;
 
 	// Constructor
 	public GPickup(int x, int y, GItem item) {
 		this.xPos = x;
 		this.yPos = y;
 		this.item = item;
-	}
-	
-	// Controls adding an item to the inventory from the screen
-	public void grabPickup() {
-		/// Nothing yet
 	}
 	
 	public int getXPos() {
@@ -34,7 +29,11 @@ public class GPickup implements Serializable {
 		return this.yPos;
 	}
 	
+	public GItem getItem() {
+		return this.item;
+	}
+	
 	public String getImage() {
-		return this.item.imagePath;
+		return this.item.getImagePath();
 	}
 }

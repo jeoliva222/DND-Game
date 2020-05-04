@@ -46,7 +46,7 @@ public class PickupManager {
 			}
 			
 			// If no pickups remaining on tile, clear the tile of pickup images
-			GameScreen.getTile(pu.xPos, pu.yPos).clearPickup();
+			GameScreen.getTile(pu.getXPos(), pu.getYPos()).clearPickup();
 			return true;
 		} else {
 			return false;

@@ -17,7 +17,10 @@ import managers.EntityManager;
 import tiles.MovableType;
 import tiles.TileType;
 
-// Abstract class containing common behavior for game characters
+/**
+ * Abstract class containing common behavior for game characters
+ * @author jeoliva
+ */
 public abstract class GCharacter implements Serializable {
 	
 	// Serialization ID
@@ -100,26 +103,34 @@ public abstract class GCharacter implements Serializable {
 		this.yOrigin = startY;
 		this.lastY = startY;
 		
-		this.populateMoveTypes();
+		populateMoveTypes();
 	}
 
-	// Moves the character: Returns false if blocked, Returns true if moved successfully
+	/**
+	 * Moves the character
+	 * @param dx X Movement
+	 * @param dy Y Movement
+	 * @return True if moved successfully | False if blocked 
+	 */
 	public boolean moveCharacter(int dx, int dy) {
-		
 		// Check if we are rooted
-		if(this.hasBuff(Buff.ROOTED)) {
+		if (hasBuff(Buff.ROOTED)) {
 			return false;
 		}
 		
+		// Get the new relative coordinates of the character
+		int newX = (xPos + dx);
+		int newY = (yPos + dy);
+		
 		// Check for collision with player
 		Player plr = EntityManager.getInstance().getPlayer();
-		if((this.xPos + dx) == plr.getXPos() && (this.yPos + dy) == plr.getYPos()) {
+		if (newX == plr.getXPos() && newY == plr.getYPos()) {
 			return false;
 		}
 		
 		// Check on collisions for other characters 
-		for(GCharacter npc : EntityManager.getInstance().getNPCManager().getCharacters()) {
-			if((this.xPos + dx) == npc.xPos && (this.yPos + dy) == npc.yPos) {
+		for (GCharacter npc : EntityManager.getInstance().getNPCManager().getCharacters()) {
+			if (newX == npc.xPos && newY == npc.yPos) {
 				return false;
 			}
 		}
@@ -128,13 +139,13 @@ public abstract class GCharacter implements Serializable {
 		TileType tt;
 		try {
 			// Try to get the TileType of the GameTile
-			tt = GameScreen.getTile(this.xPos + dx, this.yPos + dy).getTileType();
+			tt = GameScreen.getTile(newX, newY).getTileType();
 		} catch (IndexOutOfBoundsException e) {
 			return false;
 		}
 		
 		// If NPC can't move here, return without moving
-		if(!canMove(tt.getMovableType())) {
+		if (!canMove(tt.getMovableType())) {
 			return false;
 		}
 		
@@ -147,7 +158,11 @@ public abstract class GCharacter implements Serializable {
 		return true;
 	}
 	
-	// Initiates an attack on the player with damage multiplier
+	/**
+	 * Initiates an attack on the player with a damage multiplier
+	 * @param dmgMult Damage multiplier
+	 * @return True if player alive after damage | False if not
+	 */
 	public boolean attackPlayer(double dmgMult) {
 		// Fetch reference to the player
 		Player plr = EntityManager.getInstance().getPlayer();
@@ -157,131 +172,155 @@ public abstract class GCharacter implements Serializable {
 		int targetArmor = plr.getArmor();
 		
 		// If character has rage, buff the damage multiplier
-		if(this.hasBuff(Buff.RAGE)) {
+		if (hasBuff(Buff.RAGE)) {
 			dmgMult = dmgMult * RageBuff.dmgBoost;
 		}
 		
-		int newMin = (int) Math.floor(this.minDmg * dmgMult);
-		int newMax = (int) Math.floor((this.maxDmg * dmgMult) - targetArmor);
+		int newMin = (int) Math.floor(minDmg * dmgMult);
+		int newMax = (int) Math.floor((maxDmg * dmgMult) - targetArmor);
 		
 		// Maximum damage cannot drop below 0
-		if(newMax < 0) {
+		if (newMax < 0) {
 			newMax = 0;
 		}
 		
 		// If new maximum damage is below minimum damage, drop the minimum damage to match
-		if(newMin > newMax) {
+		if (newMin > newMax) {
 			newMin = newMax;
 		}
 		
 		// If the enemy gets lucky, they crit the player
 		// Otherwise, calculate damage normally
-		if(Math.random() < this.critChance) {
+		if (Math.random() < critChance) {
 			// Get critical damage value
-			dmg = (int) Math.floor(newMax * this.critMult);
+			dmg = (int) Math.floor(newMax * critMult);
 		} else {
 			// Get normal damage value
 			dmg = r.nextInt((newMax - newMin) + 1) + newMin;
 		}
 		
 		// Limit minimum damage value at 0
-		if(dmg < 0) {
+		if (dmg < 0) {
 			dmg = 0;
 		}
 		
 		// Log result
-		if(dmg == 0) {
-			LogScreen.log(this.getName() +
-					" tickled the player's defenses", GColors.BASIC);
+		if (dmg == 0) {
+			LogScreen.log(getName() + " tickled the player's defenses", GColors.BASIC);
 		} else {
-			LogScreen.log(this.getName() + " did "
-				+ Integer.toString(dmg) + " damage to the player.", GColors.DAMAGE);
+			LogScreen.log(getName() + " did " + Integer.toString(dmg) + " damage to the player.", GColors.DAMAGE);
 		}
 		
+		// Damage the player and return whether the player survived or not
 		return plr.damagePlayer(dmg);
 	}
 	
-	// Initiates an attack on the player assuming no damage multiplier
+	/**
+	 * Initiates an attack on the player
+	 */ 
 	public boolean attackPlayer() {
 		return attackPlayer(1.0);
 	}
 	
-	// Persists all the buffs on the character for the turn
+	/**
+	 * Persists all the buffs on the character for the turn
+	 */
 	public void persistBuffs() {
 		ArrayList<Buff> hearse = new ArrayList<Buff>();
-		for(Buff b : this.buffs) {
+		for (Buff b : this.buffs) {
 			// Does the buff's on-turn effect
 			b.doTurnEffect();
 			
 			// Checks if buff is still active
-			if(b.persist()) {
-				LogScreen.log(this.getName() + "'s " + b.getName() + " wore off.");
-				System.out.println(this.getName() + "'s " + b.getName() + " wore off.");
+			if (b.persist()) {
+				LogScreen.log(getName() + "'s " + b.getName() + " wore off.");
 				hearse.add(b);
-			} else {
-				System.out.println(b.getName() + ": " + b.getDuration() + " turns remaining on " + this.getName() + ".");
 			}
 		}
 		
-		for(Buff b : hearse) {
-			this.removeBuff(b);
+		// Remove expired buffs
+		for (Buff b : hearse) {
+			removeBuff(b);
 		}
 	}
 	
-	// Returns True if alive from damage, False if dead from damage
+	/**
+	 * Damages this character
+	 * @param damage Damage dealt to this character
+	 * @return True if alive after damage | False if dead after damage
+	 */
 	public boolean damageCharacter(int damage) {
-		this.currentHP = this.currentHP - damage;
+		this.currentHP = (currentHP - damage);
 		InfoScreen.setNPCFocus(this);
-		return this.isAlive();
+		return isAlive();
 	}
 	
-	// Heal character: Up to, but not over, max if not over-heal /
-	// Up and over max if over-heal
+	/**
+	 * Heals this character, with the option to over-heal
+	 * @param heal Health points to heal the character
+	 * @param isOverHeal True if healing can go above maximum HP | False if not
+	 */
 	public void healCharacter(int heal, boolean isOverHeal) {
-		this.currentHP = this.currentHP + heal;
-		if((!isOverHeal) && (this.currentHP > this.maxHP)) {
-			this.currentHP = this.maxHP;
+		this.currentHP = currentHP + heal;
+		if ((!isOverHeal) && (currentHP > maxHP)) {
+			this.currentHP = maxHP;
 		}
 	}
 	
-	// Overload that assumes heal isn't an over-heal
+	/**
+	 * Heals this character (cannot go above maximum HP)
+	 * @param heal Healing done to character
+	 */
 	public void healCharacter(int heal) {
-		this.currentHP = this.currentHP + heal;
-		if(this.currentHP > this.maxHP) {
-			this.currentHP = this.maxHP;
-		}
+		healCharacter(heal, false);
 	}
 	
-	// Fully heal the character
+	/**
+	 * Fully heals this character
+	 */
 	public void fullyHeal() {
-		this.currentHP = this.maxHP;
+		this.currentHP = maxHP;
 	}
 	
-	// Returns true if the character can move to a given MovableType
+	/**
+	 * Checks if this character can move to a given MovableType
+	 * @param mt MovableType to check
+	 * @return True if the character can move to a given MovableType | False if not
+	 */
 	public boolean canMove(Short mt) {
-		return MovableType.canMove(this.moveTypes, mt);
+		return MovableType.canMove(moveTypes, mt);
 	}
 	
-	// Adds a MovableType
+	/**
+	 * Adds an allowed MovableType to this character
+	 * @param mt MovableType to add
+	 */
 	public void addMoveType(Short mt) {
-		this.moveTypes = (short) (this.moveTypes | mt);
+		this.moveTypes = (short) (moveTypes | mt);
 	}
 	
-	// Removes a MovableType if it currently exists in the list
+	/**
+	 * Removes an allowed MovableType from this character
+	 * @param mt MovableType to remove
+	 */
 	public void removeMoveType(Short mt) {
 		mt = (short) (~mt & Short.MAX_VALUE);
-		this.moveTypes = (short) (this.moveTypes | mt);
+		this.moveTypes = (short) (moveTypes & mt);
 	}
 	
-	// Checks if character is Alive
+	/**
+	 * Checks if character is Alive
+	 * @return True if alive | False if dead
+	 */
 	public boolean isAlive() {
-		return (this.currentHP > 0);
+		return (currentHP > 0);
 	}
 	
-	// Returns the character to their original position
+	/**
+	 * Returns the character to their original position/state
+	 */
 	public void returnToOrigin() {
-		///*** Bit of a hack
-		/// Return state to idle
+		// Return state to idle
 		this.state = 0;
 		
 		// Return Patrol directions to 0
@@ -289,38 +328,43 @@ public abstract class GCharacter implements Serializable {
 		this.yPat = 0;
 		
 		// Set position to original position
-		this.xPos = this.xOrigin;
-		this.yPos = this.yOrigin;
+		this.xPos = xOrigin;
+		this.yPos = yOrigin;
 		
 		// Clear all debuffs
-		this.clearBuffs();
+		clearBuffs();
 		
 		// Fill back to full health
-		this.fullyHeal();
+		fullyHeal();
 		
 		// Reset other parameters
-		this.resetParams();
+		resetParams();
 	}
 	
 	public void resetParams() {
 		// Nothing by default
 	}
 	
-	// Updates the coordinates that the character was on last turn
+	/**
+	 * Updates the coordinates that the character was on last turn
+	 */
 	public void updateLastCoords() {
-		this.lastX = this.xPos;
-		this.lastY = this.yPos;
+		this.lastX = xPos;
+		this.lastY = yPos;
 	}
 	
-	// Outputs a formatted string of the character's statistics (to be used by InfoScreen GUI)
+	/**
+	 * Outputs a formatted string of the character's statistics (to be used by InfoScreen GUI)
+	 * @return Formatted String of this character's statistics
+	 */
 	public String getStatDescString() {
 		String output = "DMG: ";
-		output += (this.minDmg + " - " + this.maxDmg + "\n");
-		output += ("CRITS: " + this.toPercent(this.critChance) + " / " + this.critMult + "x");
+		output += (minDmg + " - " + maxDmg + "\n");
+		output += ("CRITS: " + toPercent(critChance) + " / " + critMult + "x");
 		return output;
 	}
 	
-	private String toPercent(double num) {
+	private static String toPercent(double num) {
 		// Convert double to int percent
 		int percent = (int) (num * 100);
 		
@@ -360,7 +404,7 @@ public abstract class GCharacter implements Serializable {
 	
 	public void setXPatrol(int newVal) {
 		// Safeguard for bad input values
-		if(newVal > 1 || newVal < -1) {
+		if (newVal > 1 || newVal < -1) {
 			return;
 		}
 		this.xPat = newVal;
@@ -372,7 +416,7 @@ public abstract class GCharacter implements Serializable {
 	
 	public void setYPatrol(int newVal) {
 		// Safeguard for bad input values
-		if(newVal > 1 || newVal < -1) {
+		if (newVal > 1 || newVal < -1) {
 			return;
 		}
 		this.yPat = newVal;
@@ -414,25 +458,34 @@ public abstract class GCharacter implements Serializable {
 		return this.buffs;
 	}
 	
+	/**
+	 * Adds a buff/debuff to this character
+	 * @param buff Buff/Debuff to add
+	 */
 	public void addBuff(Buff buff) {
-		if(this.hasBuff(buff.getName())) {
+		if (hasBuff(buff.getName())) {
 			// Extend the current buff
-			this.extendBuff(buff);
+			extendBuff(buff);
 		} else {
 			// Add new buff
 			buff.setCharacter(this);
 			buff.activate();
-			this.buffs.add(buff);
-			if(buff.isDebuff()) {
-				LogScreen.log(this.getName() + " inflicted with " + buff.getName() + "!", GColors.ATTACK);
+			buffs.add(buff);
+			
+			if (buff.isDebuff()) {
+				LogScreen.log(getName() + " inflicted with " + buff.getName() + "!", GColors.ATTACK);
 			} else {
-				LogScreen.log(this.getName() + " gained " + buff.getName() + "!");
+				LogScreen.log(getName() + " gained " + buff.getName() + "!");
 			}
 		}
 	}
 	
+	/**
+	 * Removes a buff/debuff from this character
+	 * @param buff Buff/Debuff to remove
+	 */
 	public boolean removeBuff(Buff buff) {
-		if(this.buffs.remove(buff)) {
+		if (buffs.remove(buff)) {
 			buff.deactivate();
 			return true;
 		} else {
@@ -440,16 +493,20 @@ public abstract class GCharacter implements Serializable {
 		}
 	}
 	
+	/**
+	 * Removes a buff/debuff from this character
+	 * @param name Name of buff/debuff to remove
+	 */
 	public boolean removeBuff(String name) {
 		Buff removeBuff = null;
-		for(Buff b : this.buffs) {
-			if(b.getName().equals(name)) {
+		for (Buff b : buffs) {
+			if (b.getName().equals(name)) {
 				removeBuff = b;
 				break;
 			}
 		}
 		
-		if(removeBuff != null) {
+		if (removeBuff != null) {
 			removeBuff.deactivate();
 			return true;
 		} else {
@@ -457,33 +514,45 @@ public abstract class GCharacter implements Serializable {
 		}
 	}
 	
+	/**
+	 * Clears all buffs/debuffs from this character
+	 */
 	public void clearBuffs() {
-		for(Buff b : this.buffs) {
+		for (Buff b : buffs) {
 			b.deactivate();
 		}
 		
-		this.buffs.clear();
+		buffs.clear();
 	}
 	
+	/**
+	 * Extends a buff/debuff on this character
+	 * @param buff Buff/Debuff to extend
+	 */
 	public void extendBuff(Buff buff) {
 		Buff extendBuff = null;
-		for(Buff b : this.buffs) {
-			if(b.getName().equals(buff.getName())) {
+		for (Buff b : buffs) {
+			if (b.getName().equals(buff.getName())) {
 				extendBuff = b;
 				break;
 			}
 		}
 		
-		if(extendBuff != null) {
-			if(buff.getDuration() > extendBuff.getDuration()) {
+		if (extendBuff != null) {
+			if (buff.getDuration() > extendBuff.getDuration()) {
 				extendBuff.setDuration(buff.getDuration());
 			}
 		}
 	}
 	
+	/**
+	 * Checks if this character has a particular buff/debuff
+	 * @param name Name of buff/debuff to check
+	 * @return True if character has buff/debuff | False if not
+	 */
 	public boolean hasBuff(String name) {
-		for(Buff b : this.buffs) {
-			if(b.getName().equals(name)) {
+		for (Buff b : buffs) {
+			if (b.getName().equals(name)) {
 				return true;
 			}
 		}

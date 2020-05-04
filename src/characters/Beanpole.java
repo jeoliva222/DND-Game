@@ -14,7 +14,10 @@ import helpers.SoundPlayer;
 import managers.EntityManager;
 import tiles.MovableType;
 
-// Class representing the Beanpole enemy character
+/**
+ * Class representing the Beanpole enemy character
+ * @author jeoliva
+ */
 public class Beanpole extends GCharacter {
 	
 	// Serialization ID
@@ -59,28 +62,14 @@ public class Beanpole extends GCharacter {
 
 
 	public Beanpole(int startX, int startY) {
-		super(startX, startY);
-		
-		this.maxHP = MAX_HP;
-		this.currentHP = this.maxHP;
-		
-		this.minDmg = MIN_DMG;
-		this.maxDmg = MAX_DMG;
-		
-		this.critChance = CRIT_CHANCE;
-		this.critMult = CRIT_MULT;
-		
-		this.state = Beanpole.STATE_IDLE;
-		this.patrolPattern = PatrolPattern.WANDER;
-		
-		this.imagePath = this.getImage();
+		this(startX, startY, PatrolPattern.WANDER);
 	}
 	
 	public Beanpole(int startX, int startY, PatrolPattern patpat) {
 		super(startX, startY);
 		
 		this.maxHP = MAX_HP;
-		this.currentHP = this.maxHP;
+		this.currentHP = maxHP;
 		
 		this.minDmg = MIN_DMG;
 		this.maxDmg = MAX_DMG;
@@ -91,7 +80,7 @@ public class Beanpole extends GCharacter {
 		this.state = Beanpole.STATE_IDLE;
 		this.patrolPattern = patpat;
 		
-		this.imagePath = this.getImage();
+		this.imagePath = getImage();
 	}
 	
 	public String getName() {
@@ -100,45 +89,44 @@ public class Beanpole extends GCharacter {
 	
 	@Override
 	public String getImage() {
-		String imgPath = this.imageDir + this.bpImage_base;
+		String imgPath = (imageDir + bpImage_base);
 		String hpPath = "";
 		String statePath = "";
 		
-		if(this.currentHP > (this.maxHP / 2)) {
+		if (currentHP > (maxHP / 2)) {
 			hpPath = "_full";
-		} else if(this.currentHP > 0) {
+		} else if (currentHP > 0) {
 			hpPath = "_fatal";
 		} else {
 			hpPath = "_dead";
 			return (imgPath + hpPath + ".png");
 		}
 		
-		switch(this.state) {
-		case Beanpole.STATE_IDLE:
-		case Beanpole.STATE_PURSUE:
-			// No extra path
-			break;
-		case Beanpole.STATE_ALERTED:
-		case Beanpole.STATE_PREP:
-			statePath = "_PREP";
-			break;
-		case Beanpole.STATE_ATT:
-			statePath = "_ATT";
-			break;
-		default:
-			System.out.println
-				(this.getName() + " couldn't find a proper image: " + Integer.toString(this.state));
-			return GPath.NULL;
+		switch (state) {
+			case Beanpole.STATE_IDLE:
+			case Beanpole.STATE_PURSUE:
+				// No extra path
+				break;
+			case Beanpole.STATE_ALERTED:
+			case Beanpole.STATE_PREP:
+				statePath = "_PREP";
+				break;
+			case Beanpole.STATE_ATT:
+				statePath = "_ATT";
+				break;
+			default:
+				System.out.println(getName() + " couldn't find a proper image: " + Integer.toString(state));
+				return GPath.NULL;
 		}
 		
 		return (imgPath + hpPath + statePath + ".png");
 	}
 	
 	public String getCorpseImage() {
-		if(this.currentHP < -(this.maxHP / 2)) {
-			return this.bpImage_DEAD_CRIT;
+		if (currentHP < -(maxHP / 2)) {
+			return bpImage_DEAD_CRIT;
 		} else {
-			return this.bpImage_DEAD;
+			return bpImage_DEAD;
 		}
 	}
 	
@@ -152,12 +140,12 @@ public class Beanpole extends GCharacter {
 	@Override
 	public void playerInitiate() {
 		SoundPlayer.playWAV(GPath.createSoundPath("Beanpole_ATTACK.wav"));
-		this.attackPlayer();
+		attackPlayer();
 	}
 	
 	@Override
 	public void onDeath() {
-		if(this.currentHP < -(this.maxHP / 2)) {
+		if (currentHP < -(maxHP / 2)) {
 			SoundPlayer.playWAV(GPath.createSoundPath("Beanpole_DEATH_CRIT.wav"));
 		} else {
 			SoundPlayer.playWAV(GPath.createSoundPath("Beanpole_DEATH.wav"));
@@ -170,7 +158,7 @@ public class Beanpole extends GCharacter {
 		Player player = EntityManager.getInstance().getPlayer();
 		
 		// If this is dead or the player is dead, don't do anything
-		if(!this.isAlive() || !player.isAlive()) {
+		if (!isAlive() || !player.isAlive()) {
 			// Do nothing
 			return;
 		}
@@ -180,13 +168,13 @@ public class Beanpole extends GCharacter {
 		int plrY = player.getYPos();
 		
 		// Get relative location to player
-		int distX = plrX - this.xPos;
-		int distY = plrY - this.yPos;
+		int distX = (plrX - xPos);
+		int distY = (plrY - yPos);
 		
-		switch(this.state) {
+		switch (state) {
 			case Beanpole.STATE_IDLE:
-				boolean hasLOS = LineDrawer.hasSight(this.xPos, this.yPos, plrX, plrY);
-				if(hasLOS) {
+				boolean hasLOS = LineDrawer.hasSight(xPos, yPos, plrX, plrY);
+				if (hasLOS) {
 					SoundPlayer.playWAV(GPath.createSoundPath("Beanpole_ALERT.wav"));
 					this.state = Beanpole.STATE_ALERTED;
 				} else {
@@ -205,20 +193,20 @@ public class Beanpole extends GCharacter {
 				int dy = 0;
 				
 				// Calculate relative movement directions
-				if(distX > 0) {
+				if (distX > 0) {
 					dx = 1;
 				} else if (distX < 0) {
 					dx = -1;
 				}
 				
-				if(distY > 0) {
+				if (distY > 0) {
 					dy = 1;
 				} else if (distY < 0) {
 					dy = -1;
 				}
 				
 				// Change state to prep if next to player
-				if(((Math.abs(distX) == 1) && (Math.abs(distY) == 0)) ||
+				if (((Math.abs(distX) == 1) && (Math.abs(distY) == 0)) ||
 						((Math.abs(distX) == 0) && (Math.abs(distY) == 1))) {
 					// Mark direction to attack next turn
 					this.markX = dx;
@@ -228,24 +216,25 @@ public class Beanpole extends GCharacter {
 					this.state = Beanpole.STATE_PREP;
 				} else {
 					// Path-find to the player if we can
-					Dimension nextStep = PathFinder.findPath(this.xPos, this.yPos, plrX, plrY, this);
-					if(nextStep == null) {
+					Dimension nextStep = PathFinder.findPath(xPos, yPos, plrX, plrY, this);
+					if (nextStep == null) {
 						// Blindly pursue the target
 						DumbFollow.blindPursue(distX, distY, dx, dy, this);
 					} else {
-						int changeX = nextStep.width - this.xPos;
-						int changeY = nextStep.height - this.yPos;
-						this.moveCharacter(changeX, changeY);
+						int changeX = (nextStep.width - xPos);
+						int changeY = (nextStep.height - yPos);
+						moveCharacter(changeX, changeY);
 					}
 				}
 				break;
 			case Beanpole.STATE_PREP:
 				// Mark tile with damage indicator
-				EntityManager.getInstance().getEffectManager().addEffect(new DamageIndicator(this.xPos + this.markX, this.yPos + this.markY));
+				EntityManager.getInstance().getEffectManager().addEffect(new DamageIndicator(xPos + markX, yPos + markY));
 				
 				// Attack in marked direction
-				if((this.xPos + this.markX) == plrX && (this.yPos + this.markY) == plrY)
-					this.playerInitiate();
+				if ((xPos + markX) == plrX && (yPos + markY) == plrY) {
+					playerInitiate();
+				}
 				this.state = Beanpole.STATE_ATT;
 				break;
 			case Beanpole.STATE_ATT:
@@ -253,12 +242,9 @@ public class Beanpole extends GCharacter {
 				this.state = Beanpole.STATE_PURSUE;
 				break;
 			default:
-				System.out.println(this.getName() +
-						" couldn't take its turn. State = " + Integer.toString(this.state));
+				System.out.println(getName() + " couldn't take its turn. State = " + Integer.toString(state));
 				return;
-		}
-			
+		}	
 	}
-
 	
 }

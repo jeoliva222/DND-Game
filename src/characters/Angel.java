@@ -82,7 +82,7 @@ public class Angel extends GCharacter {
 		super(startX, startY);
 		
 		this.maxHP = MAX_HP;
-		this.currentHP = this.maxHP;
+		this.currentHP = maxHP;
 		
 		this.minDmg = MIN_DMG;
 		this.maxDmg = MAX_DMG;
@@ -102,11 +102,11 @@ public class Angel extends GCharacter {
 	
 	@Override
 	public String getImage() {
-		String imgPath = this.imageDir + this.bpImage_base;
+		String imgPath = (imageDir + bpImage_base);
 		String hpPath = "";
 		String statePath = "";
 		
-		if (this.currentHP > (maxHP / 2)) {
+		if (currentHP > (maxHP / 2)) {
 			hpPath = "_full";
 		} else if (currentHP > 0) {
 			hpPath = "_fatal";
@@ -200,8 +200,8 @@ public class Angel extends GCharacter {
 		int plrY = player.getYPos();
 		
 		// Get relative location to player
-		int distX = plrX - this.xPos;
-		int distY = plrY - this.yPos;
+		int distX = (plrX - xPos);
+		int distY = (plrY - yPos);
 		
 		switch (state) {
 			case Angel.STATE_IDLE:
@@ -347,8 +347,8 @@ public class Angel extends GCharacter {
 				if (corpse.getXPos() == plrX && corpse.getYPos() == plrY) {
 					this.rezCount = 0;
 					
-					this.markX = (plrX - this.xPos);
-					this.markY = (plrY - this.yPos);
+					this.markX = (plrX - xPos);
+					this.markY = (plrY - yPos);
 					
 					this.state = Angel.STATE_PREP_ATT;
 					break;
@@ -410,8 +410,7 @@ public class Angel extends GCharacter {
 				this.state = Angel.STATE_PURSUE;
 				break;
 			default:
-				System.out.println(getName() +
-						" couldn't take its turn. State = " + Integer.toString(this.state));
+				System.out.println(getName() + " couldn't take its turn. State = " + Integer.toString(state));
 				return;
 		}
 			
