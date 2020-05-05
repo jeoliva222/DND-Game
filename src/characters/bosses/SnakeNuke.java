@@ -1,17 +1,19 @@
 package characters.bosses;
 
-
 import ai.PatrolPattern;
 import characters.GCharacter;
 import characters.allies.Player;
 import effects.FireEffect;
 import effects.GEffect;
-import gui.InfoScreen;
 import helpers.GPath;
 import helpers.SoundPlayer;
 import managers.EntityManager;
 import tiles.MovableType;
 
+/**
+ * Class that represents Snake Nuke entity
+ * @author jeoliva
+ */
 public class SnakeNuke extends GCharacter {
 
 	// Serialization ID
@@ -65,7 +67,7 @@ public class SnakeNuke extends GCharacter {
 		super(startX, startY);
 		
 		this.maxHP = MAX_HP;
-		this.currentHP = this.maxHP;
+		this.currentHP = maxHP;
 		
 		this.armor = ARMOR_VAL;
 		
@@ -79,8 +81,6 @@ public class SnakeNuke extends GCharacter {
 		this.patrolPattern = PatrolPattern.STATIONARY;
 		
 		this.canFocus = false;
-		
-		this.imagePath = this.getImage();
 	}
 
 	public String getName() {
@@ -89,37 +89,36 @@ public class SnakeNuke extends GCharacter {
 	
 	@Override
 	public String getImage() {
-		String imgPath = this.imageDir + this.nkImage_base;
+		String imgPath = (imageDir + nkImage_base);
 		String lightPath = "";
 		String dirPath;
 		
-		switch(this.state) {
+		switch (state) {
 			case SnakeNuke.STATE_HIDDEN:
 				return GPath.NULL;
 			case SnakeNuke.STATE_FLIGHT:
-				
 				// Glowing light
-				if(this.isGlowing) {
+				if (isGlowing) {
 					lightPath = "_A";
 				} else {
 					lightPath = "_B";
 				}
 				
 				// Get absolute value of speeds
-				int absDX = Math.abs(this.xSpeed);
-				int absDY = Math.abs(this.ySpeed);
+				int absDX = Math.abs(xSpeed);
+				int absDY = Math.abs(ySpeed);
 				
 				// Check which of the two relative directional speeds is greater
-				if(absDX >= absDY) {
+				if (absDX >= absDY) {
 					// Check if arrow is flying left or right
-					if(this.xSpeed >= 0) {
+					if (xSpeed >= 0) {
 						dirPath = "_RIGHT";
 					} else {
 						dirPath = "_LEFT";
 					}
 				} else {
 					// Check if arrow is flying up or down
-					if(this.ySpeed >= 0) {
+					if (ySpeed >= 0) {
 						dirPath = "_DOWN";
 					} else {
 						dirPath = "_UP";
@@ -127,8 +126,7 @@ public class SnakeNuke extends GCharacter {
 				}
 				break;
 			default:
-				System.out.println
-					(this.getName() + " couldn't find a proper image: " + Integer.toString(this.state));
+				System.out.println(getName() + " couldn't find a proper image: " + Integer.toString(state));
 				return GPath.NULL;
 		}
 		
@@ -151,7 +149,7 @@ public class SnakeNuke extends GCharacter {
 	@Override
 	public void playerInitiate() {
 		SoundPlayer.playWAV(GPath.createSoundPath("Beanpole_ATTACK.wav"));
-		this.attackPlayer();
+		attackPlayer();
 	}
 	
 	@Override
@@ -162,10 +160,8 @@ public class SnakeNuke extends GCharacter {
 	// Override that deflects speed of Nuke on hit
 	@Override
 	public boolean damageCharacter(int damage) {
-		this.playerDeflect();
-		this.currentHP = this.currentHP - damage;
-		InfoScreen.setNPCFocus(this);
-		return this.isAlive();
+		playerDeflect();
+		return super.damageCharacter(damage);
 	}
 
 	@Override
@@ -174,15 +170,15 @@ public class SnakeNuke extends GCharacter {
 		Player player = EntityManager.getInstance().getPlayer();
 		
 		// If this is dead or the player is dead, don't do anything
-		if(!this.isAlive() || !player.isAlive()) {
+		if (!isAlive() || !player.isAlive()) {
 			// Do nothing
 			return;
 		}
 		
-		switch(this.state) {
+		switch (state) {
 			case SnakeNuke.STATE_HIDDEN:
 				// If we were fired from the SnakeTank, appear on the screen and start flying
-				if(this.wasFired) {
+				if (wasFired) {
 					// Reset fired flag
 					this.wasFired = false;
 					
@@ -190,12 +186,12 @@ public class SnakeNuke extends GCharacter {
 					this.canFocus = true;
 					
 					// Set initial flying speed
-					this.setDirection(-1, 0);
+					setDirection(-1, 0);
 					
 					// Set new X and Y position of Nuke based on position of SnakeTank
 					EntityManager em = EntityManager.getInstance();
-					for(GCharacter npc: em.getNPCManager().getCharacters()) {
-						if(npc != this && npc instanceof SnakeTank) {
+					for (GCharacter npc: em.getNPCManager().getCharacters()) {
+						if (npc != this && npc instanceof SnakeTank) {
 							// Set position to left of SnakeTank
 							this.xPos = (npc.getXPos() - 1);
 							this.yPos = npc.getYPos();
@@ -210,55 +206,53 @@ public class SnakeNuke extends GCharacter {
 				break; // Breaks out of 'switch'
 			case SnakeNuke.STATE_FLIGHT:
 				// If we cannot move in our given direction, then we must have blown up
-				if(!this.moveCharacter(this.xSpeed, this.ySpeed)) {
+				if (!moveCharacter(xSpeed, ySpeed)) {
 					// Do explosion, then hide away until active again
 					
 					// Play explosion sound TODO
 					SoundPlayer.playWAV(GPath.createSoundPath("fire_ATT.wav"));
 					
 					// Explode based of current position and speed of Nuke
-					if(this.xPos <= 6) {
+					if (xPos <= 6) {
 						// Check for special cases, but otherwise explode left side
-						if(this.yPos == 2 && this.ySpeed == -1) {
+						if (yPos == 2 && ySpeed == -1) {
 							// Explode top of arena
-							this.explodeArea(0, -1);
-						} else if(this.yPos == 5 && this.ySpeed == 1) {
+							explodeArea(0, -1);
+						} else if (yPos == 5 && ySpeed == 1) {
 							// Explode bottom of arena
-							this.explodeArea(0, 1);
+							explodeArea(0, 1);
 						} else {
 							// Explode left side of arena
-							this.explodeArea(-1, 0);
+							explodeArea(-1, 0);
 						}
 					} else {
 						// Check for special cases, but otherwise explode right side
-						if(this.yPos == 2 && this.ySpeed == -1) {
+						if (yPos == 2 && ySpeed == -1) {
 							// Explode top of arena
-							this.explodeArea(0, -1);
-						} else if(this.yPos == 5 && this.ySpeed == 1) {
+							explodeArea(0, -1);
+						} else if (yPos == 5 && ySpeed == 1) {
 							// Explode bottom of arena
-							this.explodeArea(0, 1);
+							explodeArea(0, 1);
 						} else {
 							// Explode right side of arena
-							this.explodeArea(1, 0);
+							explodeArea(1, 0);
 						}
 					}
 					
-					// Hide the nuke
-					this.hideNuke();
+					// Hide the Nuke
+					hideNuke();
 					
 					// Change state
 					this.state = SnakeNuke.STATE_HIDDEN;
 				}
 				
 				// Toggle the glow of the light
-				this.isGlowing = !this.isGlowing;
+				this.isGlowing = !(isGlowing);
 				break;
 			default:
-				System.out.println(this.getName() +
-						" couldn't take its turn. State = " + Integer.toString(this.state));
+				System.out.println(getName() + " couldn't take its turn. State = " + Integer.toString(state));
 				return;
-		}
-			
+		}	
 	}
 	
 	// Sets new direction of the Nuke based on relative direction from player 
@@ -269,14 +263,14 @@ public class SnakeNuke extends GCharacter {
 		int plrY = player.getYPos(); 
 		
 		// Set new direction of Nuke based on player's relative position to Nuke
-		if(plrY > this.yPos) {
-			this.setDirection(0, -1);
-		} else if(plrY < this.yPos) {
-			this.setDirection(0, 1);
-		} else if(plrX > this.xPos) {
-			this.setDirection(-1, 0);
+		if (plrY > yPos) {
+			setDirection(0, -1);
+		} else if (plrY < yPos) {
+			setDirection(0, 1);
+		} else if (plrX > xPos) {
+			setDirection(-1, 0);
 		} else {
-			this.setDirection(1, 0);
+			setDirection(1, 0);
 		}
 	}
 	
@@ -289,8 +283,8 @@ public class SnakeNuke extends GCharacter {
 	// Hides the Nuke from player
 	private void hideNuke() {
 		// Set position at given 'hide' coordinates
-		this.xPos = this.xHide;
-		this.yPos = this.yHide;
+		this.xPos = xHide;
+		this.yPos = yHide;
 		
 		// Disallow focusing
 		this.canFocus = false;
@@ -308,15 +302,15 @@ public class SnakeNuke extends GCharacter {
 		
 		// Fetch reference to SnakeTank and its coordinates
 		SnakeTank tank = null;
-		for(GCharacter npc: em.getNPCManager().getCharacters()) {
-			if(npc != this && npc instanceof SnakeTank) {
+		for (GCharacter npc: em.getNPCManager().getCharacters()) {
+			if (npc != this && npc instanceof SnakeTank) {
 				tank = (SnakeTank) npc;
 				break;
 			}
 		}
 		
 		// Fail and return if we found no instance of the tank
-		if(tank == null) {
+		if (tank == null) {
 			System.out.println("Tank not found!");
 			return;
 		}
@@ -324,63 +318,63 @@ public class SnakeNuke extends GCharacter {
 		// Let the tank know that the Nuke has exploded
 		tank.informNukeDead();
 		
-		if(xSpot == 0 && ySpot == 1) {
+		if (xSpot == 0 && ySpot == 1) {
 			// Bottom area
 			
-			for(int x = 4; x < 9; x++) {
-				for(int y = 4; y < 6; y++) {
+			for (int x = 4; x < 9; x++) {
+				for (int y = 4; y < 6; y++) {
 					// Create effect
-					this.addEffect(new FireEffect(x, y));
+					addEffect(new FireEffect(x, y));
 					
 					// Check for player collision
-					if(plrX == x && plrY == y) {
-						this.playerInitiate();
+					if (plrX == x && plrY == y) {
+						playerInitiate();
 					}
 					
 					// Check for SnakeTank collision
-					if(tank.getXPos() == x && tank.getYPos() == y) {
+					if (tank.getXPos() == x && tank.getYPos() == y) {
 						// Damage tank if we hit it
 						tank.damageCharacter(10);
 					}
 				}
 			}
 			
-		} else if(xSpot == 0 && ySpot == -1) {
+		} else if (xSpot == 0 && ySpot == -1) {
 			// Top area
 			
-			for(int x = 4; x < 9; x++) {
-				for(int y = 2; y < 4; y++) {
+			for (int x = 4; x < 9; x++) {
+				for (int y = 2; y < 4; y++) {
 					// Create effect
-					this.addEffect(new FireEffect(x, y));
+					addEffect(new FireEffect(x, y));
 					
 					// Check for player collision
-					if(plrX == x && plrY == y) {
-						this.playerInitiate();
+					if (plrX == x && plrY == y) {
+						playerInitiate();
 					}
 					
 					// Check for SnakeTank collision
-					if(tank.getXPos() == x && tank.getYPos() == y) {
+					if (tank.getXPos() == x && tank.getYPos() == y) {
 						// Damage tank if we hit it
 						tank.damageCharacter(10);
 					}
 				}
 			}
 			
-		} else if(xSpot == 1 && ySpot == 0) {
+		} else if (xSpot == 1 && ySpot == 0) {
 			// Right area
 			
-			for(int x = 7; x < 9; x++) {
-				for(int y = 2; y < 6; y++) {
+			for (int x = 7; x < 9; x++) {
+				for (int y = 2; y < 6; y++) {
 					// Create effect
-					this.addEffect(new FireEffect(x, y));
+					addEffect(new FireEffect(x, y));
 					
 					// Check for player collision
-					if(plrX == x && plrY == y) {
-						this.playerInitiate();
+					if (plrX == x && plrY == y) {
+						playerInitiate();
 					}
 					
 					// Check for SnakeTank collision
-					if(tank.getXPos() == x && tank.getYPos() == y) {
+					if (tank.getXPos() == x && tank.getYPos() == y) {
 						// Damage tank if we hit it
 						tank.damageCharacter(10);
 					}
@@ -390,18 +384,18 @@ public class SnakeNuke extends GCharacter {
 		} else if(xSpot == -1 && ySpot == 0) {
 			// Left area
 			
-			for(int x = 4; x < 6; x++) {
-				for(int y = 2; y < 6; y++) {
+			for (int x = 4; x < 6; x++) {
+				for (int y = 2; y < 6; y++) {
 					// Create effect
-					this.addEffect(new FireEffect(x, y));
+					addEffect(new FireEffect(x, y));
 					
 					// Check for player collision
-					if(plrX == x && plrY == y) {
-						this.playerInitiate();
+					if (plrX == x && plrY == y) {
+						playerInitiate();
 					}
 					
 					// Check for SnakeTank collision
-					if(tank.getXPos() == x && tank.getYPos() == y) {
+					if (tank.getXPos() == x && tank.getYPos() == y) {
 						// Damage tank if we hit it
 						tank.damageCharacter(10);
 					}

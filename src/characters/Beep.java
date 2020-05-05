@@ -12,7 +12,10 @@ import helpers.SoundPlayer;
 import managers.EntityManager;
 import tiles.MovableType;
 
-// Class that represents 'Beep' enemy
+/**
+ * Class that represents Beep enemy
+ * @author jeoliva
+ */
 public class Beep extends GCharacter {
 
 	// Serialization ID
@@ -20,13 +23,13 @@ public class Beep extends GCharacter {
 	
 	// Modifiers/Statistics
 	
-	private int MAX_HP = 2;
+	private static int MAX_HP = 2;
 	
-	private int MIN_DMG = 1;
-	private int MAX_DMG = 1;
+	private static int MIN_DMG = 1;
+	private static int MAX_DMG = 1;
 	
-	private double CRIT_CHANCE = 0.2;
-	private double CRIT_MULT = 2.0;
+	private static double CRIT_CHANCE = 0.2;
+	private static double CRIT_MULT = 2.0;
 	
 	//----------------------------
 	
@@ -46,36 +49,22 @@ public class Beep extends GCharacter {
 	//----------------------------
 	
 	// File paths to images
-	private String imageDir = GPath.createImagePath(GPath.ENEMY, GPath.BEEP);
-	private String bpImage_base = "beep";
+	private static String imageDir = GPath.createImagePath(GPath.ENEMY, GPath.BEEP);
+	private static String bpImage_base = "beep";
 	
-	private String beImage_DEAD = GPath.createImagePath(GPath.ENEMY, GPath.BEEP, "beep_dead.png");
-	private String beImage_DEAD_CRIT = GPath.createImagePath(GPath.ENEMY, GPath.BEEP, "beep_dead_CRIT.png");
+	private static String beImage_DEAD = GPath.createImagePath(GPath.ENEMY, GPath.BEEP, "beep_dead.png");
+	private static String beImage_DEAD_CRIT = GPath.createImagePath(GPath.ENEMY, GPath.BEEP, "beep_dead_CRIT.png");
 
 	// Constructors
 	public Beep(int startX, int startY) {
-		super(startX, startY);
-		
-		this.maxHP = MAX_HP;
-		this.currentHP = this.maxHP;
-		
-		this.minDmg = MIN_DMG;
-		this.maxDmg = MAX_DMG;
-		
-		this.critChance = CRIT_CHANCE;
-		this.critMult = CRIT_MULT;
-		
-		this.state = Beep.STATE_IDLE;
-		this.patrolPattern = PatrolPattern.STATIONARY;
-		
-		this.imagePath = this.getImage();
+		this(startX, startY, PatrolPattern.STATIONARY);
 	}
 	
 	public Beep(int startX, int startY, PatrolPattern patpat) {
 		super(startX, startY);
 		
 		this.maxHP = MAX_HP;
-		this.currentHP = this.maxHP;
+		this.currentHP = maxHP;
 		
 		this.minDmg = MIN_DMG;
 		this.maxDmg = MAX_DMG;
@@ -85,8 +74,6 @@ public class Beep extends GCharacter {
 		
 		this.state = Beep.STATE_IDLE;
 		this.patrolPattern = patpat;
-		
-		this.imagePath = this.getImage();
 	}
 	
 	public String getName() {
@@ -95,45 +82,44 @@ public class Beep extends GCharacter {
 	
 	@Override
 	public String getImage() {
-		String imgPath = this.imageDir + this.bpImage_base;
+		String imgPath = (imageDir + bpImage_base);
 		String hpPath = "";
 		String statePath = "";
 		
-		if(this.currentHP > (this.maxHP / 2)) {
+		if (currentHP > (maxHP / 2)) {
 			hpPath = "_full";
-		} else if(this.currentHP > 0) {
+		} else if (currentHP > 0) {
 			hpPath = "_fatal";
 		} else {
 			hpPath = "_dead";
 			return GPath.NULL;
 		}
 		
-		switch(this.state) {
-		case Beep.STATE_IDLE:
-			// No extra path
-			break;
-		case Beep.STATE_PREP:
-			statePath = "_PREP";
-			break;
-		case Beep.STATE_ATT:
-			if(this.cooldownCount < 1) {
-				statePath = "_ATT";
-			}
-			break;
-		default:
-			System.out.println
-				(this.getName() + " couldn't find a proper image: " + Integer.toString(this.state));
-			return GPath.NULL;
+		switch (state) {
+			case Beep.STATE_IDLE:
+				// No extra path
+				break;
+			case Beep.STATE_PREP:
+				statePath = "_PREP";
+				break;
+			case Beep.STATE_ATT:
+				if (cooldownCount < 1) {
+					statePath = "_ATT";
+				}
+				break;
+			default:
+				System.out.println(getName() + " couldn't find a proper image: " + Integer.toString(state));
+				return GPath.NULL;
 		}
 		
 		return (imgPath + hpPath + statePath + ".png");
 	}
 	
 	public String getCorpseImage() {
-		if(this.currentHP < -(this.maxHP)) {
-			return this.beImage_DEAD_CRIT;
+		if (currentHP < -(maxHP)) {
+			return beImage_DEAD_CRIT;
 		} else {
-			return this.beImage_DEAD;
+			return beImage_DEAD;
 		}
 	}
 	
@@ -147,15 +133,15 @@ public class Beep extends GCharacter {
 	@Override
 	public void playerInitiate() {
 		SoundPlayer.playWAV(GPath.createSoundPath("Beanpole_ATTACK.wav"));
-		this.attackPlayer();
+		attackPlayer();
 	}
 	
 	@Override
 	public void onDeath() {
-		if(this.currentHP < -(this.maxHP)) {
+		if (currentHP < -(maxHP)) {
 			SoundPlayer.playWAV(GPath.createSoundPath("Bitester_DEATH_CRIT.wav"));
 		} else {
-			this.playDeathSound();
+			playDeathSound();
 		}
 	}
 	
@@ -172,7 +158,7 @@ public class Beep extends GCharacter {
 		Player player = EntityManager.getInstance().getPlayer();
 		
 		// If this is dead or the player is dead, don't do anything
-		if(!this.isAlive() || !player.isAlive()) {
+		if (!isAlive() || !player.isAlive()) {
 			// Do nothing
 			return;
 		}
@@ -182,13 +168,13 @@ public class Beep extends GCharacter {
 		int plrY = player.getYPos();
 		
 		// Get relative location to player
-		int distX = plrX - this.xPos;
-		int distY = plrY - this.yPos;
+		int distX = (plrX - xPos);
+		int distY = (plrY - yPos);
 		
-		switch(this.state) {
+		switch (state) {
 			case Beep.STATE_IDLE:
-				boolean hasLOS = LineDrawer.hasSight(this.xPos, this.yPos, plrX, plrY);
-				if(hasLOS) {
+				boolean hasLOS = LineDrawer.hasSight(xPos, yPos, plrX, plrY);
+				if (hasLOS) {
 					SoundPlayer.playWAV(GPath.createSoundPath("beep_ALERT.wav"));
 					this.state = Beep.STATE_PREP;
 				} else {
@@ -198,10 +184,10 @@ public class Beep extends GCharacter {
 				break;
 			case Beep.STATE_PREP:
 				// Attack if player is in one tile radius around player
-				if(Math.abs(distX) <= 1 && Math.abs(distY) <= 1) {
+				if (Math.abs(distX) <= 1 && Math.abs(distY) <= 1) {
 					// Mark tiles with damage indicators
 					EntityManager.getInstance().getEffectManager().addEffect(new DamageIndicator(plrX, plrY));
-					this.playerInitiate();
+					playerInitiate();
 				} else {
 					// If not attacking the player, hop closer to them
 					
@@ -210,13 +196,13 @@ public class Beep extends GCharacter {
 					int dy = 0;
 					
 					// Calculate relative movement directions
-					if(distX > 0) {
+					if (distX > 0) {
 						dx = 1;
 					} else if (distX < 0) {
 						dx = -1;
 					}
 					
-					if(distY > 0) {
+					if (distY > 0) {
 						dy = 1;
 					} else if (distY < 0) {
 						dy = -1;
@@ -225,24 +211,23 @@ public class Beep extends GCharacter {
 					// First, try to move diagonal
 					// If unsuccessful, move in the direction that it is
 					// further from the player.
-					if(!this.moveCharacter(dx, dy)) {
-						if((Math.abs(distX)) > (Math.abs(distY))) {
+					if (!moveCharacter(dx, dy)) {
+						if ((Math.abs(distX)) > (Math.abs(distY))) {
 							// If movement in the x direction fails, try the y direction
-							if(!this.moveCharacter(dx, 0)) {
-								this.moveCharacter(0, dy);
+							if (!moveCharacter(dx, 0)) {
+								moveCharacter(0, dy);
 							}
 						} else {
 							// If movement in the y direction fails, try the x direction
-							if(!this.moveCharacter(0, dy)) {
-								this.moveCharacter(dx, 0);
+							if (!moveCharacter(0, dy)) {
+								moveCharacter(dx, 0);
 							}
 						}
 					}
-					
 				}
 				
 				// Play hop sound
-				this.playHopSound();
+				playHopSound();
 
 				this.state = Beep.STATE_ATT;
 				break;
@@ -253,7 +238,7 @@ public class Beep extends GCharacter {
 				this.cooldownCount += 1;
 				
 				// Check if we've completed our cooldown
-				if(this.cooldownCount >= this.cooldownMax) {
+				if (cooldownCount >= cooldownMax) {
 					// If so, switch to preparation state
 					this.cooldownCount = 0;
 					this.state = Beep.STATE_PREP;
@@ -263,36 +248,20 @@ public class Beep extends GCharacter {
 				
 				break;
 			default:
-				System.out.println(this.getName() +
-						" couldn't take its turn. State = " + Integer.toString(this.state));
+				System.out.println(getName() + " couldn't take its turn. State = " + Integer.toString(state));
 				return;
 		}
 
 	}
 	
 	protected void playHopSound() {
-		Random r = new Random();
-		int whichSound = r.nextInt(4);
-		if(whichSound == 0) {
-			SoundPlayer.playWAV(GPath.createSoundPath("beep_hop1.wav"), -10);
-		} else if(whichSound == 1) {
-			SoundPlayer.playWAV(GPath.createSoundPath("beep_hop2.wav"), -10);
-		} else if(whichSound == 2) {
-			SoundPlayer.playWAV(GPath.createSoundPath("beep_hop3.wav"), -10);
-		} else {
-			SoundPlayer.playWAV(GPath.createSoundPath("beep_hop4.wav"), -10);
-		}
+		int whichSound = (new Random().nextInt(4) + 1);
+		SoundPlayer.playWAV(GPath.createSoundPath("beep_hop" + whichSound + ".wav"), -10);
 	}
 	
 	protected void playDeathSound() {
-		Random r = new Random();
-		int whichSound = r.nextInt(3);
-		if(whichSound == 0) {
-			SoundPlayer.playWAV(GPath.createSoundPath("beep_death1.wav"));
-		} else if(whichSound == 1) {
-			SoundPlayer.playWAV(GPath.createSoundPath("beep_death2.wav"));
-		} else {
-			SoundPlayer.playWAV(GPath.createSoundPath("beep_death3.wav"));
-		}
+		int whichSound = (new Random().nextInt(3) + 1);
+		SoundPlayer.playWAV(GPath.createSoundPath("beep_death" + whichSound +".wav"));
 	}
+	
 }

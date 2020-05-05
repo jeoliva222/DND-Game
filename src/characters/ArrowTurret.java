@@ -7,6 +7,10 @@ import helpers.SoundPlayer;
 import managers.EntityManager;
 import projectiles.Arrow;
 
+/**
+ * Class that represents Arrow Turret obstacle
+ * @author jeoliva
+ */
 public class ArrowTurret extends GCharacter {
 	
 	// Serialization ID
@@ -14,13 +18,13 @@ public class ArrowTurret extends GCharacter {
 	
 	// Modifiers/Statistics
 
-	private int MAX_HP = 100;
+	private static int MAX_HP = 100;
 	
-	private int MIN_DMG = 3;
-	private int MAX_DMG = 3;
+	private static int MIN_DMG = 3;
+	private static int MAX_DMG = 3;
 	
-	private double CRIT_CHANCE = 0.05;
-	private double CRIT_MULT = 1.7;
+	private static double CRIT_CHANCE = 0.05;
+	private static double CRIT_MULT = 1.7;
 	
 	//----------------------------
 	
@@ -44,15 +48,15 @@ public class ArrowTurret extends GCharacter {
 	//----------------------------
 	
 	// File paths to images
-	private String imageDir = GPath.createImagePath(GPath.ENEMY, GPath.ARROW_TURRET);
-	private String atImage_base = "arrowturret";
+	private static String imageDir = GPath.createImagePath(GPath.ENEMY, GPath.ARROW_TURRET);
+	private static String atImage_base = "arrowturret";
 
 	// Constructor
 	public ArrowTurret(int startX, int startY, int shootX, int shootY, int interval, int offset) {
 		super(startX, startY);
 		
 		this.maxHP = MAX_HP;
-		this.currentHP = this.maxHP;
+		this.currentHP = maxHP;
 		
 		this.minDmg = MIN_DMG;
 		this.maxDmg = MAX_DMG;
@@ -63,7 +67,7 @@ public class ArrowTurret extends GCharacter {
 		// Can't be damaged
 		this.armor = 100;
 		
-		if(shootX == 0 && shootY == 0) {
+		if (shootX == 0 && shootY == 0) {
 			this.shootX = 0;
 			this.shootY = 1;
 		} else {
@@ -76,8 +80,6 @@ public class ArrowTurret extends GCharacter {
 		
 		this.state = ArrowTurret.STATE_ACTIVE;
 		this.patrolPattern = PatrolPattern.STATIONARY;
-		
-		this.imagePath = this.getImage();
 	}
 	
 	// Constructor
@@ -92,20 +94,19 @@ public class ArrowTurret extends GCharacter {
 
 	@Override
 	public String getImage() {
-		switch(this.state) {
+		switch (state) {
 			case ArrowTurret.STATE_INACTIVE:
-				return (this.imageDir + this.atImage_base + "_INACTIVE.png");
+				return (imageDir + atImage_base + "_INACTIVE.png");
 			case ArrowTurret.STATE_ACTIVE:
-				if((this.shotCount - 1) >= this.shotMax) {
-					return (this.imageDir + this.atImage_base + "_ATT.png");
-				} else if(this.shotCount >= this.shotMax) {
-					return (this.imageDir + this.atImage_base + "_PREP.png");
+				if ((shotCount - 1) >= shotMax) {
+					return (imageDir + atImage_base + "_ATT.png");
+				} else if (shotCount >= shotMax) {
+					return (imageDir + atImage_base + "_PREP.png");
 				} else {
-					return (this.imageDir + this.atImage_base + "_INACTIVE.png");
+					return (imageDir + atImage_base + "_INACTIVE.png");
 				}
 			default:
-				System.out.println
-					(this.getName() + " couldn't find a proper image: " + Integer.toString(this.state));
+				System.out.println(getName() + " couldn't find a proper image: " + Integer.toString(state));
 				return GPath.NULL;
 		}
 	}
@@ -128,24 +129,24 @@ public class ArrowTurret extends GCharacter {
 	@Override
 	public void takeTurn() {
 		// If this is dead or the player is dead, don't do anything
-		if(!this.isAlive() || !EntityManager.getInstance().getPlayer().isAlive()) {
+		if (!isAlive() || !EntityManager.getInstance().getPlayer().isAlive()) {
 			// Do nothing
 			return;
 		}
 		
 		// Depending on current state, act accordingly
-		switch(this.state) {
+		switch (state) {
 			case ArrowTurret.STATE_INACTIVE:
 				// Do nothing because it's inactive
 				break;
 			case ArrowTurret.STATE_ACTIVE:
 				// Reset our counter
-				if(this.shotCount > this.shotMax) {
+				if (shotCount > shotMax) {
 					this.shotCount = 0;
 				}
 				
 				// We're active, so shoot arrows periodically
-				if(this.shotCount < this.shotMax) {
+				if (shotCount < shotMax) {
 					// Do nothing, we're on cooldown
 				} else {
 					// Play arrow firing sound
@@ -153,17 +154,17 @@ public class ArrowTurret extends GCharacter {
 					
 					// Fire an arrow in a predetermined direction
 					EntityManager.getInstance().getProjectileManager()
-						.addProjectile(new Arrow((this.xPos + this.shootX),
-												(this.yPos + this.shootY),
-												this.shootX,
-												this.shootY, this.getClass()));
+						.addProjectile(new Arrow((xPos + shootX),
+												(yPos + shootY),
+												shootX,
+												shootY, getClass()));
 				}
 				
 				// Increment our cooldown counter
 				this.shotCount += 1;
 				break;
 			default:
-				System.out.println(this.getName() + " couldn't identify its state!");
+				System.out.println(getName() + " couldn't identify its state! State = " + Integer.toString(state));
 				break;
 		}
 	}

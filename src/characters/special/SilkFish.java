@@ -1,6 +1,5 @@
 package characters.special;
 
-
 import ai.DumbFollow;
 import ai.IdleController;
 import ai.IslandChecker;
@@ -16,6 +15,10 @@ import managers.EntityManager;
 import tiles.MovableType;
 import tiles.TileType;
 
+/**
+ * Class representing special Silk Fish enemy
+ * @author jeoliva
+ */
 public class SilkFish extends GCharacter {
 	
 	// Serialization ID
@@ -23,13 +26,13 @@ public class SilkFish extends GCharacter {
 
 	// Modifiers/Statistics
 
-	private int MAX_HP = 1;
+	private static int MAX_HP = 1;
 	
-	private int MIN_DMG = 0;
-	private int MAX_DMG = 0;
+	private static int MIN_DMG = 0;
+	private static int MAX_DMG = 0;
 	
-	private double CRIT_CHANCE = 0.0;
-	private double CRIT_MULT = 1.0;
+	private static double CRIT_CHANCE = 0.0;
+	private static double CRIT_MULT = 1.0;
 	
 	//----------------------------
 	
@@ -41,25 +44,11 @@ public class SilkFish extends GCharacter {
 	//----------------------------
 	
 	// File paths to images
-	private String imageDir = GPath.createImagePath(GPath.ENEMY, GPath.SILKFISH);
-	private String btImage_base = "silkfish";
+	private static String imageDir = GPath.createImagePath(GPath.ENEMY, GPath.SILKFISH);
+	private static String btImage_base = "silkfish";
 
 	public SilkFish(int startX, int startY) {
-		super(startX, startY);
-		
-		this.maxHP = MAX_HP;
-		this.currentHP = this.maxHP;
-		
-		this.minDmg = MIN_DMG;
-		this.maxDmg = MAX_DMG;
-		
-		this.critChance = CRIT_CHANCE;
-		this.critMult = CRIT_MULT;
-		
-		this.state = SilkFish.STATE_IDLE;
-		this.patrolPattern = PatrolPattern.WANDER;
-		
-		this.imagePath = this.getImage();
+		this(startX, startY, PatrolPattern.WANDER);
 	}
 	
 	public SilkFish(int startX, int startY, PatrolPattern patpat) {
@@ -76,8 +65,6 @@ public class SilkFish extends GCharacter {
 		
 		this.state = SilkFish.STATE_IDLE;
 		this.patrolPattern = patpat;
-		
-		this.imagePath = this.getImage();
 	}
 	
 	public String getName() {
@@ -86,12 +73,12 @@ public class SilkFish extends GCharacter {
 	
 	@Override
 	public String getImage() {
-		String imgPath = this.imageDir + this.btImage_base;
+		String imgPath = (imageDir + btImage_base);
 		String hpPath = "";
 		String statePath = "";
 		
 		// Add path modifier based on current health level
-		if(this.currentHP > 0) {
+		if (currentHP > 0) {
 			hpPath = "_full";
 		} else {
 			hpPath = "_dead";
@@ -122,7 +109,7 @@ public class SilkFish extends GCharacter {
 		SoundPlayer.playWAV(GPath.createSoundPath("Bitester_DEATH_CRIT.wav"));
 		
 		// Drop the soft skin
-		EntityManager.getInstance().getPickupManager().addPickup(new GPickup(this.xPos, this.yPos, new SilkFishSkin()));
+		EntityManager.getInstance().getPickupManager().addPickup(new GPickup(xPos, yPos, new SilkFishSkin()));
 	}
 	
 	@Override
@@ -131,7 +118,7 @@ public class SilkFish extends GCharacter {
 		Player player = EntityManager.getInstance().getPlayer();
 		
 		// If this is dead or the player is dead, don't do anything
-		if(!this.isAlive() || !player.isAlive()) {
+		if (!isAlive() || !player.isAlive()) {
 			// Do nothing
 			return;
 		}
@@ -141,17 +128,16 @@ public class SilkFish extends GCharacter {
 		int plrY = player.getYPos();
 		
 		// Get relative location to player
-		int distX = plrX - this.xPos;
-		int distY = plrY - this.yPos;
+		int distX = (plrX - xPos);
+		int distY = (plrY - yPos);
 		
-		TileType tt = GameScreen
-				.getTile(player.getXPos(), player.getYPos()).getTileType();
+		// Get tile type the player is standing on
+		TileType tt = GameScreen.getTile(player.getXPos(), player.getYPos()).getTileType();
 		
-		switch(this.state) {
+		switch (state) {
 			case SilkFish.STATE_FLEE:	
-				
 				// If player hops out of water, stop fleeing
-				if(!MovableType.isWater(tt.getMovableType())) {
+				if (!MovableType.isWater(tt.getMovableType())) {
 					this.state = SilkFish.STATE_IDLE;
 					return;
 				}
@@ -161,13 +147,13 @@ public class SilkFish extends GCharacter {
 				int dy = 0;
 				
 				// Calculate relative movement directions
-				if(distX > 0) {
+				if (distX > 0) {
 					dx = 1;
 				} else if (distX < 0) {
 					dx = -1;
 				}
 				
-				if(distY > 0) {
+				if (distY > 0) {
 					dy = 1;
 				} else if (distY < 0) {
 					dy = -1;
@@ -179,8 +165,8 @@ public class SilkFish extends GCharacter {
 				break;
 			case SilkFish.STATE_IDLE:
 				// Do nothing, until player steps in same pool of water
-				if((MovableType.isWater(tt.getMovableType())) &&
-						IslandChecker.virusStart(this.xPos, this.yPos, plrX, plrY, MovableType.WATER)) {
+				if ((MovableType.isWater(tt.getMovableType())) &&
+						IslandChecker.virusStart(xPos, yPos, plrX, plrY, MovableType.WATER)) {
 					// Alert and flee if in same pool
 					this.state = SilkFish.STATE_FLEE;
 					return;
@@ -190,10 +176,9 @@ public class SilkFish extends GCharacter {
 				}
 				break;
 			default:
-				System.out.println(this.getName() +
-						" couldn't take its turn. State = " + Integer.toString(this.state));
+				System.out.println(getName() + " couldn't take its turn. State = " + Integer.toString(state));
 				return;
 		}
-			
 	}
+	
 }

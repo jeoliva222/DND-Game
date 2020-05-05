@@ -9,6 +9,10 @@ import helpers.SoundPlayer;
 import managers.EntityManager;
 import tiles.MovableType;
 
+/**
+ * Class that represents the Tormented Soul character
+ * @author jeoliva
+ */
 public class TormentedSoul extends GCharacter {
 
 	// Serialization ID
@@ -16,13 +20,13 @@ public class TormentedSoul extends GCharacter {
 	
 	// Modifiers/Statistics
 
-	private int MAX_HP = 20;
+	private static int MAX_HP = 10;
 	
-	private int MIN_DMG = 0;
-	private int MAX_DMG = 0;
+	private static int MIN_DMG = 0;
+	private static int MAX_DMG = 0;
 	
-	private double CRIT_CHANCE = 0.0;
-	private double CRIT_MULT = 1.0;
+	private static double CRIT_CHANCE = 0.0;
+	private static double CRIT_MULT = 1.0;
 	
 	//----------------------------
 	
@@ -45,12 +49,16 @@ public class TormentedSoul extends GCharacter {
 	// Cooldown counter to ensure soul doesn't spam sounds
 	private int soundCooldown = 0;
 	
+	// Number of turns to not play a sound after playing a sound
+	private final int soundCooldownMax = 3;
+	
 	//----------------------------
 	
 	// File paths to images
-	private String imageDir = GPath.createImagePath(GPath.ENEMY, GPath.TORMENTED_SOUL);
+	private static String imageDir = GPath.createImagePath(GPath.ENEMY, GPath.TORMENTED_SOUL);
+	
+	// Non-static image file paths
 	private String tsImage_base = "";
-
 	private String tsImage_DEAD = "";
 
 
@@ -70,12 +78,10 @@ public class TormentedSoul extends GCharacter {
 		this.patrolPattern = PatrolPattern.STATIONARY;
 		
 		this.tsImage_base = imageBase;
-		this.tsImage_DEAD = (this.imageDir + this.tsImage_base + "_dead.png");
+		this.tsImage_DEAD = (imageDir + tsImage_base + "_dead.png");
 		
 		// Can't focus on this at first
 		this.canFocus = false;
-		
-		this.imagePath = this.getImage();
 	}
 	
 	public String getName() {
@@ -84,37 +90,34 @@ public class TormentedSoul extends GCharacter {
 	
 	@Override
 	public String getImage() {
-		String imgPath = this.imageDir + this.tsImage_base;
+		String imgPath = (imageDir + tsImage_base);
 		String hpPath = "";
 		String statePath = "";
 		
-		if(this.currentHP > (this.maxHP / 2)) {
-			hpPath = "_full";
-		} else if(this.currentHP > 0) {
+		if (currentHP > 0) {
 			hpPath = "_full";
 		} else {
 			hpPath = "_dead";
 			return (imgPath + hpPath + ".png");
 		}
 		
-		switch(this.state) {
-		case TormentedSoul.STATE_IDLE:
-			// No extra path
-			break;
-		case TormentedSoul.STATE_FREAK_OUT:
-			if(whichStep) {
-				statePath = "_STEP1";
-			} else {
-				statePath = "_STEP2";
-			}
-			break;
-		case TormentedSoul.STATE_ALERTED:
-			statePath = "_ALERT";
-			break;
-		default:
-			System.out.println
-				(this.getName() + " couldn't find a proper image: " + Integer.toString(this.state));
-			return GPath.NULL;
+		switch (state) {
+			case TormentedSoul.STATE_IDLE:
+				// No extra path
+				break;
+			case TormentedSoul.STATE_FREAK_OUT:
+				if(whichStep) {
+					statePath = "_STEP1";
+				} else {
+					statePath = "_STEP2";
+				}
+				break;
+			case TormentedSoul.STATE_ALERTED:
+				statePath = "_ALERT";
+				break;
+			default:
+				System.out.println(getName() + " couldn't find a proper image: " + Integer.toString(state));
+				return GPath.NULL;
 		}
 		
 		return (imgPath + hpPath + statePath + ".png");
@@ -132,7 +135,7 @@ public class TormentedSoul extends GCharacter {
 	@Override
 	public void playerInitiate() {
 		SoundPlayer.playWAV(GPath.createSoundPath("Beanpole_ATTACK.wav"));
-		this.attackPlayer();
+		attackPlayer();
 	}
 	
 	@Override
@@ -146,14 +149,14 @@ public class TormentedSoul extends GCharacter {
 		Player player = EntityManager.getInstance().getPlayer();
 		
 		// If this is dead or the player is dead, don't do anything
-		if(!this.isAlive() || !player.isAlive()) {
+		if (!isAlive() || !player.isAlive()) {
 			// Do nothing
 			return;
 		}
 		
 		switch(this.state) {
 			case TormentedSoul.STATE_IDLE:
-				if(this.currentHP != MAX_HP) {
+				if (currentHP != MAX_HP) {
 					SoundPlayer.playWAV(GPath.createSoundPath("Soul_Cry1.wav"));
 					this.canFocus = true;
 					this.state = TormentedSoul.STATE_ALERTED;
@@ -167,15 +170,14 @@ public class TormentedSoul extends GCharacter {
 				this.state = TormentedSoul.STATE_FREAK_OUT;
 				break;
 			case TormentedSoul.STATE_FREAK_OUT:	
-				// Move around in eratic manner
-
-				if(this.shouldMove) {
+				// Move around in erratic manner
+				if (shouldMove) {
 					Random r = new Random();
 					// Gets a number 0 - 1: Determines if NPC should move or not
 					int shouldMove = r.nextInt(2);
 					
 					// Most of the time, don't even try to move
-					if(shouldMove != 0) {
+					if (shouldMove != 0) {
 						break;
 					}
 					
@@ -187,20 +189,20 @@ public class TormentedSoul extends GCharacter {
 					int posOrNeg = 1 + (-2 * r.nextInt(2));
 					
 					// Randomly move X-wise or Y-wise
-					if(xOrY == 0) {
-						//X-wise
-						if(!this.moveCharacter(posOrNeg, 0)) {
-							this.moveCharacter((-posOrNeg), 0);
+					if (xOrY == 0) {
+						// X-wise
+						if (!moveCharacter(posOrNeg, 0)) {
+							moveCharacter((-posOrNeg), 0);
 						}
 					} else {
-						//Y-wise
-						if(!this.moveCharacter(0, posOrNeg)) {
-							this.moveCharacter(0, (-posOrNeg));
+						// Y-wise
+						if (!moveCharacter(0, posOrNeg)) {
+							moveCharacter(0, (-posOrNeg));
 						}
 					}
 					
 					// Toggle step animation
-					this.whichStep = !this.whichStep;
+					this.whichStep = !(whichStep);
 					
 					// Don't move next turn
 					this.shouldMove = false;
@@ -210,15 +212,13 @@ public class TormentedSoul extends GCharacter {
 				}
 				
 				// Try to play a sound
-				this.playSound();
+				playSound();
 				
 				break;
 			default:
-				System.out.println(this.getName() +
-						" couldn't take its turn. State = " + Integer.toString(this.state));
+				System.out.println(getName() + " couldn't take its turn. State = " + Integer.toString(state));
 				return;
-		}
-			
+		}	
 	}
 	
 	private void playSound() {
@@ -226,19 +226,19 @@ public class TormentedSoul extends GCharacter {
 		Random r = new Random();
 		
 		// If we're on cooldown, decrement cooldown counter and don't play sound
-		if(this.soundCooldown > 0) {
+		if (soundCooldown > 0) {
 			this.soundCooldown += -1;
 			return;
 		}
 		
 		// Only play sounds 1/3 of the time if not on cooldown
 		int shouldPlay = r.nextInt(3);
-		if(shouldPlay != 0) {
+		if (shouldPlay != 0) {
 			return;
 		}
 		
 		// Set cooldown for three turns if we're playing a sound
-		this.soundCooldown = 3;
+		this.soundCooldown = soundCooldownMax;
 		
 		// Play one of the four crying sounds
 		int whichSound = r.nextInt(4) + 2;

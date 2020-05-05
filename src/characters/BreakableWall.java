@@ -4,6 +4,10 @@ import buffs.Buff;
 import helpers.GPath;
 import managers.EntityManager;
 
+/**
+ * Class representing the Breakable Wall obstacle
+ * @author jeoliva
+ */
 public class BreakableWall extends GCharacter {
 
 	// Serialization ID
@@ -11,18 +15,16 @@ public class BreakableWall extends GCharacter {
 	
 	// Modifiers/Statistics
 
-	private int MAX_HP = 6;
+	private static int DEFAULT_MAX_HP = 6;
 	
-	private int MIN_DMG = 0;
-	private int MAX_DMG = 0;
+	private static int MIN_DMG = 0;
+	private static int MAX_DMG = 0;
 	
-	private double CRIT_CHANCE = 0.0;
-	private double CRIT_MULT = 1.0;
+	private static double CRIT_CHANCE = 0.0;
+	private static double CRIT_MULT = 1.0;
 	
 	public BreakableWall(int startX, int startY) {
-		this(startX, startY, 10);
-		this.maxHP = MAX_HP;
-		this.currentHP = MAX_HP;
+		this(startX, startY, DEFAULT_MAX_HP);
 	}
 	
 	public BreakableWall(int startX, int startY, int maxHP) {
@@ -46,9 +48,9 @@ public class BreakableWall extends GCharacter {
 		String entityPath = "_breakablewall";
 		String hpPath;
 		
-		if(this.currentHP > (this.maxHP / 2)) {
+		if (currentHP > (maxHP / 2)) {
 			hpPath = "_full";
-		} else if(this.currentHP > 0) {
+		} else if (currentHP > 0) {
 			hpPath = "_fatal";
 		} else {
 			hpPath = null;

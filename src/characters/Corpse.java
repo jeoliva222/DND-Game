@@ -2,6 +2,10 @@ package characters;
 
 import java.io.Serializable;
 
+/**
+ * Class representing corpse left behind by dead enemies
+ * @author jeoliva
+ */
 public class Corpse implements Serializable {
 	
 	// Serialization ID

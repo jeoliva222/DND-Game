@@ -4,8 +4,11 @@ import characters.Signpost;
 import characters.allies.Player;
 import managers.EntityManager;
 
-// Special entity used in the Museum area that moves when
-// the player reaches a certain tile
+/**
+ * Class representing special entity used in the Museum area 
+ * that moves when the player reaches a certain tile
+ * @author jeoliva
+ */
 public class MuseumMoveStatue extends Signpost {
 
 	// Serialization ID
@@ -39,7 +42,7 @@ public class MuseumMoveStatue extends Signpost {
 		Player player = EntityManager.getInstance().getPlayer();
 		
 		// If this is dead or the player is dead, don't do anything
-		if(!this.isAlive() || !player.isAlive()) {
+		if (!isAlive() || !player.isAlive()) {
 			// Do nothing
 			return;
 		}
@@ -49,12 +52,15 @@ public class MuseumMoveStatue extends Signpost {
 		int plrY = player.getYPos();
 		
 		// Check to move if player is in location
-		if((!this.hasMoved) && (plrX == this.triggerX && plrY == this.triggerY)) {
+		if ((!hasMoved) && (plrX == triggerX && plrY == triggerY)) {
 			// Update position and new origin location
-			this.xPos = this.moveX;
-			this.yPos = this.moveY;
-			this.xOrigin = this.xPos;
-			this.yOrigin = this.yPos;
+			this.xPos = moveX;
+			this.yPos = moveY;
+			this.xOrigin = xPos;
+			this.yOrigin = yPos;
+			
+			// Flag that we've moved
+			this.hasMoved = true;
 		}
 	}
 	

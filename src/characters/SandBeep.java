@@ -12,7 +12,10 @@ import helpers.SoundPlayer;
 import managers.EntityManager;
 import tiles.MovableType;
 
-// Represents the 'Sand Beep' enemy in-game in the 'Poacher's Desert' area
+/**
+ * Class representing the Sand Beep enemy in the 'Poacher's Desert' area
+ * @author jeoliva
+ */
 public class SandBeep extends GCharacter {
 
 	// Serialization ID
@@ -20,13 +23,13 @@ public class SandBeep extends GCharacter {
 
 	// Modifiers/Statistics
 	
-	private int MAX_HP = 6;
+	private static int MAX_HP = 6;
 	
-	private int MIN_DMG = 2;
-	private int MAX_DMG = 4;
+	private static int MIN_DMG = 2;
+	private static int MAX_DMG = 4;
 	
-	private double CRIT_CHANCE = 0.1;
-	private double CRIT_MULT = 1.5;
+	private static double CRIT_CHANCE = 0.1;
+	private static double CRIT_MULT = 1.5;
 	
 	//----------------------------
 	
@@ -54,36 +57,22 @@ public class SandBeep extends GCharacter {
 	//----------------------------
 	
 	// File paths to images
-	private String imageDir = GPath.createImagePath(GPath.ENEMY, GPath.SAND_BEEP);
-	private String bpImage_base = "sand_beep";
+	private static String imageDir = GPath.createImagePath(GPath.ENEMY, GPath.SAND_BEEP);
+	private static String bpImage_base = "sand_beep";
 	
-	private String beImage_DEAD = GPath.createImagePath(GPath.ENEMY, GPath.SAND_BEEP, "sand_beep_dead.png");
-	private String beImage_DEAD_CRIT = GPath.createImagePath(GPath.ENEMY, GPath.SAND_BEEP, "sand_beep_dead_CRIT.png");
+	private static String beImage_DEAD = GPath.createImagePath(GPath.ENEMY, GPath.SAND_BEEP, "sand_beep_dead.png");
+	private static String beImage_DEAD_CRIT = GPath.createImagePath(GPath.ENEMY, GPath.SAND_BEEP, "sand_beep_dead_CRIT.png");
 
 	// Constructors
 	public SandBeep(int startX, int startY) {
-		super(startX, startY);
-		
-		this.maxHP = MAX_HP;
-		this.currentHP = this.maxHP;
-		
-		this.minDmg = MIN_DMG;
-		this.maxDmg = MAX_DMG;
-		
-		this.critChance = CRIT_CHANCE;
-		this.critMult = CRIT_MULT;
-		
-		this.state = SandBeep.STATE_IDLE;
-		this.patrolPattern = PatrolPattern.STATIONARY;
-		
-		this.imagePath = this.getImage();
+		this(startX, startY, PatrolPattern.STATIONARY);
 	}
 	
 	public SandBeep(int startX, int startY, PatrolPattern patpat) {
 		super(startX, startY);
 		
 		this.maxHP = MAX_HP;
-		this.currentHP = this.maxHP;
+		this.currentHP = maxHP;
 		
 		this.minDmg = MIN_DMG;
 		this.maxDmg = MAX_DMG;
@@ -93,8 +82,6 @@ public class SandBeep extends GCharacter {
 		
 		this.state = SandBeep.STATE_IDLE;
 		this.patrolPattern = patpat;
-		
-		this.imagePath = this.getImage();
 	}
 	
 	public String getName() {
@@ -103,26 +90,25 @@ public class SandBeep extends GCharacter {
 	
 	@Override
 	public String getImage() {
-		// TODO : Needs custom sprites
-		String imgPath = this.imageDir + this.bpImage_base;
+		String imgPath = (imageDir + bpImage_base);
 		String hpPath = "";
 		String statePath = "";
 		String hopPath = "";
 		
-		if(this.currentHP > (this.maxHP / 2)) {
+		if (currentHP > (maxHP / 2)) {
 			hpPath = "_full";
-		} else if(this.currentHP > 0) {
+		} else if (currentHP > 0) {
 			hpPath = "_fatal";
 		} else {
 			hpPath = "_dead";
 			return GPath.NULL;
 		}
 		
-		if(this.doExtraHop) {
+		if (doExtraHop) {
 			hopPath = "_ALT";
 		}
 		
-		switch(this.state) {
+		switch (state) {
 			case SandBeep.STATE_IDLE:
 				// No extra path
 				break;
@@ -130,24 +116,23 @@ public class SandBeep extends GCharacter {
 				statePath = "_PREP";
 				break;
 			case SandBeep.STATE_ATT:
-				if(this.cooldownCount < 1) {
+				if (cooldownCount < 1) {
 					statePath = "_ATT";
 				}
 				break;
 			default:
-				System.out.println
-					(this.getName() + " couldn't find a proper image: " + Integer.toString(this.state));
+				System.out.println(getName() + " couldn't find a proper image: " + Integer.toString(state));
 				return GPath.NULL;
-			}
+		}
 		
 		return (imgPath + hpPath + statePath + hopPath + ".png");
 	}
 	
 	public String getCorpseImage() {
-		if(this.currentHP < -(this.maxHP / 2)) {
-			return this.beImage_DEAD_CRIT;
+		if (currentHP < -(maxHP / 2)) {
+			return beImage_DEAD_CRIT;
 		} else {
-			return this.beImage_DEAD;
+			return beImage_DEAD;
 		}
 	}
 	
@@ -161,15 +146,15 @@ public class SandBeep extends GCharacter {
 	@Override
 	public void playerInitiate() {
 		SoundPlayer.playWAV(GPath.createSoundPath("Beanpole_ATTACK.wav"));
-		this.attackPlayer();
+		attackPlayer();
 	}
 	
 	@Override
 	public void onDeath() {
-		if(this.currentHP < -(this.maxHP / 2)) {
+		if (currentHP < -(maxHP / 2)) {
 			SoundPlayer.playWAV(GPath.createSoundPath("Bitester_DEATH_CRIT.wav"));
 		} else {
-			this.playDeathSound();
+			playDeathSound();
 		}
 	}
 
@@ -182,12 +167,11 @@ public class SandBeep extends GCharacter {
 	
 	@Override
 	public void takeTurn() {
-		
 		// Fetch the player for easy reference
 		Player player = EntityManager.getInstance().getPlayer();
 		
 		// If this is dead or the player is dead, don't do anything
-		if(!this.isAlive() || !player.isAlive()) {
+		if (!isAlive() || !player.isAlive()) {
 			// Do nothing
 			return;
 		}
@@ -197,13 +181,13 @@ public class SandBeep extends GCharacter {
 		int plrY = player.getYPos();
 		
 		// Get relative location to player
-		int distX = plrX - this.xPos;
-		int distY = plrY - this.yPos;
+		int distX = (plrX - xPos);
+		int distY = (plrY - yPos);
 		
-		switch(this.state) {
+		switch (state) {
 			case SandBeep.STATE_IDLE:
-				boolean hasLOS = LineDrawer.hasSight(this.xPos, this.yPos, plrX, plrY);
-				if(hasLOS) {
+				boolean hasLOS = LineDrawer.hasSight(xPos, yPos, plrX, plrY);
+				if (hasLOS) {
 					SoundPlayer.playWAV(GPath.createSoundPath("beep_ALERT.wav"));
 					this.state = SandBeep.STATE_PREP;
 				} else {
@@ -217,30 +201,30 @@ public class SandBeep extends GCharacter {
 				int dy = 0;
 				
 				// Calculate relative movement directions
-				if(distX > 0) {
+				if (distX > 0) {
 					dx = 1;
 				} else if (distX < 0) {
 					dx = -1;
 				}
 				
-				if(distY > 0) {
+				if (distY > 0) {
 					dy = 1;
 				} else if (distY < 0) {
 					dy = -1;
 				}
 				
 				// Get relative location to player
-				distX = plrX - this.xPos;
-				distY = plrY - this.yPos;
+				distX = (plrX - xPos);
+				distY = (plrY - yPos);
 				
 				// Initialize flag to indicate whether we've attack this turn
 				boolean didAttack = false;
 				
 				// Attack if player is in one tile radius around player
-				if((this.xPos + dx) == plrX && (this.yPos + dy) == plrY) {
+				if ((xPos + dx) == plrX && (yPos + dy) == plrY) {
 					// Mark tiles with damage indicators
 					EntityManager.getInstance().getEffectManager().addEffect(new DamageIndicator(plrX, plrY));
-					this.playerInitiate();
+					playerInitiate();
 					
 					// Flip flag to indicate we've attacked this turn
 					didAttack = true;
@@ -251,24 +235,24 @@ public class SandBeep extends GCharacter {
 					// If unsuccessful, move in the direction that it is
 					// further from the player.
 					// Only does this on the first hop of the turn
-					if(this.moveCharacter(dx, dy)) {
+					if (moveCharacter(dx, dy)) {
 						this.markedX = dx;
 						this.markedY = dy;
-					} else if((Math.abs(distX)) > (Math.abs(distY))) {
-							// If movement in the x direction fails, try the y direction
-						if(this.moveCharacter(dx, 0)) {
+					} else if ((Math.abs(distX)) > (Math.abs(distY))) {
+						// If movement in the x direction fails, try the y direction
+						if (moveCharacter(dx, 0)) {
 							this.markedX = dx;
 							this.markedY = 0;
-						} else if (this.moveCharacter(0, dy)) {
+						} else if (moveCharacter(0, dy)) {
 							this.markedX = 0;
 							this.markedY = dy;
 						}
 					} else {
 						// If movement in the y direction fails, try the x direction
-						if(this.moveCharacter(0, dy)) {
+						if (moveCharacter(0, dy)) {
 							this.markedX = 0;
 							this.markedY = dy;
-						} else if(this.moveCharacter(dx, 0)) {
+						} else if (moveCharacter(dx, 0)) {
 							this.markedX = dx;
 							this.markedY = 0;
 						}
@@ -276,20 +260,20 @@ public class SandBeep extends GCharacter {
 				}
 				
 				// Do a second hop if we're queued up for it and haven't attacked this turn
-				if(this.doExtraHop && !didAttack) {
+				if (doExtraHop && !didAttack) {
 					// Attack if player is our current hop path
-					if((this.xPos + this.markedX) == plrX && (this.yPos + this.markedY) == plrY) {
+					if ((xPos + markedX) == plrX && (yPos + markedY) == plrY) {
 						// Mark tiles with damage indicators
 						EntityManager.getInstance().getEffectManager().addEffect(new DamageIndicator(plrX, plrY));
-						this.playerInitiate();
+						playerInitiate();
 					} else {
 						// If we don't hit the payer, continue on our current hop path
-						this.moveCharacter(this.markedX, this.markedY);
+						moveCharacter(markedX, markedY);
 					}
 				}
 				
 				// Play hop sound
-				this.playHopSound();
+				playHopSound();
 
 				// Change state
 				this.state = SandBeep.STATE_ATT;
@@ -301,48 +285,30 @@ public class SandBeep extends GCharacter {
 				this.cooldownCount += 1;
 				
 				// Check if we've completed our cooldown
-				if(this.cooldownCount >= this.cooldownMax) {
+				if (cooldownCount >= cooldownMax) {
 					// If so, switch to preparation state
 					this.cooldownCount = 0;
 					this.state = SandBeep.STATE_PREP;
 				} else {
 					// If not, toggle extra hop parameter
-					this.doExtraHop = !(this.doExtraHop);
+					this.doExtraHop = !(doExtraHop);
 				}
 				
 				break;
 			default:
-				System.out.println(this.getName() +
-						" couldn't take its turn. State = " + Integer.toString(this.state));
+				System.out.println(getName() + " couldn't take its turn. State = " + Integer.toString(state));
 				return;
 		}
-
 	}
 	
 	protected void playHopSound() {
-		Random r = new Random();
-		int whichSound = r.nextInt(4);
-		if(whichSound == 0) {
-			SoundPlayer.playWAV(GPath.createSoundPath("beep_hop1.wav"), -10);
-		} else if(whichSound == 1) {
-			SoundPlayer.playWAV(GPath.createSoundPath("beep_hop2.wav"), -10);
-		} else if(whichSound == 2) {
-			SoundPlayer.playWAV(GPath.createSoundPath("beep_hop3.wav"), -10);
-		} else {
-			SoundPlayer.playWAV(GPath.createSoundPath("beep_hop4.wav"), -10);
-		}
+		int whichSound = (new Random().nextInt(4) + 1);
+		SoundPlayer.playWAV(GPath.createSoundPath("beep_hop" + whichSound + ".wav"), -10);
 	}
 	
 	protected void playDeathSound() {
-		Random r = new Random();
-		int whichSound = r.nextInt(3);
-		if(whichSound == 0) {
-			SoundPlayer.playWAV(GPath.createSoundPath("beep_death1.wav"));
-		} else if(whichSound == 1) {
-			SoundPlayer.playWAV(GPath.createSoundPath("beep_death2.wav"));
-		} else {
-			SoundPlayer.playWAV(GPath.createSoundPath("beep_death3.wav"));
-		}
+		int whichSound = (new Random().nextInt(3) + 1);
+		SoundPlayer.playWAV(GPath.createSoundPath("beep_death" + whichSound +".wav"));
 	}
 	
 }

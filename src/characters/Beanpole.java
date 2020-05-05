@@ -25,13 +25,13 @@ public class Beanpole extends GCharacter {
 	
 	// Modifiers/Statistics
 
-	private int MAX_HP = 5;
+	private static int MAX_HP = 5;
 	
-	private int MIN_DMG = 1;
-	private int MAX_DMG = 2;
+	private static int MIN_DMG = 1;
+	private static int MAX_DMG = 2;
 	
-	private double CRIT_CHANCE = 0.1;
-	private double CRIT_MULT = 1.5;
+	private static double CRIT_CHANCE = 0.1;
+	private static double CRIT_MULT = 1.5;
 	
 	//----------------------------
 	
@@ -79,8 +79,6 @@ public class Beanpole extends GCharacter {
 		
 		this.state = Beanpole.STATE_IDLE;
 		this.patrolPattern = patpat;
-		
-		this.imagePath = getImage();
 	}
 	
 	public String getName() {

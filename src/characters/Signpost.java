@@ -4,6 +4,10 @@ import buffs.Buff;
 import gui.LogScreen;
 import helpers.GPath;
 
+/**
+ * Class representing the Signpost interactable object
+ * @author jeoliva
+ */
 public class Signpost extends GCharacter {
 	
 	// Serialization ID
@@ -11,21 +15,25 @@ public class Signpost extends GCharacter {
 
 	// Modifiers/Statistics
 
-	private int MAX_HP = 10;
+	private static int MAX_HP = 10;
 	
-	private int ARMOR_VAL = 100;
+	private static int ARMOR_VAL = 100;
 	
-	private int MIN_DMG = 0;
-	private int MAX_DMG = 0;
+	private static int MIN_DMG = 0;
+	private static int MAX_DMG = 0;
 	
-	private double CRIT_CHANCE = 0.0;
-	private double CRIT_MULT = 1.0;
-	
+	private static double CRIT_CHANCE = 0.0;
+	private static double CRIT_MULT = 1.0;
 	
 	//-----------------------
 	
+	// Additional parameters
+	
 	// Message that reads when the player hits the signpost
 	private String message = "";
+	
+	// Image file name for the signpost
+	private String imageStr = "";
 	
 	// Constructor
 	public Signpost(int startX, int startY, String imageStr, String message) {
@@ -49,7 +57,7 @@ public class Signpost extends GCharacter {
 		this.isInteractable = true;
 		
 		// Set the signpost image
-		this.imagePath = imageStr;
+		this.imageStr = imageStr;
 		
 		// Set the signpost message
 		this.message = message;
@@ -58,14 +66,14 @@ public class Signpost extends GCharacter {
 	@Override
 	public String getImage() {
 		// Return full path
-		return GPath.createImagePath(GPath.ENEMY, GPath.SIGNPOST, this.imagePath);
+		return GPath.createImagePath(GPath.ENEMY, GPath.SIGNPOST, imageStr);
 	}
 
 	@Override
 	public boolean damageCharacter(int damage) {
 		// Log the signpost's message to the Logscreen
-		LogScreen.log("\"" + this.message + "\"");
-		return this.isAlive();
+		LogScreen.log("\"" + message + "\"");
+		return isAlive();
 	}
 	
 	@Override

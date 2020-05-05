@@ -5,8 +5,11 @@ import helpers.SoundPlayer;
 import managers.EntityManager;
 import projectiles.Arrow;
 
-// Class representing 'Elite Arrow Turret' enemy in-game
-// Elite Arrow Turrets fire in all four cardinal directions every other time they shoot
+/**
+ * Class representing Elite Arrow Turret obstacle,
+ * which fires in all four cardinal directions every other time it shoots
+ * @author jeoliva
+ */
 public class EliteArrowTurret extends ArrowTurret {
 	
 	// Serialization ID
@@ -30,8 +33,8 @@ public class EliteArrowTurret extends ArrowTurret {
 	//----------------------------
 	
 	// File paths to images
-	private String imageDir = GPath.createImagePath(GPath.ENEMY, GPath.ARROW_TURRET);
-	private String atImage_base = "elite_arrowturret";
+	private static String imageDir = GPath.createImagePath(GPath.ENEMY, GPath.ARROW_TURRET);
+	private static String atImage_base = "elite_arrowturret";
 
 	public EliteArrowTurret(int startX, int startY, int shootX, int shootY, int interval) {
 		super(startX, startY, shootX, shootY, interval);
@@ -58,20 +61,19 @@ public class EliteArrowTurret extends ArrowTurret {
 
 	@Override
 	public String getImage() {
-		switch(this.state) {
+		switch (state) {
 			case EliteArrowTurret.STATE_INACTIVE:
-				return (this.imageDir + this.atImage_base + "_INACTIVE.png");
+				return (imageDir + atImage_base + "_INACTIVE.png");
 			case EliteArrowTurret.STATE_ACTIVE:
-				if((this.shotCount - 1) >= this.shotMax) {
-					return (this.imageDir + this.atImage_base + "_ATT.png");
-				} else if(this.shotCount >= this.shotMax) {
-					return (this.imageDir + this.atImage_base + "_PREP.png");
+				if ((shotCount - 1) >= shotMax) {
+					return (imageDir + atImage_base + "_ATT.png");
+				} else if (shotCount >= shotMax) {
+					return (imageDir + atImage_base + "_PREP.png");
 				} else {
-					return (this.imageDir + this.atImage_base + "_INACTIVE.png");
+					return (imageDir + atImage_base + "_INACTIVE.png");
 				}
 			default:
-				System.out.println
-					(this.getName() + " couldn't find a proper image: " + Integer.toString(this.state));
+				System.out.println(getName() + " couldn't find a proper image: " + Integer.toString(state));
 				return GPath.NULL;
 		}
 	}
@@ -79,61 +81,46 @@ public class EliteArrowTurret extends ArrowTurret {
 	@Override
 	public void takeTurn() {
 		// If this is dead or the player is dead, don't do anything
-		if(!this.isAlive() || !EntityManager.getInstance().getPlayer().isAlive()) {
+		if (!isAlive() || !EntityManager.getInstance().getPlayer().isAlive()) {
 			// Do nothing
 			return;
 		}
 		
 		// Depending on current state, act accordingly
-		switch(this.state) {
+		switch (state) {
 			case EliteArrowTurret.STATE_INACTIVE:
 				// Do nothing because it's inactive
 				break;
 			case EliteArrowTurret.STATE_ACTIVE:
 				// Reset our counter
-				if(this.shotCount > this.shotMax) {
+				if (shotCount > shotMax) {
 					this.shotCount = 0;
 				}
 				
 				// We're active, so shoot arrows periodically
-				if(this.shotCount < this.shotMax) {
+				if (shotCount < shotMax) {
 					// Do nothing, we're on cooldown
 				} else {
 					// Play arrow firing sound
 					SoundPlayer.playWAV(GPath.createSoundPath("arrow_SHOT.wav"));
 					
-					if(this.doAltFire || this.alwaysAlt) {
+					if (doAltFire || alwaysAlt) {
 						// Fire arrows in all four cardinal directions
 						EntityManager.getInstance().getProjectileManager()
-							.addProjectile(new Arrow((this.xPos + 1),
-												(this.yPos),
-												1,
-												0, this.getClass()));
+							.addProjectile(new Arrow((xPos + 1), (yPos), 1, 0, getClass()));
 						EntityManager.getInstance().getProjectileManager()
-							.addProjectile(new Arrow((this.xPos - 1),
-											(this.yPos),
-											-1,
-											0, this.getClass()));
+							.addProjectile(new Arrow((xPos - 1), (yPos), -1, 0, getClass()));
 						EntityManager.getInstance().getProjectileManager()
-							.addProjectile(new Arrow((this.xPos),
-											(this.yPos + 1),
-											0,
-											1, this.getClass()));
+							.addProjectile(new Arrow((xPos), (yPos + 1), 0, 1, getClass()));
 						EntityManager.getInstance().getProjectileManager()
-							.addProjectile(new Arrow((this.xPos),
-											(this.yPos - 1),
-											0,
-											-1, this.getClass()));
+							.addProjectile(new Arrow((xPos), (yPos - 1), 0, -1, getClass()));
 						
 						// Don't do alternate fire next time we shoot
 						this.doAltFire = false;
 					} else {
 						// Fire an arrow in a predetermined direction
 						EntityManager.getInstance().getProjectileManager()
-							.addProjectile(new Arrow((this.xPos + this.shootX),
-													(this.yPos + this.shootY),
-													this.shootX,
-													this.shootY, this.getClass()));
+							.addProjectile(new Arrow((xPos + shootX), (yPos + shootY), shootX, shootY, getClass()));
 						
 						// Do alternate fire next time we shoot
 						this.doAltFire = true;
@@ -144,7 +131,7 @@ public class EliteArrowTurret extends ArrowTurret {
 				this.shotCount += 1;
 				break;
 			default:
-				System.out.println(this.getName() + " couldn't identify its state!");
+				System.out.println(getName() + " couldn't identify its state! State = " + Integer.toString(state));
 				break;
 		}
 	}

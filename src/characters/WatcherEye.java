@@ -31,7 +31,10 @@ import managers.EffectManager;
 import managers.EntityManager;
 import tiles.MovableType;
 
-// Class representing the Watcher Eye that stalks players
+/**
+ * Class representing the Watcher Eye enemy that stalks players
+ * @author jeoliva
+ */
 public class WatcherEye extends GCharacter {
 	
 	// Serialization ID
@@ -39,15 +42,15 @@ public class WatcherEye extends GCharacter {
 
 	// Modifiers/Statistics
 
-	private int MAX_HP = 100;
+	private static int MAX_HP = 100;
 	
-	private int ARMOR_VAL = 100;
+	private static int ARMOR_VAL = 100;
 	
-	private int MIN_DMG = 0;
-	private int MAX_DMG = 0;
+	private static int MIN_DMG = 0;
+	private static int MAX_DMG = 0;
 	
-	private double CRIT_CHANCE = 0.0;
-	private double CRIT_MULT = 1.0;
+	private static double CRIT_CHANCE = 0.0;
+	private static double CRIT_MULT = 1.0;
 	
 	//----------------------------
 	
@@ -66,20 +69,25 @@ public class WatcherEye extends GCharacter {
 	protected int markX = 0;
 	protected int markY = 0;
 	
-	protected double ILLUSION_CHANCE = 0.02;
+	// Chance to cause an illusion to appear on the player's vision
+	protected static final double ILLUSION_CHANCE = 0.02;
 	
 	//----------------------------
 	
 	// File paths to images
-	private String imageDir = GPath.createImagePath(GPath.ENEMY, GPath.GAZER);
-	private String weImage_base = "Gazer";
+	private static String imageDir = GPath.createImagePath(GPath.ENEMY, GPath.GAZER);
+	private static String weImage_base = "Gazer";
 
 
 	public WatcherEye(int startX, int startY) {
+		this(startX, startY, PatrolPattern.WANDER);
+	}
+	
+	public WatcherEye(int startX, int startY, PatrolPattern patpat) {
 		super(startX, startY);
 		
 		this.maxHP = MAX_HP;
-		this.currentHP = this.maxHP;
+		this.currentHP = maxHP;
 		
 		this.armor = ARMOR_VAL;
 		
@@ -90,27 +98,7 @@ public class WatcherEye extends GCharacter {
 		this.critMult = CRIT_MULT;
 		
 		this.state = WatcherEye.STATE_IDLE;
-		this.patrolPattern = PatrolPattern.WANDER;
-		
-		this.imagePath = this.getImage();
-	}
-	
-	public WatcherEye(int startX, int startY, PatrolPattern patpat) {
-		super(startX, startY);
-		
-		this.maxHP = MAX_HP;
-		this.currentHP = this.maxHP;
-		
-		this.minDmg = MIN_DMG;
-		this.maxDmg = MAX_DMG;
-		
-		this.critChance = CRIT_CHANCE;
-		this.critMult = CRIT_MULT;
-		
-		this.state = WatcherEye.STATE_IDLE;
 		this.patrolPattern = patpat;
-		
-		this.imagePath = this.getImage();
 	}
 	
 	public String getName() {
@@ -119,29 +107,28 @@ public class WatcherEye extends GCharacter {
 	
 	@Override
 	public String getImage() {
-		String imgPath = this.imageDir + this.weImage_base;
+		String imgPath = (imageDir + weImage_base);
 		String statePath = "";
 		
-		switch(this.state) {
-		case WatcherEye.STATE_PURSUE:
-			int xMov = this.xPos - this.lastX;
-			if(xMov < 0) {
-				statePath = "_PURSUE_LEFT";
-			} else if (xMov > 0) {
-				statePath = "_PURSUE_RIGHT";
-			} else {
+		switch (state) {
+			case WatcherEye.STATE_PURSUE:
+				int xMov = (xPos - lastX);
+				if (xMov < 0) {
+					statePath = "_PURSUE_LEFT";
+				} else if (xMov > 0) {
+					statePath = "_PURSUE_RIGHT";
+				} else {
+					statePath = "_IDLE";
+				}
+				break;
+			case WatcherEye.STATE_ALERTED:
+			case WatcherEye.STATE_IDLE:
+			case WatcherEye.STATE_SEARCH:
 				statePath = "_IDLE";
-			}
-			break;
-		case WatcherEye.STATE_ALERTED:
-		case WatcherEye.STATE_IDLE:
-		case WatcherEye.STATE_SEARCH:
-			statePath = "_IDLE";
-			break;
-		default:
-			System.out.println
-				(this.getName() + " couldn't find a proper image: " + Integer.toString(this.state));
-			return GPath.NULL;
+				break;
+			default:
+				System.out.println(getName() + " couldn't find a proper image: " + Integer.toString(state));
+				return GPath.NULL;
 		}
 		
 		return (imgPath + statePath + ".png");
@@ -163,7 +150,7 @@ public class WatcherEye extends GCharacter {
 
 	@Override
 	public void playerInitiate() {
-		// Crash the game - TODO
+		// Crash the game
 		
 		// Creates a special file
 		String filePath = GPath.EYE_PATH;
@@ -175,9 +162,9 @@ public class WatcherEye extends GCharacter {
 						"HAHAHAHAHAHAHAHAHAHAHAHAHAHAHAHAHAHAHAHAHAHAHAHAHAHAHAHAHAHAHAHAHAHAHAHA");
 				Path file = Paths.get(filePath);
 				Files.write(file, lines, Charset.forName("UTF-8"));
-			} catch (IOException e) {
+			} catch (IOException ex) {
 				System.out.println("File didn't generate properly");
-				e.printStackTrace();
+				ex.printStackTrace();
 			}
 		}
 		
@@ -186,8 +173,8 @@ public class WatcherEye extends GCharacter {
 		
 		// Fill the screen with eyes
 		EffectManager em = EntityManager.getInstance().getEffectManager();
-		for(int y = 0; y < 10; y++) {
-			for(int x = 0; x < 10; x++) {
+		for (int y = 0; y < 10; y++) {
+			for (int x = 0; x < 10; x++) {
 				em.addEffect(new EyeEffect(x, y, 5));
 			}
 		}
@@ -198,10 +185,11 @@ public class WatcherEye extends GCharacter {
 		// Create timer for small period that closes pop-up on finish
 		int delay = 400; // Milliseconds
 		ActionListener taskPerformer = new ActionListener() {
-		      public void actionPerformed(ActionEvent evt) {
-		          GameWindow.getInstance().dispose();
-		          GameWindow.getInstance().dispatchEvent(new WindowEvent(GameWindow.getInstance(), WindowEvent.WINDOW_CLOSING));
-		      }
+			@Override
+			public void actionPerformed(ActionEvent evt) {
+				GameWindow.getInstance().dispose();
+				GameWindow.getInstance().dispatchEvent(new WindowEvent(GameWindow.getInstance(), WindowEvent.WINDOW_CLOSING));
+			}
 		};
 		new Timer(delay, taskPerformer).start();
 	}
@@ -224,7 +212,7 @@ public class WatcherEye extends GCharacter {
 		Player player = em.getPlayer();
 		
 		// If this is dead or the player is dead, don't do anything
-		if(!this.isAlive() || !player.isAlive()) {
+		if (!isAlive() || !player.isAlive()) {
 			// Do nothing
 			return;
 		}
@@ -234,8 +222,8 @@ public class WatcherEye extends GCharacter {
 		int plrY = player.getYPos();
 		
 		// Initialize LOS
-		boolean hasLOS = LineDrawer.hasSight(this.xPos, this.yPos, plrX, plrY);
-		if(hasLOS) {
+		boolean hasLOS = LineDrawer.hasSight(xPos, yPos, plrX, plrY);
+		if (hasLOS) {
 			// Mark the last position we saw the player
 			this.markX = plrX;
 			this.markY = plrY;
@@ -245,20 +233,20 @@ public class WatcherEye extends GCharacter {
 		// Illusion chance increases exponentially when the player is more hurt
 		int playerHP = player.getCurrentHP();
 		if (playerHP <= 1) {
-			if(em.isDark()) {
+			if (em.isDark()) {
 				// If dark and player at 1 HP, generate a ring of illusions
-				this.createMadness();
+				createMadness();
 			}
 		} else {
 			double chanceMult =  ((double) player.getMaxHP() / playerHP);
-			if(Math.random() < (this.ILLUSION_CHANCE * chanceMult) && em.isDark()) {
-				this.createIllusion();
+			if (Math.random() < (ILLUSION_CHANCE * chanceMult) && em.isDark()) {
+				createIllusion();
 			}
 		}
 		
-		switch(this.state) {
+		switch (state) {
 			case WatcherEye.STATE_IDLE:
-				if(hasLOS) {
+				if (hasLOS) {
 					// Alert to the player
 					SoundPlayer.playWAV(GPath.createSoundPath("Eye_Scream.wav"));
 					this.state = WatcherEye.STATE_ALERTED;
@@ -272,10 +260,9 @@ public class WatcherEye extends GCharacter {
 				this.state = WatcherEye.STATE_PURSUE;
 				break;
 			case WatcherEye.STATE_PURSUE:	
-				
 				// If we arrived at last spotted position and still can't see the player,
 				// then enter search mode
-				if(!hasLOS && this.xPos == this.markX && this.yPos == this.markY) {
+				if (!hasLOS && xPos == markX && yPos == markY) {
 					this.state = WatcherEye.STATE_SEARCH;
 					break;
 				}
@@ -285,47 +272,47 @@ public class WatcherEye extends GCharacter {
 				int dy = 0;
 				
 				// Get relative location to position we spotted player last
-				int viewDistX = this.markX - this.xPos;
-				int viewDistY = this.markY - this.yPos;
+				int viewDistX = (markX - xPos);
+				int viewDistY = (markY - yPos);
 				
 				// Calculate relative movement directions to get to last spotted location
-				if(viewDistX > 0) {
+				if (viewDistX > 0) {
 					dx = 1;
 				} else if (viewDistX < 0) {
 					dx = -1;
 				}
 				
-				if(viewDistY > 0) {
+				if (viewDistY > 0) {
 					dy = 1;
 				} else if (viewDistY < 0) {
 					dy = -1;
 				}
 				
 				// Get relative location to player's position (Used for attack check)
-				int distX = plrX - this.xPos;
-				int distY = plrY - this.yPos;
+				int distX = (plrX - xPos);
+				int distY = (plrY - yPos);
 				
 				// Change state to prep if next to player
-				if(((Math.abs(distX) == 1) && (Math.abs(distY) == 0)) ||
+				if (((Math.abs(distX) == 1) && (Math.abs(distY) == 0)) ||
 						((Math.abs(distX) == 0) && (Math.abs(distY) == 1))) {
 					// End the player's life
-					this.playerInitiate();
+					playerInitiate();
 				} else {
 					// Path-find to the last position we saw the player at
-					Dimension nextStep = PathFinder.findPath(this.xPos, this.yPos, this.markX, this.markY, this);
-					if(nextStep == null) {
+					Dimension nextStep = PathFinder.findPath(xPos, yPos, markX, markY, this);
+					if (nextStep == null) {
 						// Blindly pursue the target
 						DumbFollow.blindPursue(viewDistX, viewDistY, dx, dy, this);
 					} else {
-						int changeX = nextStep.width - this.xPos;
-						int changeY = nextStep.height - this.yPos;
-						this.moveCharacter(changeX, changeY);
+						int changeX = (nextStep.width - xPos);
+						int changeY = (nextStep.height - yPos);
+						moveCharacter(changeX, changeY);
 					}
 				}
 				
 				// Recalculate LOS after move
-				hasLOS = LineDrawer.hasSight(this.xPos, this.yPos, plrX, plrY);
-				if(hasLOS) {
+				hasLOS = LineDrawer.hasSight(xPos, yPos, plrX, plrY);
+				if (hasLOS) {
 					// Mark the last position we saw the player
 					this.markX = plrX;
 					this.markY = plrY;
@@ -333,22 +320,20 @@ public class WatcherEye extends GCharacter {
 				
 				break;
 			case WatcherEye.STATE_SEARCH:
-				if(hasLOS) {
+				if (hasLOS) {
 					// Alert to the player
 					SoundPlayer.playWAV(GPath.createSoundPath("Eye_Scream.wav"));
 					this.state = WatcherEye.STATE_ALERTED;
-				} else  {	
+				} else {	
 					// Return to idling
 					SoundPlayer.playWAV(GPath.createSoundPath("Eye_Breath.wav"));
 					this.state = WatcherEye.STATE_IDLE;
 				}
 				break;
 			default:
-				System.out.println(this.getName() +
-						" couldn't take its turn. State = " + Integer.toString(this.state));
+				System.out.println(getName() + " couldn't take its turn. State = " + Integer.toString(state));
 				return;
-		}
-			
+		}	
 	}
 	
 	// Creates a single illusion right on the edge of the player's vision
@@ -369,13 +354,13 @@ public class WatcherEye extends GCharacter {
 		// Determine the angular directions based on the indexed position
 		Dimension primeDir = null;
 		Dimension sideDir = null;
-		if(quad == 0) {
+		if (quad == 0) {
 			primeDir = new Dimension(0, -1);
 			sideDir = new Dimension(1, 0);
-		} else if(quad == 1) {
+		} else if (quad == 1) {
 			primeDir = new Dimension(1, 0);
 			sideDir = new Dimension(0, 1);
-		} else if(quad == 2) {
+		} else if (quad == 2) {
 			primeDir = new Dimension(0, 1);
 			sideDir = new Dimension(-1, 0);
 		} else {
@@ -411,13 +396,13 @@ public class WatcherEye extends GCharacter {
 			// Determine the angular directions based on the indexed position
 			Dimension primeDir = null;
 			Dimension sideDir = null;
-			if(quad == 0) {
+			if (quad == 0) {
 				primeDir = new Dimension(0, -1);
 				sideDir = new Dimension(1, 0);
-			} else if(quad == 1) {
+			} else if (quad == 1) {
 				primeDir = new Dimension(1, 0);
 				sideDir = new Dimension(0, 1);
-			} else if(quad == 2) {
+			} else if (quad == 2) {
 				primeDir = new Dimension(0, 1);
 				sideDir = new Dimension(-1, 0);
 			} else {

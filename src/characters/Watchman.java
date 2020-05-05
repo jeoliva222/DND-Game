@@ -19,7 +19,10 @@ import tiles.ExtraTile;
 import tiles.MovableType;
 import tiles.TileType;
 
-// Class represents the 'Watchman' enemy in-game
+/**
+ * Class that represents the Watchman enemy
+ * @author jeoliva
+ */
 public class Watchman extends GCharacter {
 
 	// Modifiers/Statistics
@@ -27,15 +30,15 @@ public class Watchman extends GCharacter {
 	// Serialization ID
 	private static final long serialVersionUID = -7747701036774455549L;
 
-	private int MAX_HP = 6;
+	private static int MAX_HP = 6;
 	
-	private int MIN_DMG = 1;
-	private int MAX_DMG = 2;
+	private static int ARMOR_VAL = 1;
 	
-	private double CRIT_CHANCE = 0.15;
-	private double CRIT_MULT = 1.5;
+	private static int MIN_DMG = 1;
+	private static int MAX_DMG = 2;
 	
-	private int ARMOR_VAL = 1;
+	private static double CRIT_CHANCE = 0.15;
+	private static double CRIT_MULT = 1.5;
 	
 	//----------------------------
 	
@@ -51,7 +54,7 @@ public class Watchman extends GCharacter {
 	
 	// Additional Info
 	
-	// Variables used to control attack windup length
+	// Variables used to control attack wind-up length
 	private int windupCount = 0;
 	private final int windupMax = 2;
 	
@@ -69,43 +72,28 @@ public class Watchman extends GCharacter {
 	//----------------------------
 	
 	// File paths to images
-	private String imageDir = GPath.createImagePath(GPath.ENEMY, GPath.WATCHMAN);
-	private String wmImage_base = "watchman";
+	private static String imageDir = GPath.createImagePath(GPath.ENEMY, GPath.WATCHMAN);
+	private static String wmImage_base = "watchman";
 	
-	private String wmImage_DEAD = GPath.createImagePath(GPath.ENEMY, GPath.WATCHMAN, "watchman_dead.png");
-	
-	public Watchman(int startX, int startY, ArrayList<GCharacter> npcList, ArrayList<ExtraTile> tileList) {
-		super(startX, startY);
-		
-		this.maxHP = MAX_HP;
-		this.currentHP = this.maxHP;
-		
-		this.armor = ARMOR_VAL;
-		
-		this.minDmg = MIN_DMG;
-		this.maxDmg = MAX_DMG;
-		
-		this.critChance = CRIT_CHANCE;
-		this.critMult = CRIT_MULT;
-		
-		this.state = Watchman.STATE_IDLE;
-		this.patrolPattern = PatrolPattern.PATROL;
-		
-		this.npcList = npcList;
-		this.tileList = tileList;
-		
-		this.imagePath = this.getImage();
-	}
+	private static String wmImage_DEAD = GPath.createImagePath(GPath.ENEMY, GPath.WATCHMAN, "watchman_dead.png");
 	
 	public Watchman(int startX, int startY) {
 		this(startX, startY, new ArrayList<GCharacter>(), new ArrayList<ExtraTile>());
+	}
+	
+	public Watchman(int startX, int startY, PatrolPattern patpat) {
+		this(startX, startY, new ArrayList<GCharacter>(), new ArrayList<ExtraTile>(), patpat);
+	}
+	
+	public Watchman(int startX, int startY, ArrayList<GCharacter> npcList, ArrayList<ExtraTile> tileList) {
+		this(startX, startY, npcList, tileList, PatrolPattern.PATROL);
 	}
 	
 	public Watchman(int startX, int startY, ArrayList<GCharacter> npcList, ArrayList<ExtraTile> tileList, PatrolPattern patpat) {
 		super(startX, startY);
 		
 		this.maxHP = MAX_HP;
-		this.currentHP = this.maxHP;
+		this.currentHP = maxHP;
 		
 		this.armor = ARMOR_VAL;
 		
@@ -120,12 +108,6 @@ public class Watchman extends GCharacter {
 		
 		this.npcList = npcList;
 		this.tileList = tileList;
-		
-		this.imagePath = this.getImage();
-	}
-	
-	public Watchman(int startX, int startY, PatrolPattern patpat) {
-		this(startX, startY, new ArrayList<GCharacter>(), new ArrayList<ExtraTile>(), patpat);
 	}
 
 	@Override
@@ -135,20 +117,20 @@ public class Watchman extends GCharacter {
 	
 	@Override
 	public String getImage() {
-		String imgPath = this.imageDir + this.wmImage_base;
+		String imgPath = (imageDir + wmImage_base);
 		String hpPath = "";
 		String statePath = "";
 		
-		if(this.currentHP > (this.maxHP / 2)) {
+		if (currentHP > (maxHP / 2)) {
 			hpPath = "_full";
-		} else if(this.currentHP > 0) {
+		} else if (currentHP > 0) {
 			hpPath = "_fatal";
 		} else {
 			hpPath = "_dead";
 			return GPath.NULL;
 		}
 		
-		switch(this.state) {
+		switch (state) {
 			case Watchman.STATE_IDLE:
 				// No extra path
 				break;
@@ -163,8 +145,7 @@ public class Watchman extends GCharacter {
 				statePath = "_ALERT";
 				break;
 			default:
-				System.out.println
-					(this.getName() + " couldn't find a proper image: " + Integer.toString(this.state));
+				System.out.println(getName() + " couldn't find a proper image: " + Integer.toString(state));
 				return GPath.NULL;
 		}
 		
@@ -174,7 +155,7 @@ public class Watchman extends GCharacter {
 
 	@Override
 	public String getCorpseImage() {
-		return this.wmImage_DEAD;
+		return wmImage_DEAD;
 	}
 
 	@Override
@@ -185,7 +166,7 @@ public class Watchman extends GCharacter {
 	
 	@Override
 	public void playerInitiate() {
-		this.attackPlayer();
+		attackPlayer();
 	}
 
 	@Override
@@ -200,7 +181,7 @@ public class Watchman extends GCharacter {
 		Player player = EntityManager.getInstance().getPlayer();
 		
 		// If this is dead or the player is dead, don't do anything
-		if(!this.isAlive() || !player.isAlive()) {
+		if (!isAlive() || !player.isAlive()) {
 			// Do nothing
 			return;
 		}
@@ -210,20 +191,20 @@ public class Watchman extends GCharacter {
 		int plrY = player.getYPos();
 		
 		// Get relative location to player
-		int distX = plrX - this.xPos;
-		int distY = plrY - this.yPos;
+		int distX = (plrX - xPos);
+		int distY = (plrY - yPos);
 		
-		switch(this.state) {
+		switch (state) {
 			case Watchman.STATE_IDLE:
-				boolean hasLOS = LineDrawer.hasSight(this.xPos, this.yPos, plrX, plrY);
-				if(hasLOS) {
-					if(!this.soundedAlarm) {
+				boolean hasLOS = LineDrawer.hasSight(xPos, yPos, plrX, plrY);
+				if (hasLOS) {
+					if (!soundedAlarm) {
 						// For every NPC in the list, spawn it
-						for(GCharacter npc: this.npcList) {
+						for (GCharacter npc: npcList) {
 							EntityManager.getInstance().getNPCManager().addPendingCharacter(npc);
 						}
 						
-						for(ExtraTile et: this.tileList) {
+						for (ExtraTile et: tileList) {
 							// Get the tile and old tile type
 							GameTile tile = GameScreen.getTile(et.xPos, et.yPos);
 							TileType oldType = tile.getTileType();
@@ -256,34 +237,34 @@ public class Watchman extends GCharacter {
 				int dy = 0;
 				
 				// Calculate relative movement directions
-				if(distX > 0) {
+				if (distX > 0) {
 					dx = 1;
 				} else if (distX < 0) {
 					dx = -1;
 				}
 				
-				if(distY > 0) {
+				if (distY > 0) {
 					dy = 1;
 				} else if (distY < 0) {
 					dy = -1;
 				}
 				
 				// Change state to prep if next to player
-				if(((Math.abs(distX) <= 2) && (Math.abs(distY) == 0)) ||
+				if (((Math.abs(distX) <= 2) && (Math.abs(distY) == 0)) ||
 						((Math.abs(distX) == 0) && (Math.abs(distY) <= 2))) {
 					this.xMarkDir = dx;
 					this.yMarkDir = dy;
 					this.state = Watchman.STATE_PREP;
 				} else {
 					// Path-find to the player if we can
-					Dimension nextStep = PathFinder.findPath(this.xPos, this.yPos, plrX, plrY, this);
-					if(nextStep == null) {
+					Dimension nextStep = PathFinder.findPath(xPos, yPos, plrX, plrY, this);
+					if (nextStep == null) {
 						// Blindly pursue the target
 						DumbFollow.blindPursue(distX, distY, dx, dy, this);
 					} else {
-						int changeX = nextStep.width - this.xPos;
-						int changeY = nextStep.height - this.yPos;
-						this.moveCharacter(changeX, changeY);
+						int changeX = (nextStep.width - xPos);
+						int changeY = (nextStep.height - yPos);
+						moveCharacter(changeX, changeY);
 					}
 				}
 				break;
@@ -291,43 +272,42 @@ public class Watchman extends GCharacter {
 				// Retrieve instance of EntityManager
 				EntityManager em = EntityManager.getInstance();
 				
-				// Increment windup count and check to see if we've wound up enough
+				// Increment wind-up count and check to see if we've wound up enough
 				this.windupCount += 1;
-				if(this.windupCount >= this.windupMax) {
+				if (windupCount >= windupMax) {
 					// Use direction from player to mark squares
-					if(Math.abs(this.xMarkDir) > Math.abs(this.yMarkDir)) {
+					if (Math.abs(xMarkDir) > Math.abs(yMarkDir)) {
 						// Player to left/right
-						em.getEffectManager().addEffect(new MusicEffect(this.xPos + this.xMarkDir, this.yPos));
-						em.getEffectManager().addEffect(new MusicEffect(this.xPos + this.xMarkDir, this.yPos + 1));
-						em.getEffectManager().addEffect(new MusicEffect(this.xPos + this.xMarkDir, this.yPos - 1));
-						em.getEffectManager().addEffect(new MusicEffect(this.xPos + (this.xMarkDir*2), this.yPos));
-						em.getEffectManager().addEffect(new MusicEffect(this.xPos + (this.xMarkDir*2), this.yPos + 1));
-						em.getEffectManager().addEffect(new MusicEffect(this.xPos + (this.xMarkDir*2), this.yPos - 1));
+						em.getEffectManager().addEffect(new MusicEffect(xPos + xMarkDir, yPos));
+						em.getEffectManager().addEffect(new MusicEffect(xPos + xMarkDir, yPos + 1));
+						em.getEffectManager().addEffect(new MusicEffect(xPos + xMarkDir, yPos - 1));
+						em.getEffectManager().addEffect(new MusicEffect(xPos + (xMarkDir*2), yPos));
+						em.getEffectManager().addEffect(new MusicEffect(xPos + (xMarkDir*2), yPos + 1));
+						em.getEffectManager().addEffect(new MusicEffect(xPos + (xMarkDir*2), yPos - 1));
 						
 						// Attack player if in affected space
-						if(((plrX == this.xPos + this.xMarkDir) || (plrX == this.xPos + (this.xMarkDir*2))) &&
-								(plrY == this.yPos || plrY == this.yPos - 1 || plrY == this.yPos + 1)) {
-							this.playerInitiate();
+						if (((plrX == xPos + xMarkDir) || (plrX == xPos + (xMarkDir*2))) &&
+								(plrY == yPos || plrY == yPos - 1 || plrY == yPos + 1)) {
+							playerInitiate();
 						}
 					} else {
 						// Player above/below
-						em.getEffectManager().addEffect(new MusicEffect(this.xPos, this.yPos + this.yMarkDir));
-						em.getEffectManager().addEffect(new MusicEffect(this.xPos + 1, this.yPos + this.yMarkDir));
-						em.getEffectManager().addEffect(new MusicEffect(this.xPos - 1, this.yPos + this.yMarkDir));
-						em.getEffectManager().addEffect(new MusicEffect(this.xPos, this.yPos + (this.yMarkDir*2)));
-						em.getEffectManager().addEffect(new MusicEffect(this.xPos + 1, this.yPos + (this.yMarkDir*2)));
-						em.getEffectManager().addEffect(new MusicEffect(this.xPos - 1, this.yPos + (this.yMarkDir*2)));
+						em.getEffectManager().addEffect(new MusicEffect(xPos, yPos + yMarkDir));
+						em.getEffectManager().addEffect(new MusicEffect(xPos + 1, yPos + yMarkDir));
+						em.getEffectManager().addEffect(new MusicEffect(xPos - 1, yPos + yMarkDir));
+						em.getEffectManager().addEffect(new MusicEffect(xPos, yPos + (yMarkDir*2)));
+						em.getEffectManager().addEffect(new MusicEffect(xPos + 1, yPos + (yMarkDir*2)));
+						em.getEffectManager().addEffect(new MusicEffect(xPos - 1, yPos + (yMarkDir*2)));
 						
 						// Attack player if in affected space
-						if(((plrY == this.yPos + this.yMarkDir) || (plrY == this.yPos + (this.yMarkDir*2))) &&
-								(plrX == this.xPos || plrX == this.xPos - 1 || plrX == this.xPos + 1)) {
-							this.playerInitiate();
+						if (((plrY == yPos + yMarkDir) || (plrY == yPos + (yMarkDir*2))) &&
+								(plrX == xPos || plrX == xPos - 1 || plrX == xPos + 1)) {
+							playerInitiate();
 						}
 					}
 					SoundPlayer.playWAV(GPath.createSoundPath("Watchman_ATTACK.wav"));
 					this.state = Watchman.STATE_ATT;
 					this.windupCount = 0;
-					
 				} else {
 					// Continue preparing the attack
 				}
@@ -337,8 +317,7 @@ public class Watchman extends GCharacter {
 				this.state = Watchman.STATE_PURSUE;
 				break;
 			default:
-				System.out.println(this.getName() +
-						" couldn't take its turn. State = " + Integer.toString(this.state));
+				System.out.println(getName() + " couldn't take its turn. State = " + Integer.toString(state));
 				return;
 		}
 	}

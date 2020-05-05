@@ -14,7 +14,10 @@ import managers.EntityManager;
 import tiles.MovableType;
 import tiles.TileType;
 
-// Class representing unkillable underwater presence in the Sewer levels
+/**
+ * Class representing unkillable underwater presence in the Sewer levels
+ * @author jeoliva
+ */
 public class ChagrinShadow extends GCharacter {
 
 	// Serialization ID
@@ -22,15 +25,15 @@ public class ChagrinShadow extends GCharacter {
 	
 	// Modifiers/Statistics
 
-	private int MAX_HP = 100;
+	private static int MAX_HP = 100;
 	
-	private int MIN_DMG = 300;
-	private int MAX_DMG = 300;
+	private static int ARMOR_VAL = 100;
 	
-	private double CRIT_CHANCE = 0.0;
-	private double CRIT_MULT = 1.0;
+	private static int MIN_DMG = 300;
+	private static int MAX_DMG = 300;
 	
-	private int ARMOR_VAL = 100;
+	private static double CRIT_CHANCE = 0.0;
+	private static double CRIT_MULT = 1.0;
 	
 	//----------------------------
 	
@@ -59,7 +62,7 @@ public class ChagrinShadow extends GCharacter {
 		super(startX, startY);
 		
 		this.maxHP = MAX_HP;
-		this.currentHP = this.maxHP;
+		this.currentHP = maxHP;
 		
 		this.minDmg = MIN_DMG;
 		this.maxDmg = MAX_DMG;
@@ -74,8 +77,6 @@ public class ChagrinShadow extends GCharacter {
 		
 		this.state = ChagrinShadow.STATE_IDLE;
 		this.patrolPattern = PatrolPattern.WANDER;
-		
-		this.imagePath = this.getImage();
 	}
 	
 	public String getName() {
@@ -132,7 +133,7 @@ public class ChagrinShadow extends GCharacter {
 		Player player = EntityManager.getInstance().getPlayer();
 		
 		// If this is dead or the player is dead, don't do anything
-		if(!this.isAlive() || !player.isAlive()) {
+		if (!isAlive() || !player.isAlive()) {
 			// Do nothing
 			return;
 		}
@@ -141,14 +142,13 @@ public class ChagrinShadow extends GCharacter {
 		int plrX = player.getXPos();
 		int plrY = player.getYPos();
 		
-		TileType tt = GameScreen
-				.getTile(player.getXPos(), player.getYPos()).getTileType();
+		// Get tile type the player is standing on
+		TileType tt = GameScreen.getTile(player.getXPos(), player.getYPos()).getTileType();
 		
-		switch(this.state) {
+		switch (state) {
 			case ChagrinShadow.STATE_PURSUE:
-				
 				// If player hops out of water, lose interest
-				if(!MovableType.isWater(tt.getMovableType())) {
+				if (!MovableType.isWater(tt.getMovableType())) {
 					this.chaseCount = 0;
 					this.state = ChagrinShadow.STATE_IDLE;
 					return;
@@ -157,22 +157,23 @@ public class ChagrinShadow extends GCharacter {
 				// Increment chase count
 				this.chaseCount += 1;
 				
+				// Play warning if player is close to getting attacked
 				if (chaseCount == 2) {
 					SoundPlayer.playWAV(GPath.createSoundPath("Hoptooth_Breath2.wav"), -15);
 				}
 				
 				// If Shadow has maxed its chase count, attack the player
-				if(this.chaseCount >= this.chaseMax) {
+				if (chaseCount >= chaseMax) {
 					this.chaseCount = 0;
-					this.playerInitiate();
+					playerInitiate();
 					return;
 				}
 				
 				break;
 			case ChagrinShadow.STATE_IDLE:
 				// Do nothing, until player steps in same pool of water
-				if((MovableType.isWater(tt.getMovableType())) &&
-						IslandChecker.virusStart(this.poolXPos, this.poolYPos, plrX, plrY, MovableType.WATER)) {
+				if ((MovableType.isWater(tt.getMovableType())) &&
+						IslandChecker.virusStart(poolXPos, poolYPos, plrX, plrY, MovableType.WATER)) {
 					// Alert and pursue if in same pool
 					SoundPlayer.playWAV(GPath.createSoundPath("Hoptooth_Breath1.wav"), -15);
 					this.chaseCount += 1;
@@ -184,11 +185,9 @@ public class ChagrinShadow extends GCharacter {
 				}
 				break;
 			default:
-				System.out.println(this.getName() +
-						" couldn't take its turn. State = " + Integer.toString(this.state));
+				System.out.println(getName() + " couldn't take its turn. State = " + Integer.toString(state));
 				return;
-		}
-			
+		}	
 	}
 
 }

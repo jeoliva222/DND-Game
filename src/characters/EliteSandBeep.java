@@ -10,7 +10,10 @@ import helpers.SoundPlayer;
 import managers.EntityManager;
 import tiles.MovableType;
 
-// Class that defines the Elite Sand beep enemy found in the Desert area
+/**
+ * Class that defines the Elite Sand Beep enemy found in the Desert area
+ * @author jeoliva
+ */
 public class EliteSandBeep extends SandBeep {
 
 	// Serialization ID
@@ -24,11 +27,11 @@ public class EliteSandBeep extends SandBeep {
 	//----------------------------
 	
 	// File paths to images
-	private String imageDir = GPath.createImagePath(GPath.ENEMY, GPath.BEEP);
-	private String bpImage_base = "beep";
+	private static String imageDir = GPath.createImagePath(GPath.ENEMY, GPath.BEEP);
+	private static String bpImage_base = "beep";
 	
-	private String beImage_DEAD = GPath.createImagePath(GPath.ENEMY, GPath.BEEP, "beep_dead.png");
-	private String beImage_DEAD_CRIT = GPath.createImagePath(GPath.ENEMY, GPath.BEEP, "beep_dead_CRIT.png");
+	private static String beImage_DEAD = GPath.createImagePath(GPath.ENEMY, GPath.BEEP, "beep_dead.png");
+	private static String beImage_DEAD_CRIT = GPath.createImagePath(GPath.ENEMY, GPath.BEEP, "beep_dead_CRIT.png");
 
 	//------------------------------------------
 	
@@ -49,45 +52,44 @@ public class EliteSandBeep extends SandBeep {
 	@Override
 	public String getImage() {
 		// TODO : Needs custom sprites
-		String imgPath = this.imageDir + this.bpImage_base;
+		String imgPath = (imageDir + bpImage_base);
 		String hpPath = "";
 		String statePath = "";
 		
-		if(this.currentHP > (this.maxHP / 2)) {
+		if (currentHP > (maxHP / 2)) {
 			hpPath = "_full";
-		} else if(this.currentHP > 0) {
+		} else if (currentHP > 0) {
 			hpPath = "_fatal";
 		} else {
 			hpPath = "_dead";
 			return GPath.NULL;
 		}
 		
-		switch(this.state) {
-		case EliteSandBeep.STATE_IDLE:
-			// No extra path
-			break;
-		case EliteSandBeep.STATE_PREP:
-			statePath = "_PREP";
-			break;
-		case EliteSandBeep.STATE_ATT:
-			if(this.cooldownCount < 1) {
-				statePath = "_ATT";
-			}
-			break;
-		default:
-			System.out.println
-				(this.getName() + " couldn't find a proper image: " + Integer.toString(this.state));
-			return GPath.NULL;
+		switch (state) {
+			case EliteSandBeep.STATE_IDLE:
+				// No extra path
+				break;
+			case EliteSandBeep.STATE_PREP:
+				statePath = "_PREP";
+				break;
+			case EliteSandBeep.STATE_ATT:
+				if (cooldownCount < 1) {
+					statePath = "_ATT";
+				}
+				break;
+			default:
+				System.out.println(getName() + " couldn't find a proper image: " + Integer.toString(state));
+				return GPath.NULL;
 		}
 		
 		return (imgPath + hpPath + statePath + ".png");
 	}
 	
 	public String getCorpseImage() {
-		if(this.currentHP < -(this.maxHP)) {
-			return this.beImage_DEAD_CRIT;
+		if (currentHP < -(maxHP)) {
+			return beImage_DEAD_CRIT;
 		} else {
-			return this.beImage_DEAD;
+			return beImage_DEAD;
 		}
 	}
 	
@@ -101,26 +103,25 @@ public class EliteSandBeep extends SandBeep {
 	@Override
 	public void playerInitiate() {
 		SoundPlayer.playWAV(GPath.createSoundPath("Beanpole_ATTACK.wav"));
-		this.attackPlayer();
+		attackPlayer();
 	}
 	
 	@Override
 	public void onDeath() {
-		if(this.currentHP < -(this.maxHP)) {
+		if (currentHP < -(maxHP)) {
 			SoundPlayer.playWAV(GPath.createSoundPath("Bitester_DEATH_CRIT.wav"));
 		} else {
-			this.playDeathSound();
+			playDeathSound();
 		}
 	}
 
 	@Override
 	public void takeTurn() {
-		
 		// Fetch the player for easy reference
 		Player player = EntityManager.getInstance().getPlayer();
 		
 		// If this is dead or the player is dead, don't do anything
-		if(!this.isAlive() || !player.isAlive()) {
+		if (!isAlive() || !player.isAlive()) {
 			// Do nothing
 			return;
 		}
@@ -130,13 +131,13 @@ public class EliteSandBeep extends SandBeep {
 		int plrY = player.getYPos();
 		
 		// Get relative location to player
-		int distX = plrX - this.xPos;
-		int distY = plrY - this.yPos;
+		int distX = (plrX - xPos);
+		int distY = (plrY - yPos);
 		
-		switch(this.state) {
+		switch (state) {
 			case EliteSandBeep.STATE_IDLE:
-				boolean hasLOS = LineDrawer.hasSight(this.xPos, this.yPos, plrX, plrY);
-				if(hasLOS) {
+				boolean hasLOS = LineDrawer.hasSight(xPos, yPos, plrX, plrY);
+				if (hasLOS) {
 					SoundPlayer.playWAV(GPath.createSoundPath("beep_ALERT.wav"));
 					this.state = EliteSandBeep.STATE_PREP;
 				} else {
@@ -150,30 +151,30 @@ public class EliteSandBeep extends SandBeep {
 				int dy = 0;
 				
 				// Calculate relative movement directions
-				if(distX > 0) {
+				if (distX > 0) {
 					dx = 1;
 				} else if (distX < 0) {
 					dx = -1;
 				}
 				
-				if(distY > 0) {
+				if (distY > 0) {
 					dy = 1;
 				} else if (distY < 0) {
 					dy = -1;
 				}
 				
 				// Get relative location to player
-				distX = plrX - this.xPos;
-				distY = plrY - this.yPos;
+				distX = (plrX - xPos);
+				distY = (plrY - yPos);
 				
 				// Initialize flag to indicate whether we've attack this turn
 				boolean didAttack = false;
 				
 				// Attack if player is in one tile radius around player
-				if((this.xPos + dx) == plrX && (this.yPos + dy) == plrY) {
+				if ((xPos + dx) == plrX && (yPos + dy) == plrY) {
 					// Mark tiles with damage indicators
 					EntityManager.getInstance().getEffectManager().addEffect(new DamageIndicator(plrX, plrY));
-					this.playerInitiate();
+					playerInitiate();
 					
 					// Flip flag to indicate we've attacked this turn
 					didAttack = true;
@@ -184,24 +185,24 @@ public class EliteSandBeep extends SandBeep {
 					// If unsuccessful, move in the direction that it is
 					// further from the player.
 					// Only does this on the first hop of the turn
-					if(this.moveCharacter(dx, dy)) {
+					if (moveCharacter(dx, dy)) {
 						this.markedX = dx;
 						this.markedY = dy;
-					} else if((Math.abs(distX)) > (Math.abs(distY))) {
-							// If movement in the x direction fails, try the y direction
-						if(this.moveCharacter(dx, 0)) {
+					} else if ((Math.abs(distX)) > (Math.abs(distY))) {
+						// If movement in the x direction fails, try the y direction
+						if (moveCharacter(dx, 0)) {
 							this.markedX = dx;
 							this.markedY = 0;
-						} else if (this.moveCharacter(0, dy)) {
+						} else if (moveCharacter(0, dy)) {
 							this.markedX = 0;
 							this.markedY = dy;
 						}
 					} else {
 						// If movement in the y direction fails, try the x direction
-						if(this.moveCharacter(0, dy)) {
+						if (moveCharacter(0, dy)) {
 							this.markedX = 0;
 							this.markedY = dy;
-						} else if(this.moveCharacter(dx, 0)) {
+						} else if (moveCharacter(dx, 0)) {
 							this.markedX = dx;
 							this.markedY = 0;
 						}
@@ -210,26 +211,26 @@ public class EliteSandBeep extends SandBeep {
 				
 				// Do a second hop if we're queued up for it and haven't attacked this turn
 				// If we did a second hop, do a third hop if we haven't attacked this turn
-				for(int i = 0; i < 2; i++) {
-					if(this.doExtraHop && !didAttack) {
+				for (int i = 0; i < 2; i++) {
+					if (doExtraHop && !didAttack) {
 						// Attack if player is our current hop path
-						if((this.xPos + this.markedX) == plrX && (this.yPos + this.markedY) == plrY) {
+						if ((xPos + markedX) == plrX && (yPos + markedY) == plrY) {
 							// Mark tiles with damage indicators
 							EntityManager.getInstance().getEffectManager().addEffect(new DamageIndicator(plrX, plrY));
-							this.playerInitiate();
+							playerInitiate();
 							didAttack = true;
 						} else {
 							// If we don't hit the payer, continue on our current hop path
-							this.moveCharacter(this.markedX, this.markedY);
+							moveCharacter(markedX, markedY);
 						}
 					}
 				}
 				
 				// Play hop sound
-				this.playHopSound();
+				playHopSound();
 
 				// Change state and toggle whether we do a double hop next time
-				this.doExtraHop = !(this.doExtraHop);
+				this.doExtraHop = !(doExtraHop);
 				this.state = EliteSandBeep.STATE_ATT;
 				break;
 			case EliteSandBeep.STATE_ATT:
@@ -239,7 +240,7 @@ public class EliteSandBeep extends SandBeep {
 				this.cooldownCount += 1;
 				
 				// Check if we've completed our cooldown
-				if(this.cooldownCount >= this.cooldownMax) {
+				if (cooldownCount >= cooldownMax) {
 					// If so, switch to preparation state
 					this.cooldownCount = 0;
 					this.state = EliteSandBeep.STATE_PREP;
@@ -249,11 +250,9 @@ public class EliteSandBeep extends SandBeep {
 				
 				break;
 			default:
-				System.out.println(this.getName() +
-						" couldn't take its turn. State = " + Integer.toString(this.state));
+				System.out.println(getName() + " couldn't take its turn. State = " + Integer.toString(state));
 				return;
 		}
-
 	}
 
 }

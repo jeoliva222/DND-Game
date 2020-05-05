@@ -9,7 +9,11 @@ import helpers.SoundPlayer;
 import managers.EntityManager;
 import tiles.MovableType;
 
-// Elite version of 'Beep' that can move through all terrain
+/**
+ * Class representing Elite Beep enemy,
+ * which can move through all terrain
+ * @author jeoliva
+ */
 public class EliteBeep extends Beep {
 	
 	// Serialization ID
@@ -24,11 +28,11 @@ public class EliteBeep extends Beep {
 	//----------------------------
 	
 	// File paths to images
-	private String imageDir = GPath.createImagePath(GPath.ENEMY, GPath.ELITE_BEEP);
-	private String bpImage_base = "elite_beep";
+	private static String imageDir = GPath.createImagePath(GPath.ENEMY, GPath.ELITE_BEEP);
+	private static String bpImage_base = "elite_beep";
 	
-	private String beImage_DEAD = GPath.createImagePath(GPath.ENEMY, GPath.ELITE_BEEP, "elite_beep_dead.png");
-	private String beImage_DEAD_CRIT = GPath.createImagePath(GPath.ENEMY, GPath.ELITE_BEEP, "elite_beep_dead_CRIT.png");
+	private static String beImage_DEAD = GPath.createImagePath(GPath.ENEMY, GPath.ELITE_BEEP, "elite_beep_dead.png");
+	private static String beImage_DEAD_CRIT = GPath.createImagePath(GPath.ENEMY, GPath.ELITE_BEEP, "elite_beep_dead_CRIT.png");
 	
 	// Constructors
 	public EliteBeep(int startX, int startY) {
@@ -46,35 +50,34 @@ public class EliteBeep extends Beep {
 	
 	@Override
 	public String getImage() {
-		String imgPath = this.imageDir + this.bpImage_base;
+		String imgPath = (imageDir + bpImage_base);
 		String hpPath = "";
 		String statePath = "";
 		
-		if(this.currentHP > (this.maxHP / 2)) {
+		if (currentHP > (maxHP / 2)) {
 			hpPath = "_full";
-		} else if(this.currentHP > 0) {
+		} else if (currentHP > 0) {
 			hpPath = "_fatal";
 		} else {
 			hpPath = "_dead";
 			return GPath.NULL;
 		}
 		
-		switch(this.state) {
-		case EliteBeep.STATE_IDLE:
-			// No extra path
-			break;
-		case EliteBeep.STATE_PREP:
-			statePath = "_PREP";
-			break;
-		case EliteBeep.STATE_ATT:
-			if(this.cooldownCount < 1) {
-				statePath = "_ATT";
-			}
-			break;
-		default:
-			System.out.println
-				(this.getName() + " couldn't find a proper image: " + Integer.toString(this.state));
-			return GPath.NULL;
+		switch (state) {
+			case EliteBeep.STATE_IDLE:
+				// No extra path
+				break;
+			case EliteBeep.STATE_PREP:
+				statePath = "_PREP";
+				break;
+			case EliteBeep.STATE_ATT:
+				if (cooldownCount < 1) {
+					statePath = "_ATT";
+				}
+				break;
+			default:
+				System.out.println(getName() + " couldn't find a proper image: " + Integer.toString(state));
+				return GPath.NULL;
 		}
 		
 		return (imgPath + hpPath + statePath + ".png");
@@ -82,10 +85,10 @@ public class EliteBeep extends Beep {
 	
 	@Override
 	public String getCorpseImage() {
-		if(this.currentHP < -(this.maxHP)) {
-			return this.beImage_DEAD_CRIT;
+		if (currentHP < -(maxHP)) {
+			return beImage_DEAD_CRIT;
 		} else {
-			return this.beImage_DEAD;
+			return beImage_DEAD;
 		}
 	}
 	
@@ -106,7 +109,7 @@ public class EliteBeep extends Beep {
 		Player player = EntityManager.getInstance().getPlayer();
 		
 		// If this is dead or the player is dead, don't do anything
-		if(!this.isAlive() || !player.isAlive()) {
+		if (!isAlive() || !player.isAlive()) {
 			// Do nothing
 			return;
 		}
@@ -116,13 +119,13 @@ public class EliteBeep extends Beep {
 		int plrY = player.getYPos();
 		
 		// Get relative location to player
-		int distX = plrX - this.xPos;
-		int distY = plrY - this.yPos;
+		int distX = (plrX - xPos);
+		int distY = (plrY - yPos);
 		
-		switch(this.state) {
+		switch (state) {
 			case EliteBeep.STATE_IDLE:
 				// If the player is close enough, become alerted of their location
-				if((Math.abs(distX) + Math.abs(distY)) <= 3) {
+				if ((Math.abs(distX) + Math.abs(distY)) <= 3) {
 					SoundPlayer.playWAV(GPath.createSoundPath("beep_ALERT.wav"));
 					this.state = EliteBeep.STATE_PREP;
 				} else {
@@ -132,10 +135,10 @@ public class EliteBeep extends Beep {
 				break;
 			case EliteBeep.STATE_PREP:
 				// Attack if player is in one tile radius around player
-				if(Math.abs(distX) <= 1 && Math.abs(distY) <= 1) {
+				if (Math.abs(distX) <= 1 && Math.abs(distY) <= 1) {
 					// Mark tiles with damage indicators
 					EntityManager.getInstance().getEffectManager().addEffect(new DamageIndicator(plrX, plrY));
-					this.playerInitiate();
+					playerInitiate();
 				} else {
 					// If not attacking the player, hop closer to them
 					
@@ -144,13 +147,13 @@ public class EliteBeep extends Beep {
 					int dy = 0;
 					
 					// Calculate relative movement directions
-					if(distX > 0) {
+					if (distX > 0) {
 						dx = 1;
 					} else if (distX < 0) {
 						dx = -1;
 					}
 					
-					if(distY > 0) {
+					if (distY > 0) {
 						dy = 1;
 					} else if (distY < 0) {
 						dy = -1;
@@ -159,24 +162,23 @@ public class EliteBeep extends Beep {
 					// First, try to move diagonal
 					// If unsuccessful, move in the direction that it is
 					// further from the player.
-					if(!this.moveCharacter(dx, dy)) {
-						if((Math.abs(distX)) > (Math.abs(distY))) {
+					if (!moveCharacter(dx, dy)) {
+						if ((Math.abs(distX)) > (Math.abs(distY))) {
 							// If movement in the x direction fails, try the y direction
-							if(!this.moveCharacter(dx, 0)) {
-								this.moveCharacter(0, dy);
+							if (!moveCharacter(dx, 0)) {
+								moveCharacter(0, dy);
 							}
 						} else {
 							// If movement in the y direction fails, try the x direction
-							if(!this.moveCharacter(0, dy)) {
-								this.moveCharacter(dx, 0);
+							if (!moveCharacter(0, dy)) {
+								moveCharacter(dx, 0);
 							}
 						}
 					}
-				
 				}
 				
 				// Play hop sound
-				this.playHopSound();
+				playHopSound();
 
 				this.state = EliteBeep.STATE_ATT;
 				break;
@@ -187,7 +189,7 @@ public class EliteBeep extends Beep {
 				this.cooldownCount += 1;
 				
 				// Check if we've completed our cooldown
-				if(this.cooldownCount >= this.cooldownMax) {
+				if (cooldownCount >= cooldownMax) {
 					// If so, switch to preparation state
 					this.cooldownCount = 0;
 					this.state = EliteBeep.STATE_PREP;
@@ -197,10 +199,9 @@ public class EliteBeep extends Beep {
 				
 				break;
 			default:
-				System.out.println(this.getName() +
-						" couldn't take its turn. State = " + Integer.toString(this.state));
+				System.out.println(getName() + " couldn't take its turn. State = " + Integer.toString(state));
 				return;
 		}
-
 	}
+	
 }

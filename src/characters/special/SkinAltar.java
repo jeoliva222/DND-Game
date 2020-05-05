@@ -7,6 +7,11 @@ import gui.LogScreen;
 import helpers.GPath;
 import tiles.AltGround;
 
+/**
+ * Class representing special Skin Altar entity which
+ * opens the Museum area entrance upon usage of the Soft Skin item
+ * @author jeoliva
+ */
 public class SkinAltar extends GCharacter {
 
 	// Serialization ID
@@ -14,16 +19,15 @@ public class SkinAltar extends GCharacter {
 
 	// Modifiers/Statistics
 
-	private int MAX_HP = 10;
+	private static int MAX_HP = 10;
 	
-	private int ARMOR_VAL = 100;
+	private static int ARMOR_VAL = 100;
 	
-	private int MIN_DMG = 0;
-	private int MAX_DMG = 0;
+	private static int MIN_DMG = 0;
+	private static int MAX_DMG = 0;
 	
-	private double CRIT_CHANCE = 0.0;
-	private double CRIT_MULT = 1.0;
-	
+	private static double CRIT_CHANCE = 0.0;
+	private static double CRIT_MULT = 1.0;
 	
 	//-----------------------
 	
@@ -36,8 +40,8 @@ public class SkinAltar extends GCharacter {
 	//-----------------------
 	
 	// File paths to images
-	private String imageDir = GPath.createImagePath(GPath.ENEMY, GPath.SIGNPOST);
-	private String imageBase = "skin_altar";
+	private static String imageDir = GPath.createImagePath(GPath.ENEMY, GPath.SIGNPOST);
+	private static String imageBase = "skin_altar";
 	
 	// Constructor
 	public SkinAltar(int startX, int startY) {
@@ -66,7 +70,7 @@ public class SkinAltar extends GCharacter {
 		String imgPath = (imageDir + imageBase);
 		
 		// Check if skin is placed or not
-		if(skinPlaced) {
+		if (skinPlaced) {
 			imgPath += "_on";
 		} else {
 			imgPath += "_off";
@@ -83,14 +87,14 @@ public class SkinAltar extends GCharacter {
 
 	@Override
 	public boolean damageCharacter(int damage) {
-		// Log the signpost's message to the Logscreen
-		LogScreen.log("\"" + this.message + "\"");
-		return this.isAlive();
+		// Log the signpost's message to the Log Screen
+		LogScreen.log("\"" + message + "\"");
+		return isAlive();
 	}
 	
 	// Used by player when skin item is placed on altar
 	public void placeSkin() {
-		if(!this.skinPlaced) {
+		if (!skinPlaced) {
 			this.skinPlaced = true;
 			this.message = "The museum awaits...";
 			

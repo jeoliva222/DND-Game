@@ -29,13 +29,13 @@ public class Angel extends GCharacter {
 	
 	// Modifiers/Statistics
 
-	private int MAX_HP = 15;
+	private static int MAX_HP = 15;
 	
-	private int MIN_DMG = 4;
-	private int MAX_DMG = 6;
+	private static int MIN_DMG = 4;
+	private static int MAX_DMG = 6;
 	
-	private double CRIT_CHANCE = 0.1;
-	private double CRIT_MULT = 1.4;
+	private static double CRIT_CHANCE = 0.1;
+	private static double CRIT_MULT = 1.4;
 	
 	//----------------------------
 	
@@ -67,11 +67,11 @@ public class Angel extends GCharacter {
 	//----------------------------
 	
 	// File paths to images
-	private String imageDir = GPath.createImagePath(GPath.ENEMY, GPath.BEANPOLE);
-	private String bpImage_base = "beanpole";
+	private static String imageDir = GPath.createImagePath(GPath.ENEMY, GPath.BEANPOLE);
+	private static String bpImage_base = "beanpole";
 	
-	private String bpImage_DEAD = GPath.createImagePath(GPath.ENEMY, GPath.BEANPOLE, "beanpole_dead.png");
-	private String bpImage_DEAD_CRIT = GPath.createImagePath(GPath.ENEMY, GPath.BEANPOLE, "beanpole_dead_CRIT.png");
+	private static String bpImage_DEAD = GPath.createImagePath(GPath.ENEMY, GPath.BEANPOLE, "beanpole_dead.png");
+	private static String bpImage_DEAD_CRIT = GPath.createImagePath(GPath.ENEMY, GPath.BEANPOLE, "beanpole_dead_CRIT.png");
 
 
 	public Angel(int startX, int startY) {
@@ -92,8 +92,6 @@ public class Angel extends GCharacter {
 		
 		this.state = Angel.STATE_IDLE;
 		this.patrolPattern = patpat;
-		
-		this.imagePath = getImage();
 	}
 	
 	public String getName() {

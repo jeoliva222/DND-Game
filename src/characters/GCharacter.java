@@ -25,9 +25,6 @@ public abstract class GCharacter implements Serializable {
 	
 	// Serialization ID
 	private static final long serialVersionUID = 894471161442120373L;
-
-	// File path of the character image (Not needed?) TODO
-	protected String imagePath;
 	
 	// Current and Max Health values
 	protected int currentHP, maxHP;

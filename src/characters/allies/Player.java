@@ -35,12 +35,12 @@ public class Player implements Serializable {
 	private static final long serialVersionUID = -1569715616453904946L;
 	
 	// Player image paths
-	private final String playerImage_FULL = GPath.createImagePath(GPath.ALLY, GPath.PLAYER, "frog_full.png");
-	private final String playerImage_BRUISED = GPath.createImagePath(GPath.ALLY, GPath.PLAYER, "frog_bruised.png");
-	private final String playerImage_INJURED = GPath.createImagePath(GPath.ALLY, GPath.PLAYER, "frog_injured.png");
-	private final String playerImage_FATAL = GPath.createImagePath(GPath.ALLY, GPath.PLAYER, "frog_fatal2.png");
-	private final String playerImage_DEAD = GPath.createImagePath(GPath.ALLY, GPath.PLAYER, "frog_dead2.png");
-	private final String playerImage_DEAD_CRIT = GPath.createImagePath(GPath.ALLY, GPath.PLAYER, "frog_dead2_crit.png");
+	private static final String playerImage_FULL = GPath.createImagePath(GPath.ALLY, GPath.PLAYER, "frog_full.png");
+	private static final String playerImage_BRUISED = GPath.createImagePath(GPath.ALLY, GPath.PLAYER, "frog_bruised.png");
+	private static final String playerImage_INJURED = GPath.createImagePath(GPath.ALLY, GPath.PLAYER, "frog_injured.png");
+	private static final String playerImage_FATAL = GPath.createImagePath(GPath.ALLY, GPath.PLAYER, "frog_fatal2.png");
+	private static final String playerImage_DEAD = GPath.createImagePath(GPath.ALLY, GPath.PLAYER, "frog_dead2.png");
+	private static final String playerImage_DEAD_CRIT = GPath.createImagePath(GPath.ALLY, GPath.PLAYER, "frog_dead2_crit.png");
 	
 	// X and Y positions on the current screen
 	private int xPos, yPos;
@@ -88,13 +88,13 @@ public class Player implements Serializable {
 		
 		/// ***TEMP*** Set the area coordinates
 		// Default is 0, 1
-		this.areaX = 0;
+		this.areaX = 1;
 		this.areaY = 1;
 		
 		/// ***TEMP*** Set the level coordinates
 		// Default is 3, 2
-		this.levelX = 3;
-		this.levelY = 2;
+		this.levelX = 0;
+		this.levelY = 0;
 		
 		// Set health values
 		// Default is 20

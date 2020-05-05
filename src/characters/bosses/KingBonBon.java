@@ -19,7 +19,6 @@ import effects.SmallFireEffect;
 import effects.ThunderEffect;
 import effects.WarningIndicator;
 import gui.GameScreen;
-import gui.InfoScreen;
 import helpers.GPath;
 import helpers.SoundPlayer;
 import managers.EntityManager;
@@ -28,6 +27,10 @@ import projectiles.KingFireball;
 import tiles.MovableType;
 import tiles.Wall;
 
+/**
+ * Class representing the King Bon Bon boss enemy
+ * @author jeoliva
+ */
 public class KingBonBon extends GCharacter {
 
 	// Serialization ID
@@ -137,7 +140,7 @@ public class KingBonBon extends GCharacter {
 		super(startX, startY);
 		
 		this.maxHP = MAX_HP;
-		this.currentHP = this.maxHP;
+		this.currentHP = maxHP;
 		
 		this.minDmg = MIN_DMG;
 		this.maxDmg = MAX_DMG;
@@ -147,8 +150,6 @@ public class KingBonBon extends GCharacter {
 		
 		this.state = KingBonBon.STATE_IDLE;
 		this.patrolPattern = PatrolPattern.STATIONARY;
-		
-		this.imagePath = this.getImage();
 	}
 
 	@Override
@@ -158,24 +159,24 @@ public class KingBonBon extends GCharacter {
 	
 	@Override
 	public String getImage() {
-		String imgPath = this.imageDir + this.bbImage_base;
+		String imgPath = (imageDir + bbImage_base);
 		String hpPath = "";
 		String statePath = "";
 		
-		if(this.currentHP > 0) {
+		if (currentHP > 0) {
 			hpPath = "_full";
 		} else {
 			hpPath = "_dead";
 			return GPath.NULL;
 		}
 		
-		switch(this.state) {
+		switch (state) {
 			case KingBonBon.STATE_IDLE:
 			case KingBonBon.STATE_PURSUE:
 				// No extra path
 				break;
 			case KingBonBon.STATE_PREP_STAB:
-				if(this.attCount < 1) {
+				if (attCount < 1) {
 					statePath = "_PREP_STAB";
 				} else {
 					statePath = "_ALERT";
@@ -188,7 +189,7 @@ public class KingBonBon extends GCharacter {
 				statePath = "_ALERT_ALT";
 				break;
 			case KingBonBon.STATE_PREP_SWIPE:
-				if(this.attCount < 1) {
+				if (attCount < 1) {
 					statePath = "_PREP_SWING";
 				} else {
 					statePath = "_ATT_SWING";
@@ -198,7 +199,7 @@ public class KingBonBon extends GCharacter {
 				statePath = "_ATT_SWING_ALT";
 				break;
 			case KingBonBon.STATE_PREP_SLAM:
-				if(this.attCount <= 2) {
+				if (attCount <= 2) {
 					statePath = "_PREP_SLAM";
 				} else {
 					statePath = "_ATT_SLAM";
@@ -223,8 +224,7 @@ public class KingBonBon extends GCharacter {
 				statePath = "_ATT_FLOOD";
 				break;
 			default:
-				System.out.println
-					(this.getName() + " couldn't find a proper image: " + Integer.toString(this.state));
+				System.out.println(getName() + " couldn't find a proper image: " + Integer.toString(state));
 				return GPath.NULL;
 		}
 		
@@ -247,7 +247,7 @@ public class KingBonBon extends GCharacter {
 	@Override
 	public void playerInitiate() {
 		SoundPlayer.playWAV(GPath.createSoundPath("Beanpole_ATTACK.wav"));
-		this.attackPlayer();
+		attackPlayer();
 	}
 
 	@Override
@@ -256,28 +256,27 @@ public class KingBonBon extends GCharacter {
 		SoundPlayer.playWAV(GPath.createSoundPath("king_death.wav"));
 		
 		// Spawn the King's Head
-		EntityManager.getInstance().getNPCManager().addCharacter(new KingsHead(this.xPos, this.yPos));
+		EntityManager.getInstance().getNPCManager().addCharacter(new KingsHead(xPos, yPos));
 	}
 	
 	// Override that increments internal counter ands sets logic flags
 	@Override
 	public boolean damageCharacter(int damage) {
-		this.currentHP = this.currentHP - damage;
-		InfoScreen.setNPCFocus(this);
+		boolean result = super.damageCharacter(damage);
 		
 		// Increment damage counter and set that we've recently been damaged
 		this.dmgCount += 1;
 		this.recentDmg = true;
 		
 		// If below 80% health, go to phase 2
-		if((this.currentHP < (this.maxHP*4/5)) && (!this.isPhase2)) {
+		if ((!isPhase2) && (currentHP < (maxHP*4/5))) {
 			this.isPhase2 = true;
 			SoundPlayer.playWAV(GPath.createSoundPath("king_phase2.wav"));
 		} else {
 			// Play hurt sound
-			this.playHurt();
+			playHurt();
 		}
-		return this.isAlive();
+		return result;
 	}
 	
 	@Override
@@ -289,7 +288,7 @@ public class KingBonBon extends GCharacter {
 		Random r = new Random();
 		
 		// If this is dead or the player is dead, don't do anything
-		if(!this.isAlive() || !player.isAlive()) {
+		if (!isAlive() || !player.isAlive()) {
 			// Do nothing
 			return;
 		}
@@ -299,22 +298,22 @@ public class KingBonBon extends GCharacter {
 		int plrY = player.getYPos();
 		
 		// Get relative location to player
-		int distX = plrX - this.xPos;
-		int distY = plrY - this.yPos;
+		int distX = (plrX - xPos);
+		int distY = (plrY - yPos);
 		
 		// Calculate whether a warp should be done at the next opportunity
 		int shouldWarp = r.nextInt(5) + 1;
-		if(this.recentDmg && (shouldWarp < this.dmgCount)) {
+		if (recentDmg && (shouldWarp < dmgCount)) {
 			this.warpFlag = true;
 		}
 		
 		// Manage the thunder attack
-		this.manageThunder(plrX, plrY);
+		manageThunder(plrX, plrY);
 		
-		switch(this.state) {
+		switch (state) {
 			case KingBonBon.STATE_IDLE: //------------------------------------------------------------
 				// If player enters the arena, alert and close the arena
-				if(plrY <= 7) {		
+				if (plrY <= 7) {		
 					// Close the doors to the arena
 					GameScreen.getTile(4, 8).setTileType(new Wall());
 					GameScreen.getTile(5, 8).setTileType(new Wall());
@@ -346,62 +345,62 @@ public class KingBonBon extends GCharacter {
 				
 				// Calculate relative movement directions
 				// X-movement
-				if(distX > 0) {
+				if (distX > 0) {
 					dx = 1;
 				} else if (distX < 0) {
 					dx = -1;
 				}
 				// Y-movement
-				if(distY > 0) {
+				if (distY > 0) {
 					dy = 1;
 				} else if (distY < 0) {
 					dy = -1;
 				}
 				
 				// Check if we're pending a warp
-				if(this.warpFlag) {
+				if (warpFlag) {
 					// Do a warp
-					this.warpKing(plrX, plrY);
+					warpKing(plrX, plrY);
 					
 					// End the turn
-					this.resetFlags();
-					this.incrementCounters();
+					resetFlags();
+					incrementCounters();
 					this.recentWarp = true;
 					return;
 				}
 				
 				// If we're in phase 2 and have recently warped, try special attack
-				if(this.isPhase2 && this.recentWarp) {
+				if (isPhase2 && recentWarp) {
 					// Check if we should do special attack
 					// Probability increases as turns pass without special attack
 					int shouldSpecial = r.nextInt(40);
-					if(shouldSpecial < this.spcCount) {
+					if (shouldSpecial < spcCount) {
 						// Reset the counters
-						this.resetFlags();
-						this.incrementCounters();
+						resetFlags();
+						incrementCounters();
 						this.spcCount = 0;
 						
 						// Decide on which special attack to use
-						this.chooseSpecialAttack();
+						chooseSpecialAttack();
 						return;
 					}
 				}
 				
 				// If next to the player, decide an appropriate course of action
-				if(((Math.abs(distX) == 1) && (Math.abs(distY) == 0)) ||
+				if (((Math.abs(distX) == 1) && (Math.abs(distY) == 0)) ||
 						((Math.abs(distX) == 0) && (Math.abs(distY) == 1))) {
 					this.xMarkDir = dx;
 					this.yMarkDir = dy;
 					
 					// Decide whether to swipe, stab, or slam
 					int whichAttack = r.nextInt(16);
-					if(whichAttack < 6) {
+					if (whichAttack < 6) {
 						this.state = KingBonBon.STATE_PREP_STAB;
 					} else if(whichAttack < 12) {
 						// Add swipe warning effects
-						this.addEffect(new SmallFireEffect(this.xPos + this.xMarkDir, this.yPos + this.yMarkDir));
-						this.addEffect(new SmallFireEffect(this.xPos + this.xMarkDir + Math.abs(this.yMarkDir), this.yPos + this.yMarkDir + Math.abs(this.xMarkDir)));
-						this.addEffect(new SmallFireEffect(this.xPos + this.xMarkDir - Math.abs(this.yMarkDir), this.yPos + this.yMarkDir - Math.abs(this.xMarkDir)));
+						addEffect(new SmallFireEffect(xPos + xMarkDir, yPos + yMarkDir));
+						addEffect(new SmallFireEffect(xPos + xMarkDir + Math.abs(yMarkDir), yPos + yMarkDir + Math.abs(xMarkDir)));
+						addEffect(new SmallFireEffect(xPos + xMarkDir - Math.abs(yMarkDir), yPos + yMarkDir - Math.abs(xMarkDir)));
 						this.state = KingBonBon.STATE_PREP_SWIPE;
 					} else {
 						this.state = KingBonBon.STATE_PREP_SLAM;
@@ -411,19 +410,19 @@ public class KingBonBon extends GCharacter {
 					// based on which dimension you are further distance from them
 				} else {
 					// Path-find to the player if we can
-					Dimension nextStep = PathFinder.findPath(this.xPos, this.yPos, plrX, plrY, this);
-					if(nextStep == null) {
+					Dimension nextStep = PathFinder.findPath(xPos, yPos, plrX, plrY, this);
+					if (nextStep == null) {
 						// Blindly pursue the target
 						DumbFollow.blindPursue(distX, distY, dx, dy, this);
 					} else {
-						int changeX = nextStep.width - this.xPos;
-						int changeY = nextStep.height - this.yPos;
-						this.moveCharacter(changeX, changeY);
+						int changeX = (nextStep.width - xPos);
+						int changeY = (nextStep.height - yPos);
+						moveCharacter(changeX, changeY);
 					}
 					
 					// Recalculate relative location to player
-					distX = plrX - this.xPos;
-					distY = plrY - this.yPos;
+					distX = (plrX - xPos);
+					distY = (plrY - yPos);
 					
 					// Relative movement direction (Initialize at 0)
 					dx = 0;
@@ -431,13 +430,13 @@ public class KingBonBon extends GCharacter {
 					
 					// Recalculate relative movement directions
 					// X-movement
-					if(distX > 0) {
+					if (distX > 0) {
 						dx = 1;
 					} else if (distX < 0) {
 						dx = -1;
 					}
 					// Y-movement
-					if(distY > 0) {
+					if (distY > 0) {
 						dy = 1;
 					} else if (distY < 0) {
 						dy = -1;
@@ -446,13 +445,13 @@ public class KingBonBon extends GCharacter {
 					// Decide if bunny should attempt long-ranged stab prep
 					// Attempt only 1/5 of the time
 					int shouldAttack = r.nextInt(10);
-					if((shouldAttack < 3) && (((Math.abs(distX) <= 4) && (Math.abs(distY) == 0)) ||
+					if ((shouldAttack < 3) && (((Math.abs(distX) <= 4) && (Math.abs(distY) == 0)) ||
 							((Math.abs(distX) == 0) && (Math.abs(distY) <= 4)))) {
 						// Cue the running stab
 						this.xMarkDir = dx;
 						this.yMarkDir = dy;
 						this.state = KingBonBon.STATE_PREP_STAB;
-					} else if((shouldAttack < 5) && (((Math.abs(distX) <= 2) && (Math.abs(distY) == 0)) ||
+					} else if ((shouldAttack < 5) && (((Math.abs(distX) <= 2) && (Math.abs(distY) == 0)) ||
 							((Math.abs(distX) == 0) && (Math.abs(distY) <= 2)))) {
 						// If not doing running stab, try for a running swipe if we're close enough
 						// Attempt only 1/5 of the time.
@@ -460,12 +459,12 @@ public class KingBonBon extends GCharacter {
 						this.yMarkDir = dy;
 						
 						// Add swipe warning effects
-						this.addEffect(new SmallFireEffect(this.xPos + this.xMarkDir, this.yPos + this.yMarkDir));
-						this.addEffect(new SmallFireEffect(this.xPos + this.xMarkDir + Math.abs(this.yMarkDir), this.yPos + this.yMarkDir + Math.abs(this.xMarkDir)));
-						this.addEffect(new SmallFireEffect(this.xPos + this.xMarkDir - Math.abs(this.yMarkDir), this.yPos + this.yMarkDir - Math.abs(this.xMarkDir)));
+						addEffect(new SmallFireEffect(xPos + xMarkDir, yPos + yMarkDir));
+						addEffect(new SmallFireEffect(xPos + xMarkDir + Math.abs(yMarkDir), yPos + yMarkDir + Math.abs(xMarkDir)));
+						addEffect(new SmallFireEffect(xPos + xMarkDir - Math.abs(yMarkDir), yPos + yMarkDir - Math.abs(xMarkDir)));
 						
 						this.state = KingBonBon.STATE_PREP_SWIPE;
-					}  else if((shouldAttack < 7) && (((Math.abs(distX) <= 2) && (Math.abs(distY) == 0)) ||
+					}  else if ((shouldAttack < 7) && (((Math.abs(distX) <= 2) && (Math.abs(distY) == 0)) ||
 							((Math.abs(distX) == 0) && (Math.abs(distY) <= 2)))) {
 						// If not doing running swipe, try for a running slam if we're close enough
 						// Attempt only 1/5 of the time.
@@ -476,18 +475,18 @@ public class KingBonBon extends GCharacter {
 				}
 				break;
 			case KingBonBon.STATE_PREP_STAB: //------------------------------------------------------------
-				if(this.attCount < 1) {
+				if (attCount < 1) {
 					// Mark tiles with damage indicators
 					SoundPlayer.playWAV(GPath.createSoundPath("whip_ATT.wav"));
-					this.addEffect(new DamageIndicator(this.xPos + this.xMarkDir, this.yPos + this.yMarkDir));
-					this.addEffect(new DamageIndicator(this.xPos + (this.xMarkDir*2), this.yPos + (this.yMarkDir*2)));
-					this.addEffect(new DamageIndicator(this.xPos + (this.xMarkDir*3), this.yPos + (this.yMarkDir*3)));
+					addEffect(new DamageIndicator(xPos + xMarkDir, yPos + yMarkDir));
+					addEffect(new DamageIndicator(xPos + (xMarkDir*2), yPos + (yMarkDir*2)));
+					addEffect(new DamageIndicator(xPos + (xMarkDir*3), yPos + (yMarkDir*3)));
 					
 					// Attack if next to player
-					if((plrX == this.xPos + this.xMarkDir && plrY == this.yPos + this.yMarkDir) ||
-							(plrX == this.xPos + (this.xMarkDir*2) && plrY == this.yPos + (this.yMarkDir*2)) ||
-							(plrX == this.xPos + (this.xMarkDir*3) && plrY == this.yPos + (this.yMarkDir*3))) {
-						this.playerInitiate();
+					if ((plrX == xPos + xMarkDir && plrY == yPos + yMarkDir) ||
+							(plrX == xPos + (xMarkDir*2) && plrY == yPos + (yMarkDir*2)) ||
+							(plrX == xPos + (xMarkDir*3) && plrY == yPos + (yMarkDir*3))) {
+						playerInitiate();
 					}
 					
 					// Update attack counter
@@ -495,29 +494,29 @@ public class KingBonBon extends GCharacter {
 				} else {
 					// Use direction from player to mark squares
 					SoundPlayer.playWAV(GPath.createSoundPath("whip_ATT.wav"));
-					if(Math.abs(this.xMarkDir) > Math.abs(this.yMarkDir)) {
+					if (Math.abs(xMarkDir) > Math.abs(yMarkDir)) {
 						// Player to left/right
-						this.addEffect(new DamageIndicator(this.xPos + this.xMarkDir, this.yPos + 1));
-						this.addEffect(new DamageIndicator(this.xPos + this.xMarkDir, this.yPos - 1));
-						this.addEffect(new DamageIndicator(this.xPos + (this.xMarkDir*2), this.yPos + 1));
-						this.addEffect(new DamageIndicator(this.xPos + (this.xMarkDir*2), this.yPos - 1));
+						addEffect(new DamageIndicator(xPos + xMarkDir, yPos + 1));
+						addEffect(new DamageIndicator(xPos + xMarkDir, yPos - 1));
+						addEffect(new DamageIndicator(xPos + (xMarkDir*2), yPos + 1));
+						addEffect(new DamageIndicator(xPos + (xMarkDir*2), yPos - 1));
 						
 						// Attack player if in affected space
-						if(((plrX == this.xPos + this.xMarkDir) || (plrX == this.xPos + (this.xMarkDir*2))) &&
-								(plrY == this.yPos - 1 || plrY == this.yPos + 1)) {
-							this.playerInitiate();
+						if (((plrX == xPos + xMarkDir) || (plrX == xPos + (xMarkDir*2))) &&
+								(plrY == yPos - 1 || plrY == yPos + 1)) {
+							playerInitiate();
 						}
 					} else {
 						// Player above/below
-						this.addEffect(new DamageIndicator(this.xPos + 1, this.yPos + this.yMarkDir));
-						this.addEffect(new DamageIndicator(this.xPos - 1, this.yPos + this.yMarkDir));
-						this.addEffect(new DamageIndicator(this.xPos + 1, this.yPos + (this.yMarkDir*2)));
-						this.addEffect(new DamageIndicator(this.xPos - 1, this.yPos + (this.yMarkDir*2)));
+						addEffect(new DamageIndicator(xPos + 1, yPos + yMarkDir));
+						addEffect(new DamageIndicator(xPos - 1, yPos + yMarkDir));
+						addEffect(new DamageIndicator(xPos + 1, yPos + (yMarkDir*2)));
+						addEffect(new DamageIndicator(xPos - 1, yPos + (yMarkDir*2)));
 						
 						// Attack player if in affected space
-						if(((plrY == this.yPos + this.yMarkDir) || (plrY == this.yPos + (this.yMarkDir*2))) &&
-								(plrX == this.xPos - 1 || plrX == this.xPos + 1)) {
-							this.playerInitiate();
+						if (((plrY == yPos + yMarkDir) || (plrY == yPos + (yMarkDir*2))) &&
+								(plrX == xPos - 1 || plrX == xPos + 1)) {
+							playerInitiate();
 						}
 					}
 					
@@ -530,66 +529,62 @@ public class KingBonBon extends GCharacter {
 				this.state = KingBonBon.STATE_PURSUE;
 				break;
 			case KingBonBon.STATE_PREP_SWIPE: //------------------------------------------------------------
-				if(this.attCount < 1) {
+				if (attCount < 1) {
 					// Use direction from player to mark squares
 					SoundPlayer.playWAV(GPath.createSoundPath("fire_ATT.wav"));
-					if(Math.abs(this.xMarkDir) > Math.abs(this.yMarkDir)) {
+					if (Math.abs(xMarkDir) > Math.abs(yMarkDir)) {
 						// Player to left/right
-						this.addEffect(new FireEffect(this.xPos + this.xMarkDir, this.yPos));
-						this.addEffect(new FireEffect(this.xPos + this.xMarkDir, this.yPos + 1));
-						this.addEffect(new FireEffect(this.xPos + this.xMarkDir, this.yPos - 1));
+						addEffect(new FireEffect(xPos + xMarkDir, yPos));
+						addEffect(new FireEffect(xPos + xMarkDir, yPos + 1));
+						addEffect(new FireEffect(xPos + xMarkDir, yPos - 1));
 						
 						// Attack player if in affected space
-						if((plrX == this.xPos + this.xMarkDir) &&
-								(plrY == this.yPos || plrY == this.yPos - 1 || plrY == this.yPos + 1)) {
-							this.playerInitiate();
+						if ((plrX == xPos + xMarkDir) && (plrY == yPos || plrY == yPos - 1 || plrY == yPos + 1)) {
+							playerInitiate();
 						}
 					} else {
 						// Player above/below
-						this.addEffect(new FireEffect(this.xPos, this.yPos + this.yMarkDir));
-						this.addEffect(new FireEffect(this.xPos + 1, this.yPos + this.yMarkDir));
-						this.addEffect(new FireEffect(this.xPos - 1, this.yPos + this.yMarkDir));
+						addEffect(new FireEffect(xPos, yPos + yMarkDir));
+						addEffect(new FireEffect(xPos + 1, yPos + yMarkDir));
+						addEffect(new FireEffect(xPos - 1, yPos + yMarkDir));
 						
 						// Attack player if in affected space
-						if((plrY == this.yPos + this.yMarkDir) &&
-								(plrX == this.xPos || plrX == this.xPos - 1 || plrX == this.xPos + 1)) {
-							this.playerInitiate();
+						if ((plrY == yPos + yMarkDir) && (plrX == xPos || plrX == xPos - 1 || plrX == xPos + 1)) {
+							playerInitiate();
 						}
 					}
 					
 					// Add second swipe warning effects
-					this.addEffect(new SmallFireEffect(this.xPos + (this.xMarkDir*2), this.yPos + (this.yMarkDir*2)));
-					this.addEffect(new SmallFireEffect(this.xPos + (this.xMarkDir*2) + Math.abs(this.yMarkDir),
-							this.yPos + (this.yMarkDir*2) + Math.abs(this.xMarkDir)));
-					this.addEffect(new SmallFireEffect(this.xPos + (this.xMarkDir*2) - Math.abs(this.yMarkDir),
-							this.yPos + (this.yMarkDir*2) - Math.abs(this.xMarkDir)));
+					addEffect(new SmallFireEffect(xPos + (xMarkDir*2), yPos + (yMarkDir*2)));
+					addEffect(new SmallFireEffect(xPos + (xMarkDir*2) + Math.abs(yMarkDir),
+							yPos + (yMarkDir*2) + Math.abs(xMarkDir)));
+					addEffect(new SmallFireEffect(xPos + (xMarkDir*2) - Math.abs(yMarkDir),
+							yPos + (yMarkDir*2) - Math.abs(xMarkDir)));
 					
 					// Increase attack counter
 					this.attCount += 1;
 				} else {
 					// Use direction from player to mark squares
 					SoundPlayer.playWAV(GPath.createSoundPath("fire_ATT.wav"));
-					if(Math.abs(this.xMarkDir) > Math.abs(this.yMarkDir)) {
+					if (Math.abs(xMarkDir) > Math.abs(yMarkDir)) {
 						// Player to left/right
-						this.addEffect(new FireEffect(this.xPos + (this.xMarkDir*2), this.yPos));
-						this.addEffect(new FireEffect(this.xPos + (this.xMarkDir*2), this.yPos + 1));
-						this.addEffect(new FireEffect(this.xPos + (this.xMarkDir*2), this.yPos - 1));
+						addEffect(new FireEffect(xPos + (xMarkDir*2), yPos));
+						addEffect(new FireEffect(xPos + (xMarkDir*2), yPos + 1));
+						addEffect(new FireEffect(xPos + (xMarkDir*2), yPos - 1));
 						
 						// Attack player if in affected space
-						if((plrX == this.xPos + (this.xMarkDir*2)) &&
-								(plrY == this.yPos || plrY == this.yPos - 1 || plrY == this.yPos + 1)) {
-							this.playerInitiate();
+						if ((plrX == xPos + (xMarkDir*2)) && (plrY == yPos || plrY == yPos - 1 || plrY == yPos + 1)) {
+							playerInitiate();
 						}
 					} else {
 						// Player above/below
-						this.addEffect(new FireEffect(this.xPos, this.yPos + (this.yMarkDir*2)));
-						this.addEffect(new FireEffect(this.xPos + 1, this.yPos + (this.yMarkDir*2)));
-						this.addEffect(new FireEffect(this.xPos - 1, this.yPos + (this.yMarkDir*2)));
+						addEffect(new FireEffect(xPos, yPos + (yMarkDir*2)));
+						addEffect(new FireEffect(xPos + 1, yPos + (yMarkDir*2)));
+						addEffect(new FireEffect(xPos - 1, yPos + (yMarkDir*2)));
 						
 						// Attack player if in affected space
-						if((plrY == this.yPos + (this.yMarkDir*2)) &&
-								(plrX == this.xPos || plrX == this.xPos - 1 || plrX == this.xPos + 1)) {
-							this.playerInitiate();
+						if ((plrY == yPos + (yMarkDir*2)) && (plrX == xPos || plrX == xPos - 1 || plrX == xPos + 1)) {
+							playerInitiate();
 						}
 					}
 					
@@ -607,20 +602,20 @@ public class KingBonBon extends GCharacter {
 				this.attCount += 1;
 				
 				// Prepare for the slam
-				if(this.attCount <= 3) {
+				if (attCount <= 3) {
 					// Do nothing if still prepping
 				} else {
 					// Slam the ground, marking it up
 					SoundPlayer.playWAV(GPath.createSoundPath("slam_ATT.wav"));
-					for(int x = (this.xPos - 3); x < (this.xPos + 4); x++) {
-						int relX = Math.abs(this.xPos - x);
-						for(int y = (this.yPos + (relX-3)); y < (this.yPos + (4-relX)); y++) {
-							if(!(x == this.xPos && y == this.yPos)) {
+					for (int x = (xPos - 3); x < (xPos + 4); x++) {
+						int relX = Math.abs(xPos - x);
+						for (int y = (yPos + (relX-3)); y < (yPos + (4-relX)); y++) {
+							if (!(x == xPos && y == yPos)) {
 								// Add effect if not at center
-								this.addEffect(new RubbleEffect(x, y));
+								addEffect(new RubbleEffect(x, y));
 							}
-							if(plrX == x && plrY == y) {
-								this.playerInitiate();
+							if (plrX == x && plrY == y) {
+								playerInitiate();
 							}
 						}
 					}
@@ -631,10 +626,10 @@ public class KingBonBon extends GCharacter {
 				}
 				break;
 			case KingBonBon.STATE_PREP_FIRE: //------------------------------------------------------------
-				if(this.attCount == 0) {
+				if (attCount == 0) {
 					// Mark all fire spawning tiles with warnings
-					for(Dimension d: this.fireCoords) {
-						this.addEffect(new WarningIndicator(d.width, d.height));
+					for (Dimension d: fireCoords) {
+						addEffect(new WarningIndicator(d.width, d.height));
 					}
 					
 					// Increment attack counter
@@ -642,9 +637,9 @@ public class KingBonBon extends GCharacter {
 				} else {
 					// Spawn fireballs at marked locations
 					SoundPlayer.playWAV(GPath.createSoundPath("fire_ATT.wav"));
-					for(Dimension d: this.fireCoords) {
+					for (Dimension d: fireCoords) {
 						int direction = 1 + (-2 * (d.height%2));
-						this.addProjectile(new KingFireball(d.width, d.height, direction, 0, this.getClass()));
+						addProjectile(new KingFireball(d.width, d.height, direction, 0, getClass()));
 					}
 					
 					// Reset attack counter and change state
@@ -657,7 +652,7 @@ public class KingBonBon extends GCharacter {
 				this.state = KingBonBon.STATE_PURSUE;
 				break;
 			case KingBonBon.STATE_PREP_THUNDER: //------------------------------------------------------------
-				if(this.attCount == 0) {
+				if (attCount == 0) {
 					// Increment attack counter and do nothing
 					this.attCount += 1;
 				} else {
@@ -677,51 +672,51 @@ public class KingBonBon extends GCharacter {
 				this.state = KingBonBon.STATE_PURSUE;
 				break;
 			case KingBonBon.STATE_PREP_FLOOD: //------------------------------------------------------------
-				if(this.attCount == 0) {
+				if (attCount == 0) {
 					// Mark the side opposite the king with lots of warnings
-					if(this.xPos < 5) {
+					if (xPos < 5) {
 						// Mark the right side
-						for(int x = 8; x > 1; x--) {
-							for(int y = 2; y < 8; y++) {
-								this.addEffect(new WarningIndicator(x, y, 4));
+						for (int x = 8; x > 1; x--) {
+							for (int y = 2; y < 8; y++) {
+								addEffect(new WarningIndicator(x, y, 4));
 							}
 						}
 					} else {
 						// Mark the left side
-						for(int x = 1; x < 8; x++) {
-							for(int y = 2; y < 8; y++) {
-								this.addEffect(new WarningIndicator(x, y, 4));
+						for (int x = 1; x < 8; x++) {
+							for (int y = 2; y < 8; y++) {
+								addEffect(new WarningIndicator(x, y, 4));
 							}
 						}
 					}
-				} else if(this.attCount == 5) {
+				} else if (attCount == 5) {
 					// Set the flood down on the arena
 					SoundPlayer.playWAV(GPath.createSoundPath("flood_ATT.wav"));
-					if(this.xPos < 5) {
+					if (xPos < 5) {
 						// Flood the right side
-						for(int x = 8; x > 1; x--) {
-							for(int y = 2; y < 8; y++) {
-								if(x == 2) {
-									this.addEffect(new FloodEffect(x, y, -1, true));
+						for (int x = 8; x > 1; x--) {
+							for (int y = 2; y < 8; y++) {
+								if (x == 2) {
+									addEffect(new FloodEffect(x, y, -1, true));
 								} else {
-									this.addEffect(new FloodEffect(x, y, -1, false));
+									addEffect(new FloodEffect(x, y, -1, false));
 								}
-								if(plrX == x && plrY == y) {
-									this.playerInitiate();
+								if (plrX == x && plrY == y) {
+									playerInitiate();
 								}
 							}
 						}
 					} else {
 						// Flood the left side
-						for(int x = 1; x < 8; x++) {
-							for(int y = 2; y < 8; y++) {
-								if(x == 7) {
-									this.addEffect(new FloodEffect(x, y, 1, true));
+						for (int x = 1; x < 8; x++) {
+							for (int y = 2; y < 8; y++) {
+								if (x == 7) {
+									addEffect(new FloodEffect(x, y, 1, true));
 								} else {
-									this.addEffect(new FloodEffect(x, y, 1, false));
+									addEffect(new FloodEffect(x, y, 1, false));
 								}
-								if(plrX == x && plrY == y) {
-									this.playerInitiate();
+								if (plrX == x && plrY == y) {
+									playerInitiate();
 								}
 							}
 						}
@@ -741,15 +736,14 @@ public class KingBonBon extends GCharacter {
 				this.state = KingBonBon.STATE_PURSUE;
 				break;
 			default: //------------------------------------------------------------------------------------
-				System.out.println(this.getName() +
-						" couldn't take its turn. State = " + Integer.toString(this.state));
+				System.out.println(getName() + " couldn't take its turn. State = " + Integer.toString(state));
 				return;
 				
 		} // END OF SWITCH STATEMENT ****
 		
 		// End of turn resetting of variables
-		this.resetFlags();
-		this.incrementCounters();
+		resetFlags();
+		incrementCounters();
 		return;
 	}
 	
@@ -778,10 +772,10 @@ public class KingBonBon extends GCharacter {
 		int bestTotal = -1;
 		
 		// Check for corner furthest away from player
-		for(Dimension d: this.corners) {
+		for (Dimension d: corners) {
 			int xDist = Math.abs(d.width - plrX);
 			int yDist = Math.abs(d.height - plrY);
-			if(bestTotal < (xDist + yDist)) {
+			if (bestTotal < (xDist + yDist)) {
 				bestCorner = d;
 				bestTotal = (xDist + yDist);
 			}
@@ -802,23 +796,23 @@ public class KingBonBon extends GCharacter {
 	// Manage the thunder attack, which slowly crawls down the screen
 	private void manageThunder(int plrX, int plrY) {
 		// If thunder isn't active, return
-		if(!this.thunderActive) {
+		if (!thunderActive) {
 			return;
 		}
 		
 		// Alternate between marking rows and striking them with thunder
-		if((this.thunderCount % 2) == 0) {
+		if ((thunderCount % 2) == 0) {
 			// Mark the current row as a warning
-			for(int x = 1; x < 9; x++) {
-				this.addEffect(new ThunderEffect(x, thunderRow, false));
+			for (int x = 1; x < 9; x++) {
+				addEffect(new ThunderEffect(x, thunderRow, false));
 			}
 		} else {
 			// Strike the thunder down at the current row
 			SoundPlayer.playWAV(GPath.createSoundPath("thunder_ATT.wav"));
-			for(int x = 1; x < 9; x++) {
-				this.addEffect(new ThunderEffect(x, this.thunderRow));
-				if(plrX == x && plrY == this.thunderRow) {
-					this.playerInitiate();
+			for (int x = 1; x < 9; x++) {
+				addEffect(new ThunderEffect(x, thunderRow));
+				if (plrX == x && plrY == thunderRow) {
+					playerInitiate();
 				}
 			}
 			
@@ -830,7 +824,7 @@ public class KingBonBon extends GCharacter {
 		this.thunderCount += 1;
 		
 		// If we're done with the attack, reset everything
-		if(this.thunderRow > 7) {
+		if (thunderRow > 7) {
 			this.thunderActive = false;
 			this.thunderCount = 0;
 			this.thunderRow = 2;
@@ -839,33 +833,29 @@ public class KingBonBon extends GCharacter {
 	
 	private void playHurt() {
 		Random r = new Random();
-		if(r.nextInt(4) == 0) {
-			int whichSound = r.nextInt(2);
-			if(whichSound == 0) {
-				SoundPlayer.playWAV(GPath.createSoundPath("king_hurt1.wav"));
-			} else {
-				SoundPlayer.playWAV(GPath.createSoundPath("king_hurt2.wav"));
-			}
+		if (r.nextInt(4) == 0) {
+			int whichSound = (r.nextInt(2) + 1);
+			SoundPlayer.playWAV(GPath.createSoundPath("king_hurt" + whichSound +".wav"));
 		}
 	}
 	
 	// Chooses the next special attack for the King
 	private void chooseSpecialAttack() {
 		// Check and reset special attack flags if all are hit
-		this.checkSpcAttacks();
+		checkSpcAttacks();
 		
 		// Create and populate temp attack list
 		ArrayList<Integer> attacks = new ArrayList<Integer>();
 		
-		if(!this.didSpc0) {
+		if (!didSpc0) {
 			attacks.add(KingBonBon.STATE_PREP_FIRE);
 		}
 		
-		if(!this.didSpc1) {
+		if (!didSpc1) {
 			attacks.add(KingBonBon.STATE_PREP_THUNDER);
 		}
 		
-		if(!this.didSpc2) {
+		if (!didSpc2) {
 			attacks.add(KingBonBon.STATE_PREP_FLOOD);
 		}
 		
@@ -873,7 +863,7 @@ public class KingBonBon extends GCharacter {
 		int whichAttack = new Random().nextInt(attacks.size());
 		this.state = attacks.get(whichAttack);
 		
-		switch(this.state) {
+		switch (state) {
 			case KingBonBon.STATE_PREP_FIRE:
 				this.didSpc0 = true;
 				break;
@@ -884,7 +874,7 @@ public class KingBonBon extends GCharacter {
 				this.didSpc2 = true;
 				break;
 			default:
-				System.out.println("Special attack not recognized: " + this.state);
+				System.out.println("Special attack not recognized: " + state);
 				break;
 		}
 		
@@ -896,13 +886,13 @@ public class KingBonBon extends GCharacter {
 	// Checks to see if each special attack has been used once.
 	// If so, reset the flags and allow them to all be used again.
 	private void checkSpcAttacks() {
-		if(this.didAllSpcAttacks()) {
-			this.resetSpcAttacks();
+		if (didAllSpcAttacks()) {
+			resetSpcAttacks();
 		}
 	}
 	
 	private boolean didAllSpcAttacks() {
-		return (this.didSpc0 && this.didSpc1 && this.didSpc2);
+		return (didSpc0 && didSpc1 && didSpc2);
 	}
 	
 	private void resetSpcAttacks() {

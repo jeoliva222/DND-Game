@@ -11,7 +11,6 @@ import effects.GEffect;
 import effects.ThunderEffect;
 import effects.WarningIndicator;
 import gui.GameScreen;
-import gui.InfoScreen;
 import gui.LogScreen;
 import helpers.GPath;
 import helpers.SoundPlayer;
@@ -21,7 +20,11 @@ import projectiles.KingFireball;
 import tiles.Ground;
 import tiles.MovableType;
 
-// The King's Head represents the last phase of the King Bon Bon fight.
+/**
+ * Class representing the King's Head boss enemy,
+ * which is the last phase of the King Bon Bon boss fight.
+ * @author jeoliva
+ */
 public class KingsHead extends GCharacter {
 
 	// Serialization ID
@@ -104,7 +107,7 @@ public class KingsHead extends GCharacter {
 		super(startX, startY);
 		
 		this.maxHP = MAX_HP;
-		this.currentHP = this.maxHP;
+		this.currentHP = maxHP;
 		
 		this.minDmg = MIN_DMG;
 		this.maxDmg = MAX_DMG;
@@ -114,26 +117,6 @@ public class KingsHead extends GCharacter {
 		
 		this.state = KingsHead.STATE_ALERTED;
 		this.patrolPattern = PatrolPattern.STATIONARY;
-		
-		this.imagePath = this.getImage();
-	}
-	
-	public KingsHead(int startX, int startY, PatrolPattern patpat) {
-		super(startX, startY);
-		
-		this.maxHP = MAX_HP;
-		this.currentHP = this.maxHP;
-		
-		this.minDmg = MIN_DMG;
-		this.maxDmg = MAX_DMG;
-		
-		this.critChance = CRIT_CHANCE;
-		this.critMult = CRIT_MULT;
-		
-		this.state = KingsHead.STATE_ALERTED;
-		this.patrolPattern = patpat;
-		
-		this.imagePath = this.getImage();
 	}
 	
 	public String getName() {
@@ -142,35 +125,35 @@ public class KingsHead extends GCharacter {
 	
 	@Override
 	public String getImage() {
-		String imgPath = this.imageDir + this.khImage_base;
+		String imgPath = (imageDir + khImage_base);
 		String hpPath = "";
 		String statePath = "";
 		
-		if(this.currentHP > (this.maxHP / 2)) {
+		if (currentHP > (maxHP / 2)) {
 			hpPath = "_full";
-		} else if(this.currentHP > 0) {
+		} else if (currentHP > 0) {
 			hpPath = "_fatal";
 		} else {
 			hpPath = "_dead";
 			return (imgPath + hpPath + ".png");
 		}
 		
-		switch(this.state) {
+		switch (state) {
 			case KingsHead.STATE_STORM:
-				if(this.attCount == 0) {
+				if (attCount == 0) {
 					statePath = "_REST";
-				} else if (this.attCount == 1) {
+				} else if (attCount == 1) {
 					statePath = "_RAGING";
-				} else if (this.attCount == 2) {
+				} else if (attCount == 2) {
 					statePath = "_CALMING";
-				} else if (this.attCount >= 34) {
+				} else if (attCount >= 34) {
 					statePath = "_REST";
 				} else {
 					statePath = "_CHASE";
 				}
 				break;
 			case KingsHead.STATE_PURSUE:
-				if(this.attCount == this.interval) {
+				if (attCount == interval) {
 					statePath = "_CALMING";
 				} else {
 					statePath = "_CHASE";
@@ -180,15 +163,14 @@ public class KingsHead extends GCharacter {
 				statePath = "_CALMING";
 				break;
 			case KingsHead.STATE_REST:
-				if(this.attCount == this.interval) {
+				if (attCount == interval) {
 					statePath = "_RAGING";
 				} else {
 					statePath = "_REST";
 				}
 				break;
 			default:
-				System.out.println
-					(this.getName() + " couldn't find a proper image: " + Integer.toString(this.state));
+				System.out.println(getName() + " couldn't find a proper image: " + Integer.toString(state));
 				return GPath.NULL;
 		}
 		
@@ -210,12 +192,12 @@ public class KingsHead extends GCharacter {
 
 	@Override
 	public void playerInitiate() {
-		if(this.state != KingsHead.STATE_STORM) {
+		if (state != KingsHead.STATE_STORM) {
 			SoundPlayer.playWAV(GPath.createSoundPath("head_chomp.wav"));
 		} else {
 			SoundPlayer.playWAV(GPath.createSoundPath("Beanpole_ATTACK.wav"));
 		}
-		this.attackPlayer();
+		attackPlayer();
 	}
 	
 	@Override
@@ -240,14 +222,12 @@ public class KingsHead extends GCharacter {
 	// Override that prevents death once and starts storm attack
 	@Override
 	public boolean damageCharacter(int damage) {
-		if((this.currentHP - damage) <= 0 && (!this.startStorm)) {
+		if ((currentHP - damage) <= 0 && (!startStorm)) {
 			this.currentHP = 1;
 			this.startStorm = true;
 			return true;
 		} else {
-			this.currentHP = this.currentHP - damage;
-			InfoScreen.setNPCFocus(this);
-			return this.isAlive();
+			return super.damageCharacter(damage);
 		}
 	}
 
@@ -257,7 +237,7 @@ public class KingsHead extends GCharacter {
 		Player player = EntityManager.getInstance().getPlayer();
 		
 		// If this is dead or the player is dead, don't do anything
-		if(!this.isAlive() || !player.isAlive()) {
+		if (!isAlive() || !player.isAlive()) {
 			// Do nothing
 			return;
 		}
@@ -267,13 +247,13 @@ public class KingsHead extends GCharacter {
 		int plrY = player.getYPos();
 		
 		// Get relative location to player
-		int distX = plrX - this.xPos;
-		int distY = plrY - this.yPos;
+		int distX = (plrX - xPos);
+		int distY = (plrY - yPos);
 		
-		switch(this.state) {
+		switch (state) {
 			case KingsHead.STATE_ALERTED:
 				// Check for start of storm attack, and then prepare for it if needed
-				if(this.checkStorm()) {
+				if (checkStorm()) {
 					return;
 				}
 				
@@ -283,12 +263,12 @@ public class KingsHead extends GCharacter {
 				break;
 			case KingsHead.STATE_PURSUE:
 				// Check for start of storm attack, and then prepare for it if needed
-				if(this.checkStorm()) {
+				if (checkStorm()) {
 					return;
 				}
 				
 				// If we've pursued the player for long enough, go into rest mode temporarily
-				if(this.attCount >= this.interval) {
+				if (attCount >= interval) {
 					// Reset counter, play sound, and switch states
 					this.attCount = 0;
 					SoundPlayer.playWAV(GPath.createSoundPath("head_rest.wav"));
@@ -297,25 +277,25 @@ public class KingsHead extends GCharacter {
 				}
 				
 				// Attack if player is in one tile radius around player
-				if(Math.abs(distX) <= 1 && Math.abs(distY) <= 1) {
+				if (Math.abs(distX) <= 1 && Math.abs(distY) <= 1) {
 					// Mark tiles with damage indicators
 					EntityManager.getInstance().getEffectManager().addEffect(new DamageIndicator(plrX, plrY));
-					this.playerInitiate();
+					playerInitiate();
 				} else {
-					// If not attacking the player, hope closer to them
+					// If not attacking the player, move closer to them
 					
 					// Relative movement direction (Initialize at 0)
 					int dx = 0;
 					int dy = 0;
 					
 					// Calculate relative movement directions
-					if(distX > 0) {
+					if (distX > 0) {
 						dx = 1;
 					} else if (distX < 0) {
 						dx = -1;
 					}
 					
-					if(distY > 0) {
+					if (distY > 0) {
 						dy = 1;
 					} else if (distY < 0) {
 						dy = -1;
@@ -324,20 +304,19 @@ public class KingsHead extends GCharacter {
 					// First, try to move diagonal
 					// If unsuccessful, move in the direction that it is
 					// further from the player.
-					if(!this.moveCharacter(dx, dy)) {
-						if((Math.abs(distX)) > (Math.abs(distY))) {
+					if (!moveCharacter(dx, dy)) {
+						if ((Math.abs(distX)) > (Math.abs(distY))) {
 							// If movement in the x direction fails, try the y direction
-							if(!this.moveCharacter(dx, 0)) {
-								this.moveCharacter(0, dy);
+							if (!moveCharacter(dx, 0)) {
+								moveCharacter(0, dy);
 							}
 						} else {
 							// If movement in the y direction fails, try the x direction
-							if(!this.moveCharacter(0, dy)) {
-								this.moveCharacter(dx, 0);
+							if (!moveCharacter(0, dy)) {
+								moveCharacter(dx, 0);
 							}
 						}
 					}
-					
 				}
 				
 				// Increment the counter
@@ -345,15 +324,15 @@ public class KingsHead extends GCharacter {
 				break;
 			case KingsHead.STATE_REST:
 				// Check for start of storm attack, and then prepare for it if needed
-				if(this.checkStorm()) {
+				if (checkStorm()) {
 					return;
 				}
 				
 				// Don't change state back to pursue until we've fully rested
-				if(this.attCount >= this.interval) {
+				if (attCount >= interval) {
 					// Alternate between intervals
-					int temp = this.interval;
-					this.interval = this.altInterval;
+					int temp = interval;
+					this.interval = altInterval;
 					this.altInterval = temp;
 					
 					// Reset counter, play sound, and switch states
@@ -368,50 +347,49 @@ public class KingsHead extends GCharacter {
 				break;
 			case KingsHead.STATE_STORM:
 				// Manage thunder if active
-				this.manageThunder(plrX, plrY);
+				manageThunder(plrX, plrY);
 				
 				// Command all elements
-				if(this.attCount == 0) {
+				if (attCount == 0) {
 					// Start top thunder
 					this.thunderTopActive = true;
-				} else if(this.attCount == 2) {
+				} else if (attCount == 2) {
 					// Mark all fire spawning tiles with warnings
-					this.warnFire();
-				} else if(this.attCount == 3) {
+					warnFire();
+				} else if (attCount == 3) {
 					// Spawn fireballs at marked locations
-					this.launchFire();
-				} else if(this.attCount == 6) {
+					launchFire();
+				} else if (attCount == 6) {
 					// Start bottom thunder
 					this.thunderBotActive = true;
-				} else if(this.attCount == 7) {
+				} else if (attCount == 7) {
 					// Mark all fire spawning tiles with warnings
-					this.warnFire();
-				} else if(this.attCount == 8) {
+					warnFire();
+				} else if (attCount == 8) {
 					// Spawn fireballs at marked locations
-					this.launchFire();
-				} else if(this.attCount == 20) {
+					launchFire();
+				} else if (attCount == 20) {
 					// Warn for a left-wise flood
-					this.warnFlood(-1, 5);
-				} else if(this.attCount == 26) {
+					warnFlood(-1, 5);
+				} else if (attCount == 26) {
 					// Launch a left-wise flood
-					this.launchFlood(plrX, plrY, -1);
-				} else if(this.attCount == 28) {
+					launchFlood(plrX, plrY, -1);
+				} else if (attCount == 28) {
 					// Warn for a right-wise flood
-					this.warnFlood(1, 5);
-				} else if(this.attCount == 34) {
+					warnFlood(1, 5);
+				} else if (attCount == 34) {
 					// Launch a right-wise flood
-					this.launchFlood(plrX, plrY, 1);
-				} else if(this.attCount == 35) {
+					launchFlood(plrX, plrY, 1);
+				} else if (attCount == 35) {
 					// Warp to the center of the room
-					this.warpKing(plrX, plrY);
+					warpKing(plrX, plrY);
 				}
 				
 				// Increment attack counter
 				this.attCount += 1;
 				break;
 			default:
-				System.out.println(this.getName() +
-						" couldn't take its turn. State = " + Integer.toString(this.state));
+				System.out.println(getName() + " couldn't take its turn. State = " + Integer.toString(state));
 				return;
 		}
 			
@@ -420,20 +398,20 @@ public class KingsHead extends GCharacter {
 	// Manage the thunder attack, which slowly crawls down the screen
 	private void manageThunder(int plrX, int plrY) {
 		// If thunder isn't active, return
-		if(this.thunderTopActive) {
+		if (thunderTopActive) {
 			// Alternate between marking rows and striking them with thunder
-			if((this.thunderTopCount % 2) == 0) {
+			if ((thunderTopCount % 2) == 0) {
 				// Mark the current row as a warning
-				for(int x = 1; x < 9; x++) {
-					this.addEffect(new ThunderEffect(x, thunderTopRow, false));
+				for (int x = 1; x < 9; x++) {
+					addEffect(new ThunderEffect(x, thunderTopRow, false));
 				}
 			} else {
 				// Strike the thunder down at the current row
 				SoundPlayer.playWAV(GPath.createSoundPath("thunder_ATT.wav"));
-				for(int x = 1; x < 9; x++) {
-					this.addEffect(new ThunderEffect(x, this.thunderTopRow));
-					if(plrX == x && plrY == this.thunderTopRow) {
-						this.playerInitiate();
+				for (int x = 1; x < 9; x++) {
+					addEffect(new ThunderEffect(x, thunderTopRow));
+					if (plrX == x && plrY == thunderTopRow) {
+						playerInitiate();
 					}
 				}
 				
@@ -445,27 +423,27 @@ public class KingsHead extends GCharacter {
 			this.thunderTopCount += 1;
 			
 			// If we're done with the attack, reset everything
-			if(this.thunderTopRow > 7) {
+			if (thunderTopRow > 7) {
 				this.thunderTopActive = false;
 				this.thunderTopCount = 0;
 				this.thunderTopRow = 2;
 			}
 		}
 		
-		if(this.thunderBotActive) {
+		if (thunderBotActive) {
 			// Alternate between marking rows and striking them with thunder
-			if((this.thunderBotCount % 2) == 0) {
+			if ((thunderBotCount % 2) == 0) {
 				// Mark the current row as a warning
-				for(int x = 1; x < 9; x++) {
-					this.addEffect(new ThunderEffect(x, thunderBotRow, false));
+				for (int x = 1; x < 9; x++) {
+					addEffect(new ThunderEffect(x, thunderBotRow, false));
 				}
 			} else {
 				// Strike the thunder down at the current row
 				SoundPlayer.playWAV(GPath.createSoundPath("thunder_ATT.wav"));
-				for(int x = 1; x < 9; x++) {
-					this.addEffect(new ThunderEffect(x, this.thunderBotRow));
-					if(plrX == x && plrY == this.thunderBotRow) {
-						this.playerInitiate();
+				for (int x = 1; x < 9; x++) {
+					addEffect(new ThunderEffect(x, thunderBotRow));
+					if (plrX == x && plrY == thunderBotRow) {
+						playerInitiate();
 					}
 				}
 				
@@ -477,7 +455,7 @@ public class KingsHead extends GCharacter {
 			this.thunderBotCount += 1;
 			
 			// If we're done with the attack, reset everything
-			if(this.thunderBotRow < 2) {
+			if (thunderBotRow < 2) {
 				this.thunderBotActive = false;
 				this.thunderBotCount = 0;
 				this.thunderBotRow = 7;
@@ -488,8 +466,8 @@ public class KingsHead extends GCharacter {
 	// Creates warning of fireballs
 	private void warnFire() {
 		// Mark all fire spawning tiles with warnings
-		for(Dimension d: this.fireCoords) {
-			this.addEffect(new WarningIndicator(d.width, d.height));
+		for (Dimension d: fireCoords) {
+			addEffect(new WarningIndicator(d.width, d.height));
 		}
 	}
 	
@@ -497,26 +475,26 @@ public class KingsHead extends GCharacter {
 	private void launchFire() {
 		// Spawn fireballs at marked locations
 		SoundPlayer.playWAV(GPath.createSoundPath("fire_ATT.wav"));
-		for(Dimension d: this.fireCoords) {
+		for (Dimension d: fireCoords) {
 			int direction = 1 + (-2 * (d.height%2));
-			this.addProjectile(new KingFireball(d.width, d.height, direction, 0, this.getClass()));
+			addProjectile(new KingFireball(d.width, d.height, direction, 0, getClass()));
 		}
 	}
 	
 	// Warns player of flood
 	private void warnFlood(int side, int duration) {
-		if(side > 0) {
+		if (side > 0) {
 			// Mark the right side
-			for(int x = 8; x > 1; x--) {
-				for(int y = 2; y < 8; y++) {
-					this.addEffect(new WarningIndicator(x, y, duration));
+			for (int x = 8; x > 1; x--) {
+				for (int y = 2; y < 8; y++) {
+					addEffect(new WarningIndicator(x, y, duration));
 				}
 			}
 		} else {
 			// Mark the left side
-			for(int x = 1; x < 8; x++) {
-				for(int y = 2; y < 8; y++) {
-					this.addEffect(new WarningIndicator(x, y, duration));
+			for (int x = 1; x < 8; x++) {
+				for (int y = 2; y < 8; y++) {
+					addEffect(new WarningIndicator(x, y, duration));
 				}
 			}
 		}
@@ -526,31 +504,31 @@ public class KingsHead extends GCharacter {
 	private void launchFlood(int plrX, int plrY, int side) {
 		// Set the flood down on the arena
 		SoundPlayer.playWAV(GPath.createSoundPath("flood_ATT.wav"));
-		if(side > 0) {
+		if (side > 0) {
 			// Flood the right side
-			for(int x = 8; x > 1; x--) {
-				for(int y = 2; y < 8; y++) {
-					if(x == 2) {
-						this.addEffect(new FloodEffect(x, y, -1, true));
+			for (int x = 8; x > 1; x--) {
+				for (int y = 2; y < 8; y++) {
+					if (x == 2) {
+						addEffect(new FloodEffect(x, y, -1, true));
 					} else {
-						this.addEffect(new FloodEffect(x, y, -1, false));
+						addEffect(new FloodEffect(x, y, -1, false));
 					}
-					if(plrX == x && plrY == y) {
-						this.playerInitiate();
+					if (plrX == x && plrY == y) {
+						playerInitiate();
 					}
 				}
 			}
 		} else {
 			// Flood the left side
-			for(int x = 1; x < 8; x++) {
-				for(int y = 2; y < 8; y++) {
-					if(x == 7) {
-						this.addEffect(new FloodEffect(x, y, 1, true));
+			for (int x = 1; x < 8; x++) {
+				for (int y = 2; y < 8; y++) {
+					if (x == 7) {
+						addEffect(new FloodEffect(x, y, 1, true));
 					} else {
-						this.addEffect(new FloodEffect(x, y, 1, false));
+						addEffect(new FloodEffect(x, y, 1, false));
 					}
-					if(plrX == x && plrY == y) {
-						this.playerInitiate();
+					if (plrX == x && plrY == y) {
+						playerInitiate();
 					}
 				}
 			}
@@ -563,10 +541,10 @@ public class KingsHead extends GCharacter {
 		int bestTotal = -1;
 		
 		// Check for corner furthest away from player
-		for(Dimension d: this.corners) {
+		for (Dimension d: corners) {
 			int xDist = Math.abs(d.width - plrX);
 			int yDist = Math.abs(d.height - plrY);
-			if(bestTotal < (xDist + yDist)) {
+			if (bestTotal < (xDist + yDist)) {
 				bestCorner = d;
 				bestTotal = (xDist + yDist);
 			}
@@ -582,7 +560,7 @@ public class KingsHead extends GCharacter {
 	
 	// Checks whether to start the final storm attack, and then prepares for it if needed
 	private boolean checkStorm() {
-		if(this.startStorm) {
+		if (startStorm) {
 			// Change position
 			this.xPos = 4;
 			this.yPos = 0;

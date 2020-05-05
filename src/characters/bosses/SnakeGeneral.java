@@ -23,7 +23,6 @@ import effects.GEffect;
 import effects.WarningIndicator;
 import effects.WarpFizzleEffect;
 import gui.GameScreen;
-import gui.InfoScreen;
 import gui.LogScreen;
 import helpers.GPath;
 import helpers.SoundPlayer;
@@ -150,7 +149,7 @@ public class SnakeGeneral extends GCharacter {
 		super(startX, startY);
 		
 		this.maxHP = MAX_HP;
-		this.currentHP = this.maxHP;
+		this.currentHP = maxHP;
 		
 		this.armor = ARMOR_VAL;
 		
@@ -162,8 +161,6 @@ public class SnakeGeneral extends GCharacter {
 		
 		this.state = SnakeGeneral.STATE_IDLE;
 		this.patrolPattern = PatrolPattern.STATIONARY;
-		
-		this.imagePath = this.getImage();
 	}
 	
 	public String getName() {
@@ -172,119 +169,119 @@ public class SnakeGeneral extends GCharacter {
 	
 	@Override
 	public String getImage() {
-		String imgPath = this.imageDir + this.sgImage_base;
+		String imgPath = (imageDir + sgImage_base);
 		String hpPath = "";
 		String statePath = "";
 		
-		if(isHealthy()) {
+		if (isHealthy()) {
 			hpPath = "_full";
-		} else if(this.currentHP > 0) {
+		} else if (isAlive()) {
 			hpPath = "_fatal";
 		} else {
 			return GPath.NULL;
 		}
 		
-		switch(this.state) {
-		case SnakeGeneral.STATE_IDLE:
-		case SnakeGeneral.STATE_PURSUE:
-			// No extra path
-			break;
-		case SnakeGeneral.STATE_ALERTED:
-			statePath = "_ALERT";
-			break;
-		case SnakeGeneral.STATE_PREP_COMBO:
-			statePath = "_PREP_COMBO";
-			break;
-		case SnakeGeneral.STATE_ATT_COMBO:
-			if(this.attCount % 2 == 0) {
-				statePath = "_ATT_COMBO_STAB";
-			} else {
-				statePath = "_ATT_COMBO_SWIPE";
-			}
-			break;
-		case SnakeGeneral.STATE_PREP_RETREAT:
-			if(this.attCount <= 1) {
-				statePath = "_PREP_FIRE";
-			} else if (this.attCount % 2 == 1) {
-				statePath = "_ATT_FIRE";
-			} else {
-				statePath = "_ATT_FIRE_ALT";
-			}
-			break;
-		case SnakeGeneral.STATE_ATT_RETREAT:
-			if (this.attCount % 2 == 1) {
-				statePath = "_ATT_FIRE";
-			} else {
-				statePath = "_ATT_FIRE_ALT";
-			}
-			break;
-		case SnakeGeneral.STATE_PREP_CHAINGUN:
-			if(this.attCount == 0) {
-				statePath = "_PREP_GUN";
-			} else {
-				statePath = "_ATT_GUN";
-			}
-			break;
-		case SnakeGeneral.STATE_ATT_CHAINGUN:
-			statePath = "_ATT_GUN";
-			break;
-		case SnakeGeneral.STATE_PREP_MINE:
-			statePath = "_PREP_MINE";
-			break;
-		case SnakeGeneral.STATE_ATT_MINE:
-			statePath = "_ATT_MINE";
-			break;
-		case SnakeGeneral.STATE_WARP_AWAY:
-			statePath = "_WARP";
-			break;
-		case SnakeGeneral.STATE_SPC_ASSASSINATE:
-			if(this.attCount <= 4) {
-				return GPath.NULL;
-			} else {
-				statePath = "_PREP_FIRE";
-			}
-			break;
-		case SnakeGeneral.STATE_SPC_ASSASSINATE_ATT:
-			statePath = "_ATT_FIRE_ALT";
-			break;
-		case SnakeGeneral.STATE_SPC_BLITZ:
-			if(this.attCount <= 7) {
-				return GPath.NULL;
-			} else if(this.attCount == 8) {
-				statePath = "_ATT_COMBO_SWIPE";
-			} else {
+		switch (state) {
+			case SnakeGeneral.STATE_IDLE:
+			case SnakeGeneral.STATE_PURSUE:
 				// No extra path
-			}
-			break;
-		case SnakeGeneral.STATE_SPC_CANNON:
-			if(this.attCount <= 1) {
+				break;
+			case SnakeGeneral.STATE_ALERTED:
+				statePath = "_ALERT";
+				break;
+			case SnakeGeneral.STATE_PREP_COMBO:
+				statePath = "_PREP_COMBO";
+				break;
+			case SnakeGeneral.STATE_ATT_COMBO:
+				if (attCount % 2 == 0) {
+					statePath = "_ATT_COMBO_STAB";
+				} else {
+					statePath = "_ATT_COMBO_SWIPE";
+				}
+				break;
+			case SnakeGeneral.STATE_PREP_RETREAT:
+				if (attCount <= 1) {
+					statePath = "_PREP_FIRE";
+				} else if (attCount % 2 == 1) {
+					statePath = "_ATT_FIRE";
+				} else {
+					statePath = "_ATT_FIRE_ALT";
+				}
+				break;
+			case SnakeGeneral.STATE_ATT_RETREAT:
+				if (attCount % 2 == 1) {
+					statePath = "_ATT_FIRE";
+				} else {
+					statePath = "_ATT_FIRE_ALT";
+				}
+				break;
+			case SnakeGeneral.STATE_PREP_CHAINGUN:
+				if (attCount == 0) {
+					statePath = "_PREP_GUN";
+				} else {
+					statePath = "_ATT_GUN";
+				}
+				break;
+			case SnakeGeneral.STATE_ATT_CHAINGUN:
+				statePath = "_ATT_GUN";
+				break;
+			case SnakeGeneral.STATE_PREP_MINE:
+				statePath = "_PREP_MINE";
+				break;
+			case SnakeGeneral.STATE_ATT_MINE:
+				statePath = "_ATT_MINE";
+				break;
+			case SnakeGeneral.STATE_WARP_AWAY:
+				statePath = "_WARP";
+				break;
+			case SnakeGeneral.STATE_SPC_ASSASSINATE:
+				if (attCount <= 4) {
+					return GPath.NULL;
+				} else {
+					statePath = "_PREP_FIRE";
+				}
+				break;
+			case SnakeGeneral.STATE_SPC_ASSASSINATE_ATT:
+				statePath = "_ATT_FIRE_ALT";
+				break;
+			case SnakeGeneral.STATE_SPC_BLITZ:
+				if (attCount <= 7) {
+					return GPath.NULL;
+				} else if (attCount == 8) {
+					statePath = "_ATT_COMBO_SWIPE";
+				} else {
+					// No extra path
+				}
+				break;
+			case SnakeGeneral.STATE_SPC_CANNON:
+				if (attCount <= 1) {
+					return GPath.NULL;
+				} else if (attCount > (CANNON_MAX + 1)) {
+					statePath = "_PREP_CANNON";
+				} else if (xPos == 9) {
+					if (attCount % 2 == 0) {
+						statePath = "_PREP_CANNON";
+					} else {
+						statePath = "_ATT_CANNON";
+					}
+				} else {
+					if (attCount % 2 == 0) {
+						statePath = "_ATT_CANNON";
+					} else {
+						statePath = "_PREP_CANNON";
+					}
+				}
+				break;
+			case SnakeGeneral.STATE_STUN:
+				if (attCount % 2 == 0) {
+					statePath = "_STUN";
+				} else {
+					statePath = "_STUN_ALT";
+				}
+				break;
+			default:
+				System.out.println(getName() + " couldn't find a proper image: " + Integer.toString(state));
 				return GPath.NULL;
-			} else if (attCount > (CANNON_MAX + 1)) {
-				statePath = "_PREP_CANNON";
-			} else if (this.xPos == 9) {
-				if (this.attCount % 2 == 0) {
-					statePath = "_PREP_CANNON";
-				} else {
-					statePath = "_ATT_CANNON";
-				}
-			} else {
-				if (this.attCount % 2 == 0) {
-					statePath = "_ATT_CANNON";
-				} else {
-					statePath = "_PREP_CANNON";
-				}
-			}
-			break;
-		case SnakeGeneral.STATE_STUN:
-			if (this.attCount % 2 == 0) {
-				statePath = "_STUN";
-			} else {
-				statePath = "_STUN_ALT";
-			}
-			break;
-		default:
-			System.out.println(this.getName() + " couldn't find a proper image: " + Integer.toString(this.state));
-			return GPath.NULL;
 		}
 		
 		return (imgPath + hpPath + statePath + ".png");
@@ -304,7 +301,7 @@ public class SnakeGeneral extends GCharacter {
 	@Override
 	public void playerInitiate() {
 		SoundPlayer.playWAV(GPath.createSoundPath("Beanpole_ATTACK.wav"));
-		this.attackPlayer();
+		attackPlayer();
 	}
 	
 	@Override
@@ -313,7 +310,7 @@ public class SnakeGeneral extends GCharacter {
 		SoundPlayer.playWAV(GPath.createSoundPath("Snake_Death.wav"));
 		
 		// Clear any remaining bombs
-		this.placedBombs.clear();
+		placedBombs.clear();
 		
 		// Open the doors to the arena
 		GameScreen.getTile(4, 1).setTileType(new AltGround());
@@ -333,13 +330,13 @@ public class SnakeGeneral extends GCharacter {
 				EntityManager.getInstance().getActiveArea().getMusicVolume());
 		
 		// Log a final death message
-		LogScreen.log("The general and his tank lie defeated and broken...");
+		LogScreen.log("The general and his tank lie broken and defeated...");
 	}
 	
 	// Override that resets a few extra parameters
 	@Override
 	public void resetParams() {
-		this.resetFlags();
+		resetFlags();
 	}
 	
 	// Resets all flags/counters
@@ -354,28 +351,27 @@ public class SnakeGeneral extends GCharacter {
 	// Returns whether General is considered healthy or not
 	// Used for determining image rendering
 	private boolean isHealthy() {
-		return (this.currentHP > (this.maxHP / 3));
+		return (currentHP > (maxHP / 3));
 	}
 	
 	// Override that increments internal counter ands sets logic flags
 	@Override
 	public boolean damageCharacter(int damage) {
-		this.currentHP = this.currentHP - damage;
-		InfoScreen.setNPCFocus(this);
+		boolean result = super.damageCharacter(damage);
 		
 		// Increment damage counter and set that we've recently been damaged
 		this.dmgCount += damage;
 		this.recentDmg = true;
 		
 		// If below (5/6) health, go to phase 2
-		if((!this.isPhase2) && (this.currentHP <= (this.maxHP*5/6))) {
+		if ((!isPhase2) && (currentHP <= (maxHP*5/6))) {
 			SoundPlayer.playWAV(GPath.createSoundPath("snake1_warn1.wav"));
 			this.isPhase2 = true;
 		} else {
-			this.playHurt();
+			playHurt();
 		}
 		
-		return this.isAlive();
+		return result;
 	}
 	
 	@Override
@@ -384,7 +380,7 @@ public class SnakeGeneral extends GCharacter {
 		Player player = EntityManager.getInstance().getPlayer();
 		
 		// If this is dead or the player is dead, don't do anything
-		if(!this.isAlive() || !player.isAlive()) {
+		if (!isAlive() || !player.isAlive()) {
 			// Do nothing
 			return;
 		}
@@ -394,23 +390,23 @@ public class SnakeGeneral extends GCharacter {
 		int plrY = player.getYPos();
 		
 		// Get relative location to player
-		int distX = plrX - this.xPos;
-		int distY = plrY - this.yPos;
+		int distX = (plrX - xPos);
+		int distY = (plrY - yPos);
 		
 		// Relative movement direction (Initialize at 0)
 		int dx = 0;
 		int dy = 0;
 		
 		// Manage the bombs
-		this.manageBombs(plrX, plrY);
+		manageBombs(plrX, plrY);
 		
-		switch(this.state) {
+		switch (state) {
 			case SnakeGeneral.STATE_IDLE: //------------------------------------------------------------
-				boolean hasLOS = LineDrawer.hasSight(this.xPos, this.yPos, plrX, plrY);
-				if(hasLOS) {
+				boolean hasLOS = LineDrawer.hasSight(xPos, yPos, plrX, plrY);
+				if (hasLOS) {
 					Random r = new Random();
 					int whichSound = r.nextInt(2);
-					if(whichSound == 0) {
+					if (whichSound == 0) {
 						SoundPlayer.playWAV(GPath.createSoundPath("snake1_greet1.wav"));
 					} else {
 						SoundPlayer.playWAV(GPath.createSoundPath("snake1_warn1.wav"));
@@ -433,25 +429,25 @@ public class SnakeGeneral extends GCharacter {
 			case SnakeGeneral.STATE_PURSUE:	 //------------------------------------------------------------
 				// Calculate relative movement directions
 				// X-movement
-				if(distX > 0) {
+				if (distX > 0) {
 					dx = 1;
 				} else if (distX < 0) {
 					dx = -1;
 				}
 				// Y-movement
-				if(distY > 0) {
+				if (distY > 0) {
 					dy = 1;
 				} else if (distY < 0) {
 					dy = -1;
 				}
 				
 				// If we're in phase 2 and have recently warped, try special attack
-				if(this.isPhase2 && this.recentRetreat) {
+				if (isPhase2 && recentRetreat) {
 					// Check if we should do special attack
 					// Probability increases as turns pass without special attack
 					Random r = new Random();
 					int shouldSpecial = r.nextInt(SPC_MAX);
-					if(shouldSpecial < this.spcCount) {
+					if (shouldSpecial < spcCount) {
 						// Reset the counters/flags
 						this.recentRetreat = false;
 						this.spcCount = 0;
@@ -463,13 +459,13 @@ public class SnakeGeneral extends GCharacter {
 				}
 				
 				// Change state to prepare a stab/swipe 100% of the time if next to player
-				if(((Math.abs(distX) == 1) && (Math.abs(distY) == 0)) ||
+				if (((Math.abs(distX) == 1) && (Math.abs(distY) == 0)) ||
 						((Math.abs(distX) == 0) && (Math.abs(distY) == 1))) {
 					this.xMarkDir = dx;
 					this.yMarkDir = dy;
 
 					// Choose a close-quarters melee-based attack
-					this.chooseCQMeleeAttack();
+					chooseCQMeleeAttack();
 					
 					// Else, try to move x-wise or y-wise closer to the player
 					// based on which dimension you are further distance from them
@@ -478,8 +474,8 @@ public class SnakeGeneral extends GCharacter {
 					DumbFollow.blindPursue(distX, distY, dx, dy, this);
 					
 					// Recalculate relative location to player
-					distX = plrX - this.xPos;
-					distY = plrY - this.yPos;
+					distX = (plrX - xPos);
+					distY = (plrY - yPos);
 					
 					// Relative movement direction (Initialize at 0)
 					dx = 0;
@@ -487,13 +483,13 @@ public class SnakeGeneral extends GCharacter {
 					
 					// Recalculate relative movement directions
 					// X-movement
-					if(distX > 0) {
+					if (distX > 0) {
 						dx = 1;
 					} else if (distX < 0) {
 						dx = -1;
 					}
 					// Y-movement
-					if(distY > 0) {
+					if (distY > 0) {
 						dy = 1;
 					} else if (distY < 0) {
 						dy = -1;
@@ -503,16 +499,16 @@ public class SnakeGeneral extends GCharacter {
 					// Punishes running away and eager approaches
 					// Attempt 2/3 of the time
 					int shouldMelee = new Random().nextInt(3);
-					if((shouldMelee <= 1) && (((Math.abs(distX) <= 3) && (Math.abs(distY) == 0)) ||
+					if ((shouldMelee <= 1) && (((Math.abs(distX) <= 3) && (Math.abs(distY) == 0)) ||
 							((Math.abs(distX) == 0) && (Math.abs(distY) <= 3)))) {
 						// Next, make sure there aren't any walls in the way
-						boolean hasAttLOS = LineDrawer.hasSight(this.xPos, this.yPos, plrX, plrY);
-						if(hasAttLOS) {
+						boolean hasAttLOS = LineDrawer.hasSight(xPos, yPos, plrX, plrY);
+						if (hasAttLOS) {
 							this.xMarkDir = dx;
 							this.yMarkDir = dy;
 							
 							// Choose a ranged melee-based attack
-							this.chooseRangedMeleeAttack();
+							chooseRangedMeleeAttack();
 						}
 					}
 				}
@@ -522,20 +518,20 @@ public class SnakeGeneral extends GCharacter {
 				break;
 			case SnakeGeneral.STATE_PREP_COMBO: //------------------------------------------------------------
 				// If player is directly diagonal from General, don't lunge forward
-				if(!((Math.abs(distX) == 1) && (Math.abs(distY) == 1))) {
+				if (!((Math.abs(distX) == 1) && (Math.abs(distY) == 1))) {
 					// Move General in marked direction
-					this.moveCharacter(this.xMarkDir, this.yMarkDir);
+					moveCharacter(xMarkDir, yMarkDir);
 				}
 				
 				// Use direction from player to mark squares
 				SoundPlayer.playWAV(GPath.createSoundPath("Snake_Bite.wav"));
-				this.addEffect(new DamageIndicator(this.xPos + this.xMarkDir, this.yPos + this.yMarkDir));
-				this.addEffect(new DamageIndicator(this.xPos + (this.xMarkDir*2), this.yPos + (this.yMarkDir*2)));
+				addEffect(new DamageIndicator(xPos + xMarkDir, yPos + yMarkDir));
+				addEffect(new DamageIndicator(xPos + (xMarkDir*2), yPos + (yMarkDir*2)));
 				
 				// Hit player in affected spaces
-				if((plrX == this.xPos + this.xMarkDir && plrY == this.yPos + this.yMarkDir) ||
-						(plrX == this.xPos + (this.xMarkDir*2) && plrY == this.yPos + (this.yMarkDir*2))) {
-					this.playerInitiate();
+				if ((plrX == xPos + xMarkDir && plrY == yPos + yMarkDir) ||
+						(plrX == xPos + (xMarkDir*2) && plrY == yPos + (yMarkDir*2))) {
+					playerInitiate();
 				}
 				
 				// Change state and increment attack counter
@@ -543,7 +539,7 @@ public class SnakeGeneral extends GCharacter {
 				break;
 			case SnakeGeneral.STATE_ATT_COMBO: //------------------------------------------------------------
 				// Attack a specified number of times (swipeMaxCount)
-				if(this.attCount >= this.swipeMaxCount) {
+				if (attCount >= swipeMaxCount) {
 					// Reset attack counter
 					this.attCount = 0;
 					
@@ -556,14 +552,14 @@ public class SnakeGeneral extends GCharacter {
 				}
 				
 				// Recalculate relative location to player
-				distX = plrX - this.xPos;
-				distY = plrY - this.yPos;
+				distX = (plrX - xPos);
+				distY = (plrY - yPos);
 				
 				// Do side-swipe attack towards direction player moved
 				SoundPlayer.playWAV(GPath.createSoundPath("swing_ATT.wav"));
-				if(this.xMarkDir != 0) {
+				if (xMarkDir != 0) {
 					// Recalculate Y attack direction
-					if(distY > 0) {
+					if (distY > 0) {
 						this.yMarkDir = 1;
 					} else if (distY < 0) {
 						this.yMarkDir = -1;
@@ -572,17 +568,16 @@ public class SnakeGeneral extends GCharacter {
 					}
 					
 					// Player to left/right
-					this.addEffect(new DamageIndicator(this.xPos + this.xMarkDir, this.yPos));
-					this.addEffect(new DamageIndicator(this.xPos + this.xMarkDir, this.yPos + this.yMarkDir));
+					addEffect(new DamageIndicator(xPos + xMarkDir, yPos));
+					addEffect(new DamageIndicator(xPos + xMarkDir, yPos + yMarkDir));
 					
 					// Attack player if in affected space
-					if((plrX == this.xPos + this.xMarkDir) &&
-							(plrY == this.yPos || plrY == this.yPos + this.yMarkDir)) {
-						this.playerInitiate();
+					if ((plrX == xPos + xMarkDir) && (plrY == yPos || plrY == yPos + yMarkDir)) {
+						playerInitiate();
 					}
 				} else {
 					// Recalculate X attack direction
-					if(distX > 0) {
+					if (distX > 0) {
 						this.xMarkDir = 1;
 					} else if (distX < 0) {
 						this.xMarkDir = -1;
@@ -591,19 +586,18 @@ public class SnakeGeneral extends GCharacter {
 					}
 					
 					// Player above/below
-					this.addEffect(new DamageIndicator(this.xPos, this.yPos + this.yMarkDir));
-					this.addEffect(new DamageIndicator(this.xPos + this.xMarkDir, this.yPos + this.yMarkDir));
+					addEffect(new DamageIndicator(xPos, yPos + yMarkDir));
+					addEffect(new DamageIndicator(xPos + xMarkDir, yPos + yMarkDir));
 					
 					// Attack player if in affected space
-					if((plrY == this.yPos + this.yMarkDir) &&
-							(plrX == this.xPos || plrX == this.xPos + this.xMarkDir)) {
-						this.playerInitiate();
+					if ((plrY == yPos + yMarkDir) && (plrX == xPos || plrX == xPos + xMarkDir)) {
+						playerInitiate();
 					}
 				}
 				
 				break;
 			case SnakeGeneral.STATE_PREP_RETREAT: //------------------------------------------------------------
-				if(this.attCount == 0) {
+				if (attCount == 0) {
 					// Do nothing for first turn
 				} else {
 					// Relative movement direction (Initialize at 0)
@@ -612,13 +606,13 @@ public class SnakeGeneral extends GCharacter {
 					
 					// Recalculate relative movement directions
 					// X-movement
-					if(distX > 0) {
+					if (distX > 0) {
 						dx = 1;
 					} else if (distX < 0) {
 						dx = -1;
 					}
 					// Y-movement
-					if(distY > 0) {
+					if (distY > 0) {
 						dy = 1;
 					} else if (distY < 0) {
 						dy = -1;
@@ -626,54 +620,54 @@ public class SnakeGeneral extends GCharacter {
 					
 					// Move away from player, checking for whether we actually moved or not
 					// If we moved, swing in the opposite direction
-					int tempX = this.xPos;
-					int tempY = this.yPos;
+					int tempX = xPos;
+					int tempY = yPos;
 					DumbFollow.blindPursue(distX, distY, -dx, -dy, this);
-					if(tempX == this.xPos && tempY == this.yPos) {
+					if (tempX == xPos && tempY == yPos) {
 						this.breakRetreat = true;
 					} else {
-						this.xMarkDir = tempX - this.xPos;
-						this.yMarkDir = tempY - this.yPos;
+						this.xMarkDir = (tempX - xPos);
+						this.yMarkDir = (tempY - yPos);
 					}
 					
 					// Play sound if first turn retreating
-					if(this.attCount == 1) {
+					if (attCount == 1) {
 						SoundPlayer.playWAV(GPath.createSoundPath("fire_ATT.wav"));
 					}
 					
 					// Use direction from player to mark squares
-					if(Math.abs(this.xMarkDir) > Math.abs(this.yMarkDir)) {
+					if (Math.abs(xMarkDir) > Math.abs(yMarkDir)) {
 						// Player to left/right
-						this.addEffect(new FireEffect(this.xPos + this.xMarkDir, this.yPos));
-						this.addEffect(new FireEffect(this.xPos + this.xMarkDir, this.yPos + 1));
-						this.addEffect(new FireEffect(this.xPos + this.xMarkDir, this.yPos - 1));
-						this.addEffect(new FireEffect(this.xPos + (this.xMarkDir*2), this.yPos));
-						this.addEffect(new FireEffect(this.xPos + (this.xMarkDir*2), this.yPos + 1));
-						this.addEffect(new FireEffect(this.xPos + (this.xMarkDir*2), this.yPos - 1));
+						addEffect(new FireEffect(xPos + xMarkDir, yPos));
+						addEffect(new FireEffect(xPos + xMarkDir, yPos + 1));
+						addEffect(new FireEffect(xPos + xMarkDir, yPos - 1));
+						addEffect(new FireEffect(xPos + (xMarkDir*2), yPos));
+						addEffect(new FireEffect(xPos + (xMarkDir*2), yPos + 1));
+						addEffect(new FireEffect(xPos + (xMarkDir*2), yPos - 1));
 						
 						// Attack player if in affected space
-						if(((plrX == this.xPos + this.xMarkDir) || (plrX == this.xPos + (this.xMarkDir*2))) &&
-								(plrY == this.yPos || plrY == this.yPos - 1 || plrY == this.yPos + 1)) {
-							this.playerInitiate();
+						if (((plrX == xPos + xMarkDir) || (plrX == xPos + (xMarkDir*2))) &&
+								(plrY == yPos || plrY == yPos - 1 || plrY == yPos + 1)) {
+							playerInitiate();
 						}
 					} else {
 						// Player above/below
-						this.addEffect(new FireEffect(this.xPos, this.yPos + this.yMarkDir));
-						this.addEffect(new FireEffect(this.xPos + 1, this.yPos + this.yMarkDir));
-						this.addEffect(new FireEffect(this.xPos - 1, this.yPos + this.yMarkDir));
-						this.addEffect(new FireEffect(this.xPos, this.yPos + (this.yMarkDir*2)));
-						this.addEffect(new FireEffect(this.xPos + 1, this.yPos + (this.yMarkDir*2)));
-						this.addEffect(new FireEffect(this.xPos - 1, this.yPos + (this.yMarkDir*2)));
+						addEffect(new FireEffect(xPos, yPos + yMarkDir));
+						addEffect(new FireEffect(xPos + 1, yPos + yMarkDir));
+						addEffect(new FireEffect(xPos - 1, yPos + yMarkDir));
+						addEffect(new FireEffect(xPos, yPos + (yMarkDir*2)));
+						addEffect(new FireEffect(xPos + 1, yPos + (yMarkDir*2)));
+						addEffect(new FireEffect(xPos - 1, yPos + (yMarkDir*2)));
 						
 						// Attack player if in affected space
-						if(((plrY == this.yPos + this.yMarkDir) || (plrY == this.yPos + (this.yMarkDir*2))) &&
-								(plrX == this.xPos || plrX == this.xPos - 1 || plrX == this.xPos + 1)) {
-							this.playerInitiate();
+						if (((plrY == yPos + yMarkDir) || (plrY == yPos + (yMarkDir*2))) &&
+								(plrX == xPos || plrX == xPos - 1 || plrX == xPos + 1)) {
+							playerInitiate();
 						}
 					}
 					
 					// Check to break out
-					if(this.breakRetreat) {
+					if (breakRetreat) {
 						// If breaking out, reset break flag and change state
 						this.breakRetreat = false;
 						this.state = SnakeGeneral.STATE_ATT_RETREAT;
@@ -683,7 +677,7 @@ public class SnakeGeneral extends GCharacter {
 				// Increment attack counter
 				this.attCount += 1;
 				break;
-			case SnakeGeneral.STATE_ATT_RETREAT: //------------------------------------------------------------
+			case SnakeGeneral.STATE_ATT_RETREAT: //--------------------------------------------------------------
 				// Reset counters and change state
 				this.recentRetreat = true;
 				this.attCount = 0;
@@ -691,30 +685,30 @@ public class SnakeGeneral extends GCharacter {
 				this.state = SnakeGeneral.STATE_PURSUE;
 				break;
 			case SnakeGeneral.STATE_PREP_CHAINGUN: //------------------------------------------------------------
-				if(this.attCount > 0) {
+				if (attCount > 0) {
 					// Try to move at the player if we didn't hit chaingun shots
-					if(!this.hitShots) {
+					if (!hitShots) {
 						// Recalculate relative movement directions
 						// X-movement
-						if(distX > 0) {
+						if (distX > 0) {
 							dx = 1;
 						} else if (distX < 0) {
 							dx = -1;
 						}
 						// Y-movement
-						if(distY > 0) {
+						if (distY > 0) {
 							dy = 1;
 						} else if (distY < 0) {
 							dy = -1;
 						}
 						
 						// Check which direction to move
-						if(this.xMarkDir != 0) {
+						if (xMarkDir != 0) {
 							// Move vertically towards player
-							this.moveCharacter(0, dy);
+							moveCharacter(0, dy);
 						} else {
 							// Move horizontally towards player
-							this.moveCharacter(dx, 0);
+							moveCharacter(dx, 0);
 						}
 					}
 					
@@ -726,20 +720,20 @@ public class SnakeGeneral extends GCharacter {
 				SoundPlayer.playWAV(GPath.createSoundPath("Chaingun_Fire.wav"));
 
 				// Safety check to prevent infinite loop
-				if(this.xMarkDir == 0 && this.yMarkDir == 0) {
+				if (xMarkDir == 0 && yMarkDir == 0) {
 					this.xMarkDir = 1;
 				}
 				
 				// Fire at player
-				int nextX = (this.getXPos() + this.xMarkDir);
-				int nextY = (this.getYPos() + this.yMarkDir);
+				int nextX = (getXPos() + xMarkDir);
+				int nextY = (getYPos() + yMarkDir);
 				boolean isEndHit = false;
-				while(!isEndHit) { // BEGIN While ------------------------
+				while (!isEndHit) { // BEGIN While ------------------------
 					
 					// Check if we hit player
-					if(nextX == plrX && nextY == plrY) {
+					if (nextX == plrX && nextY == plrY) {
 						this.hitShots = true;
-						this.playerInitiate();
+						playerInitiate();
 					}
 					
 					// Check for walls or OOB to see if we need to keep checking tiles
@@ -751,12 +745,12 @@ public class SnakeGeneral extends GCharacter {
 					
 					// Mark the tile (if we didn't hit something)
 					if (!isEndHit) {
-						this.addEffect(new BulletEffect(nextX, nextY, this.xMarkDir, this.yMarkDir));
+						addEffect(new BulletEffect(nextX, nextY, xMarkDir, yMarkDir));
 					}
 					
 					// Then update the next coordinates to check
-					nextX += this.xMarkDir;
-					nextY += this.yMarkDir;
+					nextX += xMarkDir;
+					nextY += yMarkDir;
 					
 				} // END While Loop --------------------------------------
 				
@@ -769,20 +763,20 @@ public class SnakeGeneral extends GCharacter {
 				this.hitShots = false;
 				this.state = SnakeGeneral.STATE_PURSUE;
 				break;
-			case SnakeGeneral.STATE_PREP_MINE: //------------------------------------------------------------
+			case SnakeGeneral.STATE_PREP_MINE: //---------------------------------------------------------------
 				// Relative movement direction (Initialize at 0)
 				dx = 0;
 				dy = 0;
 				
 				// Recalculate relative movement directions
 				// X-movement
-				if(distX > 0) {
+				if (distX > 0) {
 					dx = 1;
 				} else if (distX < 0) {
 					dx = -1;
 				}
 				// Y-movement
-				if(distY > 0) {
+				if (distY > 0) {
 					dy = 1;
 				} else if (distY < 0) {
 					dy = -1;
@@ -792,8 +786,8 @@ public class SnakeGeneral extends GCharacter {
 				DumbFollow.blindPursue(distX, distY, -dx, -dy, this);
 				
 				// Lay down bomb
-				this.addEffect(new BombEffect(this.xPos + dx, this.yPos + dy, false));
-				this.placedBombs.add(new Triplet<Integer, Integer, Integer>(this.xPos + dx, this.yPos + dy, 5));
+				addEffect(new BombEffect(xPos + dx, yPos + dy, false));
+				placedBombs.add(new Triplet<Integer, Integer, Integer>(xPos + dx, yPos + dy, 5));
 
 				// Switch back to mine attack state (AKA: pursuit)
 				this.state = SnakeGeneral.STATE_ATT_MINE;
@@ -804,22 +798,22 @@ public class SnakeGeneral extends GCharacter {
 				this.yPos = 0;
 				
 				// Decide which special attack to use
-				this.chooseSpecialAttack();
+				chooseSpecialAttack();
 				break;
 			case SnakeGeneral.STATE_SPC_ASSASSINATE: //------------------------------------------------------------
-				if(this.attCount == 0) {
+				if (attCount == 0) {
 					// Decide which direction to attack
 					Random r = new Random();
 					int whichDir = r.nextInt(4);
-					if(whichDir == 0) {
+					if (whichDir == 0) {
 						// Choose Up
 						this.xMarkDir = 0;
 						this.yMarkDir = -1;
-					} else if(whichDir == 1) {
+					} else if (whichDir == 1) {
 						// Choose Right
 						this.xMarkDir = 1;
 						this.yMarkDir = 0;
-					} else if(whichDir == 2) {
+					} else if (whichDir == 2) {
 						// Choose Down
 						this.xMarkDir = 0;
 						this.yMarkDir = 1;
@@ -828,78 +822,74 @@ public class SnakeGeneral extends GCharacter {
 						this.xMarkDir = -1;
 						this.yMarkDir = 0;
 					}
-				} else if(this.attCount <= 3) {
-					
+				} else if (attCount <= 3) {
 					// Show illusion images around the player
-					this.addEffect(new WarpFizzleEffect(plrX, plrY - 1));
-					this.addEffect(new WarpFizzleEffect(plrX + 1, plrY));
-					this.addEffect(new WarpFizzleEffect(plrX, plrY + 1));
-					this.addEffect(new WarpFizzleEffect(plrX - 1, plrY));
-					
-				} else if(this.attCount == 4) {
+					addEffect(new WarpFizzleEffect(plrX, plrY - 1));
+					addEffect(new WarpFizzleEffect(plrX + 1, plrY));
+					addEffect(new WarpFizzleEffect(plrX, plrY + 1));
+					addEffect(new WarpFizzleEffect(plrX - 1, plrY));
+				} else if (attCount == 4) {
 					// Warp next to player
-					this.xPos = plrX + this.xMarkDir;
-					this.yPos = plrY + this.yMarkDir;
+					this.xPos = (plrX + xMarkDir);
+					this.yPos = (plrY + yMarkDir);
 					
 					// Display fakes in other directions (if general is not there)
 					boolean hpFlag = isHealthy();
 					
 					// Up direction
-					if(!((plrX == this.xPos) && (plrY - 1 == this.yPos))) {
-						this.addEffect(new FakeSnakeEffect(plrX, plrY - 1, FakeSnakeType.FIRE_PREP, hpFlag));
+					if (!((plrX == xPos) && (plrY - 1 == yPos))) {
+						addEffect(new FakeSnakeEffect(plrX, plrY - 1, FakeSnakeType.FIRE_PREP, hpFlag));
 					}
 					
 					// Right direction
-					if(!((plrX + 1 == this.xPos) && (plrY == this.yPos))) {
-						this.addEffect(new FakeSnakeEffect(plrX + 1, plrY, FakeSnakeType.FIRE_PREP, hpFlag));
+					if (!((plrX + 1 == xPos) && (plrY == yPos))) {
+						addEffect(new FakeSnakeEffect(plrX + 1, plrY, FakeSnakeType.FIRE_PREP, hpFlag));
 					}
 					
 					// Down direction
-					if(!((plrX == this.xPos) && (plrY + 1 == this.yPos))) {
-						this.addEffect(new FakeSnakeEffect(plrX, plrY + 1, FakeSnakeType.FIRE_PREP, hpFlag));
+					if (!((plrX == xPos) && (plrY + 1 == yPos))) {
+						addEffect(new FakeSnakeEffect(plrX, plrY + 1, FakeSnakeType.FIRE_PREP, hpFlag));
 					}
 					
 					// Left direction
-					if(!((plrX - 1 == this.xPos) && (plrY == this.yPos))) {
-						this.addEffect(new FakeSnakeEffect(plrX - 1, plrY, FakeSnakeType.FIRE_PREP, hpFlag));
+					if (!((plrX - 1 == xPos) && (plrY == yPos))) {
+						addEffect(new FakeSnakeEffect(plrX - 1, plrY, FakeSnakeType.FIRE_PREP, hpFlag));
 					}
-					
 				} else {
 					// Reset attack count
 					this.attCount = 0;
 					
 					// Check if we've taken damage recently
-					if(this.recentDmg) {
+					if (recentDmg) {
 						// Stun the general and break
-						this.stunGeneral();
+						stunGeneral();
 						break;
 					} else {
 						// Correct attacking direction
-						this.xMarkDir = this.xMarkDir * -1;
-						this.yMarkDir = this.yMarkDir * -1;
+						this.xMarkDir = xMarkDir * -1;
+						this.yMarkDir = yMarkDir * -1;
 						
 						// Mark Tiles for damage
-						this.addEffect(new FireEffect(this.xPos + this.xMarkDir, this.yPos + this.yMarkDir));
-						this.addEffect(new FireEffect(this.xPos + (this.xMarkDir*2), this.yPos + (this.yMarkDir*2)));
-						this.addEffect(new FireEffect(this.xPos + this.xMarkDir - (this.yMarkDir), this.yPos + this.yMarkDir - (this.xMarkDir)));
-						this.addEffect(new FireEffect(this.xPos + this.xMarkDir + (this.yMarkDir), this.yPos + this.yMarkDir + (this.xMarkDir)));
+						addEffect(new FireEffect(xPos + xMarkDir, yPos + yMarkDir));
+						addEffect(new FireEffect(xPos + (xMarkDir*2), yPos + (yMarkDir*2)));
+						addEffect(new FireEffect(xPos + xMarkDir - (yMarkDir), yPos + yMarkDir - (xMarkDir)));
+						addEffect(new FireEffect(xPos + xMarkDir + (yMarkDir), yPos + yMarkDir + (xMarkDir)));
 						
 						// Play fire sound
 						SoundPlayer.playWAV(GPath.createSoundPath("fire_ATT.wav"));
 						
 						// Attack player if in affected space
-						if((plrX == this.xPos + this.xMarkDir && plrY == this.yPos + this.yMarkDir) ||
-								(plrX == this.xPos + (this.xMarkDir*2) && plrY == this.yPos + (this.yMarkDir*2)) ||
-								(plrX == this.xPos + this.xMarkDir - (this.yMarkDir) && plrY == this.yPos + this.yMarkDir - (this.xMarkDir)) ||
-								(plrX == this.xPos + this.xMarkDir + (this.yMarkDir) && plrY == this.yPos + this.yMarkDir + (this.xMarkDir))) {
-							this.playerInitiate();
+						if ((plrX == xPos + xMarkDir && plrY == yPos + yMarkDir) ||
+								(plrX == xPos + (xMarkDir*2) && plrY == yPos + (yMarkDir*2)) ||
+								(plrX == xPos + xMarkDir - (yMarkDir) && plrY == yPos + yMarkDir - (xMarkDir)) ||
+								(plrX == xPos + xMarkDir + (yMarkDir) && plrY == yPos + yMarkDir + (xMarkDir))) {
+							playerInitiate();
 						}
 						
 						// Change state to attacked
 						this.state = SnakeGeneral.STATE_SPC_ASSASSINATE_ATT;
 						break;
 					}
-					
 				}
 
 				// Increment attack counter
@@ -908,13 +898,13 @@ public class SnakeGeneral extends GCharacter {
 			case SnakeGeneral.STATE_SPC_ASSASSINATE_ATT: //------------------------------------------------------------
 				boolean inWallAtt = false;
 				try {
-					inWallAtt = MovableType.isWall(GameScreen.getTile(this.xPos, this.yPos).getTileType().getMovableType());
+					inWallAtt = MovableType.isWall(GameScreen.getTile(xPos, yPos).getTileType().getMovableType());
 				} catch (ArrayIndexOutOfBoundsException e) {
 					inWallAtt = true;
 				}
 				
-				if(inWallAtt) {
-					this.warpGeneral(plrX, plrY);
+				if (inWallAtt) {
+					warpGeneral(plrX, plrY);
 				}
 				
 				// Reset attack/special counter and change state
@@ -923,10 +913,10 @@ public class SnakeGeneral extends GCharacter {
 				this.state = SnakeGeneral.STATE_PURSUE;
 				break;
 			case SnakeGeneral.STATE_SPC_BLITZ: //------------------------------------------------------------
-				if(this.attCount == 0) {
+				if (attCount == 0) {
 					// Determine attack order
 					Random r = new Random();
-					for(int i = 3; i > 0; i--) {
+					for (int i = 3; i > 0; i--) {
 						// Randomize swap index
 						int shuffCoord = r.nextInt(i + 1);
 						
@@ -937,50 +927,50 @@ public class SnakeGeneral extends GCharacter {
 					}
 				}
 				
-				if(this.attCount <= 3) {
+				if (attCount <= 3) {
 					// Flash warning across attacking rows
-					for(int i = 4; i <= 8; i++) {
-						this.addEffect(new WarningIndicator(i, this.rowOrder[this.attCount]));
+					for (int i = 4; i <= 8; i++) {
+						addEffect(new WarningIndicator(i, rowOrder[attCount]));
 					}
-				} else if(this.attCount <= 7) {
+				} else if (attCount <= 7) {
 					// Attack the rows in order they were previously warned
 					
 					// Put attack effects and check to damage player
 					SoundPlayer.playWAV(GPath.createSoundPath("swing_ATT.wav"));
-					for(int i = 4; i <= 8; i++) {
-						this.addEffect(new DamageIndicator(i, this.rowOrder[(this.attCount-4)]));
-						if(plrX == i && plrY == this.rowOrder[(this.attCount-4)]) {
-							this.playerInitiate();
+					for (int i = 4; i <= 8; i++) {
+						addEffect(new DamageIndicator(i, rowOrder[(attCount-4)]));
+						if (plrX == i && plrY == rowOrder[(attCount-4)]) {
+							playerInitiate();
 						}
 					}
 					
 					// Display the General attacking the current row
-					if(this.attCount == 7) {
+					if (attCount == 7) {
 						// Warp real General to last attack location (Right side)
 						this.xPos = 9;
-						this.yPos = this.rowOrder[(this.attCount-4)];
+						this.yPos = rowOrder[(attCount-4)];
 					} else {
 						// Display a fake General at the location
-						if(this.attCount % 2 == 0) {
+						if (attCount % 2 == 0) {
 							// Left side
-							this.addEffect(new FakeSnakeEffect(3, this.rowOrder[(this.attCount-4)], FakeSnakeType.SWIPE_ATT, isHealthy()));
+							addEffect(new FakeSnakeEffect(3, rowOrder[(attCount-4)], FakeSnakeType.SWIPE_ATT, isHealthy()));
 						} else {
 							// Right side
-							this.addEffect(new FakeSnakeEffect(9, this.rowOrder[(this.attCount-4)], FakeSnakeType.SWIPE_ATT, isHealthy()));
+							addEffect(new FakeSnakeEffect(9, rowOrder[(attCount-4)], FakeSnakeType.SWIPE_ATT, isHealthy()));
 						}
 					}
 					
-				} else if(this.attCount <= 10) {
+				} else if (attCount <= 10) {
 					// Cooldown for three turns
 					
 					// If we're hit during cooldown, enter stun
-					if(this.recentDmg) {
+					if (recentDmg) {
 						// Reset attack/special count
 						this.attCount = 0;
 						this.spcCount = 0;
 						
 						// Stun the general and break
-						this.stunGeneral();
+						stunGeneral();
 						break;
 					}
 					
@@ -990,13 +980,13 @@ public class SnakeGeneral extends GCharacter {
 					this.spcCount = 0;
 					
 					// If we're hit before warp, enter stun
-					if(this.recentDmg) {
+					if (recentDmg) {
 						// Stun the general and break
-						this.stunGeneral();
+						stunGeneral();
 						break;
 					} else {
 						// Warp General back to arena
-						this.warpGeneral(plrX, plrY);
+						warpGeneral(plrX, plrY);
 	
 						// Change state to pursue
 						this.state = SnakeGeneral.STATE_PURSUE;
@@ -1008,10 +998,10 @@ public class SnakeGeneral extends GCharacter {
 				this.attCount += 1;
 				break;
 			case SnakeGeneral.STATE_SPC_CANNON: //------------------------------------------------------------
-				if(this.attCount == 0) {
+				if (attCount == 0) {
 					// Determine attack directions
 					Random r = new Random();
-					for(int i = 3; i > 0; i--) {
+					for (int i = 3; i > 0; i--) {
 						// Randomize swap index
 						int shuffCoord = r.nextInt(i + 1);
 						
@@ -1022,137 +1012,134 @@ public class SnakeGeneral extends GCharacter {
 					}
 					
 					// Mark the spots for warning
-					this.addEffect(new WarningIndicator(4, this.rowOrder[0]));
-					this.addEffect(new WarningIndicator(4, this.rowOrder[1]));
-					this.addEffect(new WarningIndicator(8, this.rowOrder[2]));
-					this.addEffect(new WarningIndicator(8, this.rowOrder[3]));
+					addEffect(new WarningIndicator(4, rowOrder[0]));
+					addEffect(new WarningIndicator(4, rowOrder[1]));
+					addEffect(new WarningIndicator(8, rowOrder[2]));
+					addEffect(new WarningIndicator(8, rowOrder[3]));
 					
 					// Show General warping in
-					this.addEffect(new WarpFizzleEffect(3, this.rowOrder[0]));
-					this.addEffect(new WarpFizzleEffect(3, this.rowOrder[1]));
-					this.addEffect(new WarpFizzleEffect(9, this.rowOrder[2]));
-					this.addEffect(new WarpFizzleEffect(9, this.rowOrder[3]));
-				} else if(this.attCount <= CANNON_MAX) {
-					
+					addEffect(new WarpFizzleEffect(3, rowOrder[0]));
+					addEffect(new WarpFizzleEffect(3, rowOrder[1]));
+					addEffect(new WarpFizzleEffect(9, rowOrder[2]));
+					addEffect(new WarpFizzleEffect(9, rowOrder[3]));
+				} else if (attCount <= CANNON_MAX) {
 					// Warp in on the first turn of attack
-					if(this.attCount == 1) {
+					if (attCount == 1) {
 						int whichPos = new Random().nextInt(4);
-						if(whichPos <= 1) {
+						if (whichPos <= 1) {
 							// Left positions
 							this.xPos = 3;
-							this.yPos = this.rowOrder[whichPos];
+							this.yPos = rowOrder[whichPos];
 						} else {
 							// Right positions
 							this.xPos = 9;
-							this.yPos = this.rowOrder[whichPos];
+							this.yPos = rowOrder[whichPos];
 						}
 					}
 					
 					// If we're hit during cannon firing, enter stun
-					if(this.recentDmg) {
+					if (recentDmg) {
 						// Reset attack/special count
 						this.attCount = 0;
 						this.spcCount = 0;
 						
 						// Stun the general and break
-						this.stunGeneral();
+						stunGeneral();
 						break;
 					}
 					
 					// Flag indicating if we're attacking on the left side
 					// True = Left side | False = Right side
-					boolean isLeftSideTurn = (this.attCount % 2 == 1);
+					boolean isLeftSideTurn = (attCount % 2 == 1);
 					
 					// Health flag for displaying fakes
 					boolean hpFlag = isHealthy();
 					
 					// Mark other firing spots with Fake Generals
 					// First row (Left)
-					if(!((this.xPos == 3) && (this.yPos == this.rowOrder[0]))) {
+					if (!((xPos == 3) && (yPos == rowOrder[0]))) {
 						if (isLeftSideTurn) {
-							this.addEffect(new FakeSnakeEffect(3, this.rowOrder[0], FakeSnakeType.CANNON_ATT, hpFlag));
+							addEffect(new FakeSnakeEffect(3, rowOrder[0], FakeSnakeType.CANNON_ATT, hpFlag));
 						} else {
-							this.addEffect(new FakeSnakeEffect(3, this.rowOrder[0], FakeSnakeType.CANNON_PREP, hpFlag));
+							addEffect(new FakeSnakeEffect(3, rowOrder[0], FakeSnakeType.CANNON_PREP, hpFlag));
 						}
 					}
 					
 					// Second row (Left)
-					if(!((this.xPos == 3) && (this.yPos == this.rowOrder[1]))) {
+					if (!((xPos == 3) && (yPos == rowOrder[1]))) {
 						if (isLeftSideTurn) {
-							this.addEffect(new FakeSnakeEffect(3, this.rowOrder[1], FakeSnakeType.CANNON_ATT, hpFlag));
+							addEffect(new FakeSnakeEffect(3, rowOrder[1], FakeSnakeType.CANNON_ATT, hpFlag));
 						} else {
-							this.addEffect(new FakeSnakeEffect(3, this.rowOrder[1], FakeSnakeType.CANNON_PREP, hpFlag));
+							addEffect(new FakeSnakeEffect(3, rowOrder[1], FakeSnakeType.CANNON_PREP, hpFlag));
 						}
 					}
 					
 					// Third row (Right)
-					if(!((this.xPos == 9) && (this.yPos == this.rowOrder[2]))) {
+					if (!((xPos == 9) && (yPos == rowOrder[2]))) {
 						if (isLeftSideTurn) {
-							this.addEffect(new FakeSnakeEffect(9, this.rowOrder[2], FakeSnakeType.CANNON_PREP, hpFlag));
+							addEffect(new FakeSnakeEffect(9, rowOrder[2], FakeSnakeType.CANNON_PREP, hpFlag));
 						} else {
-							this.addEffect(new FakeSnakeEffect(9, this.rowOrder[2], FakeSnakeType.CANNON_ATT, hpFlag));
+							addEffect(new FakeSnakeEffect(9, rowOrder[2], FakeSnakeType.CANNON_ATT, hpFlag));
 						}
 					}
 					
 					// Fourth row (Right)
-					if(!((this.xPos == 9) && (this.yPos == this.rowOrder[3]))) {
+					if (!((xPos == 9) && (yPos == rowOrder[3]))) {
 						if (isLeftSideTurn) {
-							this.addEffect(new FakeSnakeEffect(9, this.rowOrder[3], FakeSnakeType.CANNON_PREP, hpFlag));
+							addEffect(new FakeSnakeEffect(9, rowOrder[3], FakeSnakeType.CANNON_PREP, hpFlag));
 						} else {
-							this.addEffect(new FakeSnakeEffect(9, this.rowOrder[3], FakeSnakeType.CANNON_ATT, hpFlag));
+							addEffect(new FakeSnakeEffect(9, rowOrder[3], FakeSnakeType.CANNON_ATT, hpFlag));
 						}
 					}
 					
 					// Play cannon sound
-					this.playCannonSound();
+					playCannonSound();
 					
 					// Alternate cannon-firing side
-					if(isLeftSideTurn) {
+					if (isLeftSideTurn) {
 						// Fire left cannons for the turn
-						this.addProjectile(new SnakeCannonball(4, this.rowOrder[0], 1, 0, this.getClass()));
-						this.addProjectile(new SnakeCannonball(4, this.rowOrder[1], 1, 0, this.getClass()));
-						this.addEffect(new DamageIndicator(4, this.rowOrder[0]));
-						this.addEffect(new DamageIndicator(4, this.rowOrder[1]));
+						addProjectile(new SnakeCannonball(4, rowOrder[0], 1, 0, getClass()));
+						addProjectile(new SnakeCannonball(4, rowOrder[1], 1, 0, getClass()));
+						addEffect(new DamageIndicator(4, rowOrder[0]));
+						addEffect(new DamageIndicator(4, rowOrder[1]));
 					} else {
 						// Fire right cannons for the turn
-						this.addProjectile(new SnakeCannonball(8, this.rowOrder[2], -1, 0, this.getClass()));
-						this.addProjectile(new SnakeCannonball(8, this.rowOrder[3], -1, 0, this.getClass()));
-						this.addEffect(new DamageIndicator(8, this.rowOrder[2]));
-						this.addEffect(new DamageIndicator(8, this.rowOrder[3]));
+						addProjectile(new SnakeCannonball(8, rowOrder[2], -1, 0, getClass()));
+						addProjectile(new SnakeCannonball(8, rowOrder[3], -1, 0, getClass()));
+						addEffect(new DamageIndicator(8, rowOrder[2]));
+						addEffect(new DamageIndicator(8, rowOrder[3]));
 					}
-				} else if(this.attCount <= (CANNON_MAX + CANNON_COOLDOWN)) { 
+				} else if (attCount <= (CANNON_MAX + CANNON_COOLDOWN)) { 
 					// Cooldown period
 					
 					// If we're hit during cooldown, enter stun
-					if(this.recentDmg) {
+					if (recentDmg) {
 						// Reset attack/special count
 						this.attCount = 0;
 						this.spcCount = 0;
 						
 						// Stun the general and break
-						this.stunGeneral();
+						stunGeneral();
 						break;
 					}
 				} else {
-
-				// Reset attack/special count
-				this.attCount = 0;
-				this.spcCount = 0;
-				
-				// If we're hit before warp, enter stun
-				if(this.recentDmg) {
-					// Stun the general and break
-					this.stunGeneral();
-					break;
-				} else {
-					// Warp General back to arena
-					this.warpGeneral(plrX, plrY);
-
-					// Change state to pursue
-					this.state = SnakeGeneral.STATE_PURSUE;
-					break;	
-				}
+					// Reset attack/special count
+					this.attCount = 0;
+					this.spcCount = 0;
 					
+					// If we're hit before warp, enter stun
+					if (recentDmg) {
+						// Stun the general and break
+						stunGeneral();
+						break;
+					} else {
+						// Warp General back to arena
+						warpGeneral(plrX, plrY);
+	
+						// Change state to pursue
+						this.state = SnakeGeneral.STATE_PURSUE;
+						break;	
+					}	
 				}
 
 				// Increment attack counter
@@ -1160,20 +1147,20 @@ public class SnakeGeneral extends GCharacter {
 				break;
 			case SnakeGeneral.STATE_STUN: //------------------------------------------------------------
 				// Stay stunned for a few turns
-				if(this.attCount <= STUN_TIME) {
+				if (attCount <= STUN_TIME) {
 					// Do nothing
 					this.attCount += 1;
 				} else {
 					// Warp to a corner in the arena if we're inside a wall
 					boolean inWallStn = false;
 					try {
-						inWallStn = MovableType.isWall(GameScreen.getTile(this.xPos, this.yPos).getTileType().getMovableType());
+						inWallStn = MovableType.isWall(GameScreen.getTile(xPos, yPos).getTileType().getMovableType());
 					} catch (ArrayIndexOutOfBoundsException e) {
 						inWallStn = true;
 					}
 					
-					if(inWallStn) {
-						this.warpGeneral(plrX, plrY);
+					if (inWallStn) {
+						warpGeneral(plrX, plrY);
 					}
 					
 					// Reset attack/special counter and change state
@@ -1183,10 +1170,8 @@ public class SnakeGeneral extends GCharacter {
 				}
 				break;
 			default: //---------------------------------------------------------------------------------
-				System.out.println(this.getName() +
-						" couldn't take its turn. State = " + Integer.toString(this.state));
+				System.out.println(getName() + " couldn't take its turn. State = " + Integer.toString(state));
 				return;
-				
 		} // END OF SWITCH STATEMENT ****
 		
 		// End of turn incrementing/resetting of certain variables
@@ -1201,10 +1186,10 @@ public class SnakeGeneral extends GCharacter {
 		int bestTotal = -1;
 		
 		// Check for corner furthest away from player
-		for(Dimension d: this.corners) {
+		for (Dimension d: corners) {
 			int xDist = Math.abs(d.width - plrX);
 			int yDist = Math.abs(d.height - plrY);
-			if(bestTotal < (xDist + yDist)) {
+			if (bestTotal < (xDist + yDist)) {
 				bestCorner = d;
 				bestTotal = (xDist + yDist);
 			}
@@ -1233,52 +1218,52 @@ public class SnakeGeneral extends GCharacter {
 	// Manage the bombs we have on screen (if there are any)
 	private void manageBombs(int plrX, int plrY) {
 		// Check if we have any bombs to manage
-		if(this.placedBombs.size() <= 0) {
+		if (placedBombs.size() <= 0) {
 			// If no bombs, do nothing
 			return;
 		}
 		
 		ArrayList<Triplet<Integer, Integer, Integer>> bombsToRemove = new ArrayList<Triplet<Integer, Integer, Integer>>();
-		for(Triplet<Integer, Integer, Integer> bomb: this.placedBombs) {
+		for (Triplet<Integer, Integer, Integer> bomb: placedBombs) {
 			// Tick down the bomb's timer by 1
 			bomb.z += -1;
 			
 			// Check bomb's timer
-			if(bomb.z <= 0) {
+			if (bomb.z <= 0) {
 				// Detonate bomb if timer at 0
-				this.addEffect(new FireEffect(bomb.x, bomb.y));				// Center
-				this.addEffect(new FireEffect(bomb.x + 1, bomb.y - 1));		// Top-right
-				this.addEffect(new FireEffect(bomb.x + 1, bomb.y + 1));		// Bottom-right
-				this.addEffect(new FireEffect(bomb.x - 1, bomb.y - 1));		// Top-left
-				this.addEffect(new FireEffect(bomb.x - 1, bomb.y + 1));		// Bottom-left
+				addEffect(new FireEffect(bomb.x, bomb.y));				// Center
+				addEffect(new FireEffect(bomb.x + 1, bomb.y - 1));		// Top-right
+				addEffect(new FireEffect(bomb.x + 1, bomb.y + 1));		// Bottom-right
+				addEffect(new FireEffect(bomb.x - 1, bomb.y - 1));		// Top-left
+				addEffect(new FireEffect(bomb.x - 1, bomb.y + 1));		// Bottom-left
 				
 				// Play bomb detonation
 				SoundPlayer.playWAV(GPath.createSoundPath("fire_ATT.wav"));
 				
 				// Check if bomb hit the player
-				if((plrX == bomb.x && plrY == bomb.y) ||
+				if ((plrX == bomb.x && plrY == bomb.y) ||
 						((plrX == bomb.x + 1) && (plrY == bomb.y + 1 || plrY == bomb.y - 1)) ||
 						((plrX == bomb.x - 1) && (plrY == bomb.y + 1 || plrY == bomb.y - 1))) {
-					this.playerInitiate();
+					playerInitiate();
 				}
 				
 				// Add bomb to clean-up list
 				bombsToRemove.add(bomb);
 			} else {
 				// Continue to display bomb effect
-				if(bomb.z == 1) {
+				if (bomb.z == 1) {
 					// If timer is at 1, display different effect
-					this.addEffect(new BombEffect(bomb.x, bomb.y, true));
+					addEffect(new BombEffect(bomb.x, bomb.y, true));
 				} else {
 					// Otherwise, display regular bomb effect
-					this.addEffect(new BombEffect(bomb.x, bomb.y, false));
+					addEffect(new BombEffect(bomb.x, bomb.y, false));
 				}
 			}
 		}
 		
 		// Remove detonated bombs from tracked list
-		for(Triplet<Integer, Integer, Integer> deadBomb: bombsToRemove) {
-			this.placedBombs.remove(deadBomb);
+		for (Triplet<Integer, Integer, Integer> deadBomb: bombsToRemove) {
+			placedBombs.remove(deadBomb);
 		}
 		bombsToRemove = null;
 	}
@@ -1286,9 +1271,9 @@ public class SnakeGeneral extends GCharacter {
 	// Chooses the next close-quarters melee attack for the General
 	private void chooseCQMeleeAttack() {
 		int whichAttack = new Random().nextInt(30);
-		if(whichAttack <= this.dmgCount) {
+		if (whichAttack <= dmgCount) {
 			this.state = SnakeGeneral.STATE_PREP_RETREAT;
-		} else if(whichAttack <= 18) {
+		} else if (whichAttack <= 18) {
 			this.state = SnakeGeneral.STATE_PREP_COMBO;
 		} else {
 			this.state = SnakeGeneral.STATE_PREP_MINE;
@@ -1298,11 +1283,11 @@ public class SnakeGeneral extends GCharacter {
 	// Chooses the next ranged melee attack for the General
 	private void chooseRangedMeleeAttack() {
 		int whichAttack = new Random().nextInt(45);
-		if(whichAttack <= this.dmgCount) {
+		if (whichAttack <= dmgCount) {
 			this.state = SnakeGeneral.STATE_PREP_RETREAT;
-		} else if(whichAttack <= 15) {
+		} else if (whichAttack <= 15) {
 			this.state = SnakeGeneral.STATE_PREP_COMBO;
-		} else if(whichAttack <= 35) {
+		} else if (whichAttack <= 35) {
 			// Play reving sound
 			SoundPlayer.playWAV(GPath.createSoundPath("Chaingun_Rev.wav"));
 			this.state = SnakeGeneral.STATE_PREP_CHAINGUN;
@@ -1314,20 +1299,20 @@ public class SnakeGeneral extends GCharacter {
 	// Chooses the next special attack for the General
 	private void chooseSpecialAttack() {
 		// Check and reset special attack flags if all are hit
-		this.checkSpcAttacks();
+		checkSpcAttacks();
 		
 		// Create and populate temp attack list
 		ArrayList<Integer> attacks = new ArrayList<Integer>();
 		
-		if(!this.didSpc0) {
+		if (!didSpc0) {
 			attacks.add(SnakeGeneral.STATE_SPC_ASSASSINATE);
 		}
 		
-		if(!this.didSpc1) {
+		if (!didSpc1) {
 			attacks.add(SnakeGeneral.STATE_SPC_BLITZ);
 		}
 		
-		if(!this.didSpc2) {
+		if (!didSpc2) {
 			attacks.add(SnakeGeneral.STATE_SPC_CANNON);
 		}
 		
@@ -1335,7 +1320,7 @@ public class SnakeGeneral extends GCharacter {
 		int whichAttack = new Random().nextInt(attacks.size());
 		this.state = attacks.get(whichAttack);
 		
-		switch(this.state) {
+		switch (state) {
 			case SnakeGeneral.STATE_SPC_ASSASSINATE:
 				this.didSpc0 = true;
 				break;
@@ -1346,7 +1331,7 @@ public class SnakeGeneral extends GCharacter {
 				this.didSpc2 = true;
 				break;
 			default:
-				System.out.println("Special attack not recognized: " + this.state);
+				System.out.println("Special attack not recognized: " + state);
 				break;
 		}
 		
@@ -1358,9 +1343,9 @@ public class SnakeGeneral extends GCharacter {
 	// Plays a hurt sound when the General takes damage TODO
 	private void playHurt() {
 //		Random r = new Random();
-//		if(r.nextInt(4) == 0) {
+//		if (r.nextInt(4) == 0) {
 //			int whichSound = r.nextInt(2);
-//			if(whichSound == 0) {
+//			if (whichSound == 0) {
 //				SoundPlayer.playWAV(GPath.createSoundPath("king_hurt1.wav"));
 //			} else {
 //				SoundPlayer.playWAV(GPath.createSoundPath("king_hurt2.wav"));
@@ -1371,39 +1356,22 @@ public class SnakeGeneral extends GCharacter {
 	// Choose random cannon fire sound to play
 	private void playCannonSound() {
 		// Decide sound to play
-		Random r = new Random();
-		int whichSound = r.nextInt(4);
+		int whichSound = (new Random().nextInt(4) + 1);
 		
 		// Play the sound
-		switch(whichSound) {
-			case 0:
-				SoundPlayer.playWAV(GPath.createSoundPath("CannonFire1.wav"));
-				break;
-			case 1:
-				SoundPlayer.playWAV(GPath.createSoundPath("CannonFire2.wav"));
-				break;
-			case 2:
-				SoundPlayer.playWAV(GPath.createSoundPath("CannonFire3.wav"));
-				break;
-			case 3:
-				SoundPlayer.playWAV(GPath.createSoundPath("CannonFire4.wav"));
-				break;
-			default:
-				SoundPlayer.playWAV(GPath.createSoundPath("CannonFire1.wav"));
-				break;
-		}
+		SoundPlayer.playWAV(GPath.createSoundPath("CannonFire" + whichSound + ".wav"));
 	}
 	
 	// Checks to see if each special attack has been used once.
 	// If so, reset the flags and allow them to all be used again.
 	private void checkSpcAttacks() {
-		if(this.didAllSpcAttacks()) {
-			this.resetSpcAttacks();
+		if (didAllSpcAttacks()) {
+			resetSpcAttacks();
 		}
 	}
 	
 	private boolean didAllSpcAttacks() {
-		return (this.didSpc0 && this.didSpc1 && this.didSpc2);
+		return (didSpc0 && didSpc1 && didSpc2);
 	}
 	
 	private void resetSpcAttacks() {

@@ -14,7 +14,10 @@ import managers.EntityManager;
 import projectiles.CactianNeedle;
 import tiles.MovableType;
 
-// Class representing the 'Cactian' enemy found in the Poacher's Desert area
+/**
+ * Class representing the Cactian enemy found in the Poacher's Desert area
+ * @author jeoliva
+ */
 public class Cactian extends GCharacter {
 
 	// Serialization ID
@@ -22,15 +25,15 @@ public class Cactian extends GCharacter {
 
 	// Modifiers/Statistics
 	
-	private int MAX_HP = 8;
+	private static int MAX_HP = 8;
 	
-	private int ARMOR_VAL = 1;
+	private static int ARMOR_VAL = 1;
 	
-	private int MIN_DMG = 3;
-	private int MAX_DMG = 4;
+	private static int MIN_DMG = 3;
+	private static int MAX_DMG = 4;
 	
-	private double CRIT_CHANCE = 0.1;
-	private double CRIT_MULT = 1.5;
+	private static double CRIT_CHANCE = 0.1;
+	private static double CRIT_MULT = 1.5;
 	
 	//----------------------------
 	
@@ -60,40 +63,22 @@ public class Cactian extends GCharacter {
 	//----------------------------
 	
 	// File paths to images
-	private String imageDir = GPath.createImagePath(GPath.ENEMY, GPath.CACTIAN);
-	private String ctImage_base = "cactian";
+	private static String imageDir = GPath.createImagePath(GPath.ENEMY, GPath.CACTIAN);
+	private static String ctImage_base = "cactian";
 	
-	private String ctImage_DEAD = GPath.createImagePath(GPath.ENEMY, GPath.CACTIAN, "cactian_dead.png");
-	private String ctImage_DEAD_CRIT = GPath.createImagePath(GPath.ENEMY, GPath.CACTIAN, "cactian_dead.png");
+	private static String ctImage_DEAD = GPath.createImagePath(GPath.ENEMY, GPath.CACTIAN, "cactian_dead.png");
+	private static String ctImage_DEAD_CRIT = GPath.createImagePath(GPath.ENEMY, GPath.CACTIAN, "cactian_dead.png");
 
 	// Constructors
 	public Cactian(int startX, int startY) {
-		super(startX, startY);
-		
-		this.maxHP = MAX_HP;
-		this.currentHP = this.maxHP;
-		
-		this.armor = ARMOR_VAL;
-		
-		this.minDmg = MIN_DMG;
-		this.maxDmg = MAX_DMG;
-		
-		this.critChance = CRIT_CHANCE;
-		this.critMult = CRIT_MULT;
-		
-		this.state = Cactian.STATE_IDLE;
-		this.patrolPattern = PatrolPattern.STATIONARY;
-		
-		this.canFocus = false;
-		
-		this.imagePath = this.getImage();
+		this(startX, startY, PatrolPattern.STATIONARY);
 	}
 	
 	public Cactian(int startX, int startY, PatrolPattern patpat) {
 		super(startX, startY);
 		
 		this.maxHP = MAX_HP;
-		this.currentHP = this.maxHP;
+		this.currentHP = maxHP;
 		
 		this.armor = ARMOR_VAL;
 		
@@ -107,8 +92,6 @@ public class Cactian extends GCharacter {
 		this.patrolPattern = patpat;
 		
 		this.canFocus = false;
-		
-		this.imagePath = this.getImage();
 	}
 	
 	public String getName() {
@@ -117,25 +100,25 @@ public class Cactian extends GCharacter {
 	
 	@Override
 	public String getImage() {
-		String imgPath = this.imageDir + this.ctImage_base;
+		String imgPath = (imageDir + ctImage_base);
 		String hpPath = "";
 		String statePath = "";
 		
-		if(this.currentHP > (this.maxHP / 2)) {
+		if (currentHP > (maxHP / 2)) {
 			hpPath = "_full";
-		} else if(this.currentHP > 0) {
+		} else if (currentHP > 0) {
 			hpPath = "_fatal";
 		} else {
 			hpPath = "_dead";
 			return (imgPath + hpPath + ".png");
 		}
 		
-		switch(this.state) {
+		switch (state) {
 			case Cactian.STATE_IDLE:
 				// No extra path
 				break;
 			case Cactian.STATE_PURSUE:
-				if(this.whichStep) {
+				if (whichStep) {
 					statePath = "_PURSUE_STEP1";
 				} else {
 					statePath = "_PURSUE_STEP2";
@@ -152,8 +135,7 @@ public class Cactian extends GCharacter {
 				statePath = "_ATT_SHOOT";
 				break;
 			default:
-				System.out.println
-					(this.getName() + " couldn't find a proper image: " + Integer.toString(this.state));
+				System.out.println(getName() + " couldn't find a proper image: " + Integer.toString(state));
 				return GPath.NULL;
 		}
 		
@@ -161,10 +143,10 @@ public class Cactian extends GCharacter {
 	}
 	
 	public String getCorpseImage() {
-		if(this.currentHP < -(this.maxHP / 2)) {
-			return this.ctImage_DEAD_CRIT;
+		if (currentHP < -(maxHP / 2)) {
+			return ctImage_DEAD_CRIT;
 		} else {
-			return this.ctImage_DEAD;
+			return ctImage_DEAD;
 		}
 	}
 	
@@ -176,12 +158,12 @@ public class Cactian extends GCharacter {
 	@Override
 	public void playerInitiate() {
 		SoundPlayer.playWAV(GPath.createSoundPath("Beanpole_ATTACK.wav"));
-		this.attackPlayer();
+		attackPlayer();
 	}
 	
 	@Override
 	public void onDeath() {
-		if(this.currentHP < -(this.maxHP / 2)) {
+		if (currentHP < -(maxHP / 2)) {
 			SoundPlayer.playWAV(GPath.createSoundPath("Beanpole_DEATH_CRIT.wav"));
 		} else {
 			SoundPlayer.playWAV(GPath.createSoundPath("Beanpole_DEATH.wav"));
@@ -201,7 +183,7 @@ public class Cactian extends GCharacter {
 		Player player = EntityManager.getInstance().getPlayer();
 		
 		// If this is dead or the player is dead, don't do anything
-		if(!this.isAlive() || !player.isAlive()) {
+		if (!isAlive() || !player.isAlive()) {
 			// Do nothing
 			return;
 		}
@@ -211,18 +193,18 @@ public class Cactian extends GCharacter {
 		int plrY = player.getYPos();
 		
 		// Get relative location to player
-		int distX = plrX - this.xPos;
-		int distY = plrY - this.yPos;
+		int distX = (plrX - xPos);
+		int distY = (plrY - yPos);
 		
-		switch(this.state) {
+		switch (state) {
 			case Cactian.STATE_IDLE:
 				// If next to the player or damaged, awaken and alert other Cactians on this screen
-				if(((Math.abs(distX) <= 1) && (Math.abs(distY) == 0)) ||
+				if (((Math.abs(distX) <= 1) && (Math.abs(distY) == 0)) ||
 						((Math.abs(distX) == 0) && (Math.abs(distY) <= 1)) ||
-						this.currentHP != MAX_HP) {
+						currentHP != MAX_HP) {
 					SoundPlayer.playWAV(GPath.createSoundPath("Beanpole_ALERT.wav"));
 					this.state = Cactian.STATE_ALERTED;
-				} else if(this.shouldAwaken) {
+				} else if (shouldAwaken) {
 					// Change state
 					this.state = Cactian.STATE_AWAKEN;
 				} else {
@@ -233,8 +215,8 @@ public class Cactian extends GCharacter {
 			case Cactian.STATE_ALERTED:
 				// Rest for one turn, alerting all other Cactians on the screen
 				EntityManager em = EntityManager.getInstance();
-				for(GCharacter npc: em.getNPCManager().getCharacters()) {
-					if(npc != this && npc instanceof Cactian) {
+				for (GCharacter npc: em.getNPCManager().getCharacters()) {
+					if (npc != this && npc instanceof Cactian) {
 						// Set state to awaken
 						Cactian ct = (Cactian) npc;
 						ct.shouldAwaken = true;
@@ -262,23 +244,23 @@ public class Cactian extends GCharacter {
 				int dy = 0;
 				
 				// Calculate relative movement directions
-				if(distX > 0) {
+				if (distX > 0) {
 					dx = 1;
 				} else if (distX < 0) {
 					dx = -1;
 				}
 				
-				if(distY > 0) {
+				if (distY > 0) {
 					dy = 1;
 				} else if (distY < 0) {
 					dy = -1;
 				}
 				
 				// Change state to prep if in a line and at least 4 tiles from player
-				if(((Math.abs(distX) <= 4) && (Math.abs(distY) == 0)) ||
+				if (((Math.abs(distX) <= 4) && (Math.abs(distY) == 0)) ||
 						((Math.abs(distX) == 0) && (Math.abs(distY) <= 4))) {
-					boolean hasLOS = LineDrawer.hasSight(this.xPos, this.yPos, plrX, plrY);
-					if(hasLOS) {
+					boolean hasLOS = LineDrawer.hasSight(xPos, yPos, plrX, plrY);
+					if (hasLOS) {
 						// Mark direction to attack next turn
 						this.markX = dx;
 						this.markY = dy;
@@ -290,26 +272,26 @@ public class Cactian extends GCharacter {
 				}
 				
 				// Path-find to the player if we can
-				Dimension nextStep = PathFinder.findPath(this.xPos, this.yPos, plrX, plrY, this);
-				if(nextStep == null) {
+				Dimension nextStep = PathFinder.findPath(xPos, yPos, plrX, plrY, this);
+				if (nextStep == null) {
 					// Blindly pursue the target
 					DumbFollow.blindPursue(distX, distY, dx, dy, this);
 				} else {
-					int changeX = nextStep.width - this.xPos;
-					int changeY = nextStep.height - this.yPos;
-					this.moveCharacter(changeX, changeY);
+					int changeX = (nextStep.width - xPos);
+					int changeY = (nextStep.height - yPos);
+					moveCharacter(changeX, changeY);
 				}
 				
 				// Alternate step pattern
-				this.whichStep = !(this.whichStep);
+				this.whichStep = !(whichStep);
 				break;
 			case Cactian.STATE_PREP:
 				// Shoot projectile in player's direction
 				EntityManager.getInstance().getProjectileManager()
-				.addProjectile(new CactianNeedle((this.xPos + this.markX),
-										(this.yPos + this.markY),
-										this.markX,
-										this.markY, this.getClass()));
+					.addProjectile(new CactianNeedle((xPos + markX),
+										(yPos + markY),
+										markX,
+										markY, getClass()));
 
 				// Changes states
 				this.state = Cactian.STATE_ATT;
@@ -319,8 +301,7 @@ public class Cactian extends GCharacter {
 				this.state = Cactian.STATE_PURSUE;
 				break;
 			default:
-				System.out.println(this.getName() +
-						" couldn't take its turn. State = " + Integer.toString(this.state));
+				System.out.println(getName() + " couldn't take its turn. State = " + Integer.toString(state));
 				return;
 		}
 			
