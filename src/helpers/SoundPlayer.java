@@ -41,7 +41,7 @@ public class SoundPlayer {
 	}
 	
     private static ScheduledExecutorService createClipExecutor() {
-	    return Executors.newScheduledThreadPool(1, new ThreadFactory() {
+	    return Executors.newScheduledThreadPool(4, new ThreadFactory() {
 			@Override
 			public Thread newThread(Runnable r) {
 				Thread thread = Executors.defaultThreadFactory().newThread(r);
