@@ -88,13 +88,13 @@ public class Player implements Serializable {
 		
 		/// ***TEMP*** Set the area coordinates
 		// Default is 0, 1
-		this.areaX = 1;
+		this.areaX = 0;
 		this.areaY = 1;
 		
 		/// ***TEMP*** Set the level coordinates
 		// Default is 3, 2
-		this.levelX = 0;
-		this.levelY = 0;
+		this.levelX = 3;
+		this.levelY = 2;
 		
 		// Set health values
 		// Default is 20
