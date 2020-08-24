@@ -193,7 +193,7 @@ public class KingsHead extends GCharacter {
 	@Override
 	public void playerInitiate() {
 		if (state != KingsHead.STATE_STORM) {
-			SoundPlayer.playWAV(GPath.createSoundPath("head_chomp.wav"));
+			SoundPlayer.playWAV(GPath.createSoundPath("head_chomp.wav"), getXPos(), getYPos());
 		} else {
 			SoundPlayer.playWAV(GPath.createSoundPath("Beanpole_ATTACK.wav"));
 		}
@@ -203,7 +203,7 @@ public class KingsHead extends GCharacter {
 	@Override
 	public void onDeath() {
 		// Play death sound
-		SoundPlayer.playWAV(GPath.createSoundPath("Beanpole_DEATH_CRIT.wav"));
+		SoundPlayer.playWAV(GPath.createSoundPath("Beanpole_DEATH_CRIT.wav"), getXPos(), getYPos());
 		
 		// Open the doors to the arena
 		GameScreen.getTile(4, 8).setTileType(new Ground());
@@ -271,7 +271,7 @@ public class KingsHead extends GCharacter {
 				if (attCount >= interval) {
 					// Reset counter, play sound, and switch states
 					this.attCount = 0;
-					SoundPlayer.playWAV(GPath.createSoundPath("head_rest.wav"));
+					SoundPlayer.playWAV(GPath.createSoundPath("head_rest.wav"), getXPos(), getYPos());
 					this.state = KingsHead.STATE_REST;
 					return;
 				}
@@ -337,7 +337,7 @@ public class KingsHead extends GCharacter {
 					
 					// Reset counter, play sound, and switch states
 					this.attCount = 0;
-					SoundPlayer.playWAV(GPath.createSoundPath("head_chase.wav"));
+					SoundPlayer.playWAV(GPath.createSoundPath("head_chase.wav"), getXPos(), getYPos());
 					this.state = KingsHead.STATE_PURSUE;
 					return;
 				}

@@ -134,13 +134,13 @@ public class TormentedSoul extends GCharacter {
 
 	@Override
 	public void playerInitiate() {
-		SoundPlayer.playWAV(GPath.createSoundPath("Beanpole_ATTACK.wav"));
+		SoundPlayer.playWAV(GPath.createSoundPath("Beanpole_ATTACK.wav"), getXPos(), getYPos());
 		attackPlayer();
 	}
 	
 	@Override
 	public void onDeath() {
-		SoundPlayer.playWAV(GPath.createSoundPath("Soul_Death1.wav"));
+		SoundPlayer.playWAV(GPath.createSoundPath("Soul_Death1.wav"), getXPos(), getYPos());
 	}
 
 	@Override
@@ -157,7 +157,7 @@ public class TormentedSoul extends GCharacter {
 		switch(this.state) {
 			case TormentedSoul.STATE_IDLE:
 				if (currentHP != MAX_HP) {
-					SoundPlayer.playWAV(GPath.createSoundPath("Soul_Cry1.wav"));
+					SoundPlayer.playWAV(GPath.createSoundPath("Soul_Cry1.wav"), getXPos(), getYPos());
 					this.canFocus = true;
 					this.state = TormentedSoul.STATE_ALERTED;
 				} else {
@@ -242,7 +242,7 @@ public class TormentedSoul extends GCharacter {
 		
 		// Play one of the four crying sounds
 		int whichSound = r.nextInt(4) + 2;
-		SoundPlayer.playWAV(GPath.createSoundPath("Soul_Cry" + whichSound + ".wav"));
+		SoundPlayer.playWAV(GPath.createSoundPath("Soul_Cry" + whichSound + ".wav"), getXPos(), getYPos());
 	}
 	
 }

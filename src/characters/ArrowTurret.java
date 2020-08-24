@@ -150,7 +150,7 @@ public class ArrowTurret extends GCharacter {
 					// Do nothing, we're on cooldown
 				} else {
 					// Play arrow firing sound
-					SoundPlayer.playWAV(GPath.createSoundPath("arrow_SHOT.wav"));
+					SoundPlayer.playWAV(GPath.createSoundPath("arrow_SHOT.wav"), getXPos(), getYPos());
 					
 					// Fire an arrow in a predetermined direction
 					EntityManager.getInstance().getProjectileManager()

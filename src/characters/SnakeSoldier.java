@@ -153,13 +153,13 @@ public class SnakeSoldier extends GCharacter {
 
 	@Override
 	public void playerInitiate() {
-		SoundPlayer.playWAV(GPath.createSoundPath("Beanpole_ATTACK.wav"));
+		SoundPlayer.playWAV(GPath.createSoundPath("Beanpole_ATTACK.wav"), getXPos(), getYPos());
 		attackPlayer();
 	}
 	
 	@Override
 	public void onDeath() {
-		SoundPlayer.playWAV(GPath.createSoundPath("Snake_Death.wav"));
+		SoundPlayer.playWAV(GPath.createSoundPath("Snake_Death.wav"), getXPos(), getYPos());
 	}
 	
 	@Override
@@ -188,9 +188,9 @@ public class SnakeSoldier extends GCharacter {
 					Random r = new Random();
 					int whichSound = r.nextInt(2);
 					if (whichSound == 0) {
-						SoundPlayer.playWAV(GPath.createSoundPath("snake1_greet1.wav"));
+						SoundPlayer.playWAV(GPath.createSoundPath("snake1_greet1.wav"), getXPos(), getYPos());
 					} else {
-						SoundPlayer.playWAV(GPath.createSoundPath("snake1_warn1.wav"));
+						SoundPlayer.playWAV(GPath.createSoundPath("snake1_warn1.wav"), getXPos(), getYPos());
 					}
 					this.state = SnakeSoldier.STATE_ALERTED;
 				} else {
@@ -293,7 +293,7 @@ public class SnakeSoldier extends GCharacter {
 				EntityManager.getInstance().getEffectManager().addEffect(new DamageIndicator(xPos + xMarkDir, yPos + yMarkDir));
 				
 				// Play sound
-				SoundPlayer.playWAV(GPath.createSoundPath("Snake_Bite.wav"));
+				SoundPlayer.playWAV(GPath.createSoundPath("Snake_Bite.wav"), getXPos(), getYPos());
 				
 				// Attack if next to player
 				if ((plrX == xPos + xMarkDir && plrY == yPos + yMarkDir)) {
@@ -308,7 +308,7 @@ public class SnakeSoldier extends GCharacter {
 				break;
 			case SnakeSoldier.STATE_PREP_SWIPE:
 				// Use direction from player to mark squares
-				SoundPlayer.playWAV(GPath.createSoundPath("swing_ATT.wav"));
+				SoundPlayer.playWAV(GPath.createSoundPath("swing_ATT.wav"), getXPos(), getYPos());
 				if (Math.abs(xMarkDir) > Math.abs(yMarkDir)) {
 					// Player to left/right
 					EntityManager.getInstance().getEffectManager().addEffect(new DamageIndicator(xPos + xMarkDir, yPos));
@@ -344,7 +344,7 @@ public class SnakeSoldier extends GCharacter {
 					playerInitiate();
 					
 					// Play hit sound
-					SoundPlayer.playWAV(GPath.createSoundPath("swing_ATT.wav"));
+					SoundPlayer.playWAV(GPath.createSoundPath("swing_ATT.wav"), getXPos(), getYPos());
 					
 					// Mark tile with damage indicator
 					EntityManager.getInstance().getEffectManager().addEffect(new DamageIndicator(xPos + xMarkDir, yPos + yMarkDir));
@@ -375,7 +375,7 @@ public class SnakeSoldier extends GCharacter {
 					playerInitiate();
 					
 					// Play hit sound
-					SoundPlayer.playWAV(GPath.createSoundPath("swing_ATT.wav"));
+					SoundPlayer.playWAV(GPath.createSoundPath("swing_ATT.wav"), getXPos(), getYPos());
 					
 					// Mark tile with damage indicator
 					EntityManager.getInstance().getEffectManager().addEffect(new DamageIndicator(xPos + xMarkDir, yPos + yMarkDir));

@@ -21,6 +21,9 @@ import javax.sound.sampled.FloatControl;
 import javax.sound.sampled.LineEvent;
 import javax.sound.sampled.LineListener;
 
+import characters.allies.Player;
+import managers.EntityManager;
+
 /**
  * Class that handles the playing of WAV and MIDI audio files
  * for game sound effects and music
@@ -28,6 +31,16 @@ import javax.sound.sampled.LineListener;
  */
 public class SoundPlayer {
 	
+	// Limit definitions
+	private static final float MIN_GAIN_VAL = -80.0f;
+	private static final float MAX_GAIN_VAL = 6.0f;
+	//--
+	private static final float PAN_RANGE_VAL = 0.5f;
+	//--
+	private static final int MIN_FALLOFF_DIST = 3;
+	private static final int MAX_FALLOFF_DIST = 12;
+	
+	// Sound players
 	private static ScheduledExecutorService clipExecutor = createClipExecutor();
 	private static Sequencer midiSequence = null;
 	private static InputStream musicStream;
@@ -56,7 +69,7 @@ public class SoundPlayer {
 	 * @param wavPath File path of audio clip
 	 */
 	public static void playWAV(String wavPath) {
-		SoundPlayer.playWAV(wavPath, 0.0f);
+		SoundPlayer.playWAV(wavPath, 0.0f, 0.0f);
 	}
 	
 	/**
@@ -65,16 +78,40 @@ public class SoundPlayer {
 	 * @param gain Float determining gain of audio clip. Accepts values [-80.0f to 6.0f]
 	 */
 	public static void playWAV(String wavPath, float gain) {
+		SoundPlayer.playWAV(wavPath, gain, 0.0f);
+	}
+	
+	/**
+	 * Play WAV audio file with given gain (increases or decreases volume) and panning direction
+	 * @param wavPath File path of audio clip
+	 * @param gain Float determining gain of audio clip. Accepts values [-80.0f to 6.0f]
+	 * @param pan Float determining panning of audio clip. Accepts values [-0.5f to 0.5f] (left to right)
+	 */
+	public static void playWAV(String wavPath, float gain, float pan) {
 		// Check for out-of-range gain level
-		// If out-of-range, reduce to 0.0f;
-		if ((gain > 6.0f) || (gain < -80.0f)) {
-			System.out.println("'" + wavPath + "' : Gain can only be between -80f and 6.0f: Your Gain = " + Float.toString(gain));
-			gain = 0.0f;
+		if ((gain > MAX_GAIN_VAL)) {
+			System.out.println("'" + wavPath + "' : Gain can only be between " + MIN_GAIN_VAL + " and " + MAX_GAIN_VAL + ": Your Gain = " + Float.toString(gain));
+			gain = MAX_GAIN_VAL;
+		}
+		//--
+		if ((gain < MIN_GAIN_VAL)) {
+			System.out.println("'" + wavPath + "' : Gain can only be between " + MIN_GAIN_VAL + " and " + MAX_GAIN_VAL + ": Your Gain = " + Float.toString(gain));
+			gain = MIN_GAIN_VAL;
+		}
+		
+		// Check for out-of-range pan level
+		if ((pan > PAN_RANGE_VAL)) {
+			pan = PAN_RANGE_VAL;
+		}
+		//--
+		if ((pan < -PAN_RANGE_VAL)) {
+			pan = -PAN_RANGE_VAL;
 		}
 		
 		// Finalize variables
 		final String finalWavPath = wavPath;
 		final float finalGain = gain;
+		final float finalPan = pan;
 		
 		// Execute sound loading and playing outside EDT thread
 		Runnable clipTask = new Runnable() {
@@ -85,10 +122,15 @@ public class SoundPlayer {
 			        AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(wavFile);
 			        final Clip clip = AudioSystem.getClip();
 			        clip.open(audioInputStream);
+			        
 			        if (finalGain != 0.0f) {
-						FloatControl gainControl = 
-							    (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
-							gainControl.setValue(finalGain); // Reduce volume by set gain
+						FloatControl gainControl = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
+						gainControl.setValue(finalGain); // Reduce volume by set gain
+			        }
+			        
+			        if (finalPan != 0.0f) {
+						FloatControl panControl = (FloatControl) clip.getControl(FloatControl.Type.PAN);
+						panControl.setValue(finalPan); // Play sound from certain direction
 			        }
 			        
 			        // Start the clip first
@@ -97,20 +139,64 @@ public class SoundPlayer {
 			        // Add listener to close clip when it is done
 			        LineListener listener = new LineListener() {
 			            public void update(LineEvent event) {
-			                    if (event.getType() == LineEvent.Type.STOP) {
-			                    	clip.close();
-			                        return;
-			                    }
+		                    if (event.getType() == LineEvent.Type.STOP) {
+		                    	clip.close();
+		                        return;
+		                    }
 			            }
 			        };
 			        clip.addLineListener(listener);
 			    } catch (Exception ex) {
-			        System.out.println("Error with playing sound: '" + finalWavPath + "'");
+			        System.out.println("Error with playing sound: \"" + finalWavPath + "\"");
 			        ex.printStackTrace();
 			    }
 			}
 		};
 		clipExecutor.execute(clipTask);
+	}
+	
+	/**
+	 * Play WAV audio file with given source location.
+	 * @param wavPath File path of audio clip
+	 * @param xPos X coordinate of sound source
+	 * @param yPos Y coordinate of sound source
+	 */
+	public static void playWAV(String wavPath, int xPos, int yPos) {
+		playWAV(wavPath, 0.0f, xPos, yPos);
+	}
+	
+	/**
+	 * Play WAV audio file with given gain and source location.
+	 * @param wavPath File path of audio clip
+	 * @param gain Float determining gain of audio clip. Accepts values [-80.0f to 6.0f]
+	 * @param xPos X coordinate of sound source
+	 * @param yPos Y coordinate of sound source
+	 */
+	public static void playWAV(String wavPath, float gain, int xPos, int yPos) {
+		Player player = EntityManager.getInstance().getPlayer();
+		int plrX = player.getXPos();
+		int plrY = player.getYPos();
+		int xDiff = xPos - plrX;
+		int yDiff = yPos - plrY;
+		float dist = (float) Math.sqrt(Math.pow(xDiff, 2) + Math.pow(yDiff, 2));
+		
+		// Adjust gain
+		if (dist >= MAX_FALLOFF_DIST) {
+			return;
+		} else if (dist > MIN_FALLOFF_DIST) {
+			float distScalar = (((float) (dist - MIN_FALLOFF_DIST)) / ((MIN_FALLOFF_DIST - MAX_FALLOFF_DIST) * 2)) + 1;
+			float gainRangeVal = gain - MIN_GAIN_VAL;
+			gain = (gainRangeVal * distScalar) + MIN_GAIN_VAL;
+		}
+		
+		// Adjust pan
+		float pan = 0.0f;
+		if (xDiff != 0 && dist > 0) {
+			pan += (PAN_RANGE_VAL * xDiff / dist);
+		}
+		
+		// Play sound with new gain/pan values
+		playWAV(wavPath, gain, pan);
 	}
 	
 	/**

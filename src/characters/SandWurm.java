@@ -156,7 +156,7 @@ public class SandWurm extends GCharacter {
 
 	@Override
 	public void playerInitiate() {
-		SoundPlayer.playWAV(GPath.createSoundPath("Beanpole_ATTACK.wav"));
+		SoundPlayer.playWAV(GPath.createSoundPath("Beanpole_ATTACK.wav"), getXPos(), getYPos());
 		attackPlayer();
 	}
 	
@@ -207,7 +207,7 @@ public class SandWurm extends GCharacter {
 			case SandWurm.STATE_IDLE:
 				boolean hasLOS = LineDrawer.hasSight(xPos, yPos, plrX, plrY);
 				if (hasLOS) {
-					SoundPlayer.playWAV(GPath.createSoundPath("beep_ALERT.wav"));
+					SoundPlayer.playWAV(GPath.createSoundPath("beep_ALERT.wav"), getXPos(), getYPos());
 					this.state = SandWurm.STATE_BURROW;
 				} else {
 					// Handle movement for Idling

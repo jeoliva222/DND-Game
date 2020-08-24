@@ -102,14 +102,14 @@ public class EliteSandBeep extends SandBeep {
 
 	@Override
 	public void playerInitiate() {
-		SoundPlayer.playWAV(GPath.createSoundPath("Beanpole_ATTACK.wav"));
+		SoundPlayer.playWAV(GPath.createSoundPath("Beanpole_ATTACK.wav"), getXPos(), getYPos());
 		attackPlayer();
 	}
 	
 	@Override
 	public void onDeath() {
 		if (currentHP < -(maxHP)) {
-			SoundPlayer.playWAV(GPath.createSoundPath("Bitester_DEATH_CRIT.wav"));
+			SoundPlayer.playWAV(GPath.createSoundPath("Bitester_DEATH_CRIT.wav"), getXPos(), getYPos());
 		} else {
 			playDeathSound();
 		}
@@ -138,7 +138,7 @@ public class EliteSandBeep extends SandBeep {
 			case EliteSandBeep.STATE_IDLE:
 				boolean hasLOS = LineDrawer.hasSight(xPos, yPos, plrX, plrY);
 				if (hasLOS) {
-					SoundPlayer.playWAV(GPath.createSoundPath("beep_ALERT.wav"));
+					SoundPlayer.playWAV(GPath.createSoundPath("beep_ALERT.wav"), getXPos(), getYPos());
 					this.state = EliteSandBeep.STATE_PREP;
 				} else {
 					// Handle movement for Idling

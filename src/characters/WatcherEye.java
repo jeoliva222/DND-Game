@@ -248,7 +248,7 @@ public class WatcherEye extends GCharacter {
 			case WatcherEye.STATE_IDLE:
 				if (hasLOS) {
 					// Alert to the player
-					SoundPlayer.playWAV(GPath.createSoundPath("Eye_Scream.wav"));
+					SoundPlayer.playWAV(GPath.createSoundPath("Eye_Scream.wav"), getXPos(), getYPos());
 					this.state = WatcherEye.STATE_ALERTED;
 				} else {
 					// Handle movement for Idling
@@ -322,11 +322,11 @@ public class WatcherEye extends GCharacter {
 			case WatcherEye.STATE_SEARCH:
 				if (hasLOS) {
 					// Alert to the player
-					SoundPlayer.playWAV(GPath.createSoundPath("Eye_Scream.wav"));
+					SoundPlayer.playWAV(GPath.createSoundPath("Eye_Scream.wav"), getXPos(), getYPos());
 					this.state = WatcherEye.STATE_ALERTED;
 				} else {	
 					// Return to idling
-					SoundPlayer.playWAV(GPath.createSoundPath("Eye_Breath.wav"));
+					SoundPlayer.playWAV(GPath.createSoundPath("Eye_Breath.wav"), getXPos(), getYPos());
 					this.state = WatcherEye.STATE_IDLE;
 				}
 				break;

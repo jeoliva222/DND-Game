@@ -477,7 +477,7 @@ public class KingBonBon extends GCharacter {
 			case KingBonBon.STATE_PREP_STAB: //------------------------------------------------------------
 				if (attCount < 1) {
 					// Mark tiles with damage indicators
-					SoundPlayer.playWAV(GPath.createSoundPath("whip_ATT.wav"));
+					SoundPlayer.playWAV(GPath.createSoundPath("whip_ATT.wav"), getXPos(), getYPos());
 					addEffect(new DamageIndicator(xPos + xMarkDir, yPos + yMarkDir));
 					addEffect(new DamageIndicator(xPos + (xMarkDir*2), yPos + (yMarkDir*2)));
 					addEffect(new DamageIndicator(xPos + (xMarkDir*3), yPos + (yMarkDir*3)));
@@ -493,7 +493,7 @@ public class KingBonBon extends GCharacter {
 					this.attCount += 1;
 				} else {
 					// Use direction from player to mark squares
-					SoundPlayer.playWAV(GPath.createSoundPath("whip_ATT.wav"));
+					SoundPlayer.playWAV(GPath.createSoundPath("whip_ATT.wav"), getXPos(), getYPos());
 					if (Math.abs(xMarkDir) > Math.abs(yMarkDir)) {
 						// Player to left/right
 						addEffect(new DamageIndicator(xPos + xMarkDir, yPos + 1));
@@ -531,7 +531,7 @@ public class KingBonBon extends GCharacter {
 			case KingBonBon.STATE_PREP_SWIPE: //------------------------------------------------------------
 				if (attCount < 1) {
 					// Use direction from player to mark squares
-					SoundPlayer.playWAV(GPath.createSoundPath("fire_ATT.wav"));
+					SoundPlayer.playWAV(GPath.createSoundPath("fire_ATT.wav"), getXPos(), getYPos());
 					if (Math.abs(xMarkDir) > Math.abs(yMarkDir)) {
 						// Player to left/right
 						addEffect(new FireEffect(xPos + xMarkDir, yPos));
@@ -565,7 +565,7 @@ public class KingBonBon extends GCharacter {
 					this.attCount += 1;
 				} else {
 					// Use direction from player to mark squares
-					SoundPlayer.playWAV(GPath.createSoundPath("fire_ATT.wav"));
+					SoundPlayer.playWAV(GPath.createSoundPath("fire_ATT.wav"), getXPos(), getYPos());
 					if (Math.abs(xMarkDir) > Math.abs(yMarkDir)) {
 						// Player to left/right
 						addEffect(new FireEffect(xPos + (xMarkDir*2), yPos));
@@ -660,7 +660,7 @@ public class KingBonBon extends GCharacter {
 					this.thunderActive = true;
 					
 					// Play spark sound
-					SoundPlayer.playWAV(GPath.createSoundPath("electric_spark.wav"));
+					SoundPlayer.playWAV(GPath.createSoundPath("electric_spark.wav"), getXPos(), getYPos());
 					
 					// Reset attack counter and change state
 					this.attCount = 0;
@@ -835,7 +835,7 @@ public class KingBonBon extends GCharacter {
 		Random r = new Random();
 		if (r.nextInt(4) == 0) {
 			int whichSound = (r.nextInt(2) + 1);
-			SoundPlayer.playWAV(GPath.createSoundPath("king_hurt" + whichSound +".wav"));
+			SoundPlayer.playWAV(GPath.createSoundPath("king_hurt" + whichSound +".wav"), getXPos(), getYPos());
 		}
 	}
 	

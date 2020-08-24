@@ -172,7 +172,7 @@ public class Watchman extends GCharacter {
 	@Override
 	public void onDeath() {
 		// Play death sound
-		SoundPlayer.playWAV(GPath.createSoundPath("Watchman_DEATH.wav"));
+		SoundPlayer.playWAV(GPath.createSoundPath("Watchman_DEATH.wav"), -5f, getXPos(), getYPos());
 	}
 	
 	@Override
@@ -219,7 +219,7 @@ public class Watchman extends GCharacter {
 					}
 					
 					// Play alert sound and change state to pursue player
-					SoundPlayer.playWAV(GPath.createSoundPath("Watchman_ALERT.wav"));
+					SoundPlayer.playWAV(GPath.createSoundPath("Watchman_ALERT.wav"), getXPos(), getYPos());
 					this.state = Watchman.STATE_ALERTED;
 				} else {
 					// Handle movement for Idling
@@ -305,7 +305,7 @@ public class Watchman extends GCharacter {
 							playerInitiate();
 						}
 					}
-					SoundPlayer.playWAV(GPath.createSoundPath("Watchman_ATTACK.wav"));
+					SoundPlayer.playWAV(GPath.createSoundPath("Watchman_ATTACK.wav"), getXPos(), getYPos());
 					this.state = Watchman.STATE_ATT;
 					this.windupCount = 0;
 				} else {

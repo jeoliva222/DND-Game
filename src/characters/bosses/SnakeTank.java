@@ -394,7 +394,7 @@ public class SnakeTank extends GCharacter {
 					DumbFollow.blindPursue(distX, distY, this);
 				} else if (attCount == 2) {
 					// Play reving sound
-					SoundPlayer.playWAV(GPath.createSoundPath("Chaingun_Rev.wav"));
+					SoundPlayer.playWAV(GPath.createSoundPath("Chaingun_Rev.wav"), getXPos(), getYPos());
 				} else {
 					// Fire the guns, and then change state
 					for (int i = 7; i >= 4; i--) {
@@ -406,7 +406,7 @@ public class SnakeTank extends GCharacter {
 					}
 					
 					// Play firing sound
-					SoundPlayer.playWAV(GPath.createSoundPath("Chaingun_Fire.wav"));
+					SoundPlayer.playWAV(GPath.createSoundPath("Chaingun_Fire.wav"), getXPos(), getYPos());
 					
 					// Reset attack counter and change state
 					this.attCount = 0;
@@ -434,7 +434,7 @@ public class SnakeTank extends GCharacter {
 				}
 				
 				// Play firing sound
-				SoundPlayer.playWAV(GPath.createSoundPath("Chaingun_Fire.wav"));
+				SoundPlayer.playWAV(GPath.createSoundPath("Chaingun_Fire.wav"), getXPos(), getYPos());
 				
 				// Continue firing the guns
 				for (int i = 7; i >= 4; i--) {
@@ -514,7 +514,7 @@ public class SnakeTank extends GCharacter {
 								this.deflected = true;
 								
 								// Play hit sound
-								SoundPlayer.playWAV(GPath.createSoundPath("player_SWING.wav"), 5);
+								SoundPlayer.playWAV(GPath.createSoundPath("player_SWING.wav"), 5f, getXPos(), getYPos());
 								
 								// Set new Nuke direction
 								if (yPos >= 4) {

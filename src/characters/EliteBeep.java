@@ -126,7 +126,7 @@ public class EliteBeep extends Beep {
 			case EliteBeep.STATE_IDLE:
 				// If the player is close enough, become alerted of their location
 				if ((Math.abs(distX) + Math.abs(distY)) <= 3) {
-					SoundPlayer.playWAV(GPath.createSoundPath("beep_ALERT.wav"));
+					SoundPlayer.playWAV(GPath.createSoundPath("beep_ALERT.wav"), getXPos(), getYPos());
 					this.state = EliteBeep.STATE_PREP;
 				} else {
 					// Handle movement for Idling

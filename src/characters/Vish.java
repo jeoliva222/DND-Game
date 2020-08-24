@@ -134,7 +134,7 @@ public class Vish extends GCharacter {
 
 	@Override
 	public void playerInitiate() {
-		SoundPlayer.playWAV(GPath.createSoundPath("Bitester_ATTACK.wav"));
+		SoundPlayer.playWAV(GPath.createSoundPath("Bitester_ATTACK.wav"), getXPos(), getYPos());
 		EntityManager.getInstance().getPlayer().addBuff(new RootDebuff(1));
 		attackPlayer();
 	}
@@ -142,9 +142,9 @@ public class Vish extends GCharacter {
 	@Override
 	public void onDeath() {
 		if (currentHP < -(maxHP / 2)) {
-			SoundPlayer.playWAV(GPath.createSoundPath("Bitester_DEATH_CRIT.wav"));
+			SoundPlayer.playWAV(GPath.createSoundPath("Bitester_DEATH_CRIT.wav"), getXPos(), getYPos());
 		} else {
-			SoundPlayer.playWAV(GPath.createSoundPath("Bitester_DEATH.wav"));
+			SoundPlayer.playWAV(GPath.createSoundPath("Bitester_DEATH.wav"), getXPos(), getYPos());
 		}
 	}
 	
@@ -236,7 +236,7 @@ public class Vish extends GCharacter {
 				if ((MovableType.isWater(tt.getMovableType())) && (totalDist <= aggroDist) &&
 						IslandChecker.virusStart(xPos, yPos, plrX, plrY, MovableType.WATER)) {
 					// Alert and pursue if in same pool
-					SoundPlayer.playWAV(GPath.createSoundPath("Bitester_ALERT.wav"));
+					SoundPlayer.playWAV(GPath.createSoundPath("Bitester_ALERT.wav"), getXPos(), getYPos());
 					this.state = Vish.STATE_PURSUE;
 					break;
 				}

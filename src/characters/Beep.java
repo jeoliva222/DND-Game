@@ -132,14 +132,14 @@ public class Beep extends GCharacter {
 
 	@Override
 	public void playerInitiate() {
-		SoundPlayer.playWAV(GPath.createSoundPath("Beanpole_ATTACK.wav"));
+		SoundPlayer.playWAV(GPath.createSoundPath("Beanpole_ATTACK.wav"), getXPos(), getYPos());
 		attackPlayer();
 	}
 	
 	@Override
 	public void onDeath() {
 		if (currentHP < -(maxHP)) {
-			SoundPlayer.playWAV(GPath.createSoundPath("Bitester_DEATH_CRIT.wav"));
+			SoundPlayer.playWAV(GPath.createSoundPath("Bitester_DEATH_CRIT.wav"), getXPos(), getYPos());
 		} else {
 			playDeathSound();
 		}
@@ -175,7 +175,7 @@ public class Beep extends GCharacter {
 			case Beep.STATE_IDLE:
 				boolean hasLOS = LineDrawer.hasSight(xPos, yPos, plrX, plrY);
 				if (hasLOS) {
-					SoundPlayer.playWAV(GPath.createSoundPath("beep_ALERT.wav"));
+					SoundPlayer.playWAV(GPath.createSoundPath("beep_ALERT.wav"), getXPos(), getYPos());
 					this.state = Beep.STATE_PREP;
 				} else {
 					// Handle movement for Idling
@@ -256,12 +256,12 @@ public class Beep extends GCharacter {
 	
 	protected void playHopSound() {
 		int whichSound = (new Random().nextInt(4) + 1);
-		SoundPlayer.playWAV(GPath.createSoundPath("beep_hop" + whichSound + ".wav"), -10);
+		SoundPlayer.playWAV(GPath.createSoundPath("beep_hop" + whichSound + ".wav"), -10, getXPos(), getYPos());
 	}
 	
 	protected void playDeathSound() {
 		int whichSound = (new Random().nextInt(3) + 1);
-		SoundPlayer.playWAV(GPath.createSoundPath("beep_death" + whichSound +".wav"));
+		SoundPlayer.playWAV(GPath.createSoundPath("beep_death" + whichSound +".wav"), getXPos(), getYPos());
 	}
 	
 }

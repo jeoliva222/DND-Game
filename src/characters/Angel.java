@@ -155,7 +155,7 @@ public class Angel extends GCharacter {
 	@Override
 	public void playerInitiate() {
 		// Play sound
-		SoundPlayer.playWAV(GPath.createSoundPath("Beanpole_ATTACK.wav"));
+		SoundPlayer.playWAV(GPath.createSoundPath("Beanpole_ATTACK.wav"), getXPos(), getYPos());
 		
 		// Attack player
 		attackPlayer();
@@ -169,9 +169,9 @@ public class Angel extends GCharacter {
 	@Override
 	public void onDeath() {
 		if (currentHP < -(maxHP / 2)) {
-			SoundPlayer.playWAV(GPath.createSoundPath("Beanpole_DEATH_CRIT.wav"));
+			SoundPlayer.playWAV(GPath.createSoundPath("Beanpole_DEATH_CRIT.wav"), getXPos(), getYPos());
 		} else {
-			SoundPlayer.playWAV(GPath.createSoundPath("Beanpole_DEATH.wav"));
+			SoundPlayer.playWAV(GPath.createSoundPath("Beanpole_DEATH.wav"), getXPos(), getYPos());
 		}
 	}
 	
@@ -205,7 +205,7 @@ public class Angel extends GCharacter {
 			case Angel.STATE_IDLE:
 				boolean hasLOS = LineDrawer.hasSight(xPos, yPos, plrX, plrY);
 				if (hasLOS) {
-					SoundPlayer.playWAV(GPath.createSoundPath("Beanpole_ALERT.wav"));
+					SoundPlayer.playWAV(GPath.createSoundPath("Beanpole_ALERT.wav"), getXPos(), getYPos());
 					this.state = Angel.STATE_ALERTED;
 				} else {
 					// Handle movement for Idling

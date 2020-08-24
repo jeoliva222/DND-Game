@@ -153,7 +153,7 @@ public class EliteWatchman extends Watchman {
 					}
 					
 					// Play alert sound and change state to pursue player
-					SoundPlayer.playWAV(GPath.createSoundPath("Watchman_ALERT.wav"));
+					SoundPlayer.playWAV(GPath.createSoundPath("Watchman_ALERT.wav"), getXPos(), getYPos());
 					this.state = EliteWatchman.STATE_ALERTED;
 				} else {
 					// Handle movement for Idling
@@ -210,7 +210,7 @@ public class EliteWatchman extends Watchman {
 				
 				
 				// Play attack sound and change state
-				SoundPlayer.playWAV(GPath.createSoundPath("Watchman_ATTACK.wav"));
+				SoundPlayer.playWAV(GPath.createSoundPath("Watchman_ATTACK.wav"), getXPos(), getYPos());
 				this.state = EliteWatchman.STATE_ATT;
 				break;
 			case EliteWatchman.STATE_ATT:

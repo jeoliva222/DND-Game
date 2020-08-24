@@ -161,13 +161,13 @@ public class Hoptooth extends GCharacter {
 
 	@Override
 	public void playerInitiate() {
-		SoundPlayer.playWAV(GPath.createSoundPath("Beanpole_ATTACK.wav"));
+		SoundPlayer.playWAV(GPath.createSoundPath("Beanpole_ATTACK.wav"), getXPos(), getYPos());
 		attackPlayer();
 	}
 	
 	@Override
 	public void onDeath() {
-		SoundPlayer.playWAV(GPath.createSoundPath("Hoptooth_Death.wav"), 3f);
+		SoundPlayer.playWAV(GPath.createSoundPath("Hoptooth_Death.wav"), 3f, getXPos(), getYPos());
 	}
 
 	@Override
@@ -197,7 +197,7 @@ public class Hoptooth extends GCharacter {
 			case Hoptooth.STATE_IDLE:
 				boolean hasLOS = LineDrawer.hasSight(xPos, yPos, plrX, plrY);
 				if (hasLOS) {
-					SoundPlayer.playWAV(GPath.createSoundPath("Hoptooth_Alert.wav"));
+					SoundPlayer.playWAV(GPath.createSoundPath("Hoptooth_Alert.wav"), getXPos(), getYPos());
 					this.state = Hoptooth.STATE_ALERTED;
 				} else {
 					// Handle movement for Idling
@@ -277,7 +277,7 @@ public class Hoptooth extends GCharacter {
 							this.markX = dx;
 							this.markY = dy;
 							
-							SoundPlayer.playWAV(GPath.createSoundPath("Hoptooth_Breath1.wav"), -5f);
+							SoundPlayer.playWAV(GPath.createSoundPath("Hoptooth_Breath1.wav"), -5f, getXPos(), getYPos());
 							this.state = Hoptooth.STATE_PREP_CHOMP;
 						}
 					}
@@ -331,13 +331,13 @@ public class Hoptooth extends GCharacter {
 					EntityManager.getInstance().getEffectManager().addEffect(new WarningIndicator(xPos + markX, yPos + markY));
 					
 					// Play warning sound
-					SoundPlayer.playWAV(GPath.createSoundPath("Hoptooth_Breath2.wav"));
+					SoundPlayer.playWAV(GPath.createSoundPath("Hoptooth_Breath2.wav"), getXPos(), getYPos());
 				} else if (attCount >= windupMax) {
 					// Mark tile with damage indicator
 					EntityManager.getInstance().getEffectManager().addEffect(new DamageIndicator(xPos + markX, yPos + markY));
 					
 					// Play chomp sound
-					SoundPlayer.playWAV(GPath.createSoundPath("Hoptooth_Chomp.wav"));
+					SoundPlayer.playWAV(GPath.createSoundPath("Hoptooth_Chomp.wav"), getXPos(), getYPos());
 					
 					// Attack in marked direction
 					if ((xPos + markX) == plrX && (yPos + markY) == plrY) {
@@ -363,7 +363,7 @@ public class Hoptooth extends GCharacter {
 	private void chooseMeleeAttack() {
 		int whichAttack = new Random().nextInt(3);
 		if (whichAttack == 0) {
-			SoundPlayer.playWAV(GPath.createSoundPath("Hoptooth_Breath1.wav"), -5f);
+			SoundPlayer.playWAV(GPath.createSoundPath("Hoptooth_Breath1.wav"), -5f, getXPos(), getYPos());
 			this.state = Hoptooth.STATE_PREP_CHOMP;
 		} else {
 			this.state = Hoptooth.STATE_PREP_SWING;
@@ -372,7 +372,7 @@ public class Hoptooth extends GCharacter {
 	
 	// Execute the player with a fatal chomp
 	private void chompPlayer() {
-		SoundPlayer.playWAV(GPath.createSoundPath("Beanpole_DEATH_CRIT.wav"));
+		SoundPlayer.playWAV(GPath.createSoundPath("Beanpole_DEATH_CRIT.wav"), getXPos(), getYPos());
 		LogScreen.log(getName() + " bit the player's head off.", GColors.DAMAGE);
 		EntityManager.getInstance().getPlayer().damagePlayer(300);
 	}

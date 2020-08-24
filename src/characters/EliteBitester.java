@@ -181,7 +181,7 @@ public class EliteBitester extends Bitester {
 				if ((MovableType.isWater(tt.getMovableType())) &&
 						IslandChecker.virusStart(xPos, yPos, plrX, plrY, MovableType.WATER)) {
 					// Alert and pursue player if in same pool
-					SoundPlayer.playWAV(GPath.createSoundPath("Bitester_ALERT.wav"));
+					SoundPlayer.playWAV(GPath.createSoundPath("Bitester_ALERT.wav"), getXPos(), getYPos());
 					this.state = EliteBitester.STATE_PURSUE;
 					return;
 				} else {

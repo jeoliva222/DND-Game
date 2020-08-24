@@ -300,14 +300,14 @@ public class SnakeGeneral extends GCharacter {
 
 	@Override
 	public void playerInitiate() {
-		SoundPlayer.playWAV(GPath.createSoundPath("Beanpole_ATTACK.wav"));
+		SoundPlayer.playWAV(GPath.createSoundPath("Beanpole_ATTACK.wav"), getXPos(), getYPos());
 		attackPlayer();
 	}
 	
 	@Override
 	public void onDeath() {
 		// Play death sound
-		SoundPlayer.playWAV(GPath.createSoundPath("Snake_Death.wav"));
+		SoundPlayer.playWAV(GPath.createSoundPath("Snake_Death.wav"), getXPos(), getYPos());
 		
 		// Clear any remaining bombs
 		placedBombs.clear();
@@ -524,7 +524,7 @@ public class SnakeGeneral extends GCharacter {
 				}
 				
 				// Use direction from player to mark squares
-				SoundPlayer.playWAV(GPath.createSoundPath("Snake_Bite.wav"));
+				SoundPlayer.playWAV(GPath.createSoundPath("Snake_Bite.wav"), getXPos(), getYPos());
 				addEffect(new DamageIndicator(xPos + xMarkDir, yPos + yMarkDir));
 				addEffect(new DamageIndicator(xPos + (xMarkDir*2), yPos + (yMarkDir*2)));
 				
@@ -556,7 +556,7 @@ public class SnakeGeneral extends GCharacter {
 				distY = (plrY - yPos);
 				
 				// Do side-swipe attack towards direction player moved
-				SoundPlayer.playWAV(GPath.createSoundPath("swing_ATT.wav"));
+				SoundPlayer.playWAV(GPath.createSoundPath("swing_ATT.wav"), getXPos(), getYPos());
 				if (xMarkDir != 0) {
 					// Recalculate Y attack direction
 					if (distY > 0) {
@@ -632,7 +632,7 @@ public class SnakeGeneral extends GCharacter {
 					
 					// Play sound if first turn retreating
 					if (attCount == 1) {
-						SoundPlayer.playWAV(GPath.createSoundPath("fire_ATT.wav"));
+						SoundPlayer.playWAV(GPath.createSoundPath("fire_ATT.wav"), getXPos(), getYPos());
 					}
 					
 					// Use direction from player to mark squares
@@ -717,7 +717,7 @@ public class SnakeGeneral extends GCharacter {
 				}
 				
 				// Play firing sound
-				SoundPlayer.playWAV(GPath.createSoundPath("Chaingun_Fire.wav"));
+				SoundPlayer.playWAV(GPath.createSoundPath("Chaingun_Fire.wav"), getXPos(), getYPos());
 
 				// Safety check to prevent infinite loop
 				if (xMarkDir == 0 && yMarkDir == 0) {
@@ -876,7 +876,7 @@ public class SnakeGeneral extends GCharacter {
 						addEffect(new FireEffect(xPos + xMarkDir + (yMarkDir), yPos + yMarkDir + (xMarkDir)));
 						
 						// Play fire sound
-						SoundPlayer.playWAV(GPath.createSoundPath("fire_ATT.wav"));
+						SoundPlayer.playWAV(GPath.createSoundPath("fire_ATT.wav"), getXPos(), getYPos());
 						
 						// Attack player if in affected space
 						if ((plrX == xPos + xMarkDir && plrY == yPos + yMarkDir) ||
@@ -1209,7 +1209,7 @@ public class SnakeGeneral extends GCharacter {
 	// Plays special sound and transitions General into Stun state
 	private void stunGeneral() {
 		// Play 'ouch' sound - TODO Temp
-		SoundPlayer.playWAV(GPath.createSoundPath("beep_ALERT.wav"));
+		SoundPlayer.playWAV(GPath.createSoundPath("beep_ALERT.wav"), getXPos(), getYPos());
 		
 		// Change state to stunned
 		this.state = SnakeGeneral.STATE_STUN;
@@ -1238,7 +1238,7 @@ public class SnakeGeneral extends GCharacter {
 				addEffect(new FireEffect(bomb.x - 1, bomb.y + 1));		// Bottom-left
 				
 				// Play bomb detonation
-				SoundPlayer.playWAV(GPath.createSoundPath("fire_ATT.wav"));
+				SoundPlayer.playWAV(GPath.createSoundPath("fire_ATT.wav"), bomb.x, bomb.y);
 				
 				// Check if bomb hit the player
 				if ((plrX == bomb.x && plrY == bomb.y) ||
@@ -1289,7 +1289,7 @@ public class SnakeGeneral extends GCharacter {
 			this.state = SnakeGeneral.STATE_PREP_COMBO;
 		} else if (whichAttack <= 35) {
 			// Play reving sound
-			SoundPlayer.playWAV(GPath.createSoundPath("Chaingun_Rev.wav"));
+			SoundPlayer.playWAV(GPath.createSoundPath("Chaingun_Rev.wav"), getXPos(), getYPos());
 			this.state = SnakeGeneral.STATE_PREP_CHAINGUN;
 		} else {
 			this.state = SnakeGeneral.STATE_PREP_MINE;

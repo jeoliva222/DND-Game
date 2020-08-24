@@ -123,7 +123,7 @@ public class EliteBeanpole extends Beanpole {
 			case EliteBeanpole.STATE_IDLE:
 				boolean hasLOS = LineDrawer.hasSight(xPos, yPos, plrX, plrY);
 				if (hasLOS) {
-					SoundPlayer.playWAV(GPath.createSoundPath("Beanpole_ALERT.wav"));
+					SoundPlayer.playWAV(GPath.createSoundPath("Beanpole_ALERT.wav"), getXPos(), getYPos());
 					this.state = EliteBeanpole.STATE_ALERTED;
 				} else {
 					// Handle movement for Idling

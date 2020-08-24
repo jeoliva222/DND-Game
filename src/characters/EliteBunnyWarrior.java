@@ -146,9 +146,9 @@ public class EliteBunnyWarrior extends BunnyWarrior {
 					Random r = new Random();
 					int whichSound = r.nextInt(2);
 					if (whichSound == 0) {
-						SoundPlayer.playWAV(GPath.createSoundPath("BunnyWarrior_ALERT.wav"));
+						SoundPlayer.playWAV(GPath.createSoundPath("BunnyWarrior_ALERT.wav"), getXPos(), getYPos());
 					} else {
-						SoundPlayer.playWAV(GPath.createSoundPath("BunnyWarrior_ALERT2.wav"));
+						SoundPlayer.playWAV(GPath.createSoundPath("BunnyWarrior_ALERT2.wav"), getXPos(), getYPos());
 					}
 					this.state = EliteBunnyWarrior.STATE_ALERTED;
 				} else {
@@ -274,7 +274,7 @@ public class EliteBunnyWarrior extends BunnyWarrior {
 				EntityManager.getInstance().getEffectManager().addEffect(new DamageIndicator(xPos + (xMarkDir*3), yPos + (yMarkDir*3)));
 				
 				// Play sound
-				SoundPlayer.playWAV(GPath.createSoundPath("whip_ATT.wav"));
+				SoundPlayer.playWAV(GPath.createSoundPath("whip_ATT.wav"), getXPos(), getYPos());
 				
 				// Attack if next to player
 				if ((plrX == xPos + xMarkDir && plrY == yPos + yMarkDir) ||
@@ -317,7 +317,7 @@ public class EliteBunnyWarrior extends BunnyWarrior {
 				this.comboCount += 1;
 				
 				// Play sound
-				SoundPlayer.playWAV(GPath.createSoundPath("swing_ATT.wav"));
+				SoundPlayer.playWAV(GPath.createSoundPath("swing_ATT.wav"), getXPos(), getYPos());
 				
 				// Change state
 				this.state = EliteBunnyWarrior.STATE_ATT_SWIPE;
@@ -350,7 +350,7 @@ public class EliteBunnyWarrior extends BunnyWarrior {
 					}
 					
 					// Play sound
-					SoundPlayer.playWAV(GPath.createSoundPath("swing_ATT.wav"));
+					SoundPlayer.playWAV(GPath.createSoundPath("swing_ATT.wav"), getXPos(), getYPos());
 					
 					if (Math.abs(xMarkDir) > Math.abs(yMarkDir)) {
 						// Player to left/right

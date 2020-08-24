@@ -157,16 +157,16 @@ public class Cactian extends GCharacter {
 
 	@Override
 	public void playerInitiate() {
-		SoundPlayer.playWAV(GPath.createSoundPath("Beanpole_ATTACK.wav"));
+		SoundPlayer.playWAV(GPath.createSoundPath("Beanpole_ATTACK.wav"), getXPos(), getYPos());
 		attackPlayer();
 	}
 	
 	@Override
 	public void onDeath() {
 		if (currentHP < -(maxHP / 2)) {
-			SoundPlayer.playWAV(GPath.createSoundPath("Beanpole_DEATH_CRIT.wav"));
+			SoundPlayer.playWAV(GPath.createSoundPath("Beanpole_DEATH_CRIT.wav"), getXPos(), getYPos());
 		} else {
-			SoundPlayer.playWAV(GPath.createSoundPath("Beanpole_DEATH.wav"));
+			SoundPlayer.playWAV(GPath.createSoundPath("Beanpole_DEATH.wav"), getXPos(), getYPos());
 		}
 	}
 	
@@ -202,7 +202,7 @@ public class Cactian extends GCharacter {
 				if (((Math.abs(distX) <= 1) && (Math.abs(distY) == 0)) ||
 						((Math.abs(distX) == 0) && (Math.abs(distY) <= 1)) ||
 						currentHP != MAX_HP) {
-					SoundPlayer.playWAV(GPath.createSoundPath("Beanpole_ALERT.wav"));
+					SoundPlayer.playWAV(GPath.createSoundPath("Beanpole_ALERT.wav"), getXPos(), getYPos());
 					this.state = Cactian.STATE_ALERTED;
 				} else if (shouldAwaken) {
 					// Change state
