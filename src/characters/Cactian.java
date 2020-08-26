@@ -67,7 +67,6 @@ public class Cactian extends GCharacter {
 	private static String ctImage_base = "cactian";
 	
 	private static String ctImage_DEAD = GPath.createImagePath(GPath.ENEMY, GPath.CACTIAN, "cactian_dead.png");
-	private static String ctImage_DEAD_CRIT = GPath.createImagePath(GPath.ENEMY, GPath.CACTIAN, "cactian_dead.png");
 
 	// Constructors
 	public Cactian(int startX, int startY) {
@@ -143,11 +142,7 @@ public class Cactian extends GCharacter {
 	}
 	
 	public String getCorpseImage() {
-		if (currentHP < -(maxHP / 2)) {
-			return ctImage_DEAD_CRIT;
-		} else {
-			return ctImage_DEAD;
-		}
+		return ctImage_DEAD;
 	}
 	
 	public void populateMoveTypes() {
@@ -163,11 +158,7 @@ public class Cactian extends GCharacter {
 	
 	@Override
 	public void onDeath() {
-		if (currentHP < -(maxHP / 2)) {
-			SoundPlayer.playWAV(GPath.createSoundPath("Beanpole_DEATH_CRIT.wav"), getXPos(), getYPos());
-		} else {
-			SoundPlayer.playWAV(GPath.createSoundPath("Beanpole_DEATH.wav"), getXPos(), getYPos());
-		}
+		SoundPlayer.playWAV(GPath.createSoundPath("Cactian_DEATH.wav"), 2f, getXPos(), getYPos());
 	}
 	
 	// Override that resets a few extra parameters
@@ -202,10 +193,11 @@ public class Cactian extends GCharacter {
 				if (((Math.abs(distX) <= 1) && (Math.abs(distY) == 0)) ||
 						((Math.abs(distX) == 0) && (Math.abs(distY) <= 1)) ||
 						currentHP != MAX_HP) {
-					SoundPlayer.playWAV(GPath.createSoundPath("Beanpole_ALERT.wav"), getXPos(), getYPos());
+					SoundPlayer.playWAV(GPath.createSoundPath("Cactian_ALERT.wav"), 3f, getXPos(), getYPos());
 					this.state = Cactian.STATE_ALERTED;
 				} else if (shouldAwaken) {
 					// Change state
+					SoundPlayer.playWAV(GPath.createSoundPath("Cactian_ALERT.wav"), 3f, getXPos(), getYPos());
 					this.state = Cactian.STATE_AWAKEN;
 				} else {
 					// Handle movement for Idling
@@ -292,6 +284,9 @@ public class Cactian extends GCharacter {
 										(yPos + markY),
 										markX,
 										markY, getClass()));
+				
+				// Play arrow shot sound
+				SoundPlayer.playWAV(GPath.createSoundPath("Cactian_TOSS.wav"), getXPos(), getYPos());
 
 				// Changes states
 				this.state = Cactian.STATE_ATT;
