@@ -2,6 +2,7 @@ package weapons;
 
 import characters.GCharacter;
 import characters.allies.Player;
+import effects.ChargeIndicator;
 import gui.LogScreen;
 import helpers.GColors;
 import managers.EntityManager;
@@ -19,8 +20,8 @@ public class Shield extends Weapon {
 	// Amount of damage the shield blocks on charge
 	public int blockValue;
 
-	public Shield(String name, int minDmg, int maxDmg, int blockValue,
-			double critChance, double critMult, double chargeMult, String desc, String imagePath) {
+	public Shield(String name, int minDmg, int maxDmg, int blockValue, double critChance, double critMult,
+			double chargeMult, int attackExhaust, int chargeExhaust, String desc, String imagePath) {
 		super(name, desc, imagePath);
 		
 		this.minDmg = minDmg;
@@ -29,41 +30,48 @@ public class Shield extends Weapon {
 		this.critChance = critChance;
 		this.critMult = critMult;
 		this.chargeMult = chargeMult;
+		this.attackExhaust = attackExhaust;
+		this.chargeExhaust = chargeExhaust;
 	}
 
 	@Override
 	public boolean tryAttack(int dx, int dy) {
 		// Retrieve instance of EntityManager
 		EntityManager em = EntityManager.getInstance();
+		Player player = em.getPlayer();
 		
-		// Attack multiplier
-		double attMult = 1.0;
-		
-		// If we are charged, affect the damage multiplier of the attack
-		if (isCharged) {
-			// First, discharge shield
-			dischargeWeapon();
-			
-			// Modify attack multiplier if charged
-			attMult = chargeMult;
-		}
-		
-		// Attack adjacent targets normally
 		for (GCharacter npc : em.getNPCManager().getCharacters()) {
 			// If we're attacking at an NPC's position, complete attack
-			if ((em.getPlayer().getXPos() + dx) == npc.getXPos()
-					&& (em.getPlayer().getYPos() + dy) == npc.getYPos()) {
-				// Hit immediately adjacent characters
-				int dmg = calculateDamage(attMult, npc);
-				npc.damageCharacter(dmg);
-				sendToLog("Player bashed and dealt " + Integer.toString(dmg)
-						+ " damage to " + npc.getName() + ".", GColors.ATTACK, npc);
+			if ((player.getXPos() + dx) == npc.getXPos() && (player.getYPos() + dy) == npc.getYPos()) {
+				if (isCharged && player.checkEnergy(chargeExhaust)) {
+					// Exhaust the player
+					player.exhaustPlayer(chargeExhaust);
+					
+					// If charged deal extra damage with standard attack
+					int dmg = calculateDamage(chargeMult, npc);
+					npc.damageCharacter(dmg);
+					
+					// Add effect on attacked tile and relay log message
+					em.getEffectManager().addEffect(new ChargeIndicator(player.getXPos() + dx, player.getYPos() + dy));
+					sendToLog("Player bashed and dealt " + Integer.toString(dmg)
+							+ " damage to " + npc.getName() + ".", GColors.ATTACK, npc);
+				} else {
+					// If not charged deal normal damage and attack normally
+					int dmg;
+					if (player.exhaustPlayer(attackExhaust)) {
+						dmg = calculateDamage(npc);
+					} else {
+						dmg = calculateDamage(EXHAUST_MULT, npc);
+					}
+					npc.damageCharacter(dmg);
+					sendToLog("Player bashed and dealt " + Integer.toString(dmg)
+							+ " damage to " + npc.getName() + ".", GColors.ATTACK, npc);
+				}
 				
-				// Play swing sound and return true
+				// We hit something, so return true
 				playSwingSound();
 				return true;
 			}
-			
 		}
 		
 		// If we hit nothing, return false

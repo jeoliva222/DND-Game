@@ -25,11 +25,17 @@ public abstract class Weapon extends GItem {
 	// Serialization ID
 	private static final long serialVersionUID = 60739329057840072L;
 	
+	// Exhausted damage multiplier on regular attacks
+	public static final double EXHAUST_MULT = 0.5;
+	
 	// Range of damage the weapon can deal
 	public int minDmg, maxDmg;
 	
 	// Critical chance, critical damage multiplier, and charge damage multiplier
 	public double critChance, critMult, chargeMult;
+	
+	// Energy removed from player for regular/charged attacks
+	public int attackExhaust, chargeExhaust;
 	
 	// Whether or not the weapon is charged
 	// Charge weapons by holding your position
@@ -99,23 +105,22 @@ public abstract class Weapon extends GItem {
 			return;
 		}
 		
-		if (isCharged) {
-			// Do nothing extra
-		} else {
-			// Charge the equipped weapon
-			this.isCharged = true;
-		}
+		// Charge the weapon
+		this.isCharged = true;
 	}
 	
 	// Sets the charge of the weapon to false if it is currently charged
 	public void dischargeWeapon() {
-		if (isCharged) {
-			this.isCharged = false;
-		}
+		this.isCharged = false;
 	}
 	
 	// Does an action when offhanded and charging
 	public void doOffhand() {
+		// Do nothing by default
+	}
+	
+	// Resets any variables remembered by the weapon
+	public void resetWeapon() {
 		// Do nothing by default
 	}
 	
@@ -125,6 +130,9 @@ public abstract class Weapon extends GItem {
 		
 		// Discharge current weapon
 		oldWep.dischargeWeapon();
+		
+		// Reset current weapon
+		oldWep.resetWeapon();
 		
 		// Set player's new weapon
 		EntityManager.getInstance().getPlayer().setWeapon(this);

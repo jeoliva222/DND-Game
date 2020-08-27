@@ -39,6 +39,9 @@ public class GameWindow extends JFrame implements KeyListener {
 	// Indicates whether a key is being pressed or not
 	private static boolean isKeyDown = false;
 	
+	// Indicates whether the spacebar is being pressed or not
+	private static boolean isSpaceDown = false;
+	
 	// Indicates whether a turn is currently in progress, preventing buffering inputs
 	private static boolean turnInProgress = false;
 	
@@ -203,21 +206,15 @@ public class GameWindow extends JFrame implements KeyListener {
 		// Fetch reference to player
 		Player plr = EntityManager.getInstance().getPlayer();
 		
-		// Update last position
-		plr.updateLastCoords();
+		// Get player position before switch
+		int currentX = plr.getXPos();
+		int currentY = plr.getYPos();
 		
-		// Only move player if we have a direction
-		if (!(dx == 0 && dy == 0)) {
-			// Get player position before switch
-			int currentX = plr.getXPos();
-			int currentY = plr.getYPos();
-			
-			// Move player if possible
-			plr.movePlayer(dx, dy);
-			
-			// Make the changes to the board
-			shiftEntity(currentX, currentY);
-		}
+		// Move player if possible
+		plr.movePlayer(dx, dy);
+		
+		// Make the changes to the board
+		shiftEntity(currentX, currentY);
 		
 		// Persist debuffs
 		plr.persistBuffs();
@@ -491,6 +488,14 @@ public class GameWindow extends JFrame implements KeyListener {
 			return;
 		}
 		
+        if (!isSpaceDown && e.getKeyCode() == KeyEvent.VK_SPACE) {
+        	// Charge active weapon
+        	isSpaceDown = true;
+        	EntityManager.getInstance().getPlayer().chargeActiveWeapon();
+        	StatusScreen.updateWeapons();
+        	return;
+        } 
+		
 		//---------------
 		
 		// Disable key repeat
@@ -525,68 +530,64 @@ public class GameWindow extends JFrame implements KeyListener {
         	completeTurn(0, -1);
         	updateAll();
         } 
-        else if (e.getKeyCode() == KeyEvent.VK_SPACE) {
-        	// Charge weapon and hold position for the turn
-        	EntityManager.getInstance().getPlayer().chargeWeapons();
-        	completeTurn(0, 0);
-        	updateAll();
-        } 
-        else if (e.getKeyCode() == KeyEvent.VK_CONTROL) {
-        	// Hold position for the turn, discharging player weapons
-        	EntityManager.getInstance().getPlayer().dischargeWeapons();
-        	completeTurn(0, 0);
-        	updateAll();
-        }
-        else if (e.getKeyCode() == KeyEvent.VK_Z) {
-        	// Shift inventory selector to the left without consuming turn
-        	InventoryScreen.shiftSelected(-1);
-        }
-        else if (e.getKeyCode() == KeyEvent.VK_X) {
-        	// Shift inventory selector to the right without consuming turn
-        	InventoryScreen.shiftSelected(1);
-        }
-        else if(e.getKeyCode() == KeyEvent.VK_ENTER) {
-        	// Uses selected item
-        	if (InventoryScreen.useSelected()) {
-            	completeTurn(0, 0);
-        	}
-        	updateAll();
-        }
-        else if (e.getKeyCode() == KeyEvent.VK_BACK_SPACE) {
-        	// Discards selected item in inventory without consuming turn
-        	InventoryScreen.discardSelected();
-        	updateAll();
-        }
-        else if (e.getKeyCode() == KeyEvent.VK_SHIFT) {
-        	// Swaps active weapon with offhand weapon without consuming turn
-        	EntityManager.getInstance().getPlayer().swapEquippedWeapon();
-        }
-        else if (e.getKeyCode() == KeyEvent.VK_M) {
-        	// Display the map of the area
-        	mapDisplayed = true;
-        	map.displayMap();
-        	LogScreen.log("Green = You / Blue = Explored");
-        	updateGUI();
-        }
-        else if (e.getKeyCode() == KeyEvent.VK_F9) {
-        	// Load the player's save file
-        	loadGame();
-        }
-        else if (isDebug && e.getKeyCode() == KeyEvent.VK_9) {
-        	// *** DEBUG: Damages player by 1
-        	EntityManager.getInstance().getPlayer().damagePlayer(1);
-        	updateAll();
-        }
-        else if (isDebug && e.getKeyCode() == KeyEvent.VK_0) {
-        	// *** DEBUG: Heals player by 1
-        	EntityManager.getInstance().getPlayer().healPlayer(1, false);
-        	updateAll();
-        }
-	    else if (isDebug && e.getKeyCode() == KeyEvent.VK_F5) {
-	    	// *** DEBUG: Saves the game
-	    	saveGame();
-	    	updateAll();
-	    }
+		if (!isSpaceDown) {
+	        if (e.getKeyCode() == KeyEvent.VK_CONTROL) {
+	        	// Hold position for the turn, discharging player weapons
+	        	EntityManager.getInstance().getPlayer().dischargeWeapons();
+	        	completeTurn(0, 0);
+	        	updateAll();
+	        }
+	        else if (e.getKeyCode() == KeyEvent.VK_Z) {
+	        	// Shift inventory selector to the left without consuming turn
+	        	InventoryScreen.shiftSelected(-1);
+	        }
+	        else if (e.getKeyCode() == KeyEvent.VK_X) {
+	        	// Shift inventory selector to the right without consuming turn
+	        	InventoryScreen.shiftSelected(1);
+	        }
+	        else if(e.getKeyCode() == KeyEvent.VK_ENTER) {
+	        	// Uses selected item
+	        	if (InventoryScreen.useSelected()) {
+	            	completeTurn(0, 0);
+	        	}
+	        	updateAll();
+	        }
+	        else if (e.getKeyCode() == KeyEvent.VK_BACK_SPACE) {
+	        	// Discards selected item in inventory without consuming turn
+	        	InventoryScreen.discardSelected();
+	        	updateAll();
+	        }
+	        else if (e.getKeyCode() == KeyEvent.VK_SHIFT) {
+	        	// Swaps active weapon with offhand weapon without consuming turn
+	        	EntityManager.getInstance().getPlayer().swapEquippedWeapon();
+	        }
+	        else if (e.getKeyCode() == KeyEvent.VK_M) {
+	        	// Display the map of the area
+	        	mapDisplayed = true;
+	        	map.displayMap();
+	        	LogScreen.log("Green = You / Blue = Explored");
+	        	updateGUI();
+	        }
+	        else if (e.getKeyCode() == KeyEvent.VK_F9) {
+	        	// Load the player's save file
+	        	loadGame();
+	        }
+	        else if (isDebug && e.getKeyCode() == KeyEvent.VK_9) {
+	        	// *** DEBUG: Damages player by 1
+	        	EntityManager.getInstance().getPlayer().damagePlayer(1);
+	        	updateAll();
+	        }
+	        else if (isDebug && e.getKeyCode() == KeyEvent.VK_0) {
+	        	// *** DEBUG: Heals player by 1
+	        	EntityManager.getInstance().getPlayer().healPlayer(1, false);
+	        	updateAll();
+	        }
+		    else if (isDebug && e.getKeyCode() == KeyEvent.VK_F5) {
+		    	// *** DEBUG: Saves the game
+		    	saveGame();
+		    	updateAll();
+		    }
+		}
 		
 		// If we're in a dark area or level, refresh all tiles every move
 		if (EntityManager.getInstance().isDark()) {
@@ -599,9 +600,17 @@ public class GameWindow extends JFrame implements KeyListener {
 	
 	@Override
 	public void keyReleased(KeyEvent e) {
-		// Mark that the key has been released and
-		// that we can hit another key
-		isKeyDown = false;
+		if (isSpaceDown && e.getKeyCode() == KeyEvent.VK_SPACE) {
+    		// Discharge our weapons
+			isSpaceDown = false;
+        	EntityManager.getInstance().getPlayer().dischargeWeapons();
+        	StatusScreen.updateWeapons();
+        } else {
+    		// Mark that the key has been released and
+    		// that we can hit another key
+    		isKeyDown = false;
+        }
+
 	}
 
 	@Override

@@ -39,42 +39,45 @@ public class KingStaff extends Weapon {
 		this.critChance = STAFF_CRIT_CHANCE;
 		this.critMult = STAFF_CRIT_MULT;
 		this.chargeMult = 1.0;
+		this.attackExhaust = 0;
+		this.chargeExhaust = 6;
 	}
 	
 	@Override
 	public boolean tryAttack(int dx, int dy) {
 		// Retrieve instance of EntityManager
 		EntityManager em = EntityManager.getInstance();
+		Player player = em.getPlayer();
 		
 		for (GCharacter npc : em.getNPCManager().getCharacters()) {
 			// If we're attacking at an NPC's position, complete attack
-			if ((em.getPlayer().getXPos() + dx) == npc.getXPos() && (em.getPlayer().getYPos() + dy) == npc.getYPos()) {
-				if (isCharged) { // CHARGED ----------------------------------------------------
+			if ((player.getXPos() + dx) == npc.getXPos() && (player.getYPos() + dy) == npc.getYPos()) {
+				if (isCharged && player.checkEnergy(chargeExhaust)) { // CHARGED ----------------------------------------------------
 					
-					// First, discharge weapon
-					dischargeWeapon();
+					// Exhaust the player
+					player.exhaustPlayer(chargeExhaust);
 					
 					// Determine randomly whether to spawn flames
 					if (Math.random() < FIRE_CHANCE) { // FLAME ---------------
 						
 						// Fire a flame in the direction the player attacked
 						em.getProjectileManager()
-							.addProjectile(new KingStaffFlame((em.getPlayer().getXPos() + dx),
-													(em.getPlayer().getYPos() + dy),
+							.addProjectile(new KingStaffFlame((player.getXPos() + dx),
+													(player.getYPos() + dy),
 													dx,
 													dy, Player.class));
 						
 						// Fire a flame to the relative left of the player's attack
 						em.getProjectileManager()
-							.addProjectile(new KingStaffFlame((em.getPlayer().getXPos() + dx - Math.abs(dy)),
-													(em.getPlayer().getYPos() + dy - Math.abs(dx)),
+							.addProjectile(new KingStaffFlame((player.getXPos() + dx - Math.abs(dy)),
+													(player.getYPos() + dy - Math.abs(dx)),
 													dx,
 													dy, Player.class));
 						
 						// Fire a flame to the relative right of the player's attack
 						em.getProjectileManager()
-							.addProjectile(new KingStaffFlame((em.getPlayer().getXPos() + dx + Math.abs(dy)),
-													(em.getPlayer().getYPos() + dy + Math.abs(dx)),
+							.addProjectile(new KingStaffFlame((player.getXPos() + dx + Math.abs(dy)),
+													(player.getYPos() + dy + Math.abs(dx)),
 													dx,
 													dy, Player.class));
 						
@@ -89,7 +92,7 @@ public class KingStaff extends Weapon {
 								+ " damage to " + npc.getName() + ".", GColors.ATTACK, npc);
 						
 						// Mark location with effect
-						em.getEffectManager().addEffect(new ChargeIndicator(em.getPlayer().getXPos() + dx, em.getPlayer().getYPos() + dy));
+						em.getEffectManager().addEffect(new ChargeIndicator(player.getXPos() + dx, player.getYPos() + dy));
 						
 						// Then, deal damage to adjacent foes
 						findSwipeTargets(dx, dy);
@@ -104,8 +107,8 @@ public class KingStaff extends Weapon {
 						
 						// Fire a flame in the direction the player attacked
 						em.getProjectileManager()
-							.addProjectile(new KingStaffFlame((em.getPlayer().getXPos() + dx),
-													(em.getPlayer().getYPos() + dy),
+							.addProjectile(new KingStaffFlame((player.getXPos() + dx),
+													(player.getYPos() + dy),
 													dx,
 													dy, null));
 						
@@ -114,7 +117,12 @@ public class KingStaff extends Weapon {
 					} else { // REGULAR ------------------------------------------
 						
 						// If not charged deal normal damage and attack normally
-						int dmg = calculateDamage(npc);
+						int dmg;
+						if (player.exhaustPlayer(attackExhaust)) {
+							dmg = calculateDamage(npc);
+						} else {
+							dmg = calculateDamage(EXHAUST_MULT, npc);
+						}
 						npc.damageCharacter(dmg);
 						sendToLog("Player slashed and dealt " + Integer.toString(dmg)
 								+ " damage to " + npc.getName() + ".", GColors.ATTACK, npc);
@@ -150,8 +158,7 @@ public class KingStaff extends Weapon {
 		
 		// Damage affected characters
 		for (GCharacter npc : em.getNPCManager().getCharacters()) {
-			if ((xPos1 == npc.getXPos() && yPos1 == npc.getYPos()) ||
-					(xPos2 == npc.getXPos() && yPos2 == npc.getYPos())) {
+			if ((xPos1 == npc.getXPos() && yPos1 == npc.getYPos()) || (xPos2 == npc.getXPos() && yPos2 == npc.getYPos())) {
 				// Damage target and log result
 				int dmg = calculateDamage(chargeMult, npc);
 				npc.damageCharacter(dmg);

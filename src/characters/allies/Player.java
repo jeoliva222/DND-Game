@@ -57,6 +57,9 @@ public class Player implements Serializable {
 	// Maximum and Current health amounts
 	private int maxHP, currentHP;
 	
+	// Maximum and Current energy amounts
+	private int maxEnergy, currentEnergy;
+	
 	// Amount of armor that negates damage
 	private int armor;
 	
@@ -101,6 +104,11 @@ public class Player implements Serializable {
 		this.maxHP = 20;
 		this.currentHP = this.maxHP;
 		
+		// Set energy values
+		// Default is 10
+		this.maxEnergy = 10;
+		this.currentEnergy = this.maxEnergy;
+		
 		// Set armor value
 		// Default is 0
 		this.armor = 0;
@@ -121,9 +129,19 @@ public class Player implements Serializable {
 	 */
 	public boolean movePlayer(int dx, int dy) {
 		
+		// Update last position
+		updateLastCoords();
+		
 		// Check if player is alive first
 		if (!isAlive()) {
 			// If player is dead, don't do anything
+			return false;
+		}
+		
+		// Check if we're not actually moving
+		if (dx == 0 && dy == 0) {
+			// Recover more energy if resting in place
+			energizePlayer(2);
 			return false;
 		}
 		
@@ -133,13 +151,16 @@ public class Player implements Serializable {
 			return false;
 		}
 		
+		// Recover energy for not attacking this turn
+		energizePlayer(1);
+		
+		// Reset weapons if player isn't attacking this turn
+		resetWeapons();
+		
 		// Check if we are rooted and can't move
 		if (hasBuff(Buff.ROOTED)) {
 			return false;
 		}
-		
-		// Discharge weapons if player isn't attacking this turn
-		dischargeWeapons();
 		
 		// Then check for barriers, out-of-bounds, and immovable spaces
 		TileType tt = null;
@@ -224,13 +245,13 @@ public class Player implements Serializable {
 			return false;
 		}
 		
+		// Reset weapons if player isn't attacking this turn
+		resetWeapons();
+		
 		// Check if we are rooted and can't move
 		if (hasBuff(Buff.ROOTED)) {
 			return false;
 		}
-		
-		// Discharge weapons if player isn't attacking this turn
-		dischargeWeapons();
 		
 		// Check for barriers, out-of-bounds, and immovable spaces
 		TileType tt;
@@ -333,7 +354,7 @@ public class Player implements Serializable {
 			return true;
 		}
 		
-		// Otherwise, deal damage, play hurt sound, and declare whether play is dead
+		// Otherwise, deal damage, play hurt sound, and declare whether player is dead
 		this.currentHP = (currentHP - damage);
 		if (isAlive()) {
 			SoundPlayer.playWAV(GPath.createSoundPath("Player_HURT.wav"), -15);
@@ -348,6 +369,47 @@ public class Player implements Serializable {
 			LogScreen.log("Player has died! Game over.", GColors.DAMAGE);
 			return false;
 		}
+	}
+	
+	/**
+	 * Subtracts energy from player, if there is enough to take
+	 * @param exhaust Energy taken from the player
+	 * @return True if energy left after exhaust applied, False if out of energy after exhaust applied
+	 */
+	public boolean exhaustPlayer(int exhaust) {
+		return exhaustPlayer(exhaust, true);
+	}
+	
+	/**
+	 * Subtracts energy from player, if there is enough to take
+	 * @param exhaust Energy taken from the player
+	 * @param force True = Deplete energy always / False = Deplete only if available
+	 * @return True if enough energy left for exhaust, False if not enough energy left for exhaust
+	 */
+	public boolean exhaustPlayer(int exhaust, boolean force) {
+		// If exhaust is equal to or less than 0, do nothing and return
+		if (exhaust <= 0) {
+			return true;
+		}
+		
+		// Otherwise, apply exhaust and declare whether player had enough energy left
+		if (exhaust <= currentEnergy) {
+			this.currentEnergy = (currentEnergy - exhaust);
+			return true;
+		} else if (force) {
+			this.currentEnergy = 0;
+		}
+		
+		return false;
+	}
+	
+	/**
+	 * Checks if the player has a certain amount of energy left (or greater)
+	 * @param check Amount of energy to check for
+	 * @return True = More or equal energy left / False = Less energy left
+	 */
+	public boolean checkEnergy(int check) {
+		return (check <= currentEnergy);
 	}
 	
 	/**
@@ -397,6 +459,24 @@ public class Player implements Serializable {
 	 */
 	public void fullyHeal() {
 		healPlayer(maxHP);
+	}
+	
+	/**
+	 * Energizes the player, giving them more energy points
+	 * @param fuel Energy points to give the player
+	 */
+	public void energizePlayer(int fuel) {
+		this.currentEnergy = currentEnergy + fuel;
+		if (currentEnergy > maxEnergy) {
+			this.currentEnergy = maxEnergy;
+		}
+	}
+	
+	/**
+	 * Energizes the player to full energy
+	 */
+	public void fullyEnergize() {
+		energizePlayer(maxEnergy);
 	}
 	
 	/**
@@ -454,18 +534,10 @@ public class Player implements Serializable {
 	}
 	
 	/**
-	 * Charges both weapons the player has equipped
+	 * Charges the player's active equipped weapon
 	 */
-	public void chargeWeapons() {
-		// Charge both equipped weapons
+	public void chargeActiveWeapon() {
 		equippedWeapon.chargeWeapon();
-		sheathedWeapon.chargeWeapon();
-		
-		// Do your offhand weapon's action
-		sheathedWeapon.doOffhand();
-		
-		// Log a message
-       	LogScreen.log("Charged weapons...");
 	}
 	
 	/**
@@ -474,6 +546,14 @@ public class Player implements Serializable {
 	public void dischargeWeapons() {
 		equippedWeapon.dischargeWeapon();
 		sheathedWeapon.dischargeWeapon();
+	}
+	
+	/**
+	 * Resets both weapons the player has equipped
+	 */
+	public void resetWeapons() {
+		equippedWeapon.resetWeapon();
+		sheathedWeapon.resetWeapon();
 	}
 	
 	/**
@@ -612,6 +692,27 @@ public class Player implements Serializable {
 	
 	public void setCurrentHP(int newHP) {
 		this.currentHP = newHP;
+	}
+	
+	public int getMaxEnergy() {
+		return this.maxEnergy;
+	}
+	
+	public void increaseMaxEnergy(int dx) {
+		this.maxEnergy += dx;
+		this.currentEnergy += dx;
+	}
+	
+	public void setMaxEnergy(int newMax) {
+		this.maxEnergy = newMax;
+	}
+	
+	public int getCurrentEnergy() {
+		return this.currentEnergy;
+	}
+	
+	public void setCurrentEnergy(int newEnergy) {
+		this.currentEnergy = newEnergy;
 	}
 	
 	public Short getMoveTypes() {

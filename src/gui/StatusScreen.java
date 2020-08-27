@@ -42,6 +42,13 @@ public class StatusScreen extends JPanel {
 	private static int arHeight = 50;
 	private static int arFontSize = 28;
 	
+	// Energy Panel fields
+	private static JPanel energyPanel = new JPanel();
+	private static JLabel energyInfo = new JLabel();
+	private static int nrgWidth = 180;
+	private static int nrgHeight = 50;
+	private static int nrgFontSize = 28;
+	
 	// Player Image Panel fields
 	private static EntityImagePanel playerImagePanel = new EntityImagePanel();
 	private static Image playerImage;
@@ -82,6 +89,9 @@ public class StatusScreen extends JPanel {
 		arWidth = (int) (arWidth * GameInitializer.scaleFactor);
 		arHeight = (int) (arHeight * GameInitializer.scaleFactor);
 		arFontSize = (int) (arFontSize * GameInitializer.scaleFactor);
+		nrgWidth = (int) (nrgWidth * GameInitializer.scaleFactor);
+		nrgHeight = (int) (nrgHeight * GameInitializer.scaleFactor);
+		nrgFontSize = (int) (nrgFontSize * GameInitializer.scaleFactor);
 		piWidth = (int) (piWidth * GameInitializer.scaleFactor);
 		piHeight = (int) (piHeight * GameInitializer.scaleFactor);
 		pWeaponWidth = (int) (pWeaponWidth * GameInitializer.scaleFactor);
@@ -120,6 +130,17 @@ public class StatusScreen extends JPanel {
 		add(armorPanel);
 		armorPanel.setPreferredSize(new Dimension(arWidth, arHeight));
 		
+		// Set up energy panel
+		energyInfo.setText("NRG: " + Integer.toString(EntityManager.getInstance().getPlayer().getCurrentEnergy())
+				+ " / " + Integer.toString(EntityManager.getInstance().getPlayer().getMaxEnergy()));
+		energyInfo.setHorizontalAlignment(SwingConstants.CENTER);
+		energyInfo.setFont(new Font(Font.SERIF, Font.BOLD, nrgFontSize));
+		energyPanel.setLayout(new GridLayout(1, 1));
+		energyPanel.add(energyInfo);
+		//--
+		add(energyPanel);
+		energyPanel.setPreferredSize(new Dimension(nrgWidth, nrgHeight));
+		
 		// Vertical spacer
 		add(Box.createVerticalGlue());
 		
@@ -142,8 +163,7 @@ public class StatusScreen extends JPanel {
 		int max = EntityManager.getInstance().getPlayer().getMaxHP();
 		
 		// Set Health text
-		healthInfo.setText("HP: " + Integer.toString(hp)
-				+ " / " + Integer.toString(max));
+		healthInfo.setText("HP: " + Integer.toString(hp) + " / " + Integer.toString(max));
 		
 		// Based on percentage of health left, get color
 		Color healthColor;
@@ -164,6 +184,23 @@ public class StatusScreen extends JPanel {
 		
 		// Repaint the panel
 		healthPanel.repaint();
+	}
+	
+	// Updates the values in the energy panel
+	public static void updateEnergyValues() {
+		// Get energy values
+		int nrg = EntityManager.getInstance().getPlayer().getCurrentEnergy();
+		int max = EntityManager.getInstance().getPlayer().getMaxEnergy();
+		
+		// Set energy text
+		energyInfo.setText("NRG: " + Integer.toString(nrg) + " / " + Integer.toString(max));
+		
+		// Based on percentage of energy left, set color
+		int hue = 180;
+		energyPanel.setBackground(new Color(hue, (int) Math.floor(hue - ((nrg / ((double) max)) * hue)), hue));
+		
+		// Repaint the panel
+		energyPanel.repaint();
 	}
 	
 	public static void updatePlayerImage() {
@@ -209,6 +246,7 @@ public class StatusScreen extends JPanel {
 	// Updates everything on the status screen
 	public static void updateStatusScreen() {
 		updateHealthValues();
+		updateEnergyValues();
 		updatePlayerImage();
 		updateArmorValues();
 	}

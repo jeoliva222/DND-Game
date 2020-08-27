@@ -5,6 +5,7 @@ import java.util.Random;
 import buffs.Buff;
 import buffs.RageBuff;
 import characters.GCharacter;
+import characters.allies.Player;
 import effects.ChargeIndicator;
 import helpers.GColors;
 import managers.EntityManager;
@@ -19,8 +20,8 @@ public class Hammer extends Weapon {
 	private static final long serialVersionUID = -7445620100936275560L;
 
 	// Constructor
-	public Hammer(String name, int minDmg, int maxDmg,
-			double critChance, double critMult, double chargeMult, String desc, String imagePath) {
+	public Hammer(String name, int minDmg, int maxDmg, double critChance, double critMult,
+			double chargeMult, int attackExhaust, int chargeExhaust, String desc, String imagePath) {
 		super(name, desc, imagePath);
 		
 		this.minDmg = minDmg;
@@ -28,21 +29,24 @@ public class Hammer extends Weapon {
 		this.critChance = critChance;
 		this.critMult = critMult;
 		this.chargeMult = chargeMult;
+		this.attackExhaust = attackExhaust;
+		this.chargeExhaust = chargeExhaust;
 	}
 	
 	@Override
 	public boolean tryAttack(int dx, int dy) {
 		// Retrieve instance of EntityManager
 		EntityManager em = EntityManager.getInstance();
-		int plrX = em.getPlayer().getXPos();
-		int plrY = em.getPlayer().getYPos();
+		Player player = em.getPlayer();
+		int plrX = player.getXPos();
+		int plrY = player.getYPos();
 		
 		for (GCharacter npc : em.getNPCManager().getCharacters()) {
 			// If we're attacking at an NPC's position, complete attack
 			if ((plrX + dx) == npc.getXPos() && (plrY + dy) == npc.getYPos()) {
-				if (isCharged) {
-					// First, discharge weapon
-					dischargeWeapon();
+				if (isCharged && player.checkEnergy(chargeExhaust)) {
+					// Exhaust the player
+					player.exhaustPlayer(chargeExhaust);
 					
 					// If charged, hit all adjacent targets with piercing damage
 					hitAdjacents(plrX, plrY);
@@ -54,7 +58,12 @@ public class Hammer extends Weapon {
 					em.getEffectManager().addEffect(new ChargeIndicator(plrX, plrY - 1));
 				} else {
 					// If not charged deal normal damage and attack normally
-					int dmg = calculateDamage(npc);
+					int dmg;
+					if (player.exhaustPlayer(attackExhaust)) {
+						dmg = calculateDamage(npc);
+					} else {
+						dmg = calculateDamage(EXHAUST_MULT, npc);
+					}
 					npc.damageCharacter(dmg);
 					sendToLog("Player smashed and dealt " + Integer.toString(dmg)
 							+ " damage to " + npc.getName() + ".", GColors.ATTACK, npc);

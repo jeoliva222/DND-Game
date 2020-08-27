@@ -35,7 +35,7 @@ public class WeaponStatPanel extends JPanel {
 
 	// Usual font to use for the panel and default font size
 	private Font usualFont;
-	private int fontSize = 20;
+	private int fontSize = 19;
 	
 	// Bottom label buffer
 	private int labelXBuffer = 7;
@@ -51,6 +51,9 @@ public class WeaponStatPanel extends JPanel {
 	
 	// Label for charge hits
 	private JLabel chargeLabel = new JLabel("CHARGE: #.#x");
+	
+	// Label for energy usage
+	private JLabel energyLabel = new JLabel("NRG: -");
 	
 	// Constructor
 	protected WeaponStatPanel() {
@@ -102,7 +105,7 @@ public class WeaponStatPanel extends JPanel {
 		//-----------------------
 		// Bottom half panel
 		JPanel bottomPanel = new JPanel();
-		bottomPanel.setLayout(new GridLayout(2, 1));
+		bottomPanel.setLayout(new GridLayout(3, 1));
 		bottomPanel.setOpaque(false);
 		
 		// Add in Critical label
@@ -114,6 +117,11 @@ public class WeaponStatPanel extends JPanel {
 		chargeLabel.setFont(usualFont);
 		bottomPanel.add(chargeLabel);
 		chargeLabel.setBorder(BorderFactory.createEmptyBorder(0, labelXBuffer, 0, 0));
+		
+		// Add in Energy label
+		energyLabel.setFont(usualFont);
+		bottomPanel.add(energyLabel);
+		energyLabel.setBorder(BorderFactory.createEmptyBorder(0, labelXBuffer, 0, 0));
 		
 		// Mouse Listener for focusing on equipped item
 		addMouseListener(new MouseAdapter() {
@@ -163,15 +171,19 @@ public class WeaponStatPanel extends JPanel {
 		}
 		
 		// Sets new damage values
-		dmgLabel.setText("DMG: "+Integer.toString(newWep.minDmg)+" - "
-				+Integer.toString(newWep.maxDmg));
+		dmgLabel.setText("DMG: " + Integer.toString(newWep.minDmg) + " - " 
+				+ Integer.toString(newWep.maxDmg));
 		
 		// Sets new crit values
-		critLabel.setText("CRITS: "+toPercent(newWep.critChance)+" / "
-				+Double.toString(newWep.critMult)+"x");
+		critLabel.setText("CRITS: " + toPercent(newWep.critChance) + " / " 
+				+ Double.toString(newWep.critMult) + "x");
 		
 		// Sets new charge values
-		chargeLabel.setText("CHARGED: "+Double.toString(newWep.chargeMult)+"x");
+		chargeLabel.setText("CHARGED: " + Double.toString(newWep.chargeMult) + "x");
+		
+		// Sets new energy values
+		energyLabel.setText("NRG: " + Integer.toString(newWep.attackExhaust) + " Regular / "
+				+ Integer.toString(newWep.chargeExhaust) + " Charged");
 	}
 	
 	public static String toPercent(double num) {

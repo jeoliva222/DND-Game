@@ -17,8 +17,8 @@ public class Dagger extends Weapon {
 	// Serialization ID
 	private static final long serialVersionUID = 1198769164795197369L;
 
-	public Dagger(String name, int minDmg, int maxDmg,
-			double critChance, double critMult, double chargeMult, String desc, String imagePath) {
+	public Dagger(String name, int minDmg, int maxDmg, double critChance, double critMult,
+			double chargeMult, int attackExhaust, int chargeExhaust, String desc, String imagePath) {
 		super(name, desc, imagePath);
 		
 		this.minDmg = minDmg;
@@ -26,6 +26,8 @@ public class Dagger extends Weapon {
 		this.critChance = critChance;
 		this.critMult = critMult;
 		this.chargeMult = chargeMult;
+		this.attackExhaust = attackExhaust;
+		this.chargeExhaust = chargeExhaust;
 	}
 
 	@Override
@@ -39,12 +41,12 @@ public class Dagger extends Weapon {
 		for (GCharacter npc : em.getNPCManager().getCharacters()) {
 			// If we're attacking at an NPC's position, complete attack
 			if ((player.getXPos() + dx) == npc.getXPos() && (player.getYPos() + dy) == npc.getYPos()) {
-				if (isCharged) {
-					// First, discharge weapon
-					dischargeWeapon();
-					
+				if (isCharged && player.checkEnergy(chargeExhaust)) {
 					// Fetch tile the targeted enemy is on
 					TileType tt = GameScreen.getTile(player.getXPos() + dx, player.getYPos() + dy).getTileType();
+					
+					// Exhaust the player
+					player.exhaustPlayer(chargeExhaust);
 					
 					if (MovableType.canMove(player.getMoveTypes(), tt.getMovableType()) &&
 							player.leapPlayer(player.getXPos() + (dx*2), player.getYPos() + (dy*2))) {
@@ -62,7 +64,12 @@ public class Dagger extends Weapon {
 					}
 				} else {
 					// If not charged deal normal damage and attack normally
-					int dmg = calculateDamage(npc);
+					int dmg;
+					if (player.exhaustPlayer(attackExhaust)) {
+						dmg = calculateDamage(npc);
+					} else {
+						dmg = calculateDamage(EXHAUST_MULT, npc);
+					}
 					npc.damageCharacter(dmg);
 					sendToLog("Player cut "+ npc.getName() +" and dealt " + Integer.toString(dmg)
 							+ " damage.", GColors.ATTACK, npc);

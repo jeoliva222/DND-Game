@@ -3,6 +3,7 @@ package weapons.special;
 import java.util.ArrayList;
 
 import characters.GCharacter;
+import characters.allies.Player;
 import effects.BulletEffect;
 import effects.ChargeIndicator;
 import gui.GameScreen;
@@ -41,15 +42,18 @@ public class VenomGun extends Weapon {
 		this.critChance = 0.05;
 		this.critMult = 1.5;
 		this.chargeMult = 1.0;
+		this.attackExhaust = 0;
+		this.chargeExhaust = 1;
 	}
 	
 	@Override
 	public boolean tryAttack(int dx, int dy) {
 		// Retrieve instance of EntityManager
 		EntityManager em = EntityManager.getInstance();
+		Player player = em.getPlayer();
 		
 		// Check if weapon is charged or not
-		if (isCharged) { // CHARGED ------------------------------------------
+		if (isCharged && player.checkEnergy(chargeExhaust)) { // CHARGED ------------------------------------------
 			// Find all enemies that are on player's shot path
 			ArrayList<GCharacter> inlineEnemies = new ArrayList<GCharacter>();
 			
@@ -58,8 +62,8 @@ public class VenomGun extends Weapon {
 			byte wallY = -1;
 			
 			// While we still have a open bullet path, check for NPCs to hit
-			byte nextX = (byte) (em.getPlayer().getXPos() + dx);
-			byte nextY = (byte) (em.getPlayer().getYPos() + dy);
+			byte nextX = (byte) (player.getXPos() + dx);
+			byte nextY = (byte) (player.getYPos() + dy);
 			boolean isEndHit = false;
 			while (!isEndHit) { // Begin While --------------------------------------
 				// First check for NPCs to add
@@ -87,14 +91,37 @@ public class VenomGun extends Weapon {
 				
 			} // END While Loop ---------------------------------------------
 			
+			// Play firing sound (louder the more bullets are fired)
+			SoundPlayer.playWAV(GPath.createSoundPath("Chaingun_Fire.wav"), (-15f + (3f * bulletsToShoot)));
+			
 			// Then check for closest NPC in the line of enemies
 			if (inlineEnemies.isEmpty()) {
 				// If no shot hit, return true anyways to stay in readied stance but lower next bullet count
+				
+				// Mark tiles with effects until our first wall
+				byte safetyCounter = 0;
+				nextX = (byte) (player.getXPos() + dx);
+				nextY = (byte) (player.getYPos() + dy);
+				while (!(nextX == wallX && nextY == wallY) && (safetyCounter < 10)) {
+					// Add bullet effect
+					em.getEffectManager().addEffect(new BulletEffect(nextX, nextY, dx, dy));
+					
+					// Increment tracker coordinates
+					nextX += dx;
+					nextY += dy;
+					safetyCounter += 1;
+				}
+				
+				// Mark last tile with special impact effect
+				em.getEffectManager().addEffect(new ChargeIndicator(nextX, nextY));
 				
 				// Decrease bullets fired with next attack (Capped at bulletsMin)
 				if (bulletsToShoot > bulletsMin) {
 					this.bulletsToShoot += -1;
 				}
+				
+				// Exhaust the player more than normal
+				player.exhaustPlayer(chargeExhaust * 3);
 				
 				// Return true to keep in stance
 				return true;
@@ -107,9 +134,6 @@ public class VenomGun extends Weapon {
 				boolean isMultihit = false;
 				int currentTarget = 0;
 				String logString = "";
-				
-				// Play firing sound
-				SoundPlayer.playWAV(GPath.createSoundPath("Chaingun_Fire.wav"));
 				
 				// Coordinates for furtherest NPC we hit
 				byte farNPCX = -1;
@@ -172,8 +196,8 @@ public class VenomGun extends Weapon {
 				
 				// Mark tiles with effects until our farthest target or first wall
 				byte safetyCounter = 0;
-				nextX = (byte) (em.getPlayer().getXPos() + dx);
-				nextY = (byte) (em.getPlayer().getYPos() + dy);
+				nextX = (byte) (player.getXPos() + dx);
+				nextY = (byte) (player.getYPos() + dy);
 				while (!(nextX == wallX && nextY == wallY) && !(nextX == farNPCX && nextY == farNPCY) && (safetyCounter < 10)) {
 					// Add bullet effect
 					em.getEffectManager().addEffect(new BulletEffect(nextX, nextY, dx, dy));
@@ -198,14 +222,16 @@ public class VenomGun extends Weapon {
 					this.bulletsToShoot += 1;
 				}
 				
+				// Exhaust the player the normal amount
+				player.exhaustPlayer(chargeExhaust);
+				
 				// Return true to indicate we hit a target
 				return true;
 			}
 		} else { // NOT CHARGED ------------------------------------------------------------------
 			// If not charged, check for immediately adjacent NPCs to punch
 			for (GCharacter npc : em.getNPCManager().getCharacters()) {
-				if ((em.getPlayer().getXPos() + dx) == npc.getXPos()
-						&& (em.getPlayer().getYPos() + dy) == npc.getYPos()) {
+				if ((player.getXPos() + dx) == npc.getXPos() && (player.getYPos() + dy) == npc.getYPos()) {
 					// If not charged deal normal damage and attack normally
 					int dmg = calculateDamage(npc);
 					npc.damageCharacter(dmg);
@@ -232,29 +258,20 @@ public class VenomGun extends Weapon {
 		}
 		
 		if (isCharged) {
-			// Discharge weapon
-			dischargeWeapon();
-		} else if (!EntityManager.getInstance().getPlayer().getSheathedWeapon().equals(this)) {
-			// Only charge the weapon if it's in our primary slot
-			
+			// Do nothing
+		} else {
 			// Charge the equipped weapon
-			isCharged = true;
+			this.isCharged = true;
 			
 			// Play reving sound
 			SoundPlayer.playWAV(GPath.createSoundPath("Chaingun_Rev.wav"));
 		}
 	}
-
-	@Override
-	public void doOffhand() {
-		// Prevent weapon from being charged while offhand
-		dischargeWeapon();
-	}
 	
 	// Override that also resets the number of bullets to shoot
 	@Override
-	public void dischargeWeapon() {
-		super.dischargeWeapon();
+	public void resetWeapon() {
+		super.resetWeapon();
 		this.bulletsToShoot = bulletsMin;
 	}
 	
