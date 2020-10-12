@@ -339,6 +339,7 @@ public class Angel extends GCharacter {
 				if (corpse == null) {
 					this.rezCount = 0;
 					this.state = Angel.STATE_PURSUE;
+					break;
 				}
 				
 				// If player is on corpse, switch to attack mode
@@ -394,11 +395,11 @@ public class Angel extends GCharacter {
 					
 					// Log the result
 					LogScreen.log(corpse.getNPC().getName() + " was resurrected!");
-					
-					// Reset rez parameters
-					this.rezCount = 0;
-					this.corpse = null;
 				}
+				
+				// Reset rez parameters
+				this.rezCount = 0;
+				this.corpse = null;
 				
 				// Change states
 				this.state = Angel.STATE_REZ;

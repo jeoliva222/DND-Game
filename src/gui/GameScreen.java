@@ -165,7 +165,7 @@ public class GameScreen extends JPanel {
 			String newAreaKey = WorldMap.getAreaKey(areaX + dx, areaY + dy);
 			
 			// Check if the next area is null
-			if (newAreaKey == "") {
+			if (newAreaKey == null || newAreaKey.trim().isEmpty()) {
 				// If null, we can't move to it, so return false
 				return false;
 			} else {

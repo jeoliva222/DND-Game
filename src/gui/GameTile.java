@@ -188,7 +188,7 @@ public class GameTile extends JPanel {
 	// Sets the corpse image
 	public void setCorpseImage(String filepath) {
 		// Sets flag to not render item if null path
-		if (filepath != GPath.NULL) {
+		if (!filepath.equals(GPath.NULL)) {
 			this.setCorpse = true;
 		} else {
 			this.setCorpse = false;
@@ -202,7 +202,7 @@ public class GameTile extends JPanel {
 	// Sets the pickup image
 	public void setPickupImage(String filepath) {
 		// Sets flag to not render item if null path
-		if (filepath != GPath.NULL) {
+		if (!filepath.equals(GPath.NULL)) {
 			this.setPickup = true;
 		} else {
 			this.setPickup = false;
@@ -216,7 +216,7 @@ public class GameTile extends JPanel {
 	// Sets the effect image
 	public void setEffectImage(String filepath, GEffect fx) {
 		// Do not render if null path
-		if (filepath == GPath.NULL) {
+		if (!filepath.equals(GPath.NULL)) {
 			return;
 		}
 		
@@ -229,7 +229,7 @@ public class GameTile extends JPanel {
 	// Sets the projectile image
 	public void setProjectileImage(String filepath, GProjectile proj) {
 		// Do not render if null path
-		if (filepath == GPath.NULL) {
+		if (!filepath.equals(GPath.NULL)) {
 			return;
 		}
 		
@@ -242,7 +242,7 @@ public class GameTile extends JPanel {
 	// Sets the character image
 	public void setFG(String filepath) {
 		// Sets flag to not render item if null path
-		if (filepath != GPath.NULL) {
+		if (!filepath.equals(GPath.NULL)) {
 			this.setEntity = true;
 		} else {
 			this.setEntity = false;

@@ -154,13 +154,15 @@ public class PathFinder {
 		
 		// Iterate through open set, getting lowest score
 		for (Dimension node: openSet) {
-			if ((scoreMap.get(node) > lowestScore)) {
+			Integer nodeScore = scoreMap.get(node);
+			if (nodeScore > lowestScore) {
 				// Do nothing if greater than lowest score
-			} else if ((r.nextInt(2) == 0) && (scoreMap.get(node) == lowestScore)) {
+			} else if (lowestScore.equals(nodeScore)) {
 				// If scores are equal, flip a coin and take one
-				currentLow = node;
-				lowestScore = scoreMap.get(node);
-			} else if (scoreMap.get(node) < lowestScore) {
+				if (r.nextBoolean()) {
+					currentLow = node;
+				}
+			} else if (nodeScore < lowestScore) {
 				// If score is lower, take the score
 				currentLow = node;
 				lowestScore = scoreMap.get(node);

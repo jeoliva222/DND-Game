@@ -97,6 +97,10 @@ public class GameState {
 	    	// Set inventory
 	    	InventoryScreen.setItemArray(loadedInv);
 	    	
+	    	// Reset any weird states that may have been saved
+	    	loadedPlayer.dischargeWeapons();
+	    	loadedPlayer.resetWeapons();
+	    	
 	    	// Set player
 	    	EntityManager.getInstance().setPlayer(loadedPlayer);
 	    } catch (Exception ex) {
@@ -179,10 +183,12 @@ public class GameState {
 	public static void deleteTempSaves() {
 		File tempFolder = new File(GPath.SAVE + "temp");
 		File[] areaFileList = tempFolder.listFiles();
-		for (File areaFile : areaFileList) {
-			if (areaFile.getName().endsWith(SUFFIX)) {
-				areaFile.delete();
-			}	
+		if (areaFileList != null) {
+			for (File areaFile : areaFileList) {
+				if (areaFile.getName().endsWith(SUFFIX)) {
+					areaFile.delete();
+				}	
+			}
 		}
 	}
 	
