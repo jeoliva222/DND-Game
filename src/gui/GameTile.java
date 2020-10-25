@@ -216,7 +216,7 @@ public class GameTile extends JPanel {
 	// Sets the effect image
 	public void setEffectImage(String filepath, GEffect fx) {
 		// Do not render if null path
-		if (!filepath.equals(GPath.NULL)) {
+		if (filepath.equals(GPath.NULL)) {
 			return;
 		}
 		
@@ -229,7 +229,7 @@ public class GameTile extends JPanel {
 	// Sets the projectile image
 	public void setProjectileImage(String filepath, GProjectile proj) {
 		// Do not render if null path
-		if (!filepath.equals(GPath.NULL)) {
+		if (filepath.equals(GPath.NULL)) {
 			return;
 		}
 		
