@@ -11,6 +11,7 @@ import java.io.File;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashSet;
 
 import javax.swing.JFrame;
 import javax.swing.UIManager;
@@ -37,7 +38,7 @@ public class GameWindow extends JFrame implements KeyListener {
 	private static GameWindow instance = null;
 	
 	// Indicates whether a key is being pressed or not
-	private static boolean isKeyDown = false;
+	private static HashSet<Integer> keysDown = new HashSet<>();
 	
 	// Indicates whether the spacebar is being pressed or not
 	private static boolean isSpaceDown = false;
@@ -488,6 +489,7 @@ public class GameWindow extends JFrame implements KeyListener {
 			return;
 		}
 		
+		Integer keyCode = Integer.valueOf(e.getKeyCode());
         if (!isSpaceDown && e.getKeyCode() == KeyEvent.VK_SPACE) {
         	// Charge active weapon
         	isSpaceDown = true;
@@ -499,12 +501,13 @@ public class GameWindow extends JFrame implements KeyListener {
 		//---------------
 		
 		// Disable key repeat
-		if (isKeyDown || turnInProgress) {
+		if (keysDown.contains(keyCode) || turnInProgress) {
 			return;
-		} else {
-			isKeyDown = true;
-			turnInProgress = true;
 		}
+		
+		// Mark turn in progress
+		keysDown.add(keyCode);
+		turnInProgress = true;
 		
 		if (e.getKeyCode() == KeyEvent.VK_RIGHT ||
 				e.getKeyCode()== KeyEvent.VK_D) {
@@ -600,17 +603,16 @@ public class GameWindow extends JFrame implements KeyListener {
 	
 	@Override
 	public void keyReleased(KeyEvent e) {
+		// Check for space key release
 		if (isSpaceDown && e.getKeyCode() == KeyEvent.VK_SPACE) {
     		// Discharge our weapons
 			isSpaceDown = false;
         	EntityManager.getInstance().getPlayer().dischargeWeapons();
         	StatusScreen.updateWeapons();
-        } else {
-    		// Mark that the key has been released and
-    		// that we can hit another key
-    		isKeyDown = false;
         }
-
+		
+		// Remove memory of key press
+		keysDown.remove(Integer.valueOf(e.getKeyCode()));
 	}
 
 	@Override
