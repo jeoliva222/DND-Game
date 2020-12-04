@@ -14,12 +14,11 @@ import javax.sound.midi.MidiSystem;
 import javax.sound.midi.Sequencer;
 import javax.sound.midi.ShortMessage;
 import javax.sound.midi.Track;
+import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
-import javax.sound.sampled.Clip;
 import javax.sound.sampled.FloatControl;
-import javax.sound.sampled.LineEvent;
-import javax.sound.sampled.LineListener;
+import javax.sound.sampled.SourceDataLine;
 
 import characters.allies.Player;
 import managers.EntityManager;
@@ -54,7 +53,7 @@ public class SoundPlayer {
 	}
 	
     private static ScheduledExecutorService createClipExecutor() {
-	    return Executors.newScheduledThreadPool(4, new ThreadFactory() {
+	    return Executors.newScheduledThreadPool(8, new ThreadFactory() {
 			@Override
 			public Thread newThread(Runnable r) {
 				Thread thread = Executors.defaultThreadFactory().newThread(r);
@@ -117,35 +116,31 @@ public class SoundPlayer {
 		Runnable clipTask = new Runnable() {
 			@Override
 			public void run() {
+				byte[] buffer = new byte[4096];
 			    try {
 			    	File wavFile = new File(finalWavPath);
 			        AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(wavFile);
-			        final Clip clip = AudioSystem.getClip();
-			        clip.open(audioInputStream);
-			        
+			        AudioFormat format = audioInputStream.getFormat();
+		            SourceDataLine line = AudioSystem.getSourceDataLine(format);
+		            line.open(format);
+		            
 			        if (finalGain != 0.0f) {
-						FloatControl gainControl = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
+						FloatControl gainControl = (FloatControl) line.getControl(FloatControl.Type.MASTER_GAIN);
 						gainControl.setValue(finalGain); // Reduce volume by set gain
 			        }
 			        
 			        if (finalPan != 0.0f) {
-						FloatControl panControl = (FloatControl) clip.getControl(FloatControl.Type.PAN);
+						FloatControl panControl = (FloatControl) line.getControl(FloatControl.Type.PAN);
 						panControl.setValue(finalPan); // Play sound from certain direction
 			        }
-			        
-			        // Start the clip first
-			        clip.start();
-			        
-			        // Add listener to close clip when it is done
-			        LineListener listener = new LineListener() {
-			            public void update(LineEvent event) {
-		                    if (event.getType() == LineEvent.Type.STOP) {
-		                    	clip.close();
-		                        return;
-		                    }
-			            }
-			        };
-			        clip.addLineListener(listener);
+		            
+		            line.start();
+		            while (audioInputStream.available() > 0) {
+		                int len = audioInputStream.read(buffer);
+		                line.write(buffer, 0, len);
+		            }
+		            line.drain();
+		            line.close();
 			    } catch (Exception ex) {
 			        System.out.println("Error with playing sound: \"" + finalWavPath + "\"");
 			        ex.printStackTrace();
