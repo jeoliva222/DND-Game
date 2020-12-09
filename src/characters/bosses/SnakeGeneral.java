@@ -1359,7 +1359,7 @@ public class SnakeGeneral extends GCharacter {
 		int whichSound = (new Random().nextInt(4) + 1);
 		
 		// Play the sound
-		SoundPlayer.playWAV(GPath.createSoundPath("CannonFire" + whichSound + ".wav"));
+		SoundPlayer.playWAV(GPath.createSoundPath("CannonFire" + whichSound + ".wav"), -10f);
 	}
 	
 	// Checks to see if each special attack has been used once.

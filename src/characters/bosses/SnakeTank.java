@@ -554,7 +554,7 @@ public class SnakeTank extends GCharacter {
 		int whichSound = (new Random().nextInt(4) + 1);
 		
 		// Play the sound
-		SoundPlayer.playWAV(GPath.createSoundPath("CannonFire" + whichSound + ".wav"));
+		SoundPlayer.playWAV(GPath.createSoundPath("CannonFire" + whichSound + ".wav"), -10f);
 	}
 	
 	// Used by SnakeNuke to inform the Tank that it blew up

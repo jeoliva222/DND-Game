@@ -197,7 +197,7 @@ public class Hoptooth extends GCharacter {
 			case Hoptooth.STATE_IDLE:
 				boolean hasLOS = LineDrawer.hasSight(xPos, yPos, plrX, plrY);
 				if (hasLOS) {
-					SoundPlayer.playWAV(GPath.createSoundPath("Hoptooth_Alert.wav"), getXPos(), getYPos());
+					SoundPlayer.playWAV(GPath.createSoundPath("Hoptooth_Alert.wav"), 3f, getXPos(), getYPos());
 					this.state = Hoptooth.STATE_ALERTED;
 				} else {
 					// Handle movement for Idling

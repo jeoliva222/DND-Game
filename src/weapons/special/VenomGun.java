@@ -264,7 +264,7 @@ public class VenomGun extends Weapon {
 			this.isCharged = true;
 			
 			// Play reving sound
-			SoundPlayer.playWAV(GPath.createSoundPath("Chaingun_Rev.wav"));
+			SoundPlayer.playWAV(GPath.createSoundPath("Chaingun_Rev.wav"), -10f);
 		}
 	}
 	
