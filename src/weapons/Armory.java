@@ -28,7 +28,7 @@ public class Armory {
 			GPath.createImagePath(GPath.PICKUP, GPath.WEAPON, "caestus.png"));
 	
 	// Cactus Claws
-	public static final Fists cactusClaws = new Fists("Cactus Claws", 2, 2, 0.00, 1.0, 2.5, 0, 6,
+	public static final Fists cactusClaws = new Fists("Cactus Claws", 2, 2, 0.00, 1.0, 2.0, 0, 6,
 			"WEAPON (Fist): Claws studded with cactus thorns. Gets consistent results.",
 			GPath.createImagePath(GPath.PICKUP, GPath.WEAPON, "cactusClaws.png"));
 	

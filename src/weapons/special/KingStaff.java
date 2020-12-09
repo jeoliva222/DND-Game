@@ -22,7 +22,7 @@ public class KingStaff extends Weapon {
 	public static final int STAFF_MIN_DMG = 1;
 	public static final int STAFF_MAX_DMG = 3;
 	public static final double STAFF_CRIT_CHANCE = 0.2;
-	public static final double STAFF_CRIT_MULT = 1.7;
+	public static final double STAFF_CRIT_MULT = 1.4;
 	
 	// Chance for fire projectiles to spawn on attack
 	private static final double FIRE_CHANCE = 0.35;
