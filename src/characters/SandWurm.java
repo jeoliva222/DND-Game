@@ -162,7 +162,8 @@ public class SandWurm extends GCharacter {
 	
 	@Override
 	public void onDeath() {
-		// Nothing
+		// Play death sound
+		SoundPlayer.playWAV(GPath.createSoundPath("Sandwurm_DEATH.wav"), -3.0f, getXPos(), getYPos());
 	}
 	
 	// Override that increments a damaged counter on hit
@@ -207,7 +208,7 @@ public class SandWurm extends GCharacter {
 			case SandWurm.STATE_IDLE:
 				boolean hasLOS = LineDrawer.hasSight(xPos, yPos, plrX, plrY);
 				if (hasLOS) {
-					SoundPlayer.playWAV(GPath.createSoundPath("beep_ALERT.wav"), getXPos(), getYPos());
+					SoundPlayer.playWAV(GPath.createSoundPath("Sandwurm_ALERT.wav"), getXPos(), getYPos());
 					this.state = SandWurm.STATE_BURROW;
 				} else {
 					// Handle movement for Idling
@@ -259,6 +260,9 @@ public class SandWurm extends GCharacter {
 					// Enable focusing in on Sandwurm
 					this.canFocus = true;
 					
+					// Play dig sound
+					playDigSound(0);
+					
 					// Change states
 					this.state = SandWurm.STATE_PREP;
 				} else {
@@ -276,6 +280,9 @@ public class SandWurm extends GCharacter {
 					// Recalculate distance after moving
 					distX = (plrX - xPos);
 					distY = (plrY - yPos);
+					
+					// Play dig sound (use player distance)
+					playDigSound(Math.abs(distX) + Math.abs(distY));
 					
 					// Check if we're next to the player after moving
 					// Attack if we are. Otherwise, do nothing
@@ -313,6 +320,9 @@ public class SandWurm extends GCharacter {
 			case SandWurm.STATE_PREP:	
 				// Mark tile with damage indicator
 				EntityManager.getInstance().getEffectManager().addEffect(new DamageIndicator(xPos + markX, yPos + markY));
+				
+				// Play attack sound
+				playAttackSound();
 				
 				// Attack in marked direction
 				if ((xPos + markX) == plrX && (yPos + markY) == plrY) {
@@ -358,6 +368,9 @@ public class SandWurm extends GCharacter {
 				// Spit at the player
 				EntityManager.getInstance().getProjectileManager()
 					.addProjectile(new SandwurmSpit((xPos + dx), (yPos + dy), dx, dy, getClass()));
+				
+				// Play spitting sound
+				SoundPlayer.playWAV(GPath.createSoundPath("Sandwurm_SPIT.wav"), -5.0f, getXPos(), getYPos());
 				
 				// Change state to spit attack
 				this.state = SandWurm.STATE_ATT_SPIT;
@@ -467,6 +480,34 @@ public class SandWurm extends GCharacter {
 		
 		// If none of the coordinates worked, return false
 		return false;
+	}
+	
+	/**
+	 * Plays one of three digging sound variations.
+	 * Incorporates its own set of distance-based volume logic to make the 
+	 * digging exponentially louder as the enemy gets closer.
+	 */
+	private void playDigSound(int totalDistance) {
+		float volume = -30.0f;
+		if (totalDistance <= 1) {
+			volume = -5.0f;
+		} else if (totalDistance <= 2) {
+			volume = -10.0f;
+		} else if (totalDistance <= 4) {
+			volume = -20.0f;
+		}
+			
+		Random r = new Random();
+		int whichSound = (r.nextInt(3) + 1);
+		SoundPlayer.playWAV(GPath.createSoundPath("Dig" + whichSound +".wav"), volume, getXPos(), getYPos());
+	}
+	
+	/**
+	 * Plays one of two attack sound variations.
+	 */
+	private void playAttackSound() {
+		boolean doGrunt = new Random().nextBoolean();
+		SoundPlayer.playWAV(GPath.createSoundPath("Sandwurm_ATT" + (doGrunt ? "_GRUNT" : "") + ".wav"), -3.0f, getXPos(), getYPos());
 	}
 	
 }
