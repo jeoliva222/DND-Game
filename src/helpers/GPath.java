@@ -90,6 +90,8 @@ public class GPath {
 	
 	public static final String TEMPLE = "temple" + File.separator;
 	
+	public static final String SPECIAL = "special" + File.separator;
+	
 	//--------- CHARACTER NAMES
 	
 	public static final String PLAYER = "player" + File.separator;

@@ -51,6 +51,9 @@ public class AreaFetcher {
 			case "sewer":
 				fetchedArea = new SewerLevels().area_SEWER;
 				break;
+			case "lily":
+				fetchedArea = new LilyLevels().area_LILY;
+				break;
 			default:
 				System.out.println("Failed to fetch an area: " + areaName);
 				break;

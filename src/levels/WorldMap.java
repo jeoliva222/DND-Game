@@ -11,7 +11,7 @@ public class WorldMap {
 	public static String[][] gameWorld = new String[][] {
 		{"sewer"  , null	},
 		{"dungeon", "desert"},
-		{null     , "museum"}
+		{"lily"   , "museum"}
 	};
 	
 	//************************************************
