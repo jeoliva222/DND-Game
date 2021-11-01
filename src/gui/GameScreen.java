@@ -14,6 +14,7 @@ import items.GPickup;
 import levels.AreaFetcher;
 import levels.MapLevel;
 import levels.WorldMap;
+import levels.WorldMap.AreaEnum;
 import managers.EntityManager;
 import managers.ImageBank;
 import tiles.Ground;
@@ -69,7 +70,7 @@ public class GameScreen extends JPanel {
 		int areaY = em.getPlayer().getAreaY();
 		int levelX = em.getPlayer().getLevelX();
 		int levelY = em.getPlayer().getLevelY();
-		String areaKey = WorldMap.getAreaKey(areaX, areaY);
+		AreaEnum areaKey = WorldMap.getAreaKey(areaX, areaY);
 		em.setActiveArea(AreaFetcher.fetchDefaultArea(areaKey));
 		
 		// Populate the grid with tiles, with placeholder as ground-type
@@ -162,10 +163,10 @@ public class GameScreen extends JPanel {
 		
 		try {	
 			// Fetch the next area key
-			String newAreaKey = WorldMap.getAreaKey(areaX + dx, areaY + dy);
+			AreaEnum newAreaKey = WorldMap.getAreaKey(areaX + dx, areaY + dy);
 			
 			// Check if the next area is null
-			if (newAreaKey == null || newAreaKey.trim().isEmpty()) {
+			if (newAreaKey == null) {
 				// If null, we can't move to it, so return false
 				return false;
 			} else {

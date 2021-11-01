@@ -12,6 +12,7 @@ import gui.InventoryScreen;
 import items.GItem;
 import levels.MapArea;
 import levels.WorldMap;
+import levels.WorldMap.AreaEnum;
 import managers.EntityManager;
 
 /**
@@ -117,17 +118,18 @@ public class GameState {
 	
 	/**
 	 * Save the active area to a save file based off a provided name.
-	 * @param areaName Name to save the area under
+	 * @param areaEnum Area Name enumeration to save the area under
 	 */
-	public static void saveArea(String areaName) {
+	public static void saveArea(AreaEnum areaEnum) {
 		// Write the area to temp save folder
 		try {
+			String areaName = areaEnum.getThemePath();
 			FileOutputStream myFileOutputStream = new FileOutputStream(TEMP_SAVE + areaName + SUFFIX);
 			ObjectOutputStream myObjectOutputStream = new ObjectOutputStream(myFileOutputStream);
 			myObjectOutputStream.writeObject(EntityManager.getInstance().getActiveArea());
 			myObjectOutputStream.close();
 		} catch (IOException ex) {
-			System.out.println("Saving the area '" + areaName + "' failed!");
+			System.out.println("Saving the area '" + areaEnum + "' failed!");
 			ex.printStackTrace();
 		}
 	}
@@ -140,7 +142,7 @@ public class GameState {
 		Player player = EntityManager.getInstance().getPlayer();
 		
 		// Get the area key of the current are we're in
-		String areaKey = WorldMap.getAreaKey(player.getAreaX(), player.getAreaY());
+		AreaEnum areaKey = WorldMap.getAreaKey(player.getAreaX(), player.getAreaY());
 		
 		// Save the area
 		GameState.saveArea(areaKey);
