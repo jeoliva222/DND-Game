@@ -75,7 +75,7 @@ public class SaveCrystal extends GCharacter {
 			+ " health from the save crystal.", GColors.HEAL);
 		
 		// Trigger a flag to save the game
-		GameWindow.shouldSave = true;
+		GameWindow.getInstance().markSavingGame();
 	}
 	
 	@Override

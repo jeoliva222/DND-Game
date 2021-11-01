@@ -38,46 +38,46 @@ public class GameWindow extends JFrame implements KeyListener {
 	private static GameWindow instance = null;
 	
 	// Indicates whether a key is being pressed or not
-	private static HashSet<Integer> keysDown = new HashSet<>();
+	private HashSet<Integer> keysDown = new HashSet<>();
 	
 	// Indicates whether the spacebar is being pressed or not
-	private static boolean isSpaceDown = false;
+	private boolean isSpaceDown = false;
 	
 	// Indicates whether a turn is currently in progress, preventing buffering inputs
-	private static boolean turnInProgress = false;
+	private boolean turnInProgress = false;
 	
 	// Flag indicating whether the screen was changed on the current turn
-	protected static boolean changedScreen = false;
+	protected boolean changedScreen = false;
 	
 	// Flag indicating whether the map is currently up on the screen
-	protected static boolean mapDisplayed = false;
+	protected boolean mapDisplayed = false;
 	
 	// Flag to save the game
-	public static boolean shouldSave = false;
+	public boolean shouldSave = false;
 	
 	// Flag indicating whether game is in debug mode (VM ARG: -Ddebug="T")
-	public static boolean isDebug = false;
+	public boolean isDebug = false;
 	
 	// MapScreen for displaying map of the current area
-	private static MapScreen map;
+	private MapScreen map;
 	
 	// GameScreen for displaying the game
-	private static GameScreen screen;
+	private GameScreen screen;
 	
 	// LogScreen for displaying logs about in-game turn details
-	private static LogScreen logs;
+	private LogScreen logs;
 	
 	// StatusScreen for showing player information
-	private static StatusScreen statusHUD;
+	private StatusScreen statusHUD;
 	
 	// DebuffScreen for displaying information about current buffs/debuffs
-	private static DebuffScreen debuffHUD;
+	private DebuffScreen debuffHUD;
 	
 	// InventoryScreen for displaying the player's inventory items
-	private static InventoryScreen inventoryHUD;
+	private InventoryScreen inventoryHUD;
 	
 	// InfoScreen for displaying info about various items/enemies
-	private static InfoScreen infoHUD;
+	private InfoScreen infoHUD;
 	
 	// Adapter used to regain focus on the game when screen is clicked
 	private MouseAdapter focusAdapter;
@@ -632,12 +632,21 @@ public class GameWindow extends JFrame implements KeyListener {
 	}
 	
 	public static GameScreen getScreen() {
-		return GameWindow.screen;
+		return GameWindow.getInstance().screen;
 	}
 	
-	@SuppressWarnings("unused")
-	private static void setScreen(GameScreen setter) {
-		GameWindow.screen = setter;
+	/**
+	 * Indicates to the GameWindow that the game should save after this turn.
+	 */
+	public void markSavingGame() {
+		this.changedScreen = true;
+	}
+	
+	/**
+	 * Indicates to the GameWindow that the screen will be changing this turn.
+	 */
+	protected void markChangingScreen() {
+		this.changedScreen = true;
 	}
 	
 }

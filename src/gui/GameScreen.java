@@ -138,7 +138,7 @@ public class GameScreen extends JPanel {
 				loadLevel(nextLevel);
 				
 				// Indicate to the main window that the screen was changed
-				GameWindow.changedScreen = true;
+				GameWindow.getInstance().markChangingScreen();
 				
 				// Return true to indicate the player can update their position
 				return true;
@@ -248,7 +248,7 @@ public class GameScreen extends JPanel {
 					SoundPlayer.changeMidi(em.getActiveArea().getMusic(), em.getActiveArea().getMusicVolume());
 					
 					// Indicate to the main window that the screen was changed
-					GameWindow.changedScreen = true;
+					GameWindow.getInstance().markChangingScreen();
 					
 					// Log area-entering message
 					LogScreen.log("Now Entering: "+ em.getActiveArea().getName());
